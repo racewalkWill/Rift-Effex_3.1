@@ -45,16 +45,7 @@ class PGLTriangleGradientFilter: PGLSourceFilter {
 //        }
 
         for index in 0 ..< sideCount  {
-            /// need inputDict that points to the attribute dict of the
-            ///  component linearGradient filter
-            ///   add sub cells below the parm row for the actual attributes
-            ///    of the linearAttribute filter
-//             inputDict: [String:Any] = [
-//                "CIAttributeType" : kCIAttributeTypeGradient,
-//                "CIAttributeClass":  "PGLGradientAttribute",
-//                "CIAttributeDisplayName" : "Side " + String(index),
-//                "kCIAttributeDescription": "A side of the gradient shape"
-//            ]
+
             
             let thisAttributeKey = "Side" + String(index)
             //
@@ -73,6 +64,7 @@ class PGLTriangleGradientFilter: PGLSourceFilter {
                     aVector.attributeDisplayName = "Side " + String(index + 1 ) + " " + aVector.attributeDisplayName!
                     }
                 attributes.append(contentsOf: vectorAttributes )
+                childLinearFilter.setDefaults()
             }
         }
 //        hasAnimation = true
@@ -98,15 +90,23 @@ class PGLTriangleGradientFilter: PGLSourceFilter {
 
 
     override func outputImageBasic() -> CIImage? {
-        blendFilters[0].setValue(linearGradients[0].outputImage, forKey: kCIInputImageKey)
-        blendFilters[0].setValue(linearGradients[1].outputImage, forKey: kCIInputBackgroundImageKey)
+        //notice that .outputImage() is used for the linearGradients image return
+        // BUT .outputImage is used for the blendFilter image return.. 
+        // it's a bug in the filter code !!
 
-        for index in 1 ..< sideCount - 2 {
-            blendFilters[index].setValue(blendFilters[index - 1 ].outputImage, forKey: kCIInputImageKey)
-            blendFilters[index].setValue(linearGradients[index + 1].outputImage, forKey: kCIInputBackgroundImageKey)
-        }
+        let linear0Image = linearGradients[0].outputImage()
+        let linear1Image = linearGradients[1].outputImage()
+        let linear2Image = linearGradients[2].outputImage()
+        blendFilters[0].setValue(linear0Image, forKey: kCIInputImageKey)
+        blendFilters[0].setValue(linear1Image, forKey: kCIInputBackgroundImageKey)
 
-        return blendFilters[sideCount - 2 ].outputImage
+        let blend0Image = blendFilters[0].outputImage
+
+        blendFilters[1].setValue(blend0Image, forKey: kCIInputImageKey)
+        blendFilters[1].setValue(linear2Image, forKey: kCIInputBackgroundImageKey)
+
+        return blendFilters[1].outputImage
+
     }
     
         ///    format is gradient.keyName  ie linear1.inputPoint1

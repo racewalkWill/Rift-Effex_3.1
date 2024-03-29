@@ -19,7 +19,14 @@ class PGLGradientChildFilter: PGLSourceFilter {
 
     var parentFilter: PGLTriangleGradientFilter?
     var sideKey = 0
-
+    let triangleVectorDefaults: [String: CGPoint] =  [
+            "linear0.inputPoint0": CGPoint(x:213, y: 398),
+            "linear0.inputPoint1": CGPoint(x:209 , y: 319),
+            "linear1.inputPoint0": CGPoint(x:1017, y: 717),
+            "linear1.inputPoint1": CGPoint(x:1047 , y: 719),
+            "linear2.inputPoint0": CGPoint(x:441, y: 568),
+            "linear2.inputPoint1": CGPoint(x:392 , y: 610)
+    ]
 
     required init?(filter: String, position: PGLFilterCategoryIndex) {
         super.init(filter: filter, position: position)
@@ -37,6 +44,27 @@ class PGLGradientChildFilter: PGLSourceFilter {
             return PGLFilterAttribute.parmClass(parmDict: parmDict) }
        }
 
+    override func setDefaults() {
+        // for side key = 3
+        setTriangleVectorDefaults()
+    }
+
+    func setTriangleVectorDefaults() {
+        for myAttribute in attributes {
+            if myAttribute.isVector() {
+                if let thisVectorName = myAttribute.attributeName{
+                    if let newPoint = triangleVectorDefaults[thisVectorName] {
+                     let newValue = CIVector(cgPoint: newPoint)
+                     setVectorValue(newValue: newValue, keyName: thisVectorName)
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
         /// need to filter the keyName to the base part that the ciFilter supports
         ///  keyName has format to be unique when there are multiple gradients in use
         ///    format is gradient.keyName  ie linear1.inputPoint1
@@ -45,6 +73,15 @@ class PGLGradientChildFilter: PGLSourceFilter {
             let suffixKeyName = baseKeyName(compoundKeyName: keyName)
             super.setVectorValue(newValue: newValue, keyName: suffixKeyName)
 
+    }
+
+    func prefixGradientIndex(compoundKeyName: String) -> Int {
+        if let delimitorIndex = compoundKeyName.firstIndex(of: kPGradientKeyDelimitor) {
+            let prefix = compoundKeyName.prefix(upTo: delimitorIndex)
+            let lastChar = prefix.last
+            return lastChar?.wholeNumberValue ?? 0
+        }
+        return 0
     }
 
         /// answer suffix part of the keyName inputPoint1
