@@ -46,9 +46,6 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
 
         for index in 0 ..< sideCount  {
 
-            
-            let thisAttributeKey = "Side" + String(index)
-            //
             // for the attributes in the ciFilter parm
             if let  childLinearFilter = PGLGradientChildFilter(filter: "CILinearGradient", position: PGLFilterCategoryIndex()) {
                 childLinearFilter.parentFilter = self
@@ -132,7 +129,15 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
     override func setVectorValue(newValue: CIVector, keyName: String) {
         logParm(#function, newValue.debugDescription, keyName)
         if keyName == kCIInputCenterKey {
+            // create a translation transform for the change from the oldPoint to the newValue
+            let oldCenterPoint = centerPoint
             centerPoint = CGPoint(x: newValue.x, y: newValue.y)
+            let mappingTransform = CGAffineTransform(translationX: centerPoint.x - oldCenterPoint.x , y: centerPoint.y - oldCenterPoint.y)
+            for aLinearGradientFilter in linearGradients {
+                if let thisGradient = aLinearGradientFilter as? PGLGradientChildFilter {
+                    thisGradient.applyTranslationMove(translation: mappingTransform)
+                }
+            }
         } else {
             if let targetGradient = targetGradient(keyName: keyName) {
                 targetGradient.setVectorValue(newValue: newValue, keyName: keyName)
