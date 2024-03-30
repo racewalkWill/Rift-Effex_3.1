@@ -17,7 +17,7 @@ import os
 /// position scaledDown image in composite blackBackgroud
 ///  holds a Lanzcos filter to downsize
 ///   answers composite black in view size with image downsized and positioned
-class PGLScaleDownFrame: PGLSourceFilter {
+class PGLScaleDownFrame: PGLSourceFilter, PGLCenterPoint {
     // return inputAttribute scaled down to the cropAttribute
     // Lanczos Scale Filter does this already.
     // use this frame for positioning at kCIInputCenterKey

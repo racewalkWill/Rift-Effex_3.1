@@ -17,7 +17,7 @@ let kGradientFilterName = "CILinearGradient"
 let kGradientAttributePrefix = "linear"
 
 /// 5 sided gradient
-class PGLTriangleGradientFilter: PGLSourceFilter {
+class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
     /// 12 storable values  3 linear gradients with 4 values - 2 vectors & 2 colors
     /// attribute namings is linear#value#  example linear1value2
     /// value1 and value2 are vectors
@@ -131,14 +131,20 @@ class PGLTriangleGradientFilter: PGLSourceFilter {
     }
     override func setVectorValue(newValue: CIVector, keyName: String) {
         logParm(#function, newValue.debugDescription, keyName)
-
-        if let targetGradient = targetGradient(keyName: keyName) {
-            targetGradient.setVectorValue(newValue: newValue, keyName: keyName)
-            postImageChange()
+        if keyName == kCIInputCenterKey {
+            centerPoint = CGPoint(x: newValue.x, y: newValue.y)
+        } else {
+            if let targetGradient = targetGradient(keyName: keyName) {
+                targetGradient.setVectorValue(newValue: newValue, keyName: keyName)
+            }
         }
+        postImageChange()
     }
 
     override func valueFor( keyName: String) -> Any? {
+        if keyName == kCIInputCenterKey {
+            return centerPoint
+        }
         if let targetGradient = targetGradient(keyName: keyName) {
             return targetGradient.valueFor(keyName: keyName)
         }
