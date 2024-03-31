@@ -40,9 +40,6 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
         for _ in 1 ..< sideCount {
             blendFilters.append(CIFilter(name: kGradientBlendFilter)! )
         }
-//        for _ in 1 ... sideCount {
-//            linearGradients.append(CIFilter(name: kGradientFilterName)!)
-//        }
 
         for index in 0 ..< sideCount  {
 

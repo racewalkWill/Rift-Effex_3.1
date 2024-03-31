@@ -28,6 +28,15 @@ class PGLGradientChildFilter: PGLSourceFilter {
         "linear2.inputPoint1": CGPoint(x:392 , y: 610)
     ]
 
+    var appStack: PGLAppStack! {
+        // now a computed property
+        guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
+            else { Logger(subsystem: LogSubsystem, category: LogCategory).fault("PGLSelectParmController viewDidLoad fatalError(AppDelegate not loaded")
+            fatalError("PGLSelectParmController could not access the AppDelegate")
+        }
+       return  myAppDelegate.appStack
+    }
+
     required init?(filter: String, position: PGLFilterCategoryIndex) {
         super.init(filter: filter, position: position)
     }
@@ -113,6 +122,21 @@ class PGLGradientChildFilter: PGLSourceFilter {
                     let newPoint = oldPoint.applying(translation)
                     let newVector = CIVector(cgPoint: newPoint)
                     setVectorValue(newValue: newVector, keyName: vectorAttribute.attributeName!)
+                    // update the view positionControl center
+
+                    if let positionControl = appStack.parmControls[vectorAttribute.attributeName!] {
+                        if let viewHeight = positionControl.superview?.bounds.height {
+                            let newViewCenter = vectorAttribute.mapVector2Point(vector: newVector, viewHeight: viewHeight, scale: 2.0)
+                                // scale is wrong - may change in by the metalRenderer..
+                                // this should go to the control.. it knows the parentView and
+                                // parentView bounds
+                                // see this in PGLImageController #addPositionControl
+                                //let inViewHeight = view.bounds.height
+                                //  or let flippedVertical = viewHeight - endingPoint.y
+
+                            positionControl.center = newViewCenter
+                        }
+                    }
                 }
             }
         }
