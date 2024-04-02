@@ -14,6 +14,16 @@ import CoreImage
 
 class PGLGradientVectorAttribute: PGLFilterAttributeVector {
 
+    var scaling: PGLVectorScaling?
+
+    override  func setScaling(heightScreenScale: PGLVectorScaling) {
+        scaling = heightScreenScale
+    }
+
+    override func getScaling() -> PGLVectorScaling? {
+        return scaling
+    }
+
     func baseKeyName(compoundKeyName: String ) -> String {
 
         if let suffixPosition = compoundKeyName.firstIndex(of: kPGradientKeyDelimitor)  {

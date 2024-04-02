@@ -115,7 +115,7 @@ class PGLGradientChildFilter: PGLSourceFilter {
             // get the current value of this attribute from the filter
             // apply the translation and set as the new value
         for anAttribute in vectorAttributes() {
-            if let vectorAttribute = anAttribute as? PGLFilterAttributeVector {
+            if let vectorAttribute = anAttribute as? PGLGradientVectorAttribute {
                 if let oldVector =  self.valueFor(keyName: vectorAttribute.attributeName!) as? CIVector
                 {
                     let oldPoint = oldVector.cgPointValue
@@ -123,20 +123,11 @@ class PGLGradientChildFilter: PGLSourceFilter {
                     let newVector = CIVector(cgPoint: newPoint)
                     setVectorValue(newValue: newVector, keyName: vectorAttribute.attributeName!)
                     // update the view positionControl center
-
                     if let positionControl = appStack.parmControls[vectorAttribute.attributeName!] {
-                        if let viewHeight = positionControl.superview?.bounds.height {
-                            let newViewCenter = vectorAttribute.mapVector2Point(vector: newVector, viewHeight: viewHeight, scale: 2.0)
-                                // scale is wrong - may change in by the metalRenderer..
-                                // this should go to the control.. it knows the parentView and
-                                // parentView bounds
-                                // see this in PGLImageController #addPositionControl
-                                //let inViewHeight = view.bounds.height
-                                //  or let flippedVertical = viewHeight - endingPoint.y
-
-                            positionControl.center = newViewCenter
-                        }
+                        let newViewCenter = vectorAttribute.mapVector2PointScaled(vector: newVector ) 
+                        positionControl.center = newViewCenter
                     }
+
                 }
             }
         }

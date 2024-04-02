@@ -210,6 +210,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     }
 
 
+
 //MARK: Vary vector start end
     func setVectorEndPoint() {
         if startPoint != nil

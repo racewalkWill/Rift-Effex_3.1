@@ -1436,6 +1436,8 @@ extension PGLImageController: UIGestureRecognizerDelegate {
 
              let viewHeight = view.bounds.height
             let flippedVertical = viewHeight - endingPoint.y
+            let theScreenScaling = PGLVectorScaling(viewHeight: viewHeight, viewScale:  myScaleFactor)
+            parm.setScaling(heightScreenScale: theScreenScaling)
             parm.set(CIVector(x: endingPoint.x * myScaleFactor , y: flippedVertical * myScaleFactor))
 
         }
@@ -1445,24 +1447,9 @@ extension PGLImageController: UIGestureRecognizerDelegate {
 
     func panEnded( endingPoint: CGPoint, parm: PGLFilterAttribute) {
 
-
-        // add move or resize mode logic
-        // tap action should have set the rectController
-
-//        parm.moveTo(startPoint: startPoint, newPoint: endingPoint, inView: (myimageController?.view)!)
-            // PGLFilterAttributeRectangle should have empty implementation of moveTo
-            // it moves on the OK action not the pan ended
-
          let viewHeight = view.bounds.height
-//            let flippedVertical = viewHeight - endingPoint.y
             let newVector = parm.mapPoint2Vector(point: endingPoint, viewHeight: viewHeight, scale: myScaleFactor)
             parm.set(newVector)
-            // or parm.set(oldVector)
-
-//        attributeValueChanged()
-//        startPoint = CGPoint.zero // reset
-//        endPoint = CGPoint.zero
-//        NSLog("PGLSelectParmController #panEnded startPoint,endPoint reset to CGPoint.zero")
 
     }
 
@@ -1517,7 +1504,6 @@ extension PGLImageController: UIGestureRecognizerDelegate {
 
             case .possible: break
             default: break
-
         }
     }
 

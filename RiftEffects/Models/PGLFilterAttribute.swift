@@ -584,14 +584,40 @@ class PGLFilterAttribute {
     }
 
     func mapVector2Point(vector: CIVector, viewHeight: CGFloat, scale: CGFloat) -> CGPoint {
-        // Upper Left Origin coord ULO point
-        // vector in Lower Left coord  LLO
-        let yPoint = ((vector.y / scale) - viewHeight) * -1.0
-        // UNDO the flip from ULO to LLO
-        let newPoint = CGPoint(x: (vector.x/scale) , y: yPoint)
-//        let newPoint = CGPoint(x: vector.x , y: yPoint)
-        return newPoint
+        // set the scaling vars
+        let theScreenScaling = PGLVectorScaling(viewHeight: viewHeight, viewScale:  scale)
+        setScaling(heightScreenScale: theScreenScaling)
+
+        return mapVector2PointScaled(vector: vector)
     }
+
+    /// map the vector to view height and screen scale
+    /// assumes scaling var has been set during creation
+    func mapVector2PointScaled(vector: CIVector) -> CGPoint {
+            // Upper Left Origin coord ULO point
+            // vector in Lower Left coord  LLO
+        if let theScale = getScaling() {
+            let yPoint = ((vector.y / theScale.viewScale) - theScale.viewHeight) * -1.0
+                // UNDO the flip from ULO to LLO
+            let newPoint = CGPoint(x: (vector.x/theScale.viewScale) , y: yPoint)
+            return newPoint
+        }
+        else { 
+            // no mapping just answer the same point
+            return vector.cgPointValue}
+    }
+
+        /// set view.height and screen scale for mapping vectors
+    func setScaling(heightScreenScale: PGLVectorScaling) {
+        // empty implemenation
+        // see PGLFilterAttributeVectorUI
+    }
+
+    func getScaling() -> PGLVectorScaling? {
+            // empty implemenation
+            // see PGLFilterAttributeVectorUI
+       return nil
+   }
 
     func okActionToSetValue() -> Bool {
         // subclass override to true if set value is deferred to the OK action of the parm cell

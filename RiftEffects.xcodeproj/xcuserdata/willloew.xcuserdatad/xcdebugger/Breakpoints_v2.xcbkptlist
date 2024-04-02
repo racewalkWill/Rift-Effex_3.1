@@ -7,54 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E2B4C98E-69D9-44CB-A12F-BBDECFDF8722"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Filters/GradientPolygonFilters/PGLTriangleGradientFilter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "135"
-            endingLineNumber = "135"
-            landmarkName = "setVectorValue(newValue:keyName:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "E2B4C98E-69D9-44CB-A12F-BBDECFDF8722 - 7fbbfb3f15e40f1d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "RiftEffects.PGLTriangleGradientFilter.setVectorValue(newValue: __C.CIVector, keyName: Swift.String) -&gt; ()"
-                  moduleName = "RiftEffects"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/willloew/Developer/RiftEffects3.0_ImagePick/RiftEffects/RiftEffects/Filters/GradientPolygonFilters/PGLTriangleGradientFilter.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "138"
-                  endingLineNumber = "138"
-                  offsetFromSymbolStart = "440">
-               </Location>
-               <Location
-                  uuid = "E2B4C98E-69D9-44CB-A12F-BBDECFDF8722 - 7fbbfb3f15e40f1d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "RiftEffects.PGLTriangleGradientFilter.setVectorValue(newValue: __C.CIVector, keyName: Swift.String) -&gt; ()"
-                  moduleName = "RiftEffects"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/willloew/Developer/RiftEffects3.0_ImagePick/RiftEffects/RiftEffects/Filters/GradientPolygonFilters/PGLTriangleGradientFilter.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "138"
-                  endingLineNumber = "138"
-                  offsetFromSymbolStart = "784">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "DBB274B5-BD2D-46A2-8EB8-04F9CA5B1855"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -71,24 +23,8 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "725C57A8-11A2-4EE1-9337-A8676C2B345C"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Filters/GradientPolygonFilters/PGLGradientChildFilter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
-            landmarkName = "applyTranslationMove(translation:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "D0D3EC5A-AFAA-4A78-A1FC-A6A59E9C62F1"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RiftEffects/Filters/GradientPolygonFilters/PGLGradientChildFilter.swift"
@@ -97,6 +33,133 @@
             startingLineNumber = "120"
             endingLineNumber = "120"
             landmarkName = "applyTranslationMove(translation:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D0D3EC5A-AFAA-4A78-A1FC-A6A59E9C62F1 - e4405ac8867fa132"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RiftEffects.PGLGradientChildFilter.applyTranslationMove(translation: __C.CGAffineTransform) -&gt; ()"
+                  moduleName = "RiftEffects"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/RiftEffects3.0_ImagePick/RiftEffects/RiftEffects/Filters/GradientPolygonFilters/PGLGradientChildFilter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "121"
+                  endingLineNumber = "121"
+                  offsetFromSymbolStart = "788">
+               </Location>
+               <Location
+                  uuid = "D0D3EC5A-AFAA-4A78-A1FC-A6A59E9C62F1 - a2fafa1c8c63dbb8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RiftEffects.PGLGradientChildFilter.applyTranslationMove(translation: __C.CGAffineTransform, mapHeight: CoreGraphics.CGFloat, mapScale: CoreGraphics.CGFloat) -&gt; ()"
+                  moduleName = "RiftEffects"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/RiftEffects3.0_ImagePick/RiftEffects/RiftEffects/Filters/GradientPolygonFilters/PGLGradientChildFilter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "121"
+                  endingLineNumber = "121"
+                  offsetFromSymbolStart = "812">
+               </Location>
+               <Location
+                  uuid = "D0D3EC5A-AFAA-4A78-A1FC-A6A59E9C62F1 - a2fafa1c8c63dbb8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RiftEffects.PGLGradientChildFilter.applyTranslationMove(translation: __C.CGAffineTransform, mapHeight: CoreGraphics.CGFloat, mapScale: CoreGraphics.CGFloat) -&gt; ()"
+                  moduleName = "RiftEffects"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/RiftEffects3.0_ImagePick/RiftEffects/RiftEffects/Filters/GradientPolygonFilters/PGLGradientChildFilter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "121"
+                  endingLineNumber = "121"
+                  offsetFromSymbolStart = "808">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C77B872C-2447-4393-B4DD-5BA072CA1E2D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Filters/GradientPolygonFilters/PGLTriangleGradientFilter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
+            landmarkName = "setVectorValue(newValue:keyName:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D49B7DAD-814E-4ACC-A9F3-FCD03A75433F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Filters/GradientPolygonFilters/PGLTriangleGradientFilter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
+            landmarkName = "setVectorValue(newValue:keyName:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "684011C1-ABAF-49CF-8DCF-61C3C569BB02"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Filters/ScaleDown/PGLFilterAttributeVectorUI.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "getScaling()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C39710A9-F371-4C8F-8306-C7C0982F590E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Models/PGLFilterAttribute.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "599"
+            endingLineNumber = "599"
+            landmarkName = "mapVector2PointScaled(vector:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "91214577-21B4-4822-885A-DB8F51EE0C68"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Models/PGLFilterAttribute.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "589"
+            endingLineNumber = "589"
+            landmarkName = "mapVector2Point(vector:viewHeight:scale:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

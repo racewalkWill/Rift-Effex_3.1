@@ -15,7 +15,15 @@ import os
 // value not held in the ciFilter attribute
 
 class PGLFilterAttributeVectorUI: PGLFilterAttributeVector {
+    var scaling: PGLVectorScaling?
 
+  override  func setScaling(heightScreenScale: PGLVectorScaling) {
+        scaling = heightScreenScale
+    }
+
+    override func getScaling() -> PGLVectorScaling? {
+        return scaling
+    }
     override func getVectorValue() -> CIVector? {
         if let myParent = self.aSourceFilter as? PGLCenterPoint {
                 // PGLScaleDownFrame & PGLTriangleGradientFilter are current adopters of the protocol
