@@ -163,10 +163,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             }
         }
     }
-
-
-
-
+    var scaling: PGLVectorScaling?
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
@@ -423,6 +420,14 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         let scaledPoint = newVectorPoint.applying(vectorFactor)
         let scaledVectorValue = CIVector.init(cgPoint: scaledPoint)
         return scaledVectorValue
+    }
+
+    override  func setScaling(heightScreenScale: PGLVectorScaling) {
+        scaling = heightScreenScale
+    }
+
+    override func getScaling() -> PGLVectorScaling? {
+        return scaling
     }
 
 

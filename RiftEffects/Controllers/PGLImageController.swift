@@ -1020,14 +1020,9 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         if let positionVector = attribute.getVectorValue() {
             // fails if no vector
             let newSize = CGSize(width: 60.0, height: 60.0)
-            var yPoint = positionVector.y
 
             // adjustment for point to effectView transforms
-            
             let inViewHeight = view.bounds.height
-            yPoint = inViewHeight - yPoint  // flip around the midpoint of the view
-
-
 //              NSLog("PGLImageController #addPositionContorl positionVector = \(positionVector)")
             var mappedOrigin = attribute.mapVector2Point(vector: positionVector, viewHeight: inViewHeight, scale: myScaleFactor)
 
