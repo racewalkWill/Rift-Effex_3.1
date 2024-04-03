@@ -929,6 +929,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         // textInputUI should stay hidden if showing the pointUI
         // and likewise.
         //
+
+        // this needs restructuring logic tree is too big with too many if else lines
         for nameAttribute in appStack.parms {
             let parmAttribute = nameAttribute.value
             let parmView = appStack.parmControls[nameAttribute.key]
@@ -948,7 +950,18 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                         if parmAttribute.isRectUI() {
                             hideRectControl()
                         } else
-                        {  parmView?.isHidden = hide
+                        {  
+                            if ( parmAttribute is PGLGradientVectorAttribute ) && !(uiTypeToShow == nil)  {
+                                if (appStack.targetAttribute === parmAttribute) {
+                                    // only show the selected gradient vector view control
+                                    parmView?.isHidden = hide // shows the parmView hide is false
+                                } else {
+                                    // hide the other vector view controls
+                                    parmView?.isHidden = !hide
+                                }
+                            } else {
+                                parmView?.isHidden = hide  // shows the parmView hide is false
+                            }
                         }
                 }
             }
