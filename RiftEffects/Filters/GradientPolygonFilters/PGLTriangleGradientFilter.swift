@@ -28,9 +28,8 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
     var sideCount = 3
     var linearGradients =  [PGLSourceFilter]()
     var blendFilters = [CIFilter]()
-    var valueParms = [PGLFilterAttribute]()
     var centerPoint: CGPoint = CGPoint(x: TargetSize.width/2, y: TargetSize.height/2)
-//    var gradientKeys: [String:]
+
 
     required init?(filter: String, position: PGLFilterCategoryIndex) {
 
@@ -66,7 +65,7 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
 
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override
-       return "Gradient with 5 sides"
+       return "3 sided Gradient for Blend with Mask. Generates the mask shape"
     }
 
     func centerPointAttribute() -> PGLFilterAttributeVector {
@@ -137,6 +136,7 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
             }
         } else {
             if let targetGradient = targetGradient(keyName: keyName) {
+                logParm(#function, newValue.debugDescription, keyName)
                 targetGradient.setVectorValue(newValue: newValue, keyName: keyName)
             }
         }

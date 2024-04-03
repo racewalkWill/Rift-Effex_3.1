@@ -19,13 +19,25 @@ class PGLGradientChildFilter: PGLSourceFilter {
 
     var parentFilter: PGLTriangleGradientFilter?
     var sideKey = 0
-    let triangleVectorDefaults: [String: CGPoint] =  [
+
+    ///  get values with debug setting of PGLSourceFilter.LogParmValues = true
+    ///  then adjust visually and copy values from the log
+    static let VectorDefaultsiPad: [String: CGPoint] =  [
         "linear0.inputPoint0": CGPoint(x:213, y: 398),
         "linear0.inputPoint1": CGPoint(x:209 , y: 319),
         "linear1.inputPoint0": CGPoint(x:1017, y: 717),
         "linear1.inputPoint1": CGPoint(x:1047 , y: 719),
         "linear2.inputPoint0": CGPoint(x:441, y: 568),
         "linear2.inputPoint1": CGPoint(x:392 , y: 610)
+    ]
+
+    static let VectorDefaultsiPhone: [String: CGPoint] =  [
+        "linear0.inputPoint0": CGPoint(x:210, y: 371),
+        "linear0.inputPoint1": CGPoint(x:209 , y: 289),
+        "linear1.inputPoint0": CGPoint(x:980, y: 672),
+        "linear1.inputPoint1": CGPoint(x:1012 , y: 683),
+        "linear2.inputPoint0": CGPoint(x:419, y: 562),
+        "linear2.inputPoint1": CGPoint(x:411 , y: 574)
     ]
 
     var appStack: PGLAppStack! {
@@ -63,9 +75,10 @@ class PGLGradientChildFilter: PGLSourceFilter {
     }
 
     func setTriangleVectorDefaults() {
+
         for myAttribute in vectorAttributes() {
             if let thisVectorName = myAttribute.attributeName{
-                if let newPoint = triangleVectorDefaults[thisVectorName] {
+                if let newPoint = PGLGradientChildFilter.VectorDefaultsiPhone[thisVectorName] {
                     let newValue = CIVector(cgPoint: newPoint)
                     setVectorValue(newValue: newValue, keyName: thisVectorName)
                 }

@@ -741,7 +741,7 @@ class PGLSelectParmController: PGLCommonController,
         imageController?.panner?.isEnabled = false
             // only enable pan gesture on certain cases
 
-//        NSLog("PGLSelectParmController # tableView(..didSelectRowAt tappedAttribute = \(tappedAttribute!.attributeDisplayName)")
+//        NSLog("PGLSelectParmController # tableView(..didSelectRowAt tappedAttribute = \(String(describing: tappedAttribute!.attributeDisplayName))")
         if tappedAttribute == nil { return }
 //        if tappedAttribute!.inputParmType() == ImageParm.filter  {
 //            // confirm that user wants to break the connection to an input
