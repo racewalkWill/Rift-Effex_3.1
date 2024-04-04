@@ -148,7 +148,7 @@ class PGLCommonController: UIViewController, UIAdaptivePresentationControllerDel
         for aParmControlTuple in appStack.parmControls {
             if aParmControlTuple.key == viewNamed {
                 // show this view
-                Logger(subsystem: LogSubsystem, category: LogCategory).debug("highlight view isHidden = false, hightlight = true")
+                Logger(subsystem: LogSubsystem, category: LogCategory).debug("highlight  \(viewNamed) isHidden = false, hightlight = true")
                 if let imageControl = (aParmControlTuple.value) as? UIImageView {
                     
                     togglePosition(theControlView: imageControl, enable: true)

@@ -904,6 +904,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 //        if appStack.videoMgr.videoState != .None
 //            { hideVideoPlayBtn() }
         panner?.isEnabled = false
+        Logger(subsystem: LogSubsystem, category: LogCategory).debug("hide all controls hide = true")
         toggleViewControls(hide: true, uiTypeToShow: nil )
             // toggle all view controls to hide
         parmSlider?.isHidden = true
@@ -937,42 +938,45 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             if hide {
                 if parmAttribute.isPointUI() || parmAttribute.isTextInputUI() {
                     parmView?.isHidden = hide
-                }
-                if parmAttribute.isRectUI() {
-                    if parmAttribute is PGLAttributeRectangle {
-                        hideRectControl()
+                    NSLog(#function +  " hide  \(nameAttribute.key)" )
+                } else {
+                    if parmAttribute.isRectUI() {
+                        if parmAttribute is PGLAttributeRectangle {
+                            hideRectControl()
+                        }
                     }
                 }
             } else
-            { // hide is false
-                if (uiTypeToShow == nil) ||
-                    (uiTypeToShow == parmAttribute.attributeUIType()) {
-                        if parmAttribute.isRectUI() {
-                            hideRectControl()
-                        } else
-                        {  
-                            if ( parmAttribute is PGLGradientVectorAttribute ) && !(uiTypeToShow == nil)  {
-                                if (appStack.targetAttribute === parmAttribute) {
-                                    // only show the selected gradient vector view control
-                                    parmView?.isHidden = hide // shows the parmView hide is false
-                                } else {
-                                    // hide the other vector view controls
-                                    parmView?.isHidden = !hide
+                { // hide is false
+                    // SHOW the control(s)
+                        if (uiTypeToShow == nil) || (uiTypeToShow == parmAttribute.attributeUIType()) {
+                                if parmAttribute.isRectUI() {
+                                    hideRectControl()
+                        } else {
+                            let isSelected = (appStack.targetAttribute === parmAttribute)
+                            if ( parmAttribute.shouldHidePosition(userSelected: isSelected)) {
+                                       // && !(uiTypeToShow == nil)  {
+                                        // only show the selected gradient vector view control
+                                    parmView?.isHidden = !hide // hides  the parmView
                                 }
-                            } else {
-                                parmView?.isHidden = hide  // shows the parmView hide is false
+                                else {
+                                    parmView?.isHidden = hide  // show the controls
+                                }
+
                             }
                         }
-                }
             }
+
 
             // leave video buttons in current state hidden or visible
 //            appStack.setVideoBtnIsHidden(hide: hide)
 
 //        Logger(subsystem: LogSubsystem, category: LogCategory).debug("\( String(describing: self) + "-" + #function)")
 
-        } // end for appStack.parms
-    }
+        } // end for appStack.parm
+        
+    } // end toggleViewControls(hide:..)
+
 
     func removeParmControls() {
         // should use the attribute methods isPointUI() or isRectUI()..

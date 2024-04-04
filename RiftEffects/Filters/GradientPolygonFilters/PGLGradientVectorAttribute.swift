@@ -48,4 +48,15 @@ class PGLGradientVectorAttribute: PGLFilterAttributeVector {
         return generic as? CIVector
         }
 
+        // MARK: ViewControl hide/show
+
+        ///  always display the position control view
+        /// PGLFilterVectorAttributeVectorUI only shows if it is selected
+    override func shouldHidePosition(userSelected: Bool) -> Bool {
+            // userSelected means should NOT HIDE
+            return !userSelected
+        }
+
+
+
 }

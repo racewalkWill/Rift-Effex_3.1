@@ -32,4 +32,13 @@ class PGLFilterAttributeVectorUI: PGLFilterAttributeVector {
                 aSourceFilter.setVectorValue(newValue: newVectorValue, keyName: attributeName!) }
         }
     }
+
+// MARK: ViewControl hide/show
+
+///  only display the positionControl if the parm is selected
+///    parent default is to show all vectorAttributes
+    override func shouldHidePosition(userSelected: Bool) -> Bool {
+            // userSelected means should NOT HIDE
+            return !userSelected
+        }
 }

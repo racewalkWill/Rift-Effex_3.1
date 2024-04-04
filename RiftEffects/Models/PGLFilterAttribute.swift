@@ -618,6 +618,14 @@ class PGLFilterAttribute {
             // see PGLFilterAttributeVectorUI
        return nil
    }
+        ///  always display the position control view
+        /// PGLFilterVectorAttributeVectorUI and PGLGradientVectorAttribute only shows if selected
+    func shouldHidePosition(userSelected: Bool) -> Bool {
+            // does not matter if the user selected this attribute
+            // always show -
+            // do not hide returns false
+            return false
+        }
 
     func okActionToSetValue() -> Bool {
         // subclass override to true if set value is deferred to the OK action of the parm cell
