@@ -1243,7 +1243,9 @@ class PGLFilterConstructor: NSObject,  CIFilterConstructor {
 
             case kPCopyOut: return PGLCopyToOutputCIFilter()
 
-            case kPolygonGradient: return PGLPolygonGradientCI()
+            case kTriangleGradient: return PGLPolygonGradientCI()
+
+            case k4SidedGradient: return PGLPolygonGradientCI()
 
             default:
                 return CIFilter(name: withName)!

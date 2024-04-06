@@ -18,10 +18,10 @@ let kGradientAttributePrefix = "linear"
 
 /// 5 sided gradient
 class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
-    /// 12 storable values  3 linear gradients with 4 values - 2 vectors & 2 colors
+    /// 6 storable values  3 linear gradients with 2 values - 2 vectors
     /// attribute namings is linear#value#  example linear1value2
     /// value1 and value2 are vectors
-    ///  value3 and value4 are colors
+    ///  color parms of the linearGradients  are ignored in the interface
 
         /// UI index for the current linear gradient
     var indexGradient = 0
@@ -33,7 +33,7 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
 
     required init?(filter: String, position: PGLFilterCategoryIndex) {
 
-        // on UI select of a linear attribute then four subcells of 4 values
+        // on UI select of a linear attribute then 2 subcells of 2 values
         super.init(filter: filter, position: position)
         attributes.append(self.centerPointAttribute() )
         for _ in 1 ..< sideCount {

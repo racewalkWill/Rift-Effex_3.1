@@ -37,7 +37,9 @@ class PGLGradientChildFilter: PGLSourceFilter {
         "linear1.inputPoint0": CGPoint(x:980, y: 672),
         "linear1.inputPoint1": CGPoint(x:1012 , y: 683),
         "linear2.inputPoint0": CGPoint(x:419, y: 562),
-        "linear2.inputPoint1": CGPoint(x:411 , y: 574)
+        "linear2.inputPoint1": CGPoint(x:411 , y: 574),
+        "linear3.inputPoint0" : CGPoint(x:652 , y: 553),
+        "linear3.inputPoint1": CGPoint(x:638 , y: 611)
     ]
 
     var appStack: PGLAppStack! {

@@ -38,7 +38,7 @@ class PGLPolygonGradientCI: CIFilter {
     class func register() {
         //       let attr: [String: AnyObject] = [:]
 //        NSLog("PGLSequencedFilters #register()")
-        CIFilter.registerName(kPolygonGradient, constructor: PGLFilterConstructor(), classAttributes: PGLPolygonGradientCI.customAttributes())
+        CIFilter.registerName(kTriangleGradient, constructor: PGLFilterConstructor(), classAttributes: PGLPolygonGradientCI.customAttributes())
     }
 
     class override var supportsSecureCoding: Bool { get {
@@ -50,7 +50,7 @@ class PGLPolygonGradientCI: CIFilter {
 
     @objc class func customAttributes() -> [String: Any] {
         let customDict:[String: Any] = [
-            kCIAttributeFilterDisplayName : kPolygonGradient,
+            kCIAttributeFilterDisplayName : kTriangleGradient,
 
             kCIAttributeFilterCategories :
                 [kCICategoryGradient, kCICategoryStillImage],
