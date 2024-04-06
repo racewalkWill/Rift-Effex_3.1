@@ -300,7 +300,7 @@ extension PGLSourceFilter {
 
     }
 
-    func storeParmValue(moContext: NSManagedObjectContext) {
+@objc func storeParmValue(moContext: NSManagedObjectContext) {
             // 4EntityModel
             /// create a CDParmValue for every parm that is not an image parm
 //        let parmValues = NSMutableSet()
@@ -828,6 +828,22 @@ extension PGLAppStack {
 }
 // ================ end extension PGLAppStack =========================
 
+extension PGLTriangleGradientFilter {
+    @objc override func storeParmValue(moContext: NSManagedObjectContext) {
+        
+        // the parm for the linear Filter needs to changed to a relationship
+        // with the parent PGLGradientFilter
+        super.storeParmValue(moContext: moContext)
+        for aParm in nonImageParms() {
+            if let aGradientParm = aParm as? PGLGradientVectorAttribute {
+                // skips over the centerPoint which is a PGLFilterAttributeVectorUI
+                aGradientParm.storedParmValue?.storedFilter = storedFilter
+                    // this storedFilter is the PGLTriangleGradientFilter (or subclass)
+            }
+        }
+    }
+}
+
 extension PGLFilterAttribute {
     @objc func storeParmValue(moContext: NSManagedObjectContext)   {
             // abstract super class implementation
@@ -1230,7 +1246,7 @@ extension PGLFilterAttributeVector {
 
         guard let myVector = getVectorValue()
             else { return }
-
+//        NSLog("PGLVectorAttribute storeParmValue \(myVector)")
         cd.vectorX = (myVector.x) as NSNumber
         cd.vectorY = (myVector.y) as NSNumber
         if let myEndPoint = endPoint {
