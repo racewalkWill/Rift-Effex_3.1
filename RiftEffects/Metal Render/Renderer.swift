@@ -99,6 +99,7 @@ class Renderer: NSObject, MTKViewDelegate {
         let fileType = UserDefaults.standard.string(forKey:  "photosFileType")
         currentPhotoFileFormat = PhotoLibSaveFormat.init(rawValue: fileType ?? "HEIF")
         super.init()
+        NSLog("\((self .debugDescription) + #function)" )
     }
 
     func captureImage() throws -> UIImage? {
@@ -201,7 +202,7 @@ class Renderer: NSObject, MTKViewDelegate {
                 // no change needed
             return
         }
-        Logger(subsystem: LogSubsystem, category: LogCategory).info( "drawableSizeWillChange mtkViewSize from  + \(String(describing: self.mtkViewSize)) " )
+//        Logger(subsystem: LogSubsystem, category: LogCategory).info( "drawableSizeWillChange mtkViewSize from  + \(String(describing: self.mtkViewSize)) " )
         Logger(subsystem: LogSubsystem, category: LogCategory).info( "drawableSizeWillChange size to  + \(String(describing: size)) " )
         mtkViewSize = size
         TargetSize = size

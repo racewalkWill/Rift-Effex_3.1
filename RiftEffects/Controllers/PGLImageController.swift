@@ -501,11 +501,17 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if metalController === nil {
+           loadMetalController()
+        }
         setGestureRecogniziers()
 //        toggleViewControls(hide: false ) // restore removed position & text controls
         if appStack.videoMgr.videoState != .None {
             appStack.videoMgr.addStartStopButton(imageController: self)
             // if controller already has video button, then nothing added
+        }
+        if traitCollection.userInterfaceIdiom == .phone {
+            metalController?.updateDrawableSize()
         }
     }
 
@@ -690,6 +696,50 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     }
 
+    fileprivate func loadMetalController() {
+        if let myMetalControllerView = storyboard!.instantiateViewController(withIdentifier: "MetalController") as? PGLMetalController {
+                // does the metalView extend under the navigation bar?? change constraints???
+                //            myMetalControllerView.view.frame = self.view.bounds
+            
+            addChild(myMetalControllerView)
+                // tried to use NSLayoutConstraint instead of setting the frame..
+            if let theMetalView = myMetalControllerView.view {
+                theMetalView.translatesAutoresizingMaskIntoConstraints = false
+                view.addSubview(theMetalView)
+                view.bringSubviewToFront(theMetalView)
+                metalController = myMetalControllerView  // hold the ref
+                let iPhoneCompact =  splitViewController?.isCollapsed ?? false
+                
+                if iPhoneCompact {  // iPhone case
+                    NSLayoutConstraint.activate([
+                        theMetalView.topAnchor.constraint(equalTo: view.topAnchor),
+                        theMetalView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                        theMetalView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                        theMetalView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                        
+                        theMetalView.widthAnchor.constraint(equalTo: view.heightAnchor , multiplier: 4/3),
+                        // iphone width constraint
+                    ]) }
+                else {  // iPad case
+                    NSLayoutConstraint.activate([
+                        theMetalView.topAnchor.constraint(equalTo: view.topAnchor),
+                        theMetalView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                        theMetalView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                        theMetalView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                        
+                        theMetalView.widthAnchor.constraint(equalTo: view.widthAnchor ),
+                        // iPad width constraint
+                    ])
+                }
+                myScaleFactor = theMetalView.contentScaleFactor
+                myScaleTransform = CGAffineTransform(scaleX: myScaleFactor, y: myScaleFactor )
+                myMetalControllerView.didMove(toParent: self)
+                
+            }
+            
+        }
+    }
+    
     override func viewDidLoad() {
         // conversion to Metal based on Core Image Programming Guide
         // https://developer.apple.com/library/archive/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_tasks/ci_tasks.html#//apple_ref/doc/uid/TP30001185-CH3-SW5
@@ -701,47 +751,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         filterStack = { self.appStack.outputOrViewFilterStack() }
 
-        if let myMetalControllerView = storyboard!.instantiateViewController(withIdentifier: "MetalController") as? PGLMetalController {
-            // does the metalView extend under the navigation bar?? change constraints???
-//            myMetalControllerView.view.frame = self.view.bounds
-
-            addChild(myMetalControllerView)
-                // tried to use NSLayoutConstraint instead of setting the frame..
-            if let theMetalView = myMetalControllerView.view {
-               theMetalView.translatesAutoresizingMaskIntoConstraints = false
-                view.addSubview(theMetalView)
-                view.bringSubviewToFront(theMetalView)
-                metalController = myMetalControllerView  // hold the ref
-                let iPhoneCompact =  splitViewController?.isCollapsed ?? false
-
-                if iPhoneCompact {  // iPhone case
-                    NSLayoutConstraint.activate([
-                        theMetalView.topAnchor.constraint(equalTo: view.topAnchor),
-                        theMetalView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                        theMetalView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                        theMetalView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-
-                        theMetalView.widthAnchor.constraint(equalTo: view.heightAnchor , multiplier: 4/3),
-                        // iphone width constraint
-                    ]) }
-                else {  // iPad case
-                    NSLayoutConstraint.activate([
-                        theMetalView.topAnchor.constraint(equalTo: view.topAnchor),
-                        theMetalView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                        theMetalView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                        theMetalView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-
-                        theMetalView.widthAnchor.constraint(equalTo: view.widthAnchor ),
-                        // iPad width constraint
-                    ])
-                }
-                myScaleFactor = theMetalView.contentScaleFactor
-                myScaleTransform = CGAffineTransform(scaleX: myScaleFactor, y: myScaleFactor )
-                myMetalControllerView.didMove(toParent: self)
-
-            }
-
-        }
+        loadMetalController()
         registerImageControllerNotifications()
 
         tintViews.append(contentsOf: [topTintView, bottomTintView, leftTintView, rightTintView])
@@ -790,7 +800,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     func releaseVars() {
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         parmController = nil
-        metalController = nil
+        
         selectedParmControlView = nil
         releaseNotifications() // reset
         metalController?.view.removeFromSuperview()
@@ -1686,6 +1696,8 @@ extension PGLImageController {
         guard let newImageController = storyboard?.instantiateViewController(withIdentifier: "MetalController") as? PGLMetalController
         else {return }
         newImageController.isFullScreen = true
+//        NSLog("\(self.debugDescription) " + #function)
+//        NSLog("newImageController = \(newImageController.debugDescription)")
         // turns on gesture recogniziers to dismiss, zoom, pan
 
         let nav = UINavigationController(rootViewController: newImageController)

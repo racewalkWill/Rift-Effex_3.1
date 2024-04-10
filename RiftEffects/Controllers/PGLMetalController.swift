@@ -52,7 +52,7 @@ class PGLMetalController: UIViewController {
         metalRender = appStack.appRenderer
         metalRender.set(metalView: metalView)
 
-       metalRender.mtkView(metalView, drawableSizeWillChange: metalView.drawableSize)
+       updateDrawableSize()
 
         metalRender.drawBasicCentered(in: metalView)
             // draw once so that the view has the current stack output image
@@ -64,6 +64,14 @@ class PGLMetalController: UIViewController {
 
         }
 
+    }
+
+        ///  image load and doubleTap to full screen and back need size change
+    func updateDrawableSize() {
+        guard let metalView = view as? MTKView
+        else { return }
+        NSLog( "\(self.debugDescription)" + #function)
+        metalRender.mtkView(metalView, drawableSizeWillChange: metalView.drawableSize)
     }
 
     func setGestureRecogniziers() {
@@ -95,6 +103,8 @@ class PGLMetalController: UIViewController {
 
     @objc func userTapAction(sender: UITapGestureRecognizer) {
         // two taps dismiss
+//        NSLog("\(self.debugDescription) " + #function + " dismiss")
+
         self.dismiss(animated: true)
     }
 
