@@ -29,7 +29,7 @@ extension PGLFilterStack {
         stackName = "Demo"
 
         let sequenceFilters = [
-            "CIBlendWithRedMask", // sequenceStack child
+            "CIBlendWithMask", // sequenceStack child
             "CIToneCurve",
             "CIKaleidoscope",
             "CIDifferenceBlendMode",
@@ -208,17 +208,17 @@ extension PGLSourceFilter {
     }
 
     func demoKaleidoscopeParms() {
-        setVectorValue(newValue: CIVector(x: 300, y: 697), keyName: "inputCenter")
+        setVectorValue(newValue: CIVector(x: 780, y: 477), keyName: "inputCenter")
         setNumberValue(newValue: 0.7306029, keyName: "inputAngle")
     }
 
     func demoPerspectiveTransformParms() {
         // filter is CIPerspectiveTransform
 
-        setVectorValue(newValue: CIVector(x: 1416, y: 350), keyName: "inputBottomRight")
-        setVectorValue(newValue: CIVector(x: 1409, y: 1195), keyName: "inputTopRight")
-        setVectorValue(newValue: CIVector(x: 113, y: 657), keyName: "inputBottomLeft")
-        setVectorValue(newValue: CIVector(x: 89, y: 1137), keyName: "inputTopLeft")
+        setVectorValue(newValue: CIVector(x: 1157, y: 115), keyName: "inputBottomRight")
+        setVectorValue(newValue: CIVector(x: 1117, y: 423), keyName: "inputTopRight")
+        setVectorValue(newValue: CIVector(x: 261, y: 100), keyName: "inputBottomLeft")
+        setVectorValue(newValue: CIVector(x: 132, y: 851), keyName: "inputTopLeft")
 
 
     }
@@ -228,7 +228,7 @@ extension PGLSourceFilter {
 
         if let starMask = addChildFilter(toAttributeName: kCIInputMaskImageKey, childFilterName: "CIStarShineGenerator", childImageInputs: nil) {
 
-            starMask.setVectorValue(newValue: CIVector(x: 431.0, y: 1019.0), keyName: "inputCenter")
+            starMask.setVectorValue(newValue: CIVector(x: 431.0, y: 569.0), keyName: "inputCenter")
                 // ( [431 1019] , inputCenter
             starMask.setNumberValue(newValue:  81.62791, keyName: "inputRadius")
 
