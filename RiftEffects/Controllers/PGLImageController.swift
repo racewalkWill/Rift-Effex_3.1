@@ -803,9 +803,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         
         selectedParmControlView = nil
         releaseNotifications() // reset
-        metalController?.view.removeFromSuperview()
-        metalController?.removeFromParent()
-        metalController = nil
+
+        /// do not remove the views.. they show during navigaton
+//        metalController?.view.removeFromSuperview()
+//        metalController?.removeFromParent()
+
+        /// control memory growth by setting metalController  to nil  Build a new one as needed
+           metalController = nil
         moreBtn.menu = nil // reset in the load.
 
 

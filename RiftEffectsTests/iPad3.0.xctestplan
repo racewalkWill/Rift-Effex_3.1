@@ -38,9 +38,9 @@
     {
       "skippedTests" : [
         "GlanceTests",
-        "PGLCategorySurvey",
         "PGLFilterDescriptorTests",
-        "PGLFilterStackTests"
+        "PGLFilterStackTests",
+        "PGLSourceFilterTests"
       ],
       "target" : {
         "containerPath" : "container:RiftEffects.xcodeproj",

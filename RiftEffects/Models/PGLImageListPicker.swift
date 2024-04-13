@@ -71,6 +71,7 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
         picker.dismiss(animated: true)
 
         loadImageListFromPicker(results: results, theController: controller)
+        if pickingImageList.isEmpty() { return }
         if let parmController = controller as? PGLSelectParmController {
             parmController.pickerCompletion(pickerController:picker, pickedImageList: pickingImageList)
         }

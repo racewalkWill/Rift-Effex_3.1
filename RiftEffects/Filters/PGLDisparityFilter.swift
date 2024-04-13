@@ -106,7 +106,7 @@ class PGLDisparityFilter: PGLRectangleFilter {
         // also sets  inputDisparityImage attribute if inputImage has depth
         // if the inputDisparityImage
 
-
+        if userPickList.isEmpty() { return }
         let newImage = userPickList.firstImageBasic()
         guard let inputAsset = userPickList.firstAsset()
          else { return }
