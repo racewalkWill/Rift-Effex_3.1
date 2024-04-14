@@ -475,6 +475,16 @@ class PGLFilterStack  {
         }
         return Stack.end // default return
     }
+
+    // MARK: Filter Updates
+/// some parms based on center points need to change if the image sizng changes
+///  does not change non position vector parms (such as color vectors)
+//    func applyParmSizeChange(changeAffine: CGAffineTransform) {
+//        for aFilter in activeFilters {
+//            aFilter.applyParmSizeChange(changeAffine: changeAffine)
+//        }
+//    }
+
     // MARK: Output
 
 

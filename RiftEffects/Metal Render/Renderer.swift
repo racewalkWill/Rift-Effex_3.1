@@ -60,7 +60,12 @@ class Renderer: NSObject, MTKViewDelegate {
         //    var pipelineState: MTLRenderPipelineState!
         //
         //    let colorSpace = CGColorSpaceCreateDeviceRGB() // or CGColorSpaceCreateDeviceCMYK() ?
+
+    /// mtkViewSize is in native pixels..  much bigger that the view.frame size
     var mtkViewSize: CGSize!
+
+        /// size before a frame change
+//    var viewOldSize: CGSize?
         //    var viewportSize: vector_uint2!
         //
         //    var library: MTLLibrary!
@@ -158,6 +163,7 @@ class Renderer: NSObject, MTKViewDelegate {
         Renderer.ciContext = ciMetalContext
         metalView.autoResizeDrawable = true
 
+
             //        metalView.clearColor = MTLClearColor(red: 0.5, green: 0.5,  blue: 0.8, alpha: 0.5)
 
     }
@@ -204,6 +210,16 @@ class Renderer: NSObject, MTKViewDelegate {
         }
 //        Logger(subsystem: LogSubsystem, category: LogCategory).info( "drawableSizeWillChange mtkViewSize from  + \(String(describing: self.mtkViewSize)) " )
         Logger(subsystem: LogSubsystem, category: LogCategory).info( "drawableSizeWillChange size to  + \(String(describing: size)) " )
+//        if viewOldSize != nil {
+//            let newFrameSize = view.frame.size
+//            let changeScale = CGAffineTransform(scaleX: viewOldSize!.width - newFrameSize.width , y:  viewOldSize!.height - newFrameSize.height )
+//
+//                /// save  value for the next change
+//            viewOldSize = newFrameSize
+////            NSLog("Renderer drawable size changeScale = \(changeScale)")
+//            filterStack()?.applyParmSizeChange(changeAffine: changeScale)
+//
+//        }
         mtkViewSize = size
         TargetSize = size
             //        viewportSize = vector_uint2(x: UInt32(size.width), y: UInt32(size.height))

@@ -204,7 +204,18 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
     }
 
- 
+    // MARK: Filter Updates
+
+    /// some parms based on center points need to change if the image sizng changes
+    ///  does not change non position vector parms (such as color vectors)
+//    func applyParmSizeChange(changeAffine: CGAffineTransform) {
+//        if filterName == "CIToneCurve" {
+//            return
+//        }
+//        for aParm in attributes {
+//            aParm.applyParmSizeChange(changeAffine: changeAffine)
+//        }
+//    }
 
     // MARK: input/output
     fileprivate func setDetectorsInput(_ image: CIImage?, _ source: String?) {

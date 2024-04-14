@@ -467,6 +467,21 @@ class PGLFilterAttribute {
         return String(describing: (getValue() ?? "") )
     }
 
+        // MARK: Filter Updates
+
+        /// some parms based on center points need to change if the image sizng changes
+        ///  does not change non position vector parms (such as color vectors)
+//    func applyParmSizeChange(changeAffine: CGAffineTransform) {
+//
+//        if isPointUI() {
+//            if let currentPoint = getVectorValue() {
+//               let newPoint =  currentPoint.cgPointValue.applying(changeAffine)
+//                let newVector = CIVector(cgPoint: newPoint)
+//                set(newVector)
+//            }
+//        }
+//    }
+
     // MARK: value change
     func set(_ value: Any ) {
         // use a system of double dispatch to address typing
