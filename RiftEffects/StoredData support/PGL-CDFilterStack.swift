@@ -71,14 +71,20 @@ extension PGLFilterStack {
         }
 
 
-    func forceSaveToNewCDVars() {
+    func forceSaveToNewCDVars(moContext: NSManagedObjectContext) {
         for filterIndex in 0..<activeFilters.count {
             let aFilter = activeFilters[filterIndex]
-            aFilter.forceSaveToNewCDVars()
+            aFilter.forceSaveToNewCDVars(moContext: moContext)
             aFilter.storedFilter = nil
         }
         NSLog("PGLFilterStack #forceSaveToNewCDVars name = \(stackName) storedStack = \(String(describing: storedStack))")
-        storedStack = nil
+        /// restore stored cdStack to saved version
+        if let myCDStoredStack = storedStack {
+            moContext.refresh(myCDStoredStack, mergeChanges: false)
+                // refresh sets it to be a fault for reread
+                // make sure the fetchedResults are reread after this
+            storedStack = nil // force creation of a new cdStack
+        }
     }
     func writeCDStack(moContext: NSManagedObjectContext) -> CDFilterStack {
         NSLog("PGLFilterStack #writeCDStack name = \(stackName) type = \(stackType)")
@@ -86,7 +92,7 @@ extension PGLFilterStack {
 
         if ((storedStack?.title != stackName ) || (storedStack?.type != stackType)) {
             // an existing stack name is changed
-            self.forceSaveToNewCDVars() // implied saveAs with the name change
+            self.forceSaveToNewCDVars(moContext: moContext) // implied saveAs with the name change
              // sets storedStack to nil
         }
         if (storedStack == nil ) { // new stack needed
@@ -270,17 +276,34 @@ extension PGLSourceFilter {
     }
 
 //    func readCDImageList(parentStack: PGLFilterStack)
-    func forceSaveToNewCDVars() {
+    func forceSaveToNewCDVars(moContext: NSManagedObjectContext) {
         // implied saveAs the top level stack name has changed
         // set all of the core data vars to nil to save as new stack
         if let myImageParms = imageParms() {
             for anImageParm in myImageParms {
                 if let childInputStack = anImageParm.inputStack {
-                    childInputStack.forceSaveToNewCDVars() // will clear child filters
+                    childInputStack.forceSaveToNewCDVars(moContext: moContext) // will clear child filters
                 }
-                anImageParm.storedParmImage?.inputAssets = nil
-                anImageParm.storedParmImage = nil
+                if let thisStoredImageValue = anImageParm.storedParmImage {
+                    // force the imageList inputAssets to newCDVars ??
+                    // not needed to reset..
+//                    thisStoredImageValue.inputAssets.forceSaveToNewCDVars(moContext: moContext)
+                    thisStoredImageValue.inputAssets = nil
+
+                    moContext.refresh(thisStoredImageValue, mergeChanges: false)
+
+                    anImageParm.storedParmImage = nil
+                        // cause creation of new storedValue row
+                }
             }
+        }
+        for aParm in nonImageParms() {
+            if let thisStoredValue = aParm.storedParmValue{
+                moContext.refresh(thisStoredValue, mergeChanges: false)
+                aParm.storedParmValue = nil
+                    // cause creation of new storedValue row
+            }
+
         }
 
     }
@@ -647,7 +670,7 @@ extension PGLAppStack {
         rollbackStack() // discards any coredata changes
             // or update to persistant state
 
-         outputStack.forceSaveToNewCDVars() // create new
+        outputStack.forceSaveToNewCDVars(moContext: dataProvider.providerManagedObjectContext) // create new
 //        self.viewerStackOrPushedFirstStack()?.setToNewStack()
 //        self.outputOrViewFilterStack().setToNewStack()
     }

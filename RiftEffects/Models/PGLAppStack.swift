@@ -229,7 +229,8 @@ class PGLAppStack {
         videoMgr.resetVars()
 
         outputStack.releaseVars()
-        dataProvider.reset()
+//        dataProvider.reset() 
+            // too drastic?  this applies to ALL retreived objects..
         resetNeedsRedraw()
 
              // nil out refs so the memory is released
