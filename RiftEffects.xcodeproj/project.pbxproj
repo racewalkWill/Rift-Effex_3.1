@@ -234,6 +234,7 @@
 		A394667F2832DFDD00A67319 /* PGLStackImageContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackImageContainerController.swift; sourceTree = "<group>"; };
 		A39466812832E30A00A67319 /* PGLSupplementNavController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSupplementNavController.swift; sourceTree = "<group>"; };
 		A39632D7250049F000F02CEC /* PGLDisparityFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLDisparityFilter.swift; sourceTree = "<group>"; };
+		A399AF082BE43013005FF85A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		A39A42962B768C3D00D553B1 /* PGLAssetVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAssetVideoPlayer.swift; sourceTree = "<group>"; };
 		A39B220D2B558E7C0026C7FE /* PGLImageListPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLImageListPicker.swift; sourceTree = "<group>"; };
 		A39F88012A4C7368000AE342 /* PGLLibraryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLLibraryController.swift; sourceTree = "<group>"; };
@@ -479,6 +480,7 @@
 			children = (
 				A3D9FF07292A9EE300BAE158 /* Metal Render */,
 				A341185E25C3008100587590 /* RiftEffects.entitlements */,
+				A399AF082BE43013005FF85A /* PrivacyInfo.xcprivacy */,
 				A3BF507624D32A3400CD5114 /* Main.storyboard */,
 				A35FF77A26DC320400D78252 /* License */,
 				A3E6243C2691261A0017372F /* Settings.bundle */,
@@ -1160,7 +1162,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = RiftEffects/RiftEffects.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 52;
+				CURRENT_PROJECT_VERSION = 53;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 9CZQPZ85AZ;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
@@ -1194,7 +1196,7 @@
 				CODE_SIGN_ENTITLEMENTS = RiftEffects/RiftEffects.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 52;
+				CURRENT_PROJECT_VERSION = 53;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 9CZQPZ85AZ;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
