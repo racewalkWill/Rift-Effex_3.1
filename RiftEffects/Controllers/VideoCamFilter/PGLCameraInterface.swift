@@ -60,7 +60,7 @@ class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
      var statusBarOrientation: UIInterfaceOrientation = .landscapeLeft
     // orientation is set once. It does not change with device rotation..
     // see https://developer.apple.com/documentation/uikit/uidevice/1620055-isgeneratingdeviceorientationnot
-    
+
 
     // MARK: - KVO and Notifications
     var sessionRunningContext = 0
@@ -81,6 +81,7 @@ class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
          is a blocking call, which can take a long time. Dispatch session setup
          to the sessionQueue so as not to block the main queue, which keeps the UI responsive.
          */
+
         sessionQueue.async {
             self.configureSession()
         }
@@ -314,7 +315,7 @@ class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
 
             let renderedCIImage = CIImage(cvImageBuffer: finalVideoPixelBuffer)
 
-            myCameraViewFilter?.videoImageFrame = renderedCIImage
+            myCameraViewFilter?.outputVideoFrames.setCurrentVideoFrame(newFrame: renderedCIImage)
 
         }
 

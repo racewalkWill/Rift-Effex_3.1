@@ -16,7 +16,8 @@ import MobileCoreServices
 
 class PGLVideoCameraFilter: PGLSourceFilter {
      var cameraInterface: PGLCameraInterface?
-    var videoImageFrame: CIImage?
+     let outputVideoFrames = PGLVideoFrameQueue()
+     var lastFrame: CIImage?
 
     // MARK: - View Controller Life Cycle
 
@@ -46,7 +47,10 @@ class PGLVideoCameraFilter: PGLSourceFilter {
 //            case .some(.portraitUpsideDown):
 //            case .some(_):
         }
-        return videoImageFrame?.oriented(orientedTarget)
+        lastFrame = outputVideoFrames.getCurrentVideoFrame() ?? lastFrame
+        // if no current frame then repeat the last one
+        
+        return lastFrame?.oriented(orientedTarget)
     }
 
     func postTransitionFilterAdd() {

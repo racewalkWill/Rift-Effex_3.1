@@ -145,6 +145,7 @@
 		A3D04B152A8444A300E6DB16 /* PGLStackInfoHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3D04B132A8444A300E6DB16 /* PGLStackInfoHeader.xib */; };
 		A3D9FF09292A9EFE00BAE158 /* VertexDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D9FF08292A9EFE00BAE158 /* VertexDescriptor.swift */; };
 		A3D9FF0B292A9F1400BAE158 /* Quad.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D9FF0A292A9F1400BAE158 /* Quad.swift */; };
+		A3DBD2D12BEC1D66009A6317 /* PGLVideoFrameQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DBD2D02BEC1D66009A6317 /* PGLVideoFrameQueue.swift */; };
 		A3DC09292BAE1EDF00A36219 /* PGLPolygonGradientCI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DC09282BAE1EDF00A36219 /* PGLPolygonGradientCI.swift */; };
 		A3DC264F2698FD83003E48C2 /* PGLImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DC264E2698FD83003E48C2 /* PGLImageController.swift */; };
 		A3DC3DE227B17EF500E4C111 /* PGLCompactImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DC3DE127B17EF500E4C111 /* PGLCompactImageController.swift */; };
@@ -329,6 +330,7 @@
 		A3D04B132A8444A300E6DB16 /* PGLStackInfoHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PGLStackInfoHeader.xib; sourceTree = "<group>"; };
 		A3D9FF08292A9EFE00BAE158 /* VertexDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VertexDescriptor.swift; sourceTree = "<group>"; };
 		A3D9FF0A292A9F1400BAE158 /* Quad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Quad.swift; sourceTree = "<group>"; };
+		A3DBD2D02BEC1D66009A6317 /* PGLVideoFrameQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLVideoFrameQueue.swift; sourceTree = "<group>"; };
 		A3DC09282BAE1EDF00A36219 /* PGLPolygonGradientCI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLPolygonGradientCI.swift; sourceTree = "<group>"; };
 		A3DC264E2698FD83003E48C2 /* PGLImageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLImageController.swift; sourceTree = "<group>"; };
 		A3DC3DE127B17EF500E4C111 /* PGLCompactImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCompactImageController.swift; sourceTree = "<group>"; };
@@ -449,6 +451,7 @@
 				A3B785172B224FC300F3DA68 /* PGLCopyOutCIFilter.swift */,
 				A3B785152B224E6F00F3DA68 /* PGLCameraViewFilter.swift */,
 				A3EFC14A2B2372CE00D30A18 /* PGLCameraInterface.swift */,
+				A3DBD2D02BEC1D66009A6317 /* PGLVideoFrameQueue.swift */,
 			);
 			path = VideoCamFilter;
 			sourceTree = "<group>";
@@ -987,6 +990,7 @@
 				A3DC264F2698FD83003E48C2 /* PGLImageController.swift in Sources */,
 				A3719FA628233D5B009A9DBE /* PGLCommonParmController.swift in Sources */,
 				A3BF50E424D32A3400CD5114 /* PGLFilterAttributeNumber.swift in Sources */,
+				A3DBD2D12BEC1D66009A6317 /* PGLVideoFrameQueue.swift in Sources */,
 				A39B220E2B558E7C0026C7FE /* PGLImageListPicker.swift in Sources */,
 				A3BF50EC24D32A3400CD5114 /* PGLVisionProtocol.swift in Sources */,
 			);
@@ -1083,7 +1087,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1142,7 +1146,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1162,7 +1166,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = RiftEffects/RiftEffects.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 53;
+				CURRENT_PROJECT_VERSION = 54;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 9CZQPZ85AZ;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
@@ -1175,7 +1179,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 3.1;
 				MTL_COMPILER_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "L-BSoftwareArtist.Rift-Effex";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1196,7 +1200,7 @@
 				CODE_SIGN_ENTITLEMENTS = RiftEffects/RiftEffects.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 53;
+				CURRENT_PROJECT_VERSION = 54;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 9CZQPZ85AZ;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
@@ -1209,7 +1213,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 3.1;
 				MTL_COMPILER_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "L-BSoftwareArtist.Rift-Effex";
 				PRODUCT_NAME = "$(TARGET_NAME)";
