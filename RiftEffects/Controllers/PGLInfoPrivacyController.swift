@@ -44,7 +44,7 @@ class PGLInfoPrivacyController: UIViewController {
 
     @IBOutlet weak var infoLinkLabel: UILabel! {
         didSet {
-            infoLinkLabel.text = "https:\\willsfiltertool.photo"
+            infoLinkLabel.text = "https:\\rifteffex.com"
         }
     }
 

@@ -609,23 +609,12 @@ class PGLImageList: CustomStringConvertible {
 
             images = ciImageArray
 
-//            let theOrientation = CGImagePropertyOrientation(theImage.imageOrientation)
-//            if PGLImageList.isDeviceASimulator() {
-//                    pickedCIImage = convertedImage.oriented(CGImagePropertyOrientation.downMirrored)
-//                } else {
-//
-//                    pickedCIImage = convertedImage.oriented(theOrientation) }
-//            }
-//           if let orientedCIImage = pickedCIImage {
-//               selectedImageList.setImage(aCiImage: orientedCIImage, position: 0)
-//           }
-
         }
 
-    func setImage(aCiImage : CIImage, position: Int ) {
-        images.insert( aCiImage, at: position)  // this adjusts the arrary size as needed.
-
-    }
+//    func setImage(aCiImage : CIImage, position: Int ) {
+//        images.insert( aCiImage, at: position)  // this adjusts the arrary size as needed.
+//
+//    }
 
     func appendImage(aCiImage: CIImage) {
         images.append(aCiImage)

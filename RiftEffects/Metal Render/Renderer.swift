@@ -325,15 +325,15 @@ class Renderer: NSObject, MTKViewDelegate {
                 //  kaliedscope filter has large negative origins so the shiftX shiftY equations are wrong.
                 
                 let backBounds = CGRect(x: 0, y: 0, width: dSize.width, height: dSize.height)
-//                var iRect = ciOutputImage.extent
-//                if ciOutputImage.extent.isInfinite {
-//                    iRect = backBounds
-//                }
-//
-//                let shiftX = round((backBounds.size.width + iRect.origin.x - iRect.size.width) * 0.5)
-//                let shiftY = round((backBounds.size.height + iRect.origin.y - iRect.size.height) * 0.5)
+                var iRect = ciOutputImage.extent
+                if ciOutputImage.extent.isInfinite {
+                    iRect = backBounds
+                }
 
-//                ciOutputImage = ciOutputImage.transformed(by: CGAffineTransform(translationX: shiftX, y: shiftY))
+                let shiftX = round((backBounds.size.width + iRect.origin.x - iRect.size.width) * 0.5)
+                let shiftY = round((backBounds.size.height + iRect.origin.y - iRect.size.height) * 0.5)
+
+                ciOutputImage = ciOutputImage.transformed(by: CGAffineTransform(translationX: shiftX, y: shiftY))
 
                     // Blend the image over an opaque background image.
                     // This is needed if the image is smaller than the view, or if it has transparent pixels.

@@ -1255,19 +1255,7 @@ class PGLSelectParmController: PGLCommonController,
         }
 
 
-    func resizeToTargetSize(image: CIImage) -> CIImage {
-            // resize to TargetSize same as  imageFrom(selectedAsset:)
-            // and loadImageListFromPicker
-            // iPhone for imagePicker path...
-
-        let sourceSize = image.extent
-        let scaleBy =  TargetSize.height / sourceSize.height
-        let aspectRatio = Double(TargetSize.width) / Double(TargetSize.height)
-
-        let resizedImage  = image.applyingFilter("CILanczosScaleTransform", parameters: [kCIInputAspectRatioKey : aspectRatio ,
-                    kCIInputScaleKey: scaleBy])
-        return resizedImage
-    }
+  
 
 
     func finishAndUpdate() {

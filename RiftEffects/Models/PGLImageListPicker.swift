@@ -158,7 +158,9 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
                 if localURL == nil {
                     return
                 }
-                try? FileManager.default.removeItem(at: localURL!)
+                if (FileManager.default.fileExists(atPath: localURL?.absoluteString ?? "" ))
+                    { try FileManager.default.removeItem(at: localURL!)
+                    }
                 try FileManager.default.copyItem(at: url, to: localURL!)
 
                 DispatchQueue.main.async {

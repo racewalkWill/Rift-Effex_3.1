@@ -53,7 +53,10 @@ class PGLMetalController: UIViewController {
         metalRender.set(metalView: metalView)
 
        updateDrawableSize()
-
+        if isFullScreen {
+            view.insetsLayoutMarginsFromSafeArea = true
+            view.sizeToFit()
+        }
         metalRender.drawBasicCentered(in: metalView)
             // draw once so that the view has the current stack output image
             // then normal 60 fps drawing is controlled by the PGLNeedsRedraw
