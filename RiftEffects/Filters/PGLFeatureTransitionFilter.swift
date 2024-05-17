@@ -63,7 +63,9 @@ class PGLFeatureTransitionFilter: PGLTransitionFilter {
 
         }
 
-        cycleStack.setImages(ciImageArray: theImages)
+            // these images are scaled already
+               cycleStack.setImages(ciImageArray: theImages)
+
             // sets all of the images from the  getImage call
 
         super.setImageListClone(cycleStack: cycleStack, sourceKey: sourceKey)

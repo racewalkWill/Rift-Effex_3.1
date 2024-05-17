@@ -1133,13 +1133,12 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
 
   }
     func resetDrawableSize() {
-        guard let firstImageInput = inputCollection?.first() else
+        
+        inputCollection?.resetCenteredImageCache()
+        guard let currentImageResized = inputCollection?.getCurrentImage() else
         { return }
-        aSourceFilter.setImageValue(newValue: firstImageInput, keyName: self.attributeName!)
-        // inputCollection (a PGLImageList) first() will use the current TargetSize
-        // to reset the input to the filter.
-        // only the first element needs this as transition filters will
-        // use TargetSize during the PGLImageList increment
+        aSourceFilter.setImageValue(newValue: currentImageResized, keyName: self.attributeName!)
+
     }
     
     func imageInputIsEmpty() -> Bool {

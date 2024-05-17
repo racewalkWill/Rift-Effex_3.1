@@ -67,6 +67,7 @@
 		A39F88062A4C7F5C000AE342 /* PGLLibraryPropertiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39F88052A4C7F5C000AE342 /* PGLLibraryPropertiesView.swift */; };
 		A39F88082A4C7FF2000AE342 /* PGLAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39F88072A4C7FF2000AE342 /* PGLAppearance.swift */; };
 		A39F880B2A4CA38B000AE342 /* PGLSectionBackgroundDecorationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39F880A2A4CA38B000AE342 /* PGLSectionBackgroundDecorationView.swift */; };
+		A3A123322BF55FAD001A756D /* PGLCenterScaler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A123312BF55FAD001A756D /* PGLCenterScaler.swift */; };
 		A3ABF28E2B194DD3006286B2 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = A3ABF28D2B194DD3006286B2 /* Documentation.docc */; };
 		A3AD94762B7CF96E00125E74 /* PGLTwoColumnSplitController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD94752B7CF96E00125E74 /* PGLTwoColumnSplitController.swift */; };
 		A3AF392C25B61D850035A5FF /* PGLSaliencyBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AF392B25B61D850035A5FF /* PGLSaliencyBlur.swift */; };
@@ -243,6 +244,7 @@
 		A39F88052A4C7F5C000AE342 /* PGLLibraryPropertiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLLibraryPropertiesView.swift; sourceTree = "<group>"; };
 		A39F88072A4C7FF2000AE342 /* PGLAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAppearance.swift; sourceTree = "<group>"; };
 		A39F880A2A4CA38B000AE342 /* PGLSectionBackgroundDecorationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSectionBackgroundDecorationView.swift; sourceTree = "<group>"; };
+		A3A123312BF55FAD001A756D /* PGLCenterScaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCenterScaler.swift; sourceTree = "<group>"; };
 		A3ABF28D2B194DD3006286B2 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		A3AD94752B7CF96E00125E74 /* PGLTwoColumnSplitController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLTwoColumnSplitController.swift; sourceTree = "<group>"; };
 		A3AF392B25B61D850035A5FF /* PGLSaliencyBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSaliencyBlur.swift; sourceTree = "<group>"; };
@@ -584,6 +586,7 @@
 				A3E17A1A29F5DBB2006A39A6 /* PGLFilterStackDemo.swift */,
 				A3BF508624D32A3400CD5114 /* PGLAppStack.swift */,
 				A3BF509C24D32A3400CD5114 /* PGLImageList.swift */,
+				A3A123312BF55FAD001A756D /* PGLCenterScaler.swift */,
 				A39B220D2B558E7C0026C7FE /* PGLImageListPicker.swift */,
 				A3BF50B624D32A3400CD5114 /* PGLUserAssetSelection.swift */,
 				A3BF507024D32A3400CD5114 /* PGLFilterCategory.swift */,
@@ -916,6 +919,7 @@
 				A3BF50DC24D32A3400CD5114 /* PGLBumpBlend.swift in Sources */,
 				A3BF510624D32A3400CD5114 /* PGLSplitViewController.swift in Sources */,
 				A3DDDEE729D85EF1003B8545 /* PGLFilterAttrChildStack.swift in Sources */,
+				A3A123322BF55FAD001A756D /* PGLCenterScaler.swift in Sources */,
 				A3B5BCB02BAFA373007606D0 /* PGLGradientChildFilter.swift in Sources */,
 				A39F880B2A4CA38B000AE342 /* PGLSectionBackgroundDecorationView.swift in Sources */,
 				A3BF50F424D32A3400CD5114 /* TextCell.swift in Sources */,

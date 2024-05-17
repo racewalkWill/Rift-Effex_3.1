@@ -60,17 +60,17 @@ class PGLImageList: CustomStringConvertible {
     var nextType = NextElement.each // normally increments each image in sequence
 
 //    var isAssetList = true // hold PGLAssets.. or holds CIImages
-    var isAssetList: Bool {
+    var hasUncachedAssets: Bool {
         get{
 //            return images.isEmpty && !imageAssets.isEmpty
             // iPhone picker loads one image but still call this an assetList
 
-            return (images.count < imageAssets.count) && !imageAssets.isEmpty
+            return (cachedImages.count < imageAssets.count) && !imageAssets.isEmpty
             // when all the images are cached in images then isAssetList is false.
         }
     }
-    private var images = [CIImage?]()
-    let doResize = MainViewImageResize  // working on scaling... boolean switch here
+    private var cachedImages = [Int:PGLImageScaler]()
+//    let doResize = MainViewImageResize  // working on scaling... boolean switch here
      var userSelection: PGLUserAssetSelection?
      // was weak var userSelection...
     
@@ -126,10 +126,12 @@ class PGLImageList: CustomStringConvertible {
         imageAssets = getAssets(localIds: assetIDs, albums: [String]())
 
     }
-
-    convenience init(ciImages: [CIImage]) {
-        self .init()
-        images  =  ciImages
+///  assumes images are scaled and center for the current TargetSize
+    convenience init(scaledImages: [PGLImageScaler] ) {
+        self.init()
+        for (thisIndex, aImageScaler) in scaledImages.enumerated() {
+            cachedImages[thisIndex] = aImageScaler
+        }
 
     }
 
@@ -137,11 +139,14 @@ class PGLImageList: CustomStringConvertible {
     convenience init(imageFileNames: [String]) {
         self .init()
        let uiImages = UIImage.uiImages(imageFileNames)
+        var counter = 0
         for anUIImage in uiImages {
-            images.append(convert2CIImage(aUIImage: anUIImage))
                 // convert2CIImage will correct orientation to downMirrored
+            if let convertedImage = convert2CIImage(aUIImage: anUIImage){
+                cacheImage(baseImage: convertedImage, index: counter)
+                counter += 1
+            }
         }
-
     }
 
 
@@ -150,7 +155,7 @@ class PGLImageList: CustomStringConvertible {
         for anAsset in imageAssets {
             anAsset.releaseVars()
         }
-        images = [CIImage?]()
+        cachedImages = [Int:PGLImageScaler]()
         userSelection?.releaseVars()
 
         inputStack?.releaseVars()
@@ -174,7 +179,7 @@ class PGLImageList: CustomStringConvertible {
     }
  // MARK: CustomStringConvertible
     var description: String {
-           return "\(assetIDs), \(images)"
+           return "\(assetIDs), \(cachedImages)"
        }
 
     // MARK: setSelection
@@ -206,9 +211,10 @@ class PGLImageList: CustomStringConvertible {
     func validateLoad() {
         // raise user message if the identifier and image count is not equal
         // in limitedLibrary mode the image may not be obtained but the identifier is set
-        if !isAssetList {
+        if !hasUncachedAssets {
+
             // no images but imageAssets exist - should load okay
-            let imageCount = images.count
+            let imageCount = cachedImages.count
             let identifierCount = assetIDs.count
 
             if imageCount != identifierCount {
@@ -247,16 +253,16 @@ class PGLImageList: CustomStringConvertible {
     }
 
     func maxAssetsOrImagesCount() -> Int {
-          if isAssetList {
+          if hasUncachedAssets {
               return imageAssets.count
           }
           else {
-              return images.count
+              return cachedImages.count
           }
       }
 
       func isEmpty() -> Bool {
-           return (imageAssets.isEmpty) && (images.isEmpty)
+           return (imageAssets.isEmpty) && (cachedImages.isEmpty)
       }
 
     // MARK: Clone
@@ -268,7 +274,7 @@ class PGLImageList: CustomStringConvertible {
         newList.nextType = NextElement.odd
 //        newList.collectionTitle = "Odd-" + self.collectionTitle  // O for Odd
         newList.position = 1
-        newList.images = self.images
+        newList.cachedImages = self.cachedImages
 //        newList.isAssetList = self.isAssetList
 
         self.nextType = NextElement.even
@@ -290,7 +296,7 @@ class PGLImageList: CustomStringConvertible {
         newList.nextType = NextElement.each
 //        newList.collectionTitle = "Odd-" + self.collectionTitle  // O for Odd
         newList.position = 0
-        newList.images = self.images
+        newList.cachedImages = self.cachedImages
 //        newList.isAssetList = self.isAssetList
 
 
@@ -367,14 +373,11 @@ class PGLImageList: CustomStringConvertible {
 
     func image(atIndex: Int) -> CIImage? {
         var answerImage: CIImage?
-
-        if !isAssetList {
+        if let thisImageScaler = cachedImages[atIndex] {
                 // has image in the private cache
                 // NO asset to load
-            answerImage = images[atIndex]
+           return thisImageScaler.image
         }
-
-
         else { 
             let imageAsset = imageAssets[atIndex]
             if imageAsset.isVideo() {
@@ -386,20 +389,19 @@ class PGLImageList: CustomStringConvertible {
                     return CIImage.empty()
                 }
             }
-
             if let imageFromAsset = imageAsset.imageFrom() {
-                answerImage = imageFromAsset
-                if (( images.count - 1 ) < atIndex ) {
+
+//                if (( cachedImages.count - 1 ) < atIndex ) {
                         // save into the images cache.
                         // zero  based array count is one more than the index
-                    appendImage(aCiImage: imageFromAsset)
-                }
+                cacheImage(baseImage: imageFromAsset, index: atIndex)
+//                }
             }
             else {
                 return CIImage.empty()
             }
         }
-        return scaleToFrame(ciImage: answerImage!, newSize: TargetSize)
+        return cachedImages[atIndex]?.image
     }
 
 
@@ -510,9 +512,10 @@ class PGLImageList: CustomStringConvertible {
             imageAssets.remove(at: firstIndexValue)
             // no image  so need to reset
             return nil }
-        if doResize {
-            return self.scaleToFrame(ciImage: answerImage, newSize: TargetSize) }
-        else { return answerImage}
+        return answerImage
+//        if doResize {
+//            return self.scaleToFrame(ciImage: answerImage, newSize: TargetSize) }
+//        else { return answerImage}
 
 
     }
@@ -520,8 +523,8 @@ class PGLImageList: CustomStringConvertible {
        fileprivate func scaleToFrame(ciImage: CIImage, newSize: CGSize) -> CIImage {
            // make all the images scale to the same size and origin
 
-           if !doResize {
-               return ciImage }
+//           if !doResize {
+//               return ciImage }
 //           NSLog("PGLImageList #scaleToFrame ")
            let xTransform:CGFloat = 0.0 - ciImage.extent.origin.x
            let yTransform:CGFloat = 0.0  - ciImage.extent.origin.y
@@ -606,9 +609,9 @@ class PGLImageList: CustomStringConvertible {
     }
 
         func setImages(ciImageArray: [CIImage]) {
-
-            images = ciImageArray
-
+            for (thisIndex, anImage) in ciImageArray.enumerated() {
+                cachedImages[thisIndex] = PGLImageScaler(image: anImage)
+            }
         }
 
 //    func setImage(aCiImage : CIImage, position: Int ) {
@@ -616,8 +619,24 @@ class PGLImageList: CustomStringConvertible {
 //
 //    }
 
-    func appendImage(aCiImage: CIImage) {
-        images.append(aCiImage)
+    func cacheImage(baseImage: CIImage, index: Int) {
+
+        let centerScaler = PGLCenterScaler(centerCIImage: baseImage)
+        let centeredImage = centerScaler.centerAndScale(image: baseImage)
+        let myScaler = PGLImageScaler(image: centeredImage, centerScaler: centerScaler)
+//        cachedImages.insert(myScaler, at: index)
+        cachedImages[index] = myScaler
+        // should have added at the end of the array
+        // array size matches index
+
+    }
+
+    func resetCenteredImageCache() {
+        // global TargetSize has changed
+        // images should be resized/centered again
+        // set cachedImages to  empty and they will resize as accessed
+        
+        cachedImages = [Int:PGLImageScaler]()
     }
 
     // MARK: Video
