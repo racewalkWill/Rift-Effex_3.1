@@ -700,7 +700,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         if let myMetalControllerView = storyboard!.instantiateViewController(withIdentifier: "MetalController") as? PGLMetalController {
                 // does the metalView extend under the navigation bar?? change constraints???
                 //            myMetalControllerView.view.frame = self.view.bounds
-            
+            Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self)) start" )
             addChild(myMetalControllerView)
                 // tried to use NSLayoutConstraint instead of setting the frame..
             if let theMetalView = myMetalControllerView.view {
@@ -734,7 +734,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 myScaleFactor = theMetalView.contentScaleFactor
                 myScaleTransform = CGAffineTransform(scaleX: myScaleFactor, y: myScaleFactor )
                 myMetalControllerView.didMove(toParent: self)
-                
+                Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self)) completed" )
             }
             
         }

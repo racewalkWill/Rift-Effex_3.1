@@ -506,9 +506,9 @@ class PGLAppStack {
     }
 
     // MARK: Display state
-    func resetDrawableSize() {
+    func resetDrawableSize(newScale: CGAffineTransform) {
         for aCellIndent in cellFilters {
-            aCellIndent.filter.resetDrawableSize()
+            aCellIndent.filter.resetDrawableSize(newScale: newScale)
         }
     }
 

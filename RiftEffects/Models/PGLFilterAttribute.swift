@@ -646,7 +646,21 @@ class PGLFilterAttribute {
         // subclass override to true if set value is deferred to the OK action of the parm cell
         return false
     }
-    
+
+    // MARK: Size changes
+    /// apply size changes to the point parms so they appear in the same spot
+    func movePointParms(transform: CGAffineTransform) {
+        if isPointUI() {
+            if let currentValue = getVectorValue() {
+                let theValuePoint = currentValue.cgPointValue
+                let newPoint = theValuePoint.applying(transform)
+                let newVector = CIVector(cgPoint: newPoint)
+                aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
+            }
+
+        }
+    }
+
     // MARK: animation values
 
     func hasAnimation() -> Bool {
@@ -1141,6 +1155,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
 
     }
     
+
     func imageInputIsEmpty() -> Bool {
         if inputCollection == nil { return true }
         return inputCollection!.isEmpty()

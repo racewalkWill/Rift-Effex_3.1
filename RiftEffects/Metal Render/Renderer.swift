@@ -208,22 +208,15 @@ class Renderer: NSObject, MTKViewDelegate {
                 // no change needed
             return
         }
-//        Logger(subsystem: LogSubsystem, category: LogCategory).info( "drawableSizeWillChange mtkViewSize from  + \(String(describing: self.mtkViewSize)) " )
-        Logger(subsystem: LogSubsystem, category: LogCategory).info( "drawableSizeWillChange size to  + \(String(describing: size)) " )
-//        if viewOldSize != nil {
-//            let newFrameSize = view.frame.size
-//            let changeScale = CGAffineTransform(scaleX: viewOldSize!.width - newFrameSize.width , y:  viewOldSize!.height - newFrameSize.height )
-//
-//                /// save  value for the next change
-//            viewOldSize = newFrameSize
-////            NSLog("Renderer drawable size changeScale = \(changeScale)")
-//            filterStack()?.applyParmSizeChange(changeAffine: changeScale)
-//
-//        }
+
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " drawableSizeWillChange to \(String(describing: size))") "))
+
+        let translate = CGAffineTransform.init(translationX:  (size.width - TargetSize.width)/2, y:  (size.height - TargetSize.height)/2)
+
         mtkViewSize = size
         TargetSize = size
-            //        viewportSize = vector_uint2(x: UInt32(size.width), y: UInt32(size.height))
-        appStack.resetDrawableSize()
+
+        appStack.resetDrawableSize(newScale: translate)
     }
 
     func draw(in view: MTKView) {

@@ -637,6 +637,16 @@ class PGLImageList: CustomStringConvertible {
         // set cachedImages to  empty and they will resize as accessed
         
         cachedImages = [Int:PGLImageScaler]()
+
+    }
+
+    func firstScaleTransform() -> CGAffineTransform? {
+        // images of list may have different sizes..
+        // this is just the first one !!!
+        if let firstCenterScaler =  cachedImages.first {
+            return firstCenterScaler.value.centerScaler?.displayTransform
+        }
+        return nil // nothing found
     }
 
     // MARK: Video
