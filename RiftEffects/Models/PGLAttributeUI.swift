@@ -134,6 +134,10 @@ class PGLTranslateAffineUI: PGLFilterAttributeVector {
             // attributeName is index for parm controls must be unique
 
     }
+    override func moveOnDrawableSizeChange() -> Bool {
+        // only some PGLFilterAttributeVectors should move
+        return false
+    }
 
     func affine(parent: PGLFilterAttributeAffine) {
         affineParent = parent
@@ -253,6 +257,10 @@ class PGLScaleAffineUI: PGLFilterAttributeVector {
         attributeType = AttrType.Position.rawValue
         // attributeName is index for parm controls must be unique
 
+    }
+    override func moveOnDrawableSizeChange() -> Bool {
+        // only some PGLFilterAttributeVectors should move
+        return false
     }
 
     func affine(parent: PGLFilterAttributeAffine) {

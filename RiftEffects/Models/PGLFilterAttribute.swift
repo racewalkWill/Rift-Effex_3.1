@@ -471,17 +471,10 @@ class PGLFilterAttribute {
 
         /// some parms based on center points need to change if the image sizng changes
         ///  does not change non position vector parms (such as color vectors)
-//    func applyParmSizeChange(changeAffine: CGAffineTransform) {
-//
-//        if isPointUI() {
-//            if let currentPoint = getVectorValue() {
-//               let newPoint =  currentPoint.cgPointValue.applying(changeAffine)
-//                let newVector = CIVector(cgPoint: newPoint)
-//                set(newVector)
-//            }
-//        }
-//    }
-
+    func moveOnDrawableSizeChange() -> Bool {
+        // only some PGLFilterAttributeVectors should move
+        return false
+    }
     // MARK: value change
     func set(_ value: Any ) {
         // use a system of double dispatch to address typing
@@ -650,14 +643,13 @@ class PGLFilterAttribute {
     // MARK: Size changes
     /// apply size changes to the point parms so they appear in the same spot
     func movePointParms(transform: CGAffineTransform) {
-        if isPointUI() {
+        if moveOnDrawableSizeChange() {
             if let currentValue = getVectorValue() {
                 let theValuePoint = currentValue.cgPointValue
                 let newPoint = theValuePoint.applying(transform)
                 let newVector = CIVector(cgPoint: newPoint)
                 aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
             }
-
         }
     }
 

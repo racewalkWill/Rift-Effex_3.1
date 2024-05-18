@@ -20,6 +20,10 @@ class PGLAttributeWeightsVector: PGLFilterAttributeVector {
 
     lazy var localMatrix: Matrix = getMatrixValue()
 
+    override func moveOnDrawableSizeChange() -> Bool {
+        // only some PGLFilterAttributeVectors should move
+        return false
+    }
 
     func setWeight(newValue: Double, row: Int, column: Int) {
         localMatrix[row, column] = newValue

@@ -407,6 +407,11 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     }
 
 // MARK: Vector Scaling
+    override func moveOnDrawableSizeChange() -> Bool {
+        // only some PGLFilterAttributeVectors should move
+        return true
+    }
+
     func scaleVector(inputVector: CIVector, scaleBy: CGAffineTransform, divideScale: Bool) -> CIVector {
         var vectorFactor: CGAffineTransform!
         let newVectorPoint = inputVector.cgPointValue
@@ -486,6 +491,11 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
             return getVectorValue()?.z ?? zValue
         }
         
+    }
+
+    override func moveOnDrawableSizeChange() -> Bool {
+        // only some PGLFilterAttributeVectors should move
+        return true
     }
 
     override func incrementValueDelta()  {

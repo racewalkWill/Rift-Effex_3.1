@@ -16,6 +16,11 @@ class PGLAttributeVectorExpand: PGLFilterAttributeVector {
 
     var scaler = CGAffineTransform(scaleX: 1000.0, y: 1000.0)
 
+    override func moveOnDrawableSizeChange() -> Bool {
+        // only some PGLFilterAttributeVectors should move
+        return false
+    }
+
     override func set(_ value: Any) {
         // divide by the scaler
         if attributeName != nil {
