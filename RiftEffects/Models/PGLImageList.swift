@@ -390,12 +390,7 @@ class PGLImageList: CustomStringConvertible {
                 }
             }
             if let imageFromAsset = imageAsset.imageFrom() {
-
-//                if (( cachedImages.count - 1 ) < atIndex ) {
-                        // save into the images cache.
-                        // zero  based array count is one more than the index
                 cacheImage(baseImage: imageFromAsset, index: atIndex)
-//                }
             }
             else {
                 return CIImage.empty()
@@ -622,7 +617,7 @@ class PGLImageList: CustomStringConvertible {
     func cacheImage(baseImage: CIImage, index: Int) {
 
         let centerScaler = PGLCenterScaler(centerCIImage: baseImage)
-        let centeredImage = centerScaler.centerAndScale(image: baseImage)
+        let centeredImage = centerScaler.displayTransform(image: baseImage)
         let myScaler = PGLImageScaler(image: centeredImage, centerScaler: centerScaler)
 //        cachedImages.insert(myScaler, at: index)
         cachedImages[index] = myScaler

@@ -13,6 +13,8 @@ import UIKit
 import simd
 import os
 
+var FullScreenAspectFillMode = false
+
 class PGLMetalController: UIViewController {
 
     var appStack: PGLAppStack! = nil  // model object
@@ -30,7 +32,8 @@ class PGLMetalController: UIViewController {
             return true
         }
     }
-    var tapGesture: UITapGestureRecognizer?
+    var tap1Gesture: UITapGestureRecognizer?
+    var tap2Gesture: UITapGestureRecognizer?
 
 
     //MARK: View Load/Unload
@@ -78,11 +81,19 @@ class PGLMetalController: UIViewController {
     }
 
     func setGestureRecogniziers() {
-        if tapGesture == nil {
-            tapGesture = UITapGestureRecognizer(target: self, action: #selector(PGLMetalController.userTapAction ))
-            if tapGesture != nil {
-                tapGesture?.numberOfTapsRequired = 2
-                view.addGestureRecognizer(tapGesture!)
+        if tap1Gesture == nil {
+            tap1Gesture = UITapGestureRecognizer(target: self, action: #selector(PGLMetalController.userSingleTap ))
+            if tap1Gesture != nil {
+                tap1Gesture?.numberOfTapsRequired = 1
+                view.addGestureRecognizer(tap1Gesture!)
+            }
+        }
+
+        if tap2Gesture == nil {
+            tap2Gesture = UITapGestureRecognizer(target: self, action: #selector(PGLMetalController.userDoubleTap ))
+            if tap2Gesture != nil {
+                tap2Gesture?.numberOfTapsRequired = 2
+                view.addGestureRecognizer(tap2Gesture!)
             }
         }
     }
@@ -95,19 +106,35 @@ class PGLMetalController: UIViewController {
 //            panner?.removeTarget(self, action: #selector(PGLImageController.panAction(_:)) )
 //            panner = nil
 //        }
-        if tapGesture != nil {
-            view.removeGestureRecognizer(tapGesture!)
-            tapGesture!.removeTarget(self, action: #selector(PGLMetalController.userTapAction ))
-            tapGesture = nil
+
+        if tap1Gesture != nil {
+            view.removeGestureRecognizer(tap1Gesture!)
+            tap1Gesture!.removeTarget(self, action: #selector(PGLMetalController.userSingleTap ))
+            tap1Gesture = nil
+        }
+        if tap2Gesture != nil {
+            view.removeGestureRecognizer(tap2Gesture!)
+            tap2Gesture!.removeTarget(self, action: #selector(PGLMetalController.userDoubleTap ))
+            tap2Gesture = nil
         }
 
     }
 
+    /// expand to AspectFill to all corners of the view
+    @objc func userSingleTap(sender: UITapGestureRecognizer) {
+            // double tap is required to fail before the single tap is tested
+        // toggle back and forth on the single tap
+        FullScreenAspectFillMode = !FullScreenAspectFillMode
+        let translate = CGAffineTransform.identity
+        // parm changes...?
+        appStack.resetDrawableSize(newScale: translate)
 
-    @objc func userTapAction(sender: UITapGestureRecognizer) {
+    }
+
+    @objc func userDoubleTap(sender: UITapGestureRecognizer) {
         // two taps dismiss
 //        NSLog("\(self.debugDescription) " + #function + " dismiss")
-
+        FullScreenAspectFillMode = false
         self.dismiss(animated: true)
     }
 

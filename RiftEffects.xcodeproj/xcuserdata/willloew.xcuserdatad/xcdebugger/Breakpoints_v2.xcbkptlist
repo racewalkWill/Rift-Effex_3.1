@@ -55,22 +55,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C65BC390-20B3-464F-B699-5DCBF0AA7F2E"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/PGLCenterScaler.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
-            landmarkName = "init(centerCIImage:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "E1CF37FC-954B-437C-A3DA-ED1DD9A489EA"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -78,8 +62,8 @@
             filePath = "RiftEffects/Metal Render/Renderer.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "324"
-            endingLineNumber = "324"
+            startingLineNumber = "325"
+            endingLineNumber = "325"
             landmarkName = "drawBasicCentered(in:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -119,47 +103,47 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7CC4F124-C304-493A-865D-0ED482DADAD4"
-            shouldBeEnabled = "Yes"
+            uuid = "C6313DB7-C932-45F1-A197-384D68F5BBAB"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/PGLFilterAttribute.swift"
+            filePath = "RiftEffects/Controllers/PGLMetalController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "647"
-            endingLineNumber = "647"
-            landmarkName = "movePointParms(transform:)"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
+            landmarkName = "userSingleTap(sender:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "7CC4F124-C304-493A-865D-0ED482DADAD4 - bb6fc0e49d7757b5"
+                  uuid = "C6313DB7-C932-45F1-A197-384D68F5BBAB - a36e4c77321e6752"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "RiftEffects.PGLFilterAttribute.movePointParms(transform: __C.CGAffineTransform) -&gt; ()"
+                  symbolName = "RiftEffects.PGLMetalController.userSingleTap(sender: __C.UITapGestureRecognizer) -&gt; ()"
                   moduleName = "RiftEffects"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/willloew/Developer/Rift-Effex3.1/Rift-Effex_3.1/RiftEffects/Models/PGLFilterAttribute.swift"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex3.1/Rift-Effex_3.1/RiftEffects/Controllers/PGLMetalController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "654"
-                  endingLineNumber = "654"
-                  offsetFromSymbolStart = "844">
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "1096">
                </Location>
                <Location
-                  uuid = "7CC4F124-C304-493A-865D-0ED482DADAD4 - bb6fc0e49d77549e"
+                  uuid = "C6313DB7-C932-45F1-A197-384D68F5BBAB - a36e4c77321e67b3"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "RiftEffects.PGLFilterAttribute.movePointParms(transform: __C.CGAffineTransform) -&gt; ()"
+                  symbolName = "RiftEffects.PGLMetalController.userSingleTap(sender: __C.UITapGestureRecognizer) -&gt; ()"
                   moduleName = "RiftEffects"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/willloew/Developer/Rift-Effex3.1/Rift-Effex_3.1/RiftEffects/Models/PGLFilterAttribute.swift"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex3.1/Rift-Effex_3.1/RiftEffects/Controllers/PGLMetalController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "647"
-                  endingLineNumber = "647"
-                  offsetFromSymbolStart = "844">
+                  startingLineNumber = "130"
+                  endingLineNumber = "130"
+                  offsetFromSymbolStart = "1276">
                </Location>
             </Locations>
          </BreakpointContent>

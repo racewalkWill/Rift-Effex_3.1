@@ -212,6 +212,7 @@ class Renderer: NSObject, MTKViewDelegate {
         Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " drawableSizeWillChange to \(String(describing: size))") "))
 
         let translate = CGAffineTransform.init(translationX:  (size.width - TargetSize.width)/2, y:  (size.height - TargetSize.height)/2)
+            // this uses the old TargetSize compared to the new size
 
         mtkViewSize = size
         TargetSize = size
