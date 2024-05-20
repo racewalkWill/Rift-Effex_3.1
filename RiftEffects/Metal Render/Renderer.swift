@@ -63,7 +63,15 @@ class Renderer: NSObject, MTKViewDelegate {
 
     /// mtkViewSize is in native pixels..  much bigger that the view.frame size
     var mtkViewSize: CGSize!
+    var isFullScreen = false {
+        didSet{
+            if isFullScreen {
+                let zoomDesc = PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self)!
+                outputZoomPanFilter = zoomDesc.pglSourceFilter() as? PGLScaleDownFrame
 
+            }
+        }
+    }
         /// size before a frame change
 //    var viewOldSize: CGSize?
         //    var viewportSize: vector_uint2!
@@ -85,6 +93,7 @@ class Renderer: NSObject, MTKViewDelegate {
     var currentPhotoFileFormat: PhotoLibSaveFormat!
     var offScreenRender: PGLOffScreenRender = PGLOffScreenRender()
         //    var numVerticesInt: Int!
+    var outputZoomPanFilter: PGLScaleDownFrame?
 
     override init() {
             /// RenderDestinationMetalView
@@ -103,10 +112,16 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let fileType = UserDefaults.standard.string(forKey:  "photosFileType")
         currentPhotoFileFormat = PhotoLibSaveFormat.init(rawValue: fileType ?? "HEIF")
+
         super.init()
         NSLog("\((self .debugDescription) + #function)" )
-    }
 
+    }
+    func initZoomPanFilter() -> PGLScaleDownFrame {
+        let zoomDesc = PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self)!
+        let zoomFilter = zoomDesc.pglSourceFilter() as! PGLScaleDownFrame
+        return zoomFilter
+    }
     func captureImage() throws -> UIImage? {
             // capture the current image in the context
             // provide a UIImage for save to photoLibrary
@@ -322,11 +337,19 @@ class Renderer: NSObject, MTKViewDelegate {
 
                     // Blend the image over an opaque background image.
                     // This is needed if the image is smaller than the view, or if it has transparent pixels.
-                ciOutputImage = ciOutputImage.composited(over: self.opaqueBackground)
-
+                if isFullScreen { 
+                    // perform zoom/pan from gestures
+                    outputZoomPanFilter?.setInput(image: ciOutputImage, source: nil)
+                    outputZoomPanFilter?.setInputImageParmState(newState: ImageParm.inputPhoto)
+                    ciOutputImage = outputZoomPanFilter?.outputImage() ?? CIImage.empty()
+                        // PGLScaleDownFrame does a composited(over opaqueBackground)
+                } else {
+                    ciOutputImage = ciOutputImage.composited(over: self.opaqueBackground)
+                }
                     // Start a task that renders to the texture destination.
                 _ = try? self.ciMetalContext.startTask(toRender: ciOutputImage, from: backBounds,
-                                                       to: destination, at: CGPoint.zero)
+                    to: destination,
+                    at: CGPoint.zero)
 
                     // Insert a command to present the drawable when the buffer has been scheduled for execution.
                 commandBuffer.present(drawable)

@@ -34,6 +34,11 @@ class PGLMetalController: UIViewController {
     }
     var tap1Gesture: UITapGestureRecognizer?
     var tap2Gesture: UITapGestureRecognizer?
+    var pinchGesture: UIPinchGestureRecognizer?
+    var panGesture: UIPanGestureRecognizer?
+
+    var currentPinchScale: CGFloat?
+    var startingPinchScale: CGFloat = 1.0
 
 
     //MARK: View Load/Unload
@@ -56,6 +61,7 @@ class PGLMetalController: UIViewController {
         metalRender.set(metalView: metalView)
 
        updateDrawableSize()
+        metalRender.isFullScreen = isFullScreen
         if isFullScreen {
             view.insetsLayoutMarginsFromSafeArea = true
             view.sizeToFit()
@@ -67,9 +73,13 @@ class PGLMetalController: UIViewController {
         if isFullScreen {
             // add dismiss tap recognizier
             setGestureRecogniziers()
-
         }
 
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        removeGestureRecogniziers()
+        super.viewWillDisappear(animated)
     }
 
         ///  image load and doubleTap to full screen and back need size change
@@ -96,16 +106,18 @@ class PGLMetalController: UIViewController {
                 view.addGestureRecognizer(tap2Gesture!)
             }
         }
+
+        if pinchGesture == nil {
+            pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(PGLMetalController.userPinch ))
+            view.addGestureRecognizer(pinchGesture!)
+        }
+        if panGesture == nil {
+            panGesture = UIPanGestureRecognizer(target: self, action: #selector(PGLMetalController.userPan ))
+            view.addGestureRecognizer(panGesture!)
+        }
     }
 
     func removeGestureRecogniziers() {
-
-//        if panner != nil {
-////                NSLog("PGLImageController #removeGestureRecogniziers")
-//            view.removeGestureRecognizer(panner!)
-//            panner?.removeTarget(self, action: #selector(PGLImageController.panAction(_:)) )
-//            panner = nil
-//        }
 
         if tap1Gesture != nil {
             view.removeGestureRecognizer(tap1Gesture!)
@@ -116,6 +128,19 @@ class PGLMetalController: UIViewController {
             view.removeGestureRecognizer(tap2Gesture!)
             tap2Gesture!.removeTarget(self, action: #selector(PGLMetalController.userDoubleTap ))
             tap2Gesture = nil
+        }
+
+        if pinchGesture != nil {
+            view.removeGestureRecognizer(pinchGesture!)
+            pinchGesture!.removeTarget(self, action: #selector(PGLMetalController.userPinch ))
+            pinchGesture = nil
+        }
+
+        if panGesture != nil {
+            view.removeGestureRecognizer(panGesture!)
+            panGesture!.removeTarget(self, action: #selector(PGLMetalController.userPan ))
+            panGesture = nil
+
         }
 
     }
@@ -135,7 +160,41 @@ class PGLMetalController: UIViewController {
         // two taps dismiss
 //        NSLog("\(self.debugDescription) " + #function + " dismiss")
         FullScreenAspectFillMode = false
+        metalRender.isFullScreen = FullScreenAspectFillMode
+
         self.dismiss(animated: true)
+    }
+
+    @objc func userPinch(sender: UIPinchGestureRecognizer) {
+        switch sender.state {
+            case .began:
+                // should use the filter current scale as the starting point?
+                startingPinchScale = ((metalRender?.outputZoomPanFilter?.localFilter.value(forKey: kCIInputScaleKey) ?? 1.0) as! CGFloat)
+
+            case .changed:
+                currentPinchScale = sender.scale 
+//                        + (startingPinchScale )
+                metalRender?.outputZoomPanFilter?.localFilter.setValue(currentPinchScale, forKey: kCIInputScaleKey)
+
+            case .ended, .cancelled, .failed, .possible,.recognized:
+                return
+            default:
+                return
+        }
+        NSLog("PGLMetalController #userPinch currentPinchScale = \(String(describing: currentPinchScale))")
+    }
+
+    @objc func userPan(sender: UIPanGestureRecognizer) {
+        let gesturePoint = sender.location(in: view)
+        let viewHeight = view.bounds.height
+       let flippedVertical = viewHeight - gesturePoint.y
+        let moveToPoint = CGPoint(x: gesturePoint.x, y: flippedVertical)
+        switch sender.state {
+            case .changed:
+                metalRender?.outputZoomPanFilter?.centerPoint = moveToPoint
+            default:
+                return
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
