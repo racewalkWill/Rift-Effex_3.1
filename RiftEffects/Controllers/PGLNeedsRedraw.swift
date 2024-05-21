@@ -27,6 +27,7 @@ class PGLRedraw {
     var filterChanged = false
     var pauseAnimation = false
     var appStackVideoMgr: PGLVideoMgr?
+    var isFullScreen = false
 
     private var viewWillAppear = false
     private var viewWillAppearCounter = 0
@@ -113,6 +114,7 @@ class PGLRedraw {
             self?.varyTimerCount = 0
             self?.viewWillAppear = false
             self?.viewWillAppearCounter = 0
+            self?.isFullScreen = false
         }
         publishers.append(cancellable!)
 
@@ -120,7 +122,7 @@ class PGLRedraw {
     
     func redrawNow() -> Bool {
         // answer true if any condition is true
-        return viewWillAppear || parmControllerIsOpen || transitionFilterExists || varyTimerIsRunning || filterChanged || videoExists()
+        return viewWillAppear || parmControllerIsOpen || transitionFilterExists || varyTimerIsRunning || filterChanged || videoExists() || isFullScreen
     }
 
     func toggleViewWillAppear() {

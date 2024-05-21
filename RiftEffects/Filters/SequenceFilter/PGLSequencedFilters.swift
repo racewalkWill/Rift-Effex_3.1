@@ -34,7 +34,7 @@ class PGLSequencedFilters: PGLSourceFilter {
     var frameCount = 0
     var pauseForFramesCount = 180 { didSet {
             // initial 3 secs * 60 fps
-        Logger(subsystem: LogSubsystem, category: LogCategory).info("\( String(describing: self) + " pauseForFramesCount set to \(pauseForFramesCount)" )")
+        Logger(subsystem: LogSubsystem, category: LogCategory).info("\( String(describing: self) + " pauseForFramesCount set to \(self.pauseForFramesCount)" )")
     }}
     var publishers = [Cancellable]()
     var cancellable: Cancellable?

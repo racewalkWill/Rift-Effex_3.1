@@ -33,7 +33,8 @@ class PGLExcludeFilters {
 "CIPaletteCentroid" ,
 "CIPalettize",
 "CIColorCurves",
-"CISaliencyMapFilter", // use PGLSaliencyBlurFilter instead of built in filter
+//  "CISaliencyMapFilter",
+    // use PGLSaliencyBlurFilter instead of built in filter
 
 "BumpFace" ,
         

@@ -68,8 +68,9 @@ class Renderer: NSObject, MTKViewDelegate {
             if isFullScreen {
                 let zoomDesc = PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self)!
                 outputZoomPanFilter = zoomDesc.pglSourceFilter() as? PGLScaleDownFrame
-
             }
+            needsRedraw.isFullScreen = isFullScreen
+            // turns off/on drawing on every frame for pinch zoom & drag
         }
     }
         /// size before a frame change

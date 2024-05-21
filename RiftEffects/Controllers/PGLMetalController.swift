@@ -39,6 +39,7 @@ class PGLMetalController: UIViewController {
 
     var currentPinchScale: CGFloat?
     var startingPinchScale: CGFloat = 1.0
+    var startingPanCenter: CGPoint?
 
 
     //MARK: View Load/Unload
@@ -186,12 +187,19 @@ class PGLMetalController: UIViewController {
 
     @objc func userPan(sender: UIPanGestureRecognizer) {
         let gesturePoint = sender.location(in: view)
-        let viewHeight = view.bounds.height
-       let flippedVertical = viewHeight - gesturePoint.y
-        let moveToPoint = CGPoint(x: gesturePoint.x, y: flippedVertical)
+        guard let viewPanFilter  = metalRender?.outputZoomPanFilter
+        else { return }
+
         switch sender.state {
+            case .began:
+                 startingPanCenter = viewPanFilter.centerPoint
             case .changed:
-                metalRender?.outputZoomPanFilter?.centerPoint = moveToPoint
+                guard let startCenter = startingPanCenter
+                    else { return }
+                let changeFromStartPoint = sender.translation(in: view)
+                let currentPoint = CGPoint.init(x: (startCenter.x + changeFromStartPoint.x), y: (startCenter.y - changeFromStartPoint.y))
+                // need to invert y axis for LLO
+               viewPanFilter.centerPoint = currentPoint
             default:
                 return
         }
