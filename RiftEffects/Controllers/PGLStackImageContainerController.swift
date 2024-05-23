@@ -9,21 +9,23 @@
 import UIKit
 import os
 class PGLStackImageContainerController: PGLTwoColumnSplitController {
+        //  2024-05-22 changed to use the super class PGLColumns.control and PGLColumns.imageViewer
+        // removed duplicate vars var containerImageController,containerStackController
+        // two vars pointed to the same controller - memory issue
 
-    var containerImageController: PGLCompactImageController?
-    var containerStackController: PGLStackController?
-    
     deinit {
 //        releaseVars()
         Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
     }
 
     override func viewDidLoad() {
+        var containerImageController: PGLCompactImageController?
+        var containerStackController: PGLStackController?
         super.viewDidLoad()
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         // Do any additional setup after loading the view.
 
-        setMoreBtnMenu() 
+
 
 //        navigationItem.title = "Effects"  //viewerStack.stackName
 
@@ -37,6 +39,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
         loadViewColumns(controller: containerStackController!, imageViewer: containerImageController!)
 
+        setMoreBtnMenu() // needs the child imageController loaded 
         // no toolbar on the stackImageContainerController so  toolbar buttons don't show
 //        containerStackController?.addToolBarButtons(toController: self)
 
@@ -58,14 +61,20 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
 
     @IBAction func helpBtnClick(_ sender: UIBarButtonItem) {
-        containerImageController?.helpBtnAction(sender)
+        guard let imageViewerController = imageController()
+            else { return }
+        imageViewerController.helpBtnAction(sender)
     }
 
     @IBOutlet weak var randomBtn: UIBarButtonItem!
 
     @IBAction func randomBtnClick(_ sender: UIBarButtonItem) {
-        containerImageController?.randomBtnAction(sender)
-        containerStackController?.updateDisplay()
+        guard let imageViewerController = imageController()
+            else { return }
+        guard let stackController = columns?.control as? PGLStackController
+        else {return }
+        imageViewerController.randomBtnAction(sender)
+        stackController.updateDisplay()
         updateNavigationBar()
     }
 
@@ -74,23 +83,30 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     @IBOutlet weak var newTrashBtn: UIBarButtonItem!
 
     @IBAction func newTrashBtnAction(_ sender: UIBarButtonItem) {
-        containerImageController?.newStackActionBtn(sender)
+        guard let imageViewerController = imageController()
+            else { return }
+
+        imageViewerController.newStackActionBtn(sender)
         updateNavigationBar()
     }
 
     @IBOutlet weak var recordBtyn: UIBarButtonItem!
     
     @IBAction func recordBtnAction(_ sender: UIBarButtonItem) {
-        containerImageController?.recordButtonTapped(controllerRecordBtn:sender)
+        guard let imageViewerController = imageController()
+            else { return }
+        imageViewerController.recordButtonTapped(controllerRecordBtn:sender)
     }
     
 
     func setMoreBtnMenu() {
             //      if traitCollection.userInterfaceIdiom == .phone {
+        guard let imageViewerController = imageController()
+            else { return }
         let libraryMenu = UIAction.init(title: "Library..", image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
             action in
-            guard let _ = self.containerImageController?.openStackActionBtn(self.moreBtn)
-            else { return }
+           imageViewerController.openStackActionBtn(self.moreBtn)
+
         }
 
         if let mySplitView =  splitViewController as? PGLSplitViewController {
@@ -108,53 +124,53 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
                                              ,
              UIAction(title: "Demo..", image:UIImage(systemName: "pencil.circle")) {
              action in
-            self.containerImageController?.loadDemoStack(self.moreBtn)
+            imageViewerController.loadDemoStack(self.moreBtn)
         },
             UIAction(title: "Save..", image:UIImage(systemName: "pencil")) {
             action in
                 // self.saveStackAlert(self.moreBtn)
-            self.containerImageController?.saveStackActionBtn(self.moreBtn)
+            imageViewerController.saveStackActionBtn(self.moreBtn)
         },
 
             UIAction(title: "Export to Photos", image:UIImage(systemName: "pencil.circle")) {
             action in
-            self.containerImageController?.saveToPhotoLibrary()
+            imageViewerController.saveToPhotoLibrary()
         },
 
             UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
             action in
-            self.containerImageController?.displayPrivacyPolicy(self.moreBtn)
+            imageViewerController.displayPrivacyPolicy(self.moreBtn)
         }
         ])
         moreBtn.menu = contextMenu
     }
 
     func setUpdateEditButton() {
-
-        guard let stackTarget = containerStackController else {
-            return
-        }
-           // update the edit button
-           if (stackTarget.tableView.isEditing) {
-                    // change to "Done"
-                    stackEditBtn!.title = "Done"
-           } else {
-               stackEditBtn!.title = "Edit" }
+        guard let stackTarget = columns?.control as? PGLStackController
+        else {return }
+       // update the edit button
+       if (stackTarget.tableView.isEditing) {
+                // change to "Done"
+                stackEditBtn!.title = "Done"
+       } else {
+           stackEditBtn!.title = "Edit" }
     }
 
     func updateNavigationBar() {
 //        self.navigationItem.title = self.appStack.firstStack()?.stackName
 //        self.navigationItem.title = "Effects"
+        guard let stackTarget = columns?.control as? PGLStackController
+        else {return }
 
-        stackEditBtn.isHidden = containerStackController?.appStack.viewerStack.isEmptyStack() ?? true
+        stackEditBtn.isHidden = stackTarget.appStack.viewerStack.isEmptyStack()
         setNeedsStatusBarAppearanceUpdate()
     }
 
 
     @objc func toggleEditing() {
-        guard let myStackTarget = containerStackController else {
-            return
-        }
+        guard let myStackTarget = columns?.control as? PGLStackController
+        else {return }
+
         guard let myTableView = myStackTarget.tableView else {
             return
         }
@@ -163,8 +179,10 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     }
 
     @IBAction func addFilterBtn(_ sender: Any) {
-        containerStackController?.appStack.setFilterChangeModeToAdd()
-        containerStackController?.postFilterNavigationChange()
+        guard let myStackTarget = columns?.control as? PGLStackController
+        else {return }
+        myStackTarget.appStack.setFilterChangeModeToAdd()
+        myStackTarget.postFilterNavigationChange()
         performSegue(withIdentifier: "showFilterImageContainer", sender: self)
     }
 

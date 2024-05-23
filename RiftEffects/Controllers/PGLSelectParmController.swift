@@ -172,7 +172,7 @@ class PGLSelectParmController: PGLCommonController,
         if let myTwoContainerParent = parent as? PGLParmImageController {
             // an iPhone layout where there are two imageControllers one in the twoContainer
             // the other in the splitView secondary column
-            imageController = myTwoContainerParent.containerImageController
+            imageController = myTwoContainerParent.imageController()
 
         } else {
             let secondaryController  = splitViewController?.viewController(for: .secondary)

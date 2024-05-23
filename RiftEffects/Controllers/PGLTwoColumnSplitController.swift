@@ -14,7 +14,7 @@ class PGLTwoColumnSplitController: UIViewController {
         var imageViewer: UIViewController
     }
 
-    var columns: PGLColumns!
+    var columns: PGLColumns?
 
     func layoutViews(_ imageView: UIView, _ controlView: UIView) {
             //        let spacer = -5.0
@@ -46,8 +46,8 @@ class PGLTwoColumnSplitController: UIViewController {
 
         columns = PGLColumns(control: controller, imageViewer: imageViewer)
 
-        addChild(columns.imageViewer)
-        addChild(columns.control)
+        addChild(columns!.imageViewer)
+        addChild(columns!.control)
 
         guard let controlView = controller.view else
             { return     }
@@ -69,8 +69,10 @@ class PGLTwoColumnSplitController: UIViewController {
     }
 
     func viewControllerRelease() {
-        viewControllerReleaseBasic(aPGLController: columns.control)
-        viewControllerReleaseBasic(aPGLController: columns.imageViewer)
+        if columns != nil {
+            viewControllerReleaseBasic(aPGLController: columns!.control)
+            viewControllerReleaseBasic(aPGLController: columns!.imageViewer)
+        }
     }
 
     func viewControllerReleaseBasic(aPGLController: UIViewController) {
@@ -81,4 +83,10 @@ class PGLTwoColumnSplitController: UIViewController {
         aPGLController.releaseNotifications()
         aPGLController.resetVars()
     }
+
+    func imageController() -> PGLCompactImageController? {
+        // all of the subclasses use the imageController
+        return columns?.imageViewer as? PGLCompactImageController
+    }
+
 }

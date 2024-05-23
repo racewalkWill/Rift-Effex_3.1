@@ -232,6 +232,11 @@ class PGLAppStack {
 //        dataProvider.reset() 
             // too drastic?  this applies to ALL retreived objects..
         resetNeedsRedraw()
+        currentFilter = nil
+        targetAttribute = nil
+        parmControls = [String : UIView]() // string index by attributeName
+                                           // holds point and textfield input
+        parms =  [String : PGLFilterAttribute]()
 
              // nil out refs so the memory is released
     }

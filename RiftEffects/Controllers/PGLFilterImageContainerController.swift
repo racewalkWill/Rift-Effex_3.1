@@ -11,9 +11,9 @@ import os
 
 /// container for Filter and Image controllers side by side
 class PGLFilterImageContainerController: PGLTwoColumnSplitController {
-
-    var containerImageController: PGLCompactImageController?
-    var containerFilterController: PGLMainFilterController?
+    // 2024-05-22 changed to use the super class PGLColumns.control and PGLColumns.imageViewer
+    // removed duplicate vars var containerImageController,containerFilterController
+    // two vars pointed to the same controller - memory issue
 
         // an opaque type is returned from addObservor
     var notifications: [NSNotification.Name : Any] = [:]
@@ -24,6 +24,9 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
     }
 
     override func viewDidLoad() {
+        var containerImageController: PGLCompactImageController?
+        var containerFilterController: PGLMainFilterController?
+        
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         super.viewDidLoad()
 
@@ -45,19 +48,26 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
     }
 
     override func viewIsAppearing(_ animated: Bool) {
-
-        layoutViews( columns.imageViewer.view, columns.control.view)
+        if columns == nil {
+            return
+        }
+        layoutViews( columns!.imageViewer.view, columns!.control.view)
         super.viewIsAppearing(animated)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        containerImageController?.releaseVars()
-        containerImageController?.removeFromParent()
+        guard let imageViewerController = imageController()
+            else { return }
 
-        containerImageController = nil
+        imageViewerController.releaseVars()
+        imageViewerController.removeFromParent()
 
-        containerFilterController?.removeFromParent()
-        containerFilterController = nil
+//        containerImageController = nil
+
+        guard let containerFilterController = columns?.imageViewer as? PGLMainFilterController
+            else { return }
+        containerFilterController.removeFromParent()
+//        containerFilterController = nil
     }
 
 //    @IBAction func addFilterBtn(_ sender: UIBarButtonItem) {
@@ -68,11 +78,15 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
     @IBAction func newStackBtnClick(_ sender: UIBarButtonItem) {
         // trash icon to start a new stack
-        containerImageController?.newStackActionBtn(sender)
+        guard let imageViewerController = imageController()
+            else { return }
+        imageViewerController.newStackActionBtn(sender)
     }
     
     @IBAction func randomBtnClick(_ sender: UIBarButtonItem) {
-        containerImageController?.randomBtnAction(sender)
+        guard let containerImageController = imageController()
+            else { return }
+        containerImageController.randomBtnAction(sender)
 
     }
     @IBAction func moreBtnClick(_ sender: UIBarButtonItem) {
@@ -86,7 +100,9 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
 
     @IBAction func helpBtnClick(_ sender: UIBarButtonItem) {
-        containerImageController?.helpBtnAction(sender)
+        guard let containerImageController = imageController()
+            else { return }
+        containerImageController.helpBtnAction(sender)
         
     }
     @IBOutlet weak var randomBtn: UIBarButtonItem!
@@ -94,30 +110,22 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
     @IBOutlet weak var recordBtn: UIBarButtonItem!
     
     @IBAction func recordBtnAction(_ sender: UIBarButtonItem) {
-        containerImageController?.recordButtonTapped(controllerRecordBtn:sender)
+        guard let containerImageController = imageController()
+            else { return }
+        containerImageController.recordButtonTapped(controllerRecordBtn:sender)
     }
         //MARK: Toolbar buttons actions
-
-
-
-
-
-
-
-
-
-
-    
-
 
   
         // MARK: Menu
     func setMoreBtnMenu() {
             //      if traitCollection.userInterfaceIdiom == .phone {
+        guard let containerImageController = imageController()
+            else { return }
         let libraryMenu = UIAction.init(title: "Library..", image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
             action in
-            guard let _ = self.containerImageController?.openStackActionBtn(self.moreBtn)
-            else { return }
+           containerImageController.openStackActionBtn(self.moreBtn)
+
         }
 
         if let mySplitView =  splitViewController as? PGLSplitViewController {
@@ -135,20 +143,20 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
                                              ,
              UIAction(title: "Demo..", image:UIImage(systemName: "pencil.circle")) {
              action in
-            self.containerImageController?.loadDemoStack(self.moreBtn)
+            containerImageController.loadDemoStack(self.moreBtn)
         },
             UIAction(title: "Save..", image:UIImage(systemName: "pencil")) {
             action in
                 // self.saveStackAlert(self.moreBtn)
-            self.containerImageController?.saveStackActionBtn(self.moreBtn)
+            containerImageController.saveStackActionBtn(self.moreBtn)
         },
             UIAction(title: "Export to Photos", image:UIImage(systemName: "pencil.circle")) {
             action in
-            self.containerImageController?.saveToPhotoLibrary()
+            containerImageController.saveToPhotoLibrary()
         },
             UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
             action in
-            self.containerImageController?.displayPrivacyPolicy(self.moreBtn)
+            containerImageController.displayPrivacyPolicy(self.moreBtn)
         }
 
         ])

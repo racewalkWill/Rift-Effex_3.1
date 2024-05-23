@@ -13,9 +13,10 @@ class PGLParmImageController: PGLTwoColumnSplitController {
     // handles segues for iPad/iPhone segue paths
     // iPad does not use the two container view
     // iPhone shows parm and image controlls inside the two containers of the view
-
-    var containerImageController: PGLImageController?
-    var containerParmController: PGLSelectParmController?
+    
+        // 2024-05-22 changed to use the super class PGLColumns.control and PGLColumns.imageViewer
+        // removed duplicate vars var containerImageController,containerParmController
+        // two vars pointed to the same controller - memory issue
 
     deinit {
 //        releaseVars()
@@ -23,6 +24,8 @@ class PGLParmImageController: PGLTwoColumnSplitController {
     }
     
     override func viewDidLoad() {
+        var containerImageController: PGLImageController?
+        var containerParmController: PGLSelectParmController?
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         super.viewDidLoad()
 
@@ -44,14 +47,18 @@ class PGLParmImageController: PGLTwoColumnSplitController {
 
     }
     
+
     override func viewDidDisappear(_ animated: Bool) {
-        containerImageController?.releaseVars()
-        containerImageController?.removeFromParent()
+        guard let containerImageController = imageController()
+            else { return }
+        guard let containerParmController = columns?.control as? PGLSelectParmController
+        else {return }
+        containerImageController.releaseVars()
+        containerImageController.removeFromParent()
 
-        containerImageController = nil
 
-        containerParmController?.removeFromParent()
-        containerParmController = nil
+        containerParmController.removeFromParent()
+        columns = nil
     }
 
     @IBAction func parmImageBackBtn(_ sender: UIBarButtonItem) {
@@ -75,7 +82,9 @@ class PGLParmImageController: PGLTwoColumnSplitController {
         
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function) + \(String(describing: segueId))")
         /// dispatch back to child parm controller 
-        containerParmController?.prepare(for: segue, sender: sender)
+        guard let containerParmController = columns?.control as? PGLSelectParmController
+        else {return }
+        containerParmController.prepare(for: segue, sender: sender)
 
 
     }

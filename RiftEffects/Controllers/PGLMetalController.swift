@@ -46,11 +46,13 @@ class PGLMetalController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
-        guard let metalView = view as? MTKView else {
-            Logger(subsystem: LogSubsystem, category: LogCategory).fault ( "PGLMetalController viewDidLoad fatalError(metal view not set up in storyboard")
-            return
-        }
+        setUpMetalRender()
+        updateDrawableSize()
+
+    }
+
+    func setUpMetalRender() {
+        // called by viewDidLoad and viewWillAppear
         guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
             else { Logger(subsystem: LogSubsystem, category: LogCategory).fault ( "PGLMetalController viewDidLoad fatalError AppDelegate not loaded")
                 return
@@ -58,15 +60,24 @@ class PGLMetalController: UIViewController {
         appStack = myAppDelegate.appStack
         filterStack = { self.appStack.outputOrViewFilterStack() }
 
+        guard let metalView = view as? MTKView else {
+            Logger(subsystem: LogSubsystem, category: LogCategory).fault ( "PGLMetalController viewDidLoad fatalError(metal view not set up in storyboard")
+            return
+        }
+
         metalRender = appStack.appRenderer
         metalRender.set(metalView: metalView)
 
-       updateDrawableSize()
-        metalRender.isFullScreen = isFullScreen
-        if isFullScreen {
-            view.insetsLayoutMarginsFromSafeArea = true
-            view.sizeToFit()
-        }
+//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+        metalRender.needsRedraw.toggleViewWillAppear()
+
+
+         metalRender.isFullScreen = isFullScreen
+         if isFullScreen {
+             view.insetsLayoutMarginsFromSafeArea = true
+             view.sizeToFit()
+         }
+            // toggles to redraw 2 times
         metalRender.drawBasicCentered(in: metalView)
             // draw once so that the view has the current stack output image
             // then normal 60 fps drawing is controlled by the PGLNeedsRedraw
@@ -77,17 +88,37 @@ class PGLMetalController: UIViewController {
         }
 
     }
+    override func resetVars() {
+
+        filterStack = { nil }
+        metalRender = nil
+    }
 
     override func viewWillDisappear(_ animated: Bool) {
         removeGestureRecogniziers()
         super.viewWillDisappear(animated)
     }
+    override func viewWillAppear(_ animated: Bool) {
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+        super.viewWillAppear(animated)
+        setUpMetalRender()
+        updateDrawableSize()
+
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        resetVars()
+    }
+
 
         ///  image load and doubleTap to full screen and back need size change
     func updateDrawableSize() {
         guard let metalView = view as? MTKView
         else { return }
         NSLog( "\(self.debugDescription)" + #function)
+        if metalRender == nil {
+            setUpMetalRender()
+        }
         metalRender.mtkView(metalView, drawableSizeWillChange: metalView.drawableSize)
     }
 
@@ -186,7 +217,7 @@ class PGLMetalController: UIViewController {
     }
 
     @objc func userPan(sender: UIPanGestureRecognizer) {
-        let gesturePoint = sender.location(in: view)
+//        let gesturePoint = sender.location(in: view)
         guard let viewPanFilter  = metalRender?.outputZoomPanFilter
         else { return }
 
@@ -205,26 +236,5 @@ class PGLMetalController: UIViewController {
         }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
-        metalRender.needsRedraw.toggleViewWillAppear()
-            // toggles to redraw 2 times
-    }
-//    override func viewDidAppear(_ animated: Bool) {
-    // this code causes
-    //  [CAMetalLayerDrawable texture] should not be called after already presenting this drawable. Get a nextDrawable instead.
-    //Execution of the command buffer was aborted due to an error during execution. Caused GPU Timeout Error (00000002:kIOGPUCommandBufferCallbackErrorTimeout)
-//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
-//        if let myMetalView = view as? MTKView {
-////            DoNotDraw = false // okay to draw now
-//            metalRender.drawBasic(in: myMetalView)
-//        }
-//    }
-
-//    override func viewWillDisappear(_ animated: Bool) {
-//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
-////        DoNotDraw = true
-//            // don't draw while off screen
-//    }
 
 }

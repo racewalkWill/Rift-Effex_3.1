@@ -43,23 +43,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
     let inFlightSemaphore = DispatchSemaphore(value: maxBuffersInFlight)
     let opaqueBackground: CIImage = CIImage.clear
-        // end RenderDestinationMetalView drawBasic
-
-        //    static let quadVertices: [Float] = [
-        //        -1,  1,  0,    // triangle 1
-        //         1, -1,  0,
-        //        -1, -1,  0,
-        //        -1,  1,  0,    // triangle 2
-        //         1,  1,  0,
-        //         1, -1,  0
-        //      ]
-
-        //    var translation: matrix_float4x4
-
-
-        //    var pipelineState: MTLRenderPipelineState!
-        //
-        //    let colorSpace = CGColorSpaceCreateDeviceRGB() // or CGColorSpaceCreateDeviceCMYK() ?
+      
 
     /// mtkViewSize is in native pixels..  much bigger that the view.frame size
     var mtkViewSize: CGSize!
@@ -68,22 +52,14 @@ class Renderer: NSObject, MTKViewDelegate {
             if isFullScreen {
                 let zoomDesc = PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self)!
                 outputZoomPanFilter = zoomDesc.pglSourceFilter() as? PGLScaleDownFrame
+            } else {
+                outputZoomPanFilter = nil
             }
             needsRedraw.isFullScreen = isFullScreen
             // turns off/on drawing on every frame for pinch zoom & drag
         }
     }
-        /// size before a frame change
-//    var viewOldSize: CGSize?
-        //    var viewportSize: vector_uint2!
-        //
-        //    var library: MTLLibrary!
-        //    var textureLoader: MTKTextureLoader!
-        //    var vertexFunction: MTLFunction!
-        //    var fragmentFunction: MTLFunction!
-        //    var pipelineStateDescriptor: MTLRenderPipelineDescriptor! = MTLRenderPipelineDescriptor()
-        //    var vertices: MTLBuffer?
-        //    var numVertices: UInt32!
+
 
     var ciMetalContext: CIContext!
     static var ciContext: CIContext!  // global for filter detectors
@@ -357,6 +333,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
                     // Commit the command buffer so that the GPU executes the work that the Core Image Render Task issues.
                 commandBuffer.commit()
+
 
             }
         }
