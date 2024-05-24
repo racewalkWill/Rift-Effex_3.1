@@ -49,10 +49,7 @@ class Renderer: NSObject, MTKViewDelegate {
     var mtkViewSize: CGSize!
     var isFullScreen = false {
         didSet{
-            if isFullScreen {
-                let zoomDesc = PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self)!
-                outputZoomPanFilter = zoomDesc.pglSourceFilter() as? PGLScaleDownFrame
-            } else {
+            if !isFullScreen {
                 outputZoomPanFilter = nil
             }
             needsRedraw.isFullScreen = isFullScreen
@@ -208,7 +205,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
         mtkViewSize = size
         TargetSize = size
-
+        outputZoomPanFilter = initZoomPanFilter() // inits with new center
         appStack.resetDrawableSize(newScale: translate)
     }
 
@@ -316,10 +313,14 @@ class Renderer: NSObject, MTKViewDelegate {
                     // This is needed if the image is smaller than the view, or if it has transparent pixels.
                 if isFullScreen { 
                     // perform zoom/pan from gestures
+                    ciOutputImage = ciOutputImage.cropForInfiniteExtent()
                     outputZoomPanFilter?.setInput(image: ciOutputImage, source: nil)
                     outputZoomPanFilter?.setInputImageParmState(newState: ImageParm.inputPhoto)
+
                     ciOutputImage = outputZoomPanFilter?.outputImage() ?? CIImage.empty()
+
                         // PGLScaleDownFrame does a composited(over opaqueBackground)
+
                 } else {
                     ciOutputImage = ciOutputImage.composited(over: self.opaqueBackground)
                 }
