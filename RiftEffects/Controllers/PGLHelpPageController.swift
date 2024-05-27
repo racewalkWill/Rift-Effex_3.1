@@ -53,7 +53,7 @@ class PGLHelpPageController: UIPageViewController {
 
     var iPadImageNames = [ "Help1-Pick",
                            "Help2-Parm",
-                           "Help3-ImagePick",
+                           "iPhone3-ImagePick",  //Help3-ImagePick",
                            "Help5-ParmAdjust",
                            "Help6-longPress",
                            "Help4-MorePick",

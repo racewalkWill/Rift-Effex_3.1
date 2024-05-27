@@ -70,16 +70,11 @@ class PGLImageList: CustomStringConvertible {
         }
     }
     private var cachedImages = [Int:PGLImageScaler]()
-//    let doResize = MainViewImageResize  // working on scaling... boolean switch here
-     var userSelection: PGLUserAssetSelection?
-     // was weak var userSelection...
-    
+    var userSelection: PGLUserAssetSelection?
+
+
     // MARK: Init
-    init(){
-
-
-
-    }
+    init(){ }
 
     deinit {
         releaseVars()

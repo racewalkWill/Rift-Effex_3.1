@@ -49,8 +49,12 @@ class PGLVideoCameraFilter: PGLSourceFilter {
         }
         lastFrame = outputVideoFrames.getCurrentVideoFrame() ?? lastFrame
         // if no current frame then repeat the last one
-        
-        return lastFrame?.oriented(orientedTarget)
+        if lastFrame != nil {
+            // fix for TestFlight crash
+            return lastFrame?.oriented(orientedTarget)
+        } else {
+            return nil
+        }
     }
 
     func postTransitionFilterAdd() {
