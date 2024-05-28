@@ -622,10 +622,10 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
     }
 
     func resetDrawableSize(newScale: CGAffineTransform) {
-        guard let myImageParms = imageParms()
-            else {return }
-        for anImageParm in myImageParms {
-            anImageParm.resetDrawableSize()
+        if let myImageParms = imageParms() {
+            for anImageParm in myImageParms {
+                anImageParm.resetDrawableSize()
+            }
         }
         // now transform the parms that are vector or CGPoint
 
@@ -1138,14 +1138,16 @@ class PGLRectangleFilter : PGLSourceFilter {
     }
 
    override func scaleOutput(ciOutput: CIImage, stackCropRect: CGRect) -> CIImage {
-       let skipScaling = false
+
         // RectangleFilter needs to crop then scale to full size
         // Most filters do not need this. Parnent PGLSourceFilter has empty implementation
           //ciOutputImage.extent    CGRect    (origin = (x = 592, y = 491), size = (width = 729, height = 742))
         // currentStack.cropRect    CGRect    (origin = (x = 0, y = 0), size = (width = 1583, height = 1668))
-       if skipScaling {
-           return ciOutput
-       }
+       
+//       let skipScaling = false
+//       if skipScaling {
+//           return ciOutput
+//       }
        if ciOutput.extent.isInfinite {
            // ciClamp filter output is always infinite extent
            // just return without scaling

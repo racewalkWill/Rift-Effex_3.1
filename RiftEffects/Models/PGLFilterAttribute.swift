@@ -1140,10 +1140,12 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
   }
     func resetDrawableSize() {
         
-        inputCollection?.resetCenteredImageCache()
-        guard let currentImageResized = inputCollection?.getCurrentImage() else
-        { return }
-        aSourceFilter.setImageValue(newValue: currentImageResized, keyName: self.attributeName!)
+        let resetSuccess = inputCollection?.resetCenteredImageCache() ?? false
+        if resetSuccess {
+            guard let currentImageResized = inputCollection?.getCurrentImage() else
+            { return }
+            aSourceFilter.setImageValue(newValue: currentImageResized, keyName: self.attributeName!)
+        }
 
     }
     

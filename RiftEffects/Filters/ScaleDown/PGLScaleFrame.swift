@@ -21,11 +21,15 @@ class PGLScaleDownFrame: PGLSourceFilter, PGLCenterPoint {
     // return inputAttribute scaled down to the cropAttribute
     // Lanczos Scale Filter does this already.
     // use this frame for positioning at kCIInputCenterKey
+    // position only if the centerPoint is changed by the user
 
-    /// add to Filter framework
-    ///
+    var shouldMoveCenter = false
     let opaqueBackground: CIImage = CIImage.clear
-    var centerPoint: CGPoint = CGPoint(x: TargetSize.width/2, y: TargetSize.height/2)
+    var centerPoint: CGPoint = CGPoint(x: TargetSize.width/2, y: TargetSize.height/2) {
+        didSet {
+            shouldMoveCenter = true
+        }
+    }
     var fullScreenRect: CGRect { get
     {   return CGRect(x: 0, y: 0, width: TargetSize.width, height: TargetSize.height)
 
@@ -59,7 +63,12 @@ class PGLScaleDownFrame: PGLSourceFilter, PGLCenterPoint {
 //        guard let scaledImage = localFilter.outputImage else { return CIImage.empty() }
         guard let scaledImage = super.outputImageBasic()
         else { return CIImage.empty() }
-        return positionOutput(ciOutput: scaledImage, inFrame: fullScreenRect, newCenterPoint: centerPoint)
+        if shouldMoveCenter {
+            NSLog("\( String(describing: self) + "-" + #function)" + " centerPoint \(centerPoint)")
+            return positionOutput(ciOutput: scaledImage, inFrame: fullScreenRect, newCenterPoint: centerPoint)
+        } else {
+            return scaledImage
+        }
     }
 
 
@@ -77,9 +86,10 @@ class PGLScaleDownFrame: PGLSourceFilter, PGLCenterPoint {
      }
 
     /// set center point
-    ///  cifilter does not hold the center point
+    ///  cifilter does not hold the center point 
     override func setVectorValue(newValue: CIVector, keyName: String) {
 //        logParm(#function, newValue.debugDescription, keyName)
+//        shouldMoveCenter = true
         centerPoint = CGPoint(x: newValue.x, y: newValue.y)
         postImageChange()
     }

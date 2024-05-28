@@ -260,6 +260,13 @@ class PGLImageList: CustomStringConvertible {
            return (imageAssets.isEmpty) && (cachedImages.isEmpty)
       }
 
+    func isDemoList() -> Bool {
+        // if only images in the cache then it is a demo
+        // images have been loaded from  build Assets.xcassets - not in the user photos library
+        return (imageAssets.isEmpty) && (!cachedImages.isEmpty)
+
+    }
+
     // MARK: Clone
     func cloneEven(toParm: PGLFilterAttribute) -> PGLImageList {
         // answer copy of self set to increment only even images
@@ -368,6 +375,7 @@ class PGLImageList: CustomStringConvertible {
 
     func image(atIndex: Int) -> CIImage? {
         var answerImage: CIImage?
+
         if let thisImageScaler = cachedImages[atIndex] {
                 // has image in the private cache
                 // NO asset to load
@@ -620,13 +628,20 @@ class PGLImageList: CustomStringConvertible {
         // array size matches index
 
     }
+/// answer true if imageCache is reset
+/// answers false if the there is nothing to cache i.e. demo images
+    func resetCenteredImageCache() -> Bool {
 
-    func resetCenteredImageCache() {
         // global TargetSize has changed
         // images should be resized/centered again
         // set cachedImages to  empty and they will resize as accessed
-        
+        if (isDemoList() || isEmpty() ) {
+            // no imageAssets exist only the cachedImages..
+            // so don't clear the cache
+            return false
+        }
         cachedImages = [Int:PGLImageScaler]()
+        return true
 
     }
 

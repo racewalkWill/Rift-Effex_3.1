@@ -213,7 +213,7 @@ class PGLMetalController: UIViewController {
             default:
                 return
         }
-        NSLog("PGLMetalController #userPinch currentPinchScale = \(String(describing: currentPinchScale))")
+//        NSLog("PGLMetalController #userPinch currentPinchScale = \(String(describing: currentPinchScale))")
     }
 
     @objc func userPan(sender: UIPanGestureRecognizer) {

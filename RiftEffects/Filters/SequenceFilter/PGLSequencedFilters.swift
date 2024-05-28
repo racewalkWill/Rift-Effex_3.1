@@ -104,16 +104,6 @@ class PGLSequencedFilters: PGLSourceFilter {
         // connect the ciFilter into the sequenceStack
         // similar to PGLAppStack UI setup in addChildSequenceStackTo(parm: PGLFilterAttribute)
         
-//       let newSequenceStack =  PGLSequenceStack()
-//        if let ciFilterSequence = onParentImageParm.myFilter as? PGLCISequenced {
-//            ciFilterSequence.myFilterSequence = newSequenceStack
-//        }
-//        newSequenceStack.stackType = "input"
-//        newSequenceStack.parentAttribute = onParentImageParm
-//
-//        onParentImageParm.setImageParmState(newState: ImageParm.inputChildStack)
-//        setDissolveWrapper(onStack: newSequenceStack)
-//        return newSequenceStack
         /// var sequenceStack is setup in the init
         return sequenceStack
     }
