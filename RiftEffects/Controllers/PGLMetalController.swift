@@ -73,10 +73,10 @@ class PGLMetalController: UIViewController {
 
 
          metalRender.isFullScreen = isFullScreen
-         if isFullScreen {
-             view.insetsLayoutMarginsFromSafeArea = true
-             view.sizeToFit()
-         }
+//         if isFullScreen {
+//             view.insetsLayoutMarginsFromSafeArea = true
+//             view.sizeToFit()
+//         }
             // toggles to redraw 2 times
         metalRender.drawBasicCentered(in: metalView)
             // draw once so that the view has the current stack output image

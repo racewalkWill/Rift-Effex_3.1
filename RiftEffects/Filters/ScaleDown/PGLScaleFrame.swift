@@ -61,16 +61,16 @@ class PGLScaleDownFrame: PGLSourceFilter, PGLCenterPoint {
     }
     override func outputImageBasic() -> CIImage? {
 //        guard let scaledImage = localFilter.outputImage else { return CIImage.empty() }
-        guard let scaledImage = super.outputImageBasic()
-        else { return CIImage.empty() }
+        var scaledImage = super.outputImageBasic()
+        if scaledImage == nil
+            { return CIImage.empty() }
         if shouldMoveCenter {
-            NSLog("\( String(describing: self) + "-" + #function)" + " centerPoint \(centerPoint)")
-            return positionOutput(ciOutput: scaledImage, inFrame: fullScreenRect, newCenterPoint: centerPoint)
-        } else {
-            return scaledImage
+            scaledImage = positionOutput(ciOutput: scaledImage!, inFrame: fullScreenRect, newCenterPoint: centerPoint)
         }
+        // Blend the image over an opaque background image.
+        // This is needed if the image is smaller than the view, or if it has transparent pixels.
+        return scaledImage?.composited(over: self.opaqueBackground) ?? CIImage.empty()
     }
-
 
     func positionOutput(ciOutput: CIImage, inFrame: CGRect, newCenterPoint: CGPoint ) -> CIImage {
 
@@ -80,9 +80,7 @@ class PGLScaleDownFrame: PGLSourceFilter, PGLCenterPoint {
         let shiftY =  newCenterPoint.y - imageCenter.y
         let ciOutputImage = ciOutput.transformed(by: CGAffineTransform(translationX: shiftX, y: shiftY))
 
-            // Blend the image over an opaque background image.
-            // This is needed if the image is smaller than the view, or if it has transparent pixels.
-        return ciOutputImage.composited(over: self.opaqueBackground)
+        return ciOutputImage
      }
 
     /// set center point
