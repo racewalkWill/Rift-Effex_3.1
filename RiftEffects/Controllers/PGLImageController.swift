@@ -339,6 +339,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     // MARK: trash button action
     fileprivate func hideViewReleaseStack() {
             // Respond to user selection of the action
+        hideParmControls()
         DoNotDraw = true
         self.metalController?.view.isHidden = true
             // makes the image go blank after the trash button loads a new stack.
