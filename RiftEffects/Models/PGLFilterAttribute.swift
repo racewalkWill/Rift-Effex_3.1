@@ -648,7 +648,10 @@ class PGLFilterAttribute {
                 let theValuePoint = currentValue.cgPointValue
                 let newPoint = theValuePoint.applying(transform)
                 let newVector = CIVector(cgPoint: newPoint)
-                aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
+                set(newVector)
+                // PGLFilterAttributeVector3 or PGLFilterAttributeVector
+                // will set correctly with either x,y,z vector or an x,y vector
+
             }
         }
     }
