@@ -20,8 +20,9 @@ class PGLStackProvider {
         self.persistentContainer = persistentContainer
 
     }
-
-    lazy var fetchedStacks = fetchedResultsController.fetchedObjects?.map({ ($0 ) })
+        /// was fetchedStacks: [CDFilterStack ] array
+        ///  now [FilterStack] struct array
+    lazy var fetchedStacks = fetchedResultsController.fetchedObjects?.map({ ($0 .asFilterStackStruct() ) })
 
     func setFetchControllerForStackViewContext() {
         providerManagedObjectContext = persistentContainer.viewContext
@@ -92,8 +93,10 @@ class PGLStackProvider {
                     fatalError("###\(#function): Failed to performFetch: \(error)") }
         }
 
-    func delete(stack: CDFilterStack, shouldSave: Bool = true, completionHandler: (() -> Void)? = nil) {
-        guard let context = stack.managedObjectContext else {
+    func delete(stack: FilterStack, shouldSave: Bool = true, completionHandler: (() -> Void)? = nil) {
+        guard let cdStack = providerManagedObjectContext.registeredObject(for: stack.objectID)
+                else { return }
+        guard let context = cdStack.managedObjectContext else {
             // missing managedObjectContext occurs when in a filtered mode search and the stack is deleted successfully
             // but remains in the filtered view. Then a second 'delete' action will not have a managedObjectContext
             // cancel or change in the search criteria will update and not show this deleted stack
@@ -101,7 +104,7 @@ class PGLStackProvider {
             return
         }
         context.perform {
-            context.delete(stack)
+            context.delete(cdStack)
 
             if shouldSave {
                 context.save(with: .deletePost)

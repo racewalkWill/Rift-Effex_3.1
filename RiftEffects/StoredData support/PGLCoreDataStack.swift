@@ -14,7 +14,7 @@ A class to set up the Core Data stack, observe Core Data notifications, process 
 */
 
 import Foundation
-import CoreData
+@preconcurrency import CoreData
 import os
 
 // MARK: - Core Data Stack
@@ -22,7 +22,8 @@ import os
 /**
  Core Data stack setup including history processing.
  */
-class CoreDataWrapper {
+class CoreDataWrapper: @unchecked Sendable  {
+
     enum DataMigrationError: Error {
         case orphanFilterError
         case orphanStackError
@@ -165,7 +166,7 @@ class CoreDataWrapper {
     /**
      The URL of the thumbnail folder.
      */
-    static var attachmentFolder: URL = {
+    static let attachmentFolder: URL = {
         var url = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent(appStackName, isDirectory: true)
         url = url.appendingPathComponent("attachments", isDirectory: true)
 

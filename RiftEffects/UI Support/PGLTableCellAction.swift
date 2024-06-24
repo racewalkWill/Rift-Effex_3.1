@@ -17,6 +17,7 @@ enum CellActionType {
     case addANDcommand
     case unknown
 }
+@MainActor
 class PGLTableCellAction {
     // holds the name of the action displayed in the swipe
     // and cell to add to the table as required (Vary adds a timer control cell)

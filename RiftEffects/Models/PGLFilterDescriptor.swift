@@ -9,42 +9,58 @@
 import Foundation
 import CoreImage
 
+//@MainActor  just some func are marked @MainActor
+struct PGLFilterDescriptor: Equatable, Hashable {
 
-class PGLFilterDescriptor:  NSObject, NSCoding {
-    func encode(with aCoder: NSCoder) {
-//        fatalError("PGLFilterDescriptor does not implement encode")
-    }
     
-    required init?(coder aDecoder: NSCoder) {
-//        fatalError("PGLFilterDescriptor does not implement coder")
-    }
+//    func encode(with aCoder: NSCoder) {
+////        fatalError("PGLFilterDescriptor does not implement encode")
+//    }
+//    
+//    required init?(coder aDecoder: NSCoder) {
+////        fatalError("PGLFilterDescriptor does not implement coder")
+//    }
     
     
     let  kFilterSettingsKey = "FilterSettings"
     let  kFilterOrderKey = "FilterOrder"
 
-@objc    var filterName = "InitialFilterName"
-@objc    var displayName = "InitialDisplayName"
+    let filterName: String
+    var displayName: String?
     var inputImageCount = -1
-    var userDescription = "emptyDescription"
+    let userDescription: String
     var uiPosition = PGLFilterCategoryIndex()
 
- override  var debugDescription: String {
+    var debugDescription: String {
         return filterName
     }
 
 
+    //MARK: hasher/equatable
+     static func == (lhs: PGLFilterDescriptor, rhs: PGLFilterDescriptor) -> Bool {
+        return (lhs.filterName == rhs.filterName) && (lhs.pglSourceFilterClass === rhs.pglSourceFilterClass)
+    }
+
+     func hash(into hasher: inout Hasher)  {
+        let myClassNameString =  String(describing: (type(of: pglSourceFilterClass).self))
+
+        hasher.combine(filterName)
+        hasher.combine(myClassNameString)
+    }
+
     var pglSourceFilterClass = PGLSourceFilter.self  //some will use a subclass ie PGLCropFilter etc..
 
+    //MARK: init
     // connect the ciFilter name to a PGLSourceFilter class
     // the ciFilter will get installed into the PGLSourceFilter instances
     // this fails if a ciFilter is used by several PGLSourceFilters because dictionary has unique keys
     // it is a many to many relationship from CIFilter instances to (PGLSourceFilter & PGLSourceFilter subclasses)
-// see implementation in CIFilter class func pglClassMap()
+    // see implementation in CIFilter class func pglClassMap()
     // constructed in PGLFilterCategory, PGLFilterDescriptors, CIFilter
 
-    init?(_ ciFilterName: String, _ pglClassType: PGLSourceFilter.Type? ) {
-
+    @MainActor init?(_ ciFilterName: String, _ pglClassType: PGLSourceFilter.Type? ) {
+         // if pglClassType passed as nil then defaults to PGLSourceFilter.self
+         
         filterName = ciFilterName  // keep the code name around
 
         if let aPGLClass = pglClassType {
@@ -53,14 +69,15 @@ class PGLFilterDescriptor:  NSObject, NSCoding {
               displayName =  pglSourceDisplayName
             }
         }
+         if displayName == nil {
+             displayName = CIFilter.localizedName(forFilterName: ciFilterName) ?? ciFilterName
+                     // will be localized to Dissolve or other...
+         }
         userDescription = pglSourceFilterClass.localizedDescription(filterName: ciFilterName)
             // just the filter name if no description is found
             // else the default value is PGLSourceFilter.self
-        
-         if displayName == "InitialDisplayName"
-         {
-            displayName = CIFilter.localizedName(forFilterName: ciFilterName) ?? ciFilterName }
-                // will be localized to Dissolve or other...
+
+
     }
 
     func filter() -> CIFilter {
@@ -70,7 +87,7 @@ class PGLFilterDescriptor:  NSObject, NSCoding {
             // triggers nil unwrap error if filter is not returned
     }
 
-    func pglSourceFilter() -> PGLSourceFilter? {
+    @MainActor func pglSourceFilter() -> PGLSourceFilter? {
         // create and return a new instance of my real filter
         // or nil if the real filter can not be created
 
@@ -82,7 +99,7 @@ class PGLFilterDescriptor:  NSObject, NSCoding {
 
     }
 
-    func copy() -> PGLFilterDescriptor {
+    @MainActor func copy() -> PGLFilterDescriptor {
         let newbie = PGLFilterDescriptor(filterName, pglSourceFilterClass)!
 
         return newbie

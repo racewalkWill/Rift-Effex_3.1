@@ -8,7 +8,7 @@
 
 import Foundation
 
-class PGLFilterCategoryIndex {
+struct PGLFilterCategoryIndex: Hashable {
     // provides link to UI arrays for buttons
     var categoryIndex: Int
     var filterIndex: Int
@@ -22,7 +22,7 @@ class PGLFilterCategoryIndex {
         filterCodeName = filtCodeName
     }
 
-    convenience init() {
+     init() {
         self.init(category: 0, filter: 0, catCodeName: "new", filtCodeName: "new")
     }
 

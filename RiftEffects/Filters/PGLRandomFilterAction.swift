@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class PGLRandomFilterAction: CIFilter {
     //holds user picked image collection and sets into the PGLDemo object
     // generages a set of 5 or more  filter (may haver child stacks created) into the stack
@@ -17,6 +18,7 @@ class PGLRandomFilterAction: CIFilter {
     @objc dynamic   var inputImage: CIImage?
     @objc dynamic   var inputTime: NSNumber = 10.0
 
+    @MainActor
     class func register() {
         //       let attr: [String: AnyObject] = [:]
 //        NSLog("PGLRandomFilterAction #register()")
@@ -42,7 +44,7 @@ class PGLRandomFilterAction: CIFilter {
     }}
 
 
-    @objc class func customAttributes() -> [String: Any] {
+    @MainActor @objc class func customAttributes() -> [String: Any] {
         // this is called at the PGLSourceFilter instance creation.
         let customDict:[String: Any] = [
             kCIAttributeFilterDisplayName : kPRandom,

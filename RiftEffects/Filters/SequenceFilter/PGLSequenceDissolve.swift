@@ -36,11 +36,18 @@ class PGLSequenceDissolve: PGLTransitionFilter {
 
     }
 
-    deinit {
+//    deinit {
 //        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
-        postTransitionFilterRemove()
+//        postTransitionFilterRemove()
         // as an internal filter the stack does not know about
         // this dissolve so this filter has to remove the needsRedraw flag for transition
+//    }
+
+    override func releaseVars() {
+        postTransitionFilterRemove()
+        sequenceStack = nil
+        sequenceFilter = nil
+        super.releaseVars()
     }
 
         /// the same image inputs are passed to both filters

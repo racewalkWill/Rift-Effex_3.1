@@ -26,7 +26,7 @@ import os
 //]
 
 
-
+@MainActor
 class PGLFilterCategory {
     // holds the filterDescriptors for a category
     // add in the custom filters
@@ -64,12 +64,12 @@ class PGLFilterCategory {
 
 
     static let Bookmark = "Bookmark"  // also described as "Frequent" "Bookmark" in code
-    static var filterDescriptors = allFilterDescriptors()
-    private static var filterCategories: [PGLFilterCategory]?
-    static var FilterUIPositionDict = [String:PGLFilterCategoryIndex]()
+    @MainActor static let filterDescriptors = allFilterDescriptors()
+    @MainActor private static var filterCategories: [PGLFilterCategory]?
+    @MainActor static var FilterUIPositionDict = [String:PGLFilterCategoryIndex]()
 
     fileprivate static func setDescriptorsUIPosition(_ thisNewbie: PGLFilterCategory, _ i: Int, _ catIndex: Int) {
-        let newbiePosition = thisNewbie.filterDescriptors[i].uiPosition
+        var newbiePosition = thisNewbie.filterDescriptors[i].uiPosition
         newbiePosition.categoryIndex = catIndex + 1 // zero is frequentCategory.. advance by one
         newbiePosition.categoryCodeName = classCategories[catIndex]
         newbiePosition.filterIndex = i
@@ -110,7 +110,7 @@ class PGLFilterCategory {
             answerFilters.append(contentsOf: aCategory.filterDescriptors)
         }
 
-        return answerFilters.sorted(by: {$0.displayName <= $1.displayName})
+        return answerFilters.sorted(by: {$0.displayName ?? "Filter" <= $1.displayName ?? "Filter"})
 
     }
 

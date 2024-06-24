@@ -19,6 +19,7 @@ struct PGLDevicePosition {
     var device: AVCaptureDevice.Position = .unspecified
 }
 
+
 class PGLAsset: Hashable, Equatable  {
     // a wrapper object around PHAsset
        // holds the sourceInfo so it can be displayed
@@ -133,6 +134,7 @@ class PGLAsset: Hashable, Equatable  {
     // MARK: Image
     /// return the CIImage
     /// moved from the PGLImageList
+    @MainActor
     func imageFrom() -> CIImage? {
         if isVideo() {
             if assetVideo != nil {
@@ -182,7 +184,7 @@ class PGLAsset: Hashable, Equatable  {
       }
 
         /// convert UIImage to CIImage and correct orientation to downMirrored
-        func convert2CIImage(aUIImage: UIImage) -> CIImage? {
+    @MainActor func convert2CIImage(aUIImage: UIImage) -> CIImage? {
             var pickedCIImage: CIImage?
 
             if let convertedImage = CoreImage.CIImage(image: aUIImage ) {

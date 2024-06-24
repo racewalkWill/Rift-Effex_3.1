@@ -23,6 +23,7 @@ class DetectorFramework {
 // change to new vision implementor here
 
 
+@MainActor
 protocol PGLDetection {
     // implementation framework for both the CIDetector and Vision VN classes
     // PGLVisionDetector or PGLDetector

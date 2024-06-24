@@ -13,11 +13,11 @@ class PGLExcludeFilters {
     // either missing documentation on their parms
     // or parms can not be generated in a visual context
     
-    static var skipFailingFilters = true  // change to false to include all filters
+    static let skipFailingFilters = true  // change to false to include all filters
         // a test case could set this to false to test for CIFilter changes in iOS releases
 
 
-    static var list = [
+    static let list = [
         // revised in release 2.2 Convolution and Affine clamps removed from excluded
         // 2023/01/03
 "CIBarcodeDescriptor",

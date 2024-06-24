@@ -156,6 +156,7 @@
 		A3E17A1B29F5DBB2006A39A6 /* PGLFilterStackDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E17A1A29F5DBB2006A39A6 /* PGLFilterStackDemo.swift */; };
 		A3E593B32541F0FD0001EDF9 /* PGLFilterCDDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E593B22541F0FD0001EDF9 /* PGLFilterCDDataTransformer.swift */; };
 		A3E6243D2691261A0017372F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A3E6243C2691261A0017372F /* Settings.bundle */; };
+		A3EAEFD12C29BF9700174793 /* CDFilterStack_Struct.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EAEFD02C29BF9700174793 /* CDFilterStack_Struct.swift */; };
 		A3EBFB0C29EF2336005E4852 /* CIFilterToPGLFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EBFB0B29EF2336005E4852 /* CIFilterToPGLFilter.swift */; };
 		A3EF3EF4294AA3A900AD0B10 /* PGLAttributeVectorExpand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EF3EF3294AA3A900AD0B10 /* PGLAttributeVectorExpand.swift */; };
 		A3EFC14B2B2372CE00D30A18 /* PGLCameraInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EFC14A2B2372CE00D30A18 /* PGLCameraInterface.swift */; };
@@ -342,6 +343,7 @@
 		A3E17A1A29F5DBB2006A39A6 /* PGLFilterStackDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterStackDemo.swift; sourceTree = "<group>"; };
 		A3E593B22541F0FD0001EDF9 /* PGLFilterCDDataTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterCDDataTransformer.swift; sourceTree = "<group>"; };
 		A3E6243C2691261A0017372F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		A3EAEFD02C29BF9700174793 /* CDFilterStack_Struct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDFilterStack_Struct.swift; sourceTree = "<group>"; };
 		A3EBFB0B29EF2336005E4852 /* CIFilterToPGLFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIFilterToPGLFilter.swift; sourceTree = "<group>"; };
 		A3EF3EF3294AA3A900AD0B10 /* PGLAttributeVectorExpand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAttributeVectorExpand.swift; sourceTree = "<group>"; };
 		A3EFC14A2B2372CE00D30A18 /* PGLCameraInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCameraInterface.swift; sourceTree = "<group>"; };
@@ -551,6 +553,7 @@
 				A3712BFC2908628400993C5E /* CDStoredFilter+CoreDataProperties.swift */,
 				A3712BFB2908628400993C5E /* CDStoredFilter+CoreDataClass.swift */,
 				A3BF504B24D32A3400CD5114 /* PGL-CDFilterStack.swift */,
+				A3EAEFD02C29BF9700174793 /* CDFilterStack_Struct.swift */,
 				A375F25E26DFE47E00721D3A /* PGLStackProvider.swift */,
 				A35FF77826DC316400D78252 /* PGLCoreDataStack.swift */,
 				A35FF77D26DC346200D78252 /* PGLCoreData+Defns.swift */,
@@ -787,7 +790,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1160;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				ORGANIZATIONNAME = "Will Loew-Blosser";
 				TargetAttributes = {
 					A3BF500824D3298F00CD5114 = {
@@ -890,6 +893,7 @@
 				A3BF512824D32A3400CD5114 /* PGLFilterStack.swift in Sources */,
 				A35BADAC2614C8FF00C8B2AA /* PGLPopUpFilterInfo.swift in Sources */,
 				A375F25F26DFE47E00721D3A /* PGLStackProvider.swift in Sources */,
+				A3EAEFD12C29BF9700174793 /* CDFilterStack_Struct.swift in Sources */,
 				A35506EC26BF376A00BAC9BD /* PGLUserDefaultKeys.swift in Sources */,
 				A3EBFB0C29EF2336005E4852 /* CIFilterToPGLFilter.swift in Sources */,
 				A3B785182B224FC300F3DA68 /* PGLCopyOutCIFilter.swift in Sources */,
@@ -1100,6 +1104,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "RiftEffects/Metal Render/AAPLShaderTypes.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = NO;
 			};
@@ -1160,6 +1165,7 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "RiftEffects/Metal Render/AAPLShaderTypes.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1193,6 +1199,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "RiftEffects/Metal Render/AAPLShaderTypes.h";
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1228,6 +1235,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "RiftEffects/Metal Render/AAPLShaderTypes.h";
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1236,7 +1244,6 @@
 		A3BF503A24D3299100CD5114 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
@@ -1259,7 +1266,6 @@
 		A3BF503B24D3299100CD5114 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
@@ -1282,7 +1288,6 @@
 		A3BF503D24D3299100CD5114 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 9CZQPZ85AZ;
@@ -1304,7 +1309,6 @@
 		A3BF503E24D3299100CD5114 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 9CZQPZ85AZ;

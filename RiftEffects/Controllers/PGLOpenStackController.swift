@@ -96,7 +96,8 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
                 if let newStackId = userDataDict["stackObjectID"] as? NSManagedObjectID {
                     // read the stack and insert into the data source
                     if let theCDStack = self.dataProvider.persistentContainer.viewContext.object(with: newStackId) as? CDFilterStack {
-                        self.dataSource.insertStack(self, theCDStack: theCDStack)
+                        let cdFilterStackStruct = theCDStack.asFilterStackStruct()
+                        self.dataSource.insertStack(self, theCDStack: cdFilterStackStruct)
                     }
                 }
             }
@@ -178,7 +179,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
     }
 
 
-    func detailTextString(ofObject: CDFilterStack) -> String {
+    func detailTextString(ofObject: FilterStack) -> String {
         var dateString: String
        if let modifiedDate =  ofObject.modified {
             dateString = dateFormatter.string(from: modifiedDate)
@@ -242,7 +243,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
 
     func removeDeletedFromSnapshot(deletedRows: [IndexPath]) {
 
-        var diffableIdentifiers = [CDFilterStack]()
+        var diffableIdentifiers = [FilterStack]()
         for aRow in deletedRows {
             if let thisIdentifier = dataSource.itemIdentifier(for: aRow) {
                 diffableIdentifiers.append(thisIdentifier)
@@ -299,7 +300,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
 
      
 
-    class DataSource: UITableViewDiffableDataSource<Int, CDFilterStack> {
+    class DataSource: UITableViewDiffableDataSource<Int, FilterStack> {
 
 
         var showHeaderText = true
@@ -333,7 +334,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
             apply(allStacks, animatingDifferences: true)
         }
 
-        func insertStack(_ myController: PGLOpenStackController, theCDStack: CDFilterStack) {
+        func insertStack(_ myController: PGLOpenStackController, theCDStack: FilterStack) {
             var currentSnapshot = snapshot()
             var sectionIndex = 0
                 // now get the type for the section
@@ -351,7 +352,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
             }
         }
 
-        func delete(cdStack: CDFilterStack) {
+        func delete(cdStack: FilterStack) {
             dataProvider?.delete(stack: cdStack, shouldSave: true, completionHandler: nil)
             let stackNotification = Notification(name:PGLUpdateLibraryMenu)
             NotificationCenter.default.post(stackNotification)
@@ -490,9 +491,9 @@ extension PGLOpenStackController {
         }
     }
 
-    func initialSnapShot() -> NSDiffableDataSourceSnapshot<Int, CDFilterStack> {
+    func initialSnapShot() -> NSDiffableDataSourceSnapshot<Int, FilterStack> {
 
-        var snapshot = NSDiffableDataSourceSnapshot<Int, CDFilterStack>()
+        var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
 
         if let sections = dataProvider.fetchedResultsController.sections {
             for index in  0..<sections.count
@@ -502,8 +503,9 @@ extension PGLOpenStackController {
                 /// delete the app to remove the cache
                 guard let sectionStacks = thisSection.objects as? [CDFilterStack]
                 else { continue}
+                let structStacks = sectionStacks.map({ ($0 .asFilterStackStruct() ) })
                 snapshot.appendSections([index])
-                snapshot.appendItems(sectionStacks)
+                snapshot.appendItems(structStacks)
             }  // for loop that will continue on error in objects
 
         }
@@ -542,7 +544,7 @@ extension PGLOpenStackController: NSFetchedResultsControllerDelegate {
       switch type {
       case .insert:
 //        tableView.insertRows(at: [newIndexPath!], with: .fade)
-        guard let myNewStack = anObject as? CDFilterStack
+        guard let myNewStack = anObject as? FilterStack
               else { return }
         self.dataSource.insertStack(self, theCDStack: myNewStack)
       case .delete:
@@ -555,7 +557,7 @@ extension PGLOpenStackController: NSFetchedResultsControllerDelegate {
               else { return }
         guard let thisCell = tableView.cellForRow(at: thisPath)
               else { return }
-        guard let myCDFilterStack = anObject as? CDFilterStack
+        guard let myCDFilterStack = anObject as? FilterStack
               else { return }
         configureCell(thisCell,  withCDFilterStack: myCDFilterStack)
         case .move:
@@ -581,7 +583,7 @@ extension PGLOpenStackController: NSFetchedResultsControllerDelegate {
 //      tableView.endUpdates()
 //    }
 
-    func configureCell(_ cell: UITableViewCell, withCDFilterStack: CDFilterStack?) {
+    func configureCell(_ cell: UITableViewCell, withCDFilterStack: FilterStack?) {
         // see also configureDataSource()
         if let cdStack = withCDFilterStack {
                 // Configure the cell with data from the managed object.
@@ -608,7 +610,7 @@ extension PGLOpenStackController: UISearchBarDelegate {
         }
 
          func performTitleQuery(with titleFilter: String?) {
-             var matchingStacks: [CDFilterStack]!
+             var matchingStacks: [FilterStack]!
              if let lowerCaseFilter = titleFilter?.lowercased() {
                  matchingStacks = dataProvider.fetchedStacks?.filter({
                      if let lowerTitle =  $0.title?.lowercased() , let lowerType = $0.type?.lowercased() {
@@ -620,7 +622,7 @@ extension PGLOpenStackController: UISearchBarDelegate {
              else
              { matchingStacks = dataProvider.fetchedStacks }
 
-                var snapshot = NSDiffableDataSourceSnapshot<Int, CDFilterStack>()
+                var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
                 snapshot.appendSections([0])
                 snapshot.appendItems(matchingStacks)
                 dataSource.showHeaderText = false

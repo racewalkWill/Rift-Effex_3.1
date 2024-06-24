@@ -71,6 +71,14 @@ class PGLSequencedFilters: PGLSourceFilter {
         publishers.append(cancellable!)
     }
 
+    override func releaseVars() {
+        dissolve.releaseVars()
+        dissolve = nil
+        sequenceStack.releaseVars()
+        sequenceStack = nil
+        super.releaseVars()
+    }
+
     fileprivate func setDissolveWrapper(onStack: PGLSequenceStack) {
 
        

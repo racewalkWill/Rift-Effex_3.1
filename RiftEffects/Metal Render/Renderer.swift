@@ -30,7 +30,7 @@ struct RenderVertex {
     var textureCoordinate: simd_float2
 }
 
-
+@MainActor
 class Renderer: NSObject, MTKViewDelegate {
 
     var device: MTLDevice!

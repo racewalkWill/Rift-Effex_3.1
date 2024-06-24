@@ -11,6 +11,7 @@ import UIKit
 
 ///  coordinate PGLAssetVideoPlayer and play control buttons in mulitple PGLImageControllers
 ///   a playButton starts/stopss all videos.
+@MainActor
 class PGLVideoMgr {
     var videoAssets =  Set<PGLAssetVideoPlayer>()
     var startStopButtons =  [PGLImageController : UIButton]()

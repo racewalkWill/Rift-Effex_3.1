@@ -20,7 +20,7 @@ class PGLLibraryController:  UIViewController, NSFetchedResultsControllerDelegat
     // with  old PGLOpenStackController
     // change to large sizer images and arrange rows by categories
 
-    var dataSource: UICollectionViewDiffableDataSource<Int, CDFilterStack>! = nil
+    var dataSource: UICollectionViewDiffableDataSource<Int, FilterStack>! = nil
     private lazy var dataProvider: PGLStackProvider = {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
       let provider = PGLStackProvider(with: appDelegate!.dataWrapper.persistentContainer)
@@ -87,13 +87,13 @@ extension PGLLibraryController {
     }
 
     private func configureDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<PGLLibraryCell, CDFilterStack> { [weak self] cell, indexPath, aCDFilterStack in
+        let cellRegistration = UICollectionView.CellRegistration<PGLLibraryCell, FilterStack> { [weak self] cell, indexPath, aCDFilterStack in
             guard self != nil else { return }
 
             cell.configureFor(aCDFilterStack)
         }
 
-        dataSource = UICollectionViewDiffableDataSource<Int, CDFilterStack>(collectionView: collectionView) {
+        dataSource = UICollectionViewDiffableDataSource<Int, FilterStack>(collectionView: collectionView) {
             (collectionView, indexPath, aCDFilterStack) in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: aCDFilterStack)
         }
@@ -104,19 +104,19 @@ extension PGLLibraryController {
         }
     }
 
-    private func setPostNeedsUpdate(_ id: CDFilterStack) {
+    private func setPostNeedsUpdate(_ id: FilterStack) {
         var snapshot = self.dataSource.snapshot()
         snapshot.reconfigureItems([id])
         self.dataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    fileprivate func applySnapShot(stacks: [CDFilterStack]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, CDFilterStack>()
+    fileprivate func applySnapShot(stacks: [FilterStack]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
 
         if let sections = dataProvider.fetchedResultsController.sections {
             for index in  0..<sections.count
             {
-                if let thisSectionElements = sections[index].objects as? [CDFilterStack]
+                if let thisSectionElements = sections[index].objects as? [FilterStack]
                 {
                     let matchingElements = thisSectionElements.filter({
                         stacks.contains($0)
@@ -137,14 +137,14 @@ extension PGLLibraryController {
             // Initial data
             // load everything
         try? dataProvider.fetchedResultsController.performFetch()
-        var snapshot = NSDiffableDataSourceSnapshot<Int, CDFilterStack>()
+        var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
 
         if let sections = dataProvider.fetchedResultsController.sections {
             for index in  0..<sections.count
             {
                 snapshot.appendSections([index])
                 let thisSection = sections[index]
-                if let sectionStacks = thisSection.objects as? [CDFilterStack]
+                if let sectionStacks = thisSection.objects as? [FilterStack]
                 {
                     snapshot.appendItems(sectionStacks)
                 }
@@ -158,7 +158,7 @@ extension PGLLibraryController {
         /// - Tag: performQuer
     func performQuery(with titleFilter: String?) {
             // load  matching titles & categories (category aka type)
-        var matchingStacks: [CDFilterStack]!
+        var matchingStacks: [FilterStack]!
         if let lowerCaseFilter = titleFilter?.lowercased() {
             matchingStacks = dataProvider.fetchedStacks?.filter({
 

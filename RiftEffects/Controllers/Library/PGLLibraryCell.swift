@@ -68,7 +68,7 @@ class PGLLibraryCell: UICollectionViewCell {
         assetToken = nil
     }
 
-    public func configureFor(_ asset: CDFilterStack) {
+    public func configureFor(_ asset: FilterStack) {
 
         if asset.thumbnail == nil {
             imageView.image = UIImage(systemName: "airplane.circle.fill")!
@@ -83,7 +83,7 @@ class PGLLibraryCell: UICollectionViewCell {
     }
 
 
-    func detailTextString(ofObject: CDFilterStack) -> String {
+    func detailTextString(ofObject: FilterStack) -> String {
         var dateString: String
        if let modifiedDate =  ofObject.modified {
            dateString = dateFormatter.string(from: modifiedDate)

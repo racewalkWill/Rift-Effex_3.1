@@ -16,23 +16,23 @@ let iCloudDataContainerName = "iCloud.L-BSoftwareArtist.RiftEffects"
 let LogSubsystem = "L-BSoftwareArtist.RiftEffects"
 
 
-var LogCategory = "PGL"
-var LogNavigation = "PGL_Nav"
-var LogMemoryRelease = "PGL_Mem"
-var LogMigration = "PGL_Migration"
-var LogParms = "PGL_Parms"
+let LogCategory = "PGL"
+let LogNavigation = "PGL_Nav"
+let LogMemoryRelease = "PGL_Mem"
+let LogMigration = "PGL_Migration"
+let LogParms = "PGL_Parms"
 // change in areas as needed.
 // caution on changes it is a GLOBAL
 
-var RendererScale:Float32 = 0.98
+let RendererScale:Float32 = 0.98
 // controls the size of the background color frame around the image area in mtkView
 
-var MainViewImageResize = false
+@MainActor var MainViewImageResize = false
 
 // or false to not perform ciOutputImage.cropped(to: currentStack.cropRect) in Render #drawIn
 // should be a user setting
 // 2/12/2020 leave as false - makes the cropped produce an empty image if in single filter edit mode.
-var ShowHelpOnOpen = false
+@MainActor var ShowHelpOnOpen = false
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

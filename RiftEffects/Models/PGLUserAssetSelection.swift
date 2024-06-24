@@ -89,6 +89,7 @@ class PGLAlbumSource: Hashable {
 
 }
 
+@MainActor
 class PGLUserAssetSelection {
     // model object for 3 view controllers to select and order the
     // imageAssets from the photoLibrary

@@ -11,6 +11,7 @@ import Photos
 import UIKit
 import os
 
+@MainActor
 class PGLDemo {
     // create random groups of image/filters
     // pull images from 'Favorites' album
@@ -22,8 +23,8 @@ class PGLDemo {
         // 100 means child stack is never added
     static var RandomImageList: PGLImageList?
         // interacts with PGLRandomFilter to hold user images for random consturction
-    static var MaxListSize = 6
-    var NumOfFilters = 5
+    static let MaxListSize = 6
+    let NumOfFilters = 5
 
     static var FavoritesAlbumList: PGLAlbumSource?
     var appStack: PGLAppStack!
@@ -32,25 +33,25 @@ class PGLDemo {
     static var Category1Index = 0
 
 
-    static var TransistionFilters =  PGLFilterCategory("CICategoryTransition")!.filterDescriptors
-    static var StylizeFilters =  PGLFilterCategory("CICategoryStylize")!.filterDescriptors
-    static var DistortFilters = PGLFilterCategory("CICategoryDistortionEffect")!.filterDescriptors
-    static var GeometryFilters = PGLFilterCategory("CICategoryGeometryAdjustment")!.filterDescriptors
-    static var GradientFilters = PGLFilterCategory("CICategoryGradient")!.filterDescriptors
-    static var SharpenFilters = PGLFilterCategory("CICategorySharpen")!.filterDescriptors
-    static var BlurFilters = PGLFilterCategory("CICategoryBlur")!.filterDescriptors
-    static var CompositeFilters = PGLFilterCategory("CICategoryCompositeOperation")!.filterDescriptors
-    static var HalfToneFilters = PGLFilterCategory("CICategoryHalftoneEffect")!.filterDescriptors
-    static var ColorAdjFilters = PGLFilterCategory("CICategoryColorAdjustment")!.filterDescriptors
+    static let TransistionFilters =  PGLFilterCategory("CICategoryTransition")!.filterDescriptors
+    static let StylizeFilters =  PGLFilterCategory("CICategoryStylize")!.filterDescriptors
+    static let DistortFilters = PGLFilterCategory("CICategoryDistortionEffect")!.filterDescriptors
+    static let GeometryFilters = PGLFilterCategory("CICategoryGeometryAdjustment")!.filterDescriptors
+    static let GradientFilters = PGLFilterCategory("CICategoryGradient")!.filterDescriptors
+    static let SharpenFilters = PGLFilterCategory("CICategorySharpen")!.filterDescriptors
+    static let BlurFilters = PGLFilterCategory("CICategoryBlur")!.filterDescriptors
+    static let CompositeFilters = PGLFilterCategory("CICategoryCompositeOperation")!.filterDescriptors
+    static let HalfToneFilters = PGLFilterCategory("CICategoryHalftoneEffect")!.filterDescriptors
+    static let ColorAdjFilters = PGLFilterCategory("CICategoryColorAdjustment")!.filterDescriptors
     static var ColorEffectFilters = PGLFilterCategory("CICategoryColorEffect")!.filterDescriptors
-    static var TileFilters = PGLFilterCategory("CICategoryTileEffect")!.filterDescriptors
-    static var GeneratorFilters = PGLFilterCategory("CICategoryGenerator")!.filterDescriptors
+    static let TileFilters = PGLFilterCategory("CICategoryTileEffect")!.filterDescriptors
+    static let GeneratorFilters = PGLFilterCategory("CICategoryGenerator")!.filterDescriptors
 
 
-    static var SingleFilterGroups = [BlurFilters,ColorAdjFilters, ColorEffectFilters,StylizeFilters, DistortFilters, GeometryFilters,SharpenFilters, HalfToneFilters , TileFilters ]
+    static let SingleFilterGroups = [BlurFilters,ColorAdjFilters, ColorEffectFilters,StylizeFilters, DistortFilters, GeometryFilters,SharpenFilters, HalfToneFilters , TileFilters ]
         // ,GeneratorFilters, GradientFilters TileFilters
-    static var GeneratorGroups = [GeneratorFilters, GradientFilters]
-    static var CompositeGroups = [CompositeFilters, TransistionFilters]
+    static let GeneratorGroups = [GeneratorFilters, GradientFilters]
+    static let CompositeGroups = [CompositeFilters, TransistionFilters]
 
 
     func fetchFavoritesList(onImageParm: PGLFilterAttribute) ->  PGLAlbumSource? {

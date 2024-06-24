@@ -18,6 +18,7 @@ enum FilterChangeMode{
 
 let PGLFilterBookMarksSetFlat = NSNotification.Name(rawValue: "PGLFilterBookMarksSetFlat")
 
+@MainActor
 class PGLMainFilterController:  UIViewController,
                                     UINavigationControllerDelegate, UISplitViewControllerDelegate,UIPopoverPresentationControllerDelegate,
                                     UICollectionViewDelegate {
@@ -64,7 +65,7 @@ class PGLMainFilterController:  UIViewController,
     deinit {
 //        releaseVars()
         Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
-        releaseNotifications()
+//        releaseNotifications()
     }
 
    override func releaseNotifications() {
@@ -237,7 +238,7 @@ class PGLMainFilterController:  UIViewController,
 
     func performFilterPick(descriptor: PGLFilterDescriptor) {
 
-        Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLFilterTableController performFilterPick \(descriptor)")
+//        Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLFilterTableController performFilterPick \(descriptor)")
         if let selectedFilter = descriptor.pglSourceFilter() {
             stackData()?.performFilterPick(selectedFilter: selectedFilter)
                 // depending on mode will replace or add to the stack
@@ -314,7 +315,7 @@ class PGLMainFilterController:  UIViewController,
                 guard let tableCell = filterCollectionView.cellForItem(at: longPressStart!) else { return  }
 
                 if let thisDescriptor = dataSource.itemIdentifier(for: longPressStart!)?.descriptor {
-                    popUpFilterDescription(filterName: thisDescriptor.displayName, filterText: thisDescriptor.userDescription, filterCell: tableCell)
+                    popUpFilterDescription(filterName: thisDescriptor.displayName ?? "Filter", filterText: thisDescriptor.userDescription, filterCell: tableCell)
                 }
             }
         }

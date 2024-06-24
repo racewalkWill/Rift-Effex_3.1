@@ -1284,7 +1284,7 @@ extension CGImagePropertyOrientation {
 
 }
 
-extension CGImagePropertyOrientation: CustomDebugStringConvertible {
+extension CGImagePropertyOrientation: @retroactive CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
                case .up: return ".up"
@@ -1315,7 +1315,7 @@ extension UIImage.Orientation {
     }
 }
 
-extension UIImage.Orientation: CustomDebugStringConvertible {
+extension UIImage.Orientation: @retroactive CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
                case .up: return ".up"

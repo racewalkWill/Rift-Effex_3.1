@@ -71,7 +71,7 @@ enum VaryDissolveState {
     case DissolveWrapper
 }
 
-
+@MainActor
 class PGLFilterAttribute {
 
     static let FlowChartSymbol = UIImage(systemName: "flowchart")

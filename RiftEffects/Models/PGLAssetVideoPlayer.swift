@@ -9,7 +9,7 @@
 import Foundation   
 
 import UIKit
-import Photos
+@preconcurrency import Photos
 import CoreImage
 import os
 

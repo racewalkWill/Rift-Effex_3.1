@@ -15,11 +15,12 @@ import os
 
 
 protocol PGLAnimation {
-    func addFilterStepTime()
+    func addFilterStepTime() async
 }
 
 
 
+@MainActor
 class PGLSourceFilter :  PGLAnimation  {
     // helper object for CIFilter  holds the filter and dispatches
     // PGLSourceFilter holds PGLFilterAtrributes.. make a subclass of  PGLSourceFilter if filter specific logic needed across multiple attributes
@@ -36,7 +37,7 @@ class PGLSourceFilter :  PGLAnimation  {
         //
 
         /// in the debugger execute expression PGLSourceFilter.LogParmValues = true
-static var LogParmValues = false
+static let LogParmValues = false
         // set to true to capture parm  set value messages & values
         // console will show lines containing filterName, setter method, values, attribute name
         // example:
@@ -831,7 +832,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
     }
 
 // MARK: swipeCell action
-    func cellFilterAction(stackController: PGLStackController, indexPath: IndexPath) -> [UIContextualAction] {
+    @MainActor func cellFilterAction(stackController: PGLStackController, indexPath: IndexPath) -> [UIContextualAction] {
 
         // does NOT use the attribute system with dispatch of PGLTableCellAction
         // this is simple case for filters.
@@ -894,6 +895,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 //    }
 //}
 
+@MainActor
 class PGLDetector: PGLDetection {
     // uses older CIDetectors.. see also the new PGLVisionDetector and the Vision framework
 
@@ -988,7 +990,7 @@ class PGLDetector: PGLDetection {
     }
 
     // set features
-    func setFeaturePoint(){
+    @MainActor func setFeaturePoint(){
         // put the center of the first feature into the point value of the attribute
         Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLDetector setFeaturePoint currentFeatureIndex = \(self.currentFeatureIndex) features.count = \(self.features.count)")
         if features.isEmpty {return }

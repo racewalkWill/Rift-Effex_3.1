@@ -21,7 +21,7 @@ enum StackDisplayMode: String {
      case All
      case Single
 }
-
+@MainActor
 class PGLAppStack {
     var outputStack: PGLFilterStack
     var viewerStack = PGLFilterStack()
@@ -535,7 +535,7 @@ class PGLAppStack {
 
 
 }
-
+@MainActor
 class PGLFilterIndent {
     // supports PGLStackController creation of cells in the tableView
     // indent a filter under it's parent

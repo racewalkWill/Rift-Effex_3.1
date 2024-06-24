@@ -24,17 +24,17 @@ import os
 
 //let defaultFilterPosition = PGLFilterCategoryIndex(category: 6, filter: 0, catCodeName: "CICategoryCompositeOperations", filtCodeName: defaultFilterName)
 //let defaultFilterPosition = PGLFilterCategoryIndex(category: 10, filter: 4, catCodeName: "CICategoryTransition", filtCodeName: defaultFilterName)
-let defaultFilterPosition = PGLFilterCategoryIndex(category: 11, filter: 13, catCodeName: "CICategoryTransition", filtCodeName: defaultFilterName)
 
 
 
+@MainActor
 class PGLFilterStack  {
     // when the filter is changed - keep the old one until the new filter is applied
     // remove the apply logic.. do not keep the old one until applied.. one less button
     // March 9, 2021 Modified assumption that there is always at least one filter
     //  now stack may have no filters. isEmpty
     
-   
+    let defaultFilterPosition = PGLFilterCategoryIndex(category: 11, filter: 13, catCodeName: "CICategoryTransition", filtCodeName: defaultFilterName)
     let  kFilterSettingsKey = "FilterSettings"
     let  kFilterOrderKey = "FilterOrder"
 

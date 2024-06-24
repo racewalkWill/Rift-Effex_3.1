@@ -18,9 +18,9 @@ enum NextElement {
     case each
 }
 
-var PrintDebugPhotoLocation = false
-
-class PGLImageList: CustomStringConvertible {
+let PrintDebugPhotoLocation = false
+@MainActor
+class PGLImageList: @preconcurrency CustomStringConvertible {
     // array of CIImage with current position
     // increment will move forward and on the end reverse in opposite direction
     // holds the source of each image in the photoLibrary
@@ -76,10 +76,10 @@ class PGLImageList: CustomStringConvertible {
     // MARK: Init
     init(){ }
 
-    deinit {
-        releaseVars()
+//    deinit {
+//        releaseVars()
 //        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
-    }
+//    }
 
     /// not used?
     convenience init(localAssetIDs: [String],albumIds: [String]) {

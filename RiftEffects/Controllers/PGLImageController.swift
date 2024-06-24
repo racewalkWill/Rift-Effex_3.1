@@ -44,8 +44,8 @@ let ExportAlbum = "ExportAlbum"
 let ShowHelpPageAtStartupKey = "DisplayStartHelp"
 let kBtnVideoPlay = "VideoPlayBtn"
 
-
-class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavigationBarDelegate, RPScreenRecorderDelegate, RPPreviewViewControllerDelegate {
+@MainActor
+class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavigationBarDelegate, RPScreenRecorderDelegate, @preconcurrency RPPreviewViewControllerDelegate {
 
 
     // controller in detail view - shows the image as filtered - knows the current filter
@@ -114,11 +114,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     var taggedSliders = [Int:UISlider]()
 
-    deinit {
-        releaseVars()
-        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
-
-    }
+//    deinit {
+//        releaseVars()
+//        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
+//
+//    }
 
     @IBOutlet weak var helpBtn: UIBarButtonItem!
     
@@ -1713,23 +1713,23 @@ extension PGLImageController {
     }
 }
 
-extension UIImage {
-  class func image(from layer: CALayer) -> UIImage? {
-    UIGraphicsBeginImageContextWithOptions(layer.bounds.size,
-  layer.isOpaque, UIScreen.main.scale)
-
-    defer { UIGraphicsEndImageContext() }
-
-    // Don't proceed unless we have context
-    guard let context = UIGraphicsGetCurrentContext() else {
-      return nil
-    }
-
-    layer.render(in: context)
-    /* UIGraphicsGetImageFromCurrentImageContext()
-       You should call this function only when a bitmap-based graphics context is the current graphics context. If the current context is nil or was not created by a call to UIGraphicsBeginImageContext(_:), this function returns nil.
-        */
-
-    return UIGraphicsGetImageFromCurrentImageContext()
-  }
-}
+//extension UIImage {
+//  class func image(from layer: CALayer) -> UIImage? {
+//    UIGraphicsBeginImageContextWithOptions(layer.bounds.size,
+//  layer.isOpaque, UIScreen.main.scale)
+//
+//    defer { UIGraphicsEndImageContext() }
+//
+//    // Don't proceed unless we have context
+//    guard let context = UIGraphicsGetCurrentContext() else {
+//      return nil
+//    }
+//
+//    layer.render(in: context)
+//    /* UIGraphicsGetImageFromCurrentImageContext()
+//       You should call this function only when a bitmap-based graphics context is the current graphics context. If the current context is nil or was not created by a call to UIGraphicsBeginImageContext(_:), this function returns nil.
+//        */
+//
+//    return UIGraphicsGetImageFromCurrentImageContext()
+//  }
+//}

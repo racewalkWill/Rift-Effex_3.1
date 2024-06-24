@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import os
 
+@MainActor
 class PGLOffScreenRender {
     var offScreenContext = CIContext.init(options: nil)
 
