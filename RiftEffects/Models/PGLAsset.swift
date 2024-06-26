@@ -83,7 +83,7 @@ class PGLAsset: Hashable, Equatable  {
         self.init(sourceAsset, collectionId: nil, collectionLocalTitle: nil)
     }
 
-    func releaseVars() {
+    @MainActor func releaseVars() {
 
         sourceInfo = nil
         assetVideo?.releaseVars()
@@ -205,7 +205,7 @@ class PGLAsset: Hashable, Equatable  {
         return asset.mediaType == .video
     }
 
-    func requestVideo(videoURL: URL) {
+    @MainActor  func requestVideo(videoURL: URL) {
         assetVideo = PGLAssetVideoPlayer(parentAsset: self)
         assetVideo?.setUpVideoPlayAssets(videoURL: videoURL)
 

@@ -10,5 +10,6 @@ import Foundation
 import CoreImage
 
 protocol PGLCenterPoint {
-    var centerPoint: CGPoint {get set}
+        @MainActor
+        var centerPoint: CGPoint {get set}
 }

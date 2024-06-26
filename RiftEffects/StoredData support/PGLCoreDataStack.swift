@@ -276,40 +276,40 @@ extension CoreDataWrapper {
 
         }
 
-    func resaveStackThumbnails() {
-        // before build 14, version 12, the thumbnails were full size
-        // resave as real thumbnails
-        let backgroundContext = persistentContainer.backgroundContext()
-            backgroundContext.performAndWait {
-            let fetchRequest:NSFetchRequest<CDFilterStack> = CDFilterStack.fetchRequest()
-            fetchRequest.predicate = NSPredicate(value: true)
-                var sortArray = [NSSortDescriptor]()
-                sortArray.append(NSSortDescriptor(key: "title", ascending: true))
-            fetchRequest.sortDescriptors = sortArray
-                // all rows in the filterStack table
-            let stackController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                             managedObjectContext: backgroundContext,
-                                                             sectionNameKeyPath: nil, cacheName: nil)
-            do {
-                try stackController.performFetch()
-            } catch {
-                Logger(subsystem: LogSubsystem, category: LogCategory).error( "resaveStackThumbnails: Failed to performFetch")
-            }
-            for aStack in stackController.fetchedObjects! {
-                let pglStack = PGLFilterStack.init()
-                pglStack.on(cdStack: aStack)
-                // now everything is connected
-
-                _ = pglStack.writeCDStack(moContext: backgroundContext)
-                // filter images are moved to a cache before the save
-                backgroundContext.perform {
-                    try? backgroundContext.save()
-                    }
-                }
-        }  // end performAndWait
-
-
-    }
+//    func resaveStackThumbnails() {
+//        // before build 14, version 12, the thumbnails were full size
+//        // resave as real thumbnails
+//        let backgroundContext = persistentContainer.backgroundContext()
+//            backgroundContext.performAndWait {
+//            let fetchRequest:NSFetchRequest<CDFilterStack> = CDFilterStack.fetchRequest()
+//            fetchRequest.predicate = NSPredicate(value: true)
+//                var sortArray = [NSSortDescriptor]()
+//                sortArray.append(NSSortDescriptor(key: "title", ascending: true))
+//            fetchRequest.sortDescriptors = sortArray
+//                // all rows in the filterStack table
+//            let stackController = NSFetchedResultsController(fetchRequest: fetchRequest,
+//                                                             managedObjectContext: backgroundContext,
+//                                                             sectionNameKeyPath: nil, cacheName: nil)
+//            do {
+//                try stackController.performFetch()
+//            } catch {
+//                Logger(subsystem: LogSubsystem, category: LogCategory).error( "resaveStackThumbnails: Failed to performFetch")
+//            }
+//            for aStack in stackController.fetchedObjects! {
+//                let pglStack = PGLFilterStack.init()
+//                pglStack.on(cdStack: aStack)
+//                // now everything is connected
+//
+//                _ = pglStack.writeCDStack(moContext: backgroundContext)
+//                // filter images are moved to a cache before the save
+//                backgroundContext.perform {
+//                    try? backgroundContext.save()
+//                    }
+//                }
+//        }  // end performAndWait
+//
+//
+//    }
 
         func batchDelete(deleteIds: [NSManagedObjectID], aContext: NSManagedObjectContext) {
             if deleteIds.isEmpty { return  }

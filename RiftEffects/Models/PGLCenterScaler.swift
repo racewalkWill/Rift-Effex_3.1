@@ -15,7 +15,7 @@ struct PGLImageScaler {
     var centerScaler: PGLCenterScaler?
         // may be nil !! if the image was already scaled
 
-    func useAspectFill() {
+    @MainActor func useAspectFill() {
         centerScaler?.setAspectFillTransform(imageExtent: image.extent)
     }
 
@@ -26,6 +26,7 @@ struct PGLImageScaler {
 
 ///  one centerScaler for each image - images are different sizes
 ///   uses Global TargetSize for  center and size transform
+@MainActor
 class PGLCenterScaler {
     var aspectFitCenter: CGAffineTransform?
     var aspectFillSize: CGAffineTransform?

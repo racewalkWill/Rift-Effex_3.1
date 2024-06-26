@@ -15,7 +15,7 @@ extension CIImage {
     func thumbnailUIImage(_ preferredHeight: CGFloat = ThumbnailPreferredHeight) -> UIImage {
         var outputImage = self
         if outputImage.extent.isInfinite {
-            outputImage = cropForInfiniteExtent()
+            outputImage = cropForInfiniteExtent(cropSize: CGSize(width: preferredHeight, height: preferredHeight))
         }
 
         let sourceSize = outputImage.extent
@@ -32,11 +32,11 @@ extension CIImage {
 
     }
 
-    func cropForInfiniteExtent() -> CIImage {
+    func cropForInfiniteExtent(cropSize: CGSize) -> CIImage {
 
         if !self.extent.isInfinite {
             return self}
-        let targetRect = CGRect(origin: CGPoint.zero, size: TargetSize)
+        let targetRect = CGRect(origin: CGPoint.zero, size: cropSize)
             // TargetSize is the ImageController view size
 
         let returnImage = self.cropped(to: targetRect)

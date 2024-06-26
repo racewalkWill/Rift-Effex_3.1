@@ -88,11 +88,11 @@ class PGLSelectParmController: PGLCommonController,
     
     var scaleFactor: CGFloat = 2.0
 
-    deinit {
-//        releaseVars()
-        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
-        releaseNotifications()
-    }
+//    deinit {
+////        releaseVars()
+//        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
+//        releaseNotifications()
+//    }
     
   override  func releaseNotifications() {
       for aCancel in publishers {

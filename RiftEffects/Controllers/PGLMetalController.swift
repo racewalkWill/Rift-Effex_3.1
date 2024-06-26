@@ -13,7 +13,7 @@ import UIKit
 import simd
 import os
 
-var FullScreenAspectFillMode = false
+@MainActor var FullScreenAspectFillMode = false
 
 class PGLMetalController: UIViewController {
 

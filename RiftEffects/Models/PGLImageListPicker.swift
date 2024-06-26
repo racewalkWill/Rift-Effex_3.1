@@ -149,28 +149,30 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
 
     func loadLocalVideoURL(thisAsset: PGLAsset, pickerResult: PHPickerResult ) {
 //        let progress: Progress?
-        var localURL: URL?
-        pickerResult.itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { [weak self] url, error in
+
+         pickerResult.itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { [weak self] url, error in
             do {
                 guard let url = url, error == nil else {
                     throw error ?? NSError(domain: NSFileProviderErrorDomain, code: -1, userInfo: nil)
                 }
-                localURL = FileManager.default.temporaryDirectory.appendingPathComponent(url.lastPathComponent)
-                if localURL == nil {
-                    return
-                }
-                if (FileManager.default.fileExists(atPath: localURL?.absoluteString ?? "" ))
-                    { try FileManager.default.removeItem(at: localURL!)
-                    }
-                try FileManager.default.copyItem(at: url, to: localURL!)
+               let localURL = FileManager.default.temporaryDirectory.appendingPathComponent(url.lastPathComponent)
 
-                DispatchQueue.main.async {
-                    self?.handleVideoCompletion(asset: thisAsset, object: localURL!)
+                if (FileManager.default.fileExists(atPath: localURL.absoluteString ))
+                    { try FileManager.default.removeItem(at: localURL)
+                    }
+                try FileManager.default.copyItem(at: url, to: localURL)
+
+                Task{
+                    await self?.handleVideoCompletion(asset: thisAsset, object: localURL)
                 }
+//                await MainActor.run
+//                 {
+//                    self?.handleVideoCompletion(asset: thisAsset, object: localURL)
+//                }
             } catch let caughtError {
-                DispatchQueue.main.async {
-                    self?.handleVideoCompletion(asset: thisAsset, object: nil, error: caughtError)
-                }
+//                 MainActor.run {
+//                    self?.handleVideoCompletion(asset: thisAsset, object: nil, error: caughtError)
+//                }
             }
     }
 

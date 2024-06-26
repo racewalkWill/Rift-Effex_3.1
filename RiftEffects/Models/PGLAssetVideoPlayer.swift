@@ -9,7 +9,7 @@
 import Foundation   
 
 import UIKit
-@preconcurrency import Photos
+import Photos
 import CoreImage
 import os
 
@@ -28,14 +28,13 @@ enum VideoSourceState: Int {
 
 }
 
-
-class PGLAssetVideoPlayer {
+@MainActor
+class PGLAssetVideoPlayer: Equatable, Hashable {
 
     var parentAsset: PGLAsset
 
     init(parentAsset: PGLAsset) {
         self.parentAsset = parentAsset
-        
     }
     
     weak var videoMgr: PGLVideoMgr?
@@ -55,7 +54,15 @@ class PGLAssetVideoPlayer {
     var imageOrientation = PGLDevicePosition()
     lazy var videoPropertyOrientation =  propertyOrientation()
 
+    //MARK: Equatable, Hashable
+    nonisolated static func == (lhs: PGLAssetVideoPlayer, rhs: PGLAssetVideoPlayer) -> Bool {
+        // two players could be playing the same video asset
+        return lhs === rhs
+    }
 
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
 // MARK: Create/Release
 
     func releaseVars() {
@@ -151,7 +158,7 @@ class PGLAssetVideoPlayer {
         statusObserver =  avPlayerItem!.observe(\.status,
                   options: [.new, .old],
                   changeHandler: { myPlayerItem, change in
-
+            MainActor.assumeIsolated( {
                 if myPlayerItem.status == .readyToPlay {
 //                        NSLog("PGLAssetVideoPlayer createDisplayLink changeHandler = .readyToPlay")
                     for aRepeatingItem in self.videoPlayer!.items() {
@@ -165,6 +172,7 @@ class PGLAssetVideoPlayer {
                     self.closeWaitingIndicator()
                         }
                     }
+            })
                  })
 //        NSLog("PGLAssetVideoPlayer createDisplayLink statusObserver created")
     }
@@ -266,17 +274,19 @@ class PGLAssetVideoPlayer {
             forName: PGLPlayVideo,
             object: nil,
             queue: mainQueue) {[weak self] notification in
-//                NSLog("PGLAssetVideoPlayer setUpReadyToPlay notification PGLPlayVideo handler triggered")
-                if self?.videoPlayer?.status == .readyToPlay {
-                        // one player may be starting while a current one is running
+                MainActor.assumeIsolated( {
+                        //                NSLog("PGLAssetVideoPlayer setUpReadyToPlay notification PGLPlayVideo handler triggered")
+                    if self?.videoPlayer?.status == .readyToPlay {
+                            // one player may be starting while a current one is running
 
-                    self?.videoPlayer?.isMuted = false
-                    self?.videoPlayer?.play()
-                    Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self.debugDescription) + " PLAYING") "))
-                }
+                        self?.videoPlayer?.isMuted = false
+                        self?.videoPlayer?.play()
+                        Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self.debugDescription) + " PLAYING") "))
+                    }
 
-                self?.notifyVideoStarted()
-//                    NSLog("PGLAssetVideoPlayer setUpReadyToPlay  videoPlayer?.play")
+                    self?.notifyVideoStarted()
+                        //                    NSLog("PGLAssetVideoPlayer setUpReadyToPlay  videoPlayer?.play")
+                })
             }
 
         postVideoLoaded()
@@ -292,9 +302,11 @@ class PGLAssetVideoPlayer {
             forName: PGLStopVideo,
             object: nil,
             queue: mainQueue) { notification in
-                self.videoPlayer?.pause()
-                self.videoPlayer?.isMuted = true
-               NSLog("\(self) PAUSED")
+                MainActor.assumeIsolated( {
+                    self.videoPlayer?.pause()
+                    self.videoPlayer?.isMuted = true
+                    NSLog("\(self) PAUSED")
+                })
 
             }
     }
@@ -318,12 +330,13 @@ class PGLAssetVideoPlayer {
 
 }
 
-extension PGLAssetVideoPlayer: Hashable {
-    static func == (lhs: PGLAssetVideoPlayer, rhs: PGLAssetVideoPlayer) -> Bool {
-            return lhs.parentAsset == rhs.parentAsset
-        }
-
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(parentAsset)
-        }
-}
+//extension PGLAssetVideoPlayer: Hashable {
+////    nonisolated 
+//    nonisolated static func == (lhs: PGLAssetVideoPlayer, rhs: PGLAssetVideoPlayer) -> Bool {
+//            return lhs.parentAsset == rhs.parentAsset
+//        }
+//
+//    nonisolated    func hash(into hasher: inout Hasher) {
+//            hasher.combine(parentAsset)
+//        }
+//}

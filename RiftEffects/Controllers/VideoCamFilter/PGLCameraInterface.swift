@@ -8,14 +8,15 @@
 //      class CameraViewController.swift
 
 
-import UIKit
+@preconcurrency import UIKit
 import AVFoundation
 import CoreVideo
 import Photos
 import MobileCoreServices
 
 /// connects to device's camera and provides frames to the PGLCameraViewFilter
-class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
+/// Manages queues explicitly so mark as Sendable
+class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, @unchecked Sendable {
      var myCameraViewFilter: PGLVideoCameraFilter?
 
     private enum SessionSetupResult {
@@ -70,7 +71,7 @@ class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
 
     }
 
-    func setUpInterface() {
+    @MainActor func setUpInterface() {
 
         /*
          Setup the capture session.
@@ -295,27 +296,44 @@ class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
 
         // MARK: - Video Data Output Delegate
 
-        func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-            processVideo(sampleBuffer: sampleBuffer)
+     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+         if !renderingEnabled {
+             return
+         }
+         guard let videoPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+         else  { return }
+
+         let renderedCIImage = CIImage(cvImageBuffer: videoPixelBuffer)
+
+         Task {
+             await self.processVideo(frame: renderedCIImage)
+         }
         }
 
-        func processVideo(sampleBuffer: CMSampleBuffer) {
-            if !renderingEnabled {
-                return
-            }
+    @MainActor func processVideo(frame:CIImage) {
+        myCameraViewFilter?.outputVideoFrames.setCurrentVideoFrame(newFrame: frame)
+    }
 
-            guard let videoPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-            else  { return }
+    @MainActor func processVideo(sampleBuffer: CVImageBuffer) {
+//            if !renderingEnabled {
+//                return
+//            }
+//
+//            guard let videoPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+//            else  { return }
     //                ,
     //            let formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) else {
     //                return
     //        }
+//        @discussion The caller does not own the returned dataBuffer, and must retain it explicitly if the caller needs to maintain a reference to it.
+//        @result        CVImageBuffer of media data. The result will be NULL if the CMSampleBuffer does not contain a CVImageBuffer, if the
+//                    CMSampleBuffer contains a CMBlockBuffer, or if there is some other error.
 
-            let finalVideoPixelBuffer = videoPixelBuffer
+//            let finalVideoPixelBuffer = videoPixelBuffer
 
-            let renderedCIImage = CIImage(cvImageBuffer: finalVideoPixelBuffer)
 
-            myCameraViewFilter?.outputVideoFrames.setCurrentVideoFrame(newFrame: renderedCIImage)
+
+//            myCameraViewFilter?.outputVideoFrames.setCurrentVideoFrame(newFrame: renderedCIImage)
 
         }
 
@@ -352,7 +370,7 @@ class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
 
 
     // MARK: userAlerts
-    func alert(title: String, message: String, actions: [UIAlertAction]) {
+    @MainActor  func alert(title: String, message: String, actions: [UIAlertAction]) {
         let alertController = UIAlertController(title: title,
                                                 message: message,
                                                 preferredStyle: .alert)

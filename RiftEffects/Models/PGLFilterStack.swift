@@ -82,7 +82,7 @@ class PGLFilterStack  {
     // need to add a break to open the debugger
 
     // MARK: Init default
-    init(){
+    nonisolated init(){
 
 //        setStartupDefault()
 
@@ -549,8 +549,8 @@ class PGLFilterStack  {
                     // -> CIColorInvert -> CIHexagonalPixellate -> CICircleSplashDistortion)
                     // clamp and crop if infinite extent
 //                  NSLog("PGLFilterStack imageUpdate thisImage has input of infinite extent")
-
-                    thisImage = thisImage!.cropForInfiniteExtent()
+                    let cropTo = TargetSize
+                    thisImage = thisImage!.cropForInfiniteExtent(cropSize: cropTo)
 //                    if doPrintCropClamp {   NSLog("PGLFilterStack imageUpdate clamped and cropped to  \(String(describing: thisImage?.extent))") }
                 }
                 filter.setInput(image: thisImage, source: nil)

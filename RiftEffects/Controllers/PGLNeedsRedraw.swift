@@ -16,7 +16,7 @@ let PGLVaryTimerRunning = NSNotification.Name(rawValue: "PGLVaryTimerRunning")
 let PGLResetNeedsRedraw = NSNotification.Name(rawValue: "PGLResetNeedsRedraw")
 let PGLPauseAnimation = NSNotification.Name(rawValue: "PGLPauseAnimation")
 
-
+@MainActor
 class PGLRedraw {
     // answers true  redrawNow() if mtkView should draw
     //   prmControllerIsOpen || transitionFilterExists || varyTimerIsRunning || filterChanged

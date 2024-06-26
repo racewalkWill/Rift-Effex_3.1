@@ -11,6 +11,7 @@ import UIKit
 import CoreImage
 import Vision
 
+@MainActor
 class DetectorFramework {
     static var Active  = PGLVisionDetector.self
     // or PGLVisionDetector.self for Vision Framework

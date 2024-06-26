@@ -10,7 +10,7 @@
 
 import Foundation
 import UIKit
-import Combine
+@preconcurrency import Combine
 import os
 
 extension CACornerMask {

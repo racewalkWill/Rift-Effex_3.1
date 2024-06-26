@@ -10,8 +10,8 @@
 import MetalKit
 import os
 
-var TargetSize = CGSize(width: 1040, height: 768)
-var DoNotDraw = false
+@MainActor var TargetSize = CGSize(width: 1040, height: 768)
+@MainActor var DoNotDraw = false
 
 ///RenderDestinationMetalView drawBasic var
 let maxBuffersInFlight = 3
@@ -161,8 +161,8 @@ class Renderer: NSObject, MTKViewDelegate {
             // capture the current image in the context
             // provide a UIImage for save to photoLibrary
             // uses existing ciContext in a background process..
-
-        if let ciOutput = filterStack()?.stackOutputImage(false).cropForInfiniteExtent()
+        let cropSize = TargetSize
+        if let ciOutput = filterStack()?.stackOutputImage(false).cropForInfiniteExtent(cropSize: cropSize)
             // cropForInfiniteExtent returns image
             // if infinite then crops to TargetSize
         {
@@ -313,7 +313,8 @@ class Renderer: NSObject, MTKViewDelegate {
                     // This is needed if the image is smaller than the view, or if it has transparent pixels.
                 if isFullScreen { 
                     // perform zoom/pan from gestures
-                    ciOutputImage = ciOutputImage.cropForInfiniteExtent()
+                    let cropSize = TargetSize
+                    ciOutputImage = ciOutputImage.cropForInfiniteExtent(cropSize: cropSize)
                     outputZoomPanFilter?.setInput(image: ciOutputImage, source: nil)
                     outputZoomPanFilter?.setInputImageParmState(newState: ImageParm.inputPhoto)
 
