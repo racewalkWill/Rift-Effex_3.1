@@ -352,6 +352,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         if aFilterIndent.level > 0 {
             // child stack is indented
             cell.detailTextLabel?.text = aFilterIndent.stack.stackName
+        } else {
+            cell.detailTextLabel?.text = ""
         }
 
         if aFilterIndent.stack is PGLSequenceStack {

@@ -119,22 +119,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "598B3A53-35C2-479E-AFBE-45F027BEAD46"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Controllers/PGLStackController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "351"
-            endingLineNumber = "351"
-            landmarkName = "filterCellFor(_:_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "734F7E53-304D-493E-9243-97586EB7BB67"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -142,8 +126,8 @@
             filePath = "RiftEffects/Controllers/PGLStackController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "369"
-            endingLineNumber = "369"
+            startingLineNumber = "371"
+            endingLineNumber = "371"
             landmarkName = "filterCellFor(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -158,9 +142,9 @@
             filePath = "RiftEffects/Models/PGLFilterStack.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "768"
-            endingLineNumber = "768"
-            landmarkName = "parmStackName(aParm:)"
+            startingLineNumber = "769"
+            endingLineNumber = "769"
+            landmarkName = "parentParmName(aParm:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -176,8 +160,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "764"
             endingLineNumber = "764"
-            landmarkName = "nextStackName()"
-            landmarkType = "7">
+            landmarkName = "PGLFilterStack"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

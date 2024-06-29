@@ -758,14 +758,15 @@ class PGLFilterStack  {
 
 
     }
+//
+//    func nextStackName() -> String {
+//        // this stack name + filterNumberLabel of the current filter
+//        return "@->" + stackName + " filter: " + filterNumLabel(maxLen: 20)
+//    }
 
-    func nextStackName() -> String {
-        // this stack name + filterNumberLabel of the current filter
-        return "@->" + stackName + " filter: " + filterNumLabel(maxLen: 20)
-    }
-
-    func parmStackName(aParm: PGLFilterAttribute) -> String {
-        return "> " + (aParm.attributeName ?? "parm")
+    func parentParmName(aParm: PGLFilterAttribute) -> String {
+        // answer name of the parent stack parm
+        return "> " + (aParm.attributeDisplayName ?? "parm")
     }
 
 
