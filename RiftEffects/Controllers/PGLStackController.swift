@@ -349,6 +349,10 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
         cell.textLabel?.text = aFilterIndent.descriptorDisplayName  // same text as the filterController cell
         cell.indentationLevel = aFilterIndent.level
+        if aFilterIndent.level > 0 {
+            // child stack is indented
+            cell.detailTextLabel?.text = aFilterIndent.stack.stackName
+        }
 
         if aFilterIndent.stack is PGLSequenceStack {
             cell.imageView?.image = PGLFilterAttribute.SequenceSymbol }

@@ -681,11 +681,13 @@ class PGLFilterStack  {
     // make sure to travers the appStack in the same order
     // adds/deletes of filters require the whole flatten array to regenerate.
         var indexCounter = 0
+        let nextLevel = level + 1
         for aFilter in activeFilters {
 //            into.append(PGLFilterIndent(level, aFilter))
-            into.append(PGLFilterIndent(level, aFilter, inStack: self,index: indexCounter))
-            let nextLevel = level + 1
             aFilter.addChildFilters(nextLevel, into: &into)
+            into.append(PGLFilterIndent(level, aFilter, inStack: self,index: indexCounter))
+
+
             indexCounter += 1
         }
         postFilterChangeRedraw()
@@ -761,6 +763,11 @@ class PGLFilterStack  {
         // this stack name + filterNumberLabel of the current filter
         return "@->" + stackName + " filter: " + filterNumLabel(maxLen: 20)
     }
+
+    func parmStackName(aParm: PGLFilterAttribute) -> String {
+        return "> " + (aParm.attributeName ?? "parm")
+    }
+
 
 
 

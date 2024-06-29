@@ -162,17 +162,13 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
                     }
                 try FileManager.default.copyItem(at: url, to: localURL)
 
-                Task{
+                Task{ // was  await MainActor.run
                     await self?.handleVideoCompletion(asset: thisAsset, object: localURL)
                 }
-//                await MainActor.run
-//                 {
-//                    self?.handleVideoCompletion(asset: thisAsset, object: localURL)
-//                }
             } catch let caughtError {
-//                 MainActor.run {
-//                    self?.handleVideoCompletion(asset: thisAsset, object: nil, error: caughtError)
-//                }
+                Task {  // was  MainActor.run
+                    await self?.handleVideoCompletion(asset: thisAsset, object: nil, error: caughtError)
+                }
             }
     }
 

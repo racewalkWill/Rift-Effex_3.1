@@ -515,7 +515,7 @@ extension PGLOpenStackController {
 
 // MARK: NSFetchedResultsControllerDelegate
 
-extension PGLOpenStackController: NSFetchedResultsControllerDelegate {
+extension PGLOpenStackController: @preconcurrency NSFetchedResultsControllerDelegate {
     // see example in RayWenderlich course 'cdt materials' CampgroundManager unit 07 unit testing
     // /Users/willloew/Developer/raywenderlich courses/cdt-materials/07-unit-testing/projects/final
 //    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -540,7 +540,7 @@ extension PGLOpenStackController: NSFetchedResultsControllerDelegate {
 //    }
 
     // swiftlint:disable force_unwrapping
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
       switch type {
       case .insert:
 //        tableView.insertRows(at: [newIndexPath!], with: .fade)

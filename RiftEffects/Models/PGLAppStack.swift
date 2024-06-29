@@ -294,7 +294,9 @@ class PGLAppStack {
     
     fileprivate func addChildStackBasic(_ newStack: PGLFilterStack, _ parm: PGLFilterAttribute) {
             //        newStack.setStartupDefault() // Images null filter is starting filter
-        newStack.stackName = viewerStack.nextStackName()
+//        newStack.stackName = viewerStack.nextStackName()
+        newStack.stackName = viewerStack.parmStackName(aParm: parm)
+
         newStack.stackType = "input"
                     NSLog("addChildStackBasic newStack.stackName = \(newStack.stackName) , parm \(parm)")
         newStack.parentAttribute = parm
@@ -423,11 +425,12 @@ class PGLAppStack {
         var level = 0
         var stackIndex = 0
         for aFilter in outputStack.activeFilters {
-            flatAnswer.append(PGLFilterIndent(level, aFilter, inStack: outputStack,index: stackIndex))
             level += 1
             aFilter.addChildFilters(level, into: &flatAnswer)
             level -= 1
             stackIndex += 1
+            flatAnswer.append(PGLFilterIndent(level, aFilter, inStack: outputStack,index: stackIndex))
+
         }
         return flatAnswer
     }

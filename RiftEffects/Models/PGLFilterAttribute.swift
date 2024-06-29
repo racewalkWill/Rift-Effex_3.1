@@ -80,7 +80,7 @@ class PGLFilterAttribute {
     static let PriorFilterSymbol = UIImage(systemName: "square.and.arrow.down.on.square")
     static let MissingPhotoInput = UIImage(systemName: "rectangle") // looks empty...
     static let CurrentStackSymbol = UIImage(systemName: "square.stack.3d.up.fill")
-    static let ChildStackSymbol = UIImage(systemName: "bubble.middle.top")
+    static let ChildStackSymbol = UIImage(systemName: "bubble.middle.bottom")
     static let ParentStackSymbol = UIImage(systemName: "arrow.down.doc")
     static let TopStackSymbol = UIImage(systemName: "square.stack.3d.up")
     static let SequenceSymbol = UIImage(systemName: "rectangle.portrait.arrowtriangle.2.outward")

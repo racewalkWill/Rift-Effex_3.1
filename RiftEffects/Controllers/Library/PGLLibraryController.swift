@@ -144,9 +144,10 @@ extension PGLLibraryController {
             {
                 snapshot.appendSections([index])
                 let thisSection = sections[index]
-                if let sectionStacks = thisSection.objects as? [FilterStack]
-                {
-                    snapshot.appendItems(sectionStacks)
+                if let sectionStacks = thisSection.objects as?  [CDFilterStack]
+
+                {   let filterStacks = sectionStacks.map({$0.asFilterStackStruct()})
+                    snapshot.appendItems(filterStacks)
                 }
                     // show empty snapshot
             }
