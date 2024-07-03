@@ -77,16 +77,30 @@ class PGLFilterAttribute {
     static let FlowChartSymbol = UIImage(systemName: "flowchart")
     static let PhotoSymbol = UIImage(systemName: "photo.on.rectangle")
     static let PhotoSymbolSingle = UIImage(systemName: "photo")
-    static let PriorFilterSymbol = UIImage(systemName: "square.and.arrow.down.on.square")
+    
+//    static let PriorFilterSymbol = UIImage(systemName: "square.and.arrow.down.on.square")
+    static let PriorFilterSymbol = UIImage(systemName:"chevron.down.square")
+
     static let MissingPhotoInput = UIImage(systemName: "rectangle") // looks empty...
     static let CurrentStackSymbol = UIImage(systemName: "square.stack.3d.up.fill")
-    static let ChildStackSymbol = UIImage(systemName: "bubble.middle.bottom")
+
+//    static let ChildStackSymbol = UIImage(systemName: "bubble.middle.bottom")
+    static let ChildStackSymbol = UIImage(systemName:"square.3.layers.3d.down.forward")
+    
     static let ParentStackSymbol = UIImage(systemName: "arrow.down.doc")
     static let TopStackSymbol = UIImage(systemName: "square.stack.3d.up")
     static let SequenceSymbol = UIImage(systemName: "rectangle.portrait.arrowtriangle.2.outward")
     static let SequenceSymbolFilled = UIImage(systemName: "rectangle.portrait.on.rectangle.portrait.fill")
 
-            // arrow.down.doc
+    // version 3.2 child stack levels
+    static let ChildStack1Symbol = UIImage(systemName: "square.and.arrow.down")
+    static let ChildStack2Symbol = UIImage(systemName: "square.2.layers.3d.bottom.filled")
+    static let ChildStack3Symbol = UIImage(systemName: "square.3.layers.3d.bottom.filled")
+    static let ChildStack4Symbol = UIImage(systemName: "square.stack" )
+    static let ChildStack5Symbol = UIImage(systemName: "square.on.square.squareshape.controlhandle")
+
+
+                                           // arrow.down.doc
             // or
                 //    doc.plaintext
                 //    Arrow.up.doc
@@ -307,7 +321,10 @@ class PGLFilterAttribute {
         NotificationCenter.default.post(uiNotification)
     }
 
-
+    func parentParmFilterName() -> String {
+        // answer name of the parent stack parm and filter
+        return  (aSourceFilter.descriptorDisplayName ?? "filter") +  ">" + (attributeDisplayName ?? "parm") 
+    }
 
     func setUICellDescription(_ uiCell: UITableViewCell) {
         uiCell.textLabel?.text = attributeDisplayName ?? ""
@@ -1120,6 +1137,8 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     let newDescriptionString = self.attributeDisplayName ?? ""
     content.text = newDescriptionString
     content.imageProperties.tintColor = .secondaryLabel
+      
+      
 
     let parmInputType = inputParmType()
     switch parmInputType {

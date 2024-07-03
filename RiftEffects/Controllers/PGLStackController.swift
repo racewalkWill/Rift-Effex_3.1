@@ -121,6 +121,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         let stackAlbumHeaderCellNib = UINib(nibName: PGLStackAlbumHeader.nibName, bundle: nil)
         tableView.register(stackAlbumHeaderCellNib ,forCellReuseIdentifier: PGLStackAlbumHeader.reuseIdentifer)
 
+        // provide the album names (aka stackTypes) for the header album choice menu
+        // see setAlbumChoiceMenu that creates UIActions for the menu with the stackTypes
+        
         if let sections = appStack.dataProvider.fetchedResultsController.sections {
             existingStackTypes = sections.map({$0.name})
         } else
@@ -324,36 +327,56 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
     // MARK: Table Setup
     override func numberOfSections(in tableView: UITableView) -> Int {
         //  return the number of sections
-        return 2
+        let mySectionCount =  appStack.stackSections().count
+        return mySectionCount
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //  return the number of rows
-        switch section {
-            case 0:
-                return 2
-                // header has stackName, type
-            case 1:
-                return appStack.flatRowCount()
-            default:
-                return 0
-        }
+//        switch section {
+//            case 0:
+//                return 2
+//                // header has stackName, type
+//            case 1:
+//                return appStack.flatRowCount()
+//            default:
+//                return 0
+//        }
+        let myRowCount =  appStack.stackSections()[section].sectionRowCount()
+        return myRowCount
+    }
 
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            // headers don't count for indexPath.
+            //        if indexPath.row == 0 {
+            //            return headerCellFor(tableView, indexPath)}
+            //        else {
+        return filterCellFor(tableView, indexPath)
+//    }
     }
 
 
     fileprivate func filterCellFor(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
         // filter cell section
         let cell = tableView.dequeueReusableCell(withIdentifier: "filterRowCell", for: indexPath)
-        let aFilterIndent = appStack.filterAt(indexPath: indexPath)
+//        let aFilterIndent = appStack.filterAt(indexPath: indexPath)
+        let sectionFilterRow = indexPath.row
+        let currentSections = appStack.stackSections()
+        let sectionIndex = indexPath.section
+        let aFilterIndent = currentSections[indexPath.section].filterIndents[sectionFilterRow]
+        let sectionFilterCount = currentSections[sectionIndex].sectionRowCount()
 
         cell.textLabel?.text = aFilterIndent.descriptorDisplayName  // same text as the filterController cell
         cell.indentationLevel = aFilterIndent.level
-        if aFilterIndent.level > 0 {
+        if (aFilterIndent.level > 0 ) && (aFilterIndent.filterPosition == (sectionFilterCount - 1))    {
             // child stack is indented
+            // only label the bottom filter with the detailText
             cell.detailTextLabel?.text = aFilterIndent.stack.stackName
+                    // stackName is set in #addChildStackBasic with #parentParmName
+//            cell.detailTextLabel?.backgroundColor = UIColor.secondaryLabel
         } else {
             cell.detailTextLabel?.text = ""
+//            cell.detailTextLabel?.backgroundColor = UIColor.clear
         }
 
         if aFilterIndent.stack is PGLSequenceStack {
@@ -363,21 +386,32 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             switch aFilterIndent.level {
                 case 0:
                     cell.imageView?.image = PGLFilterAttribute.TopStackSymbol
+                case 1:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStack1Symbol
+                case 2:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStack2Symbol
+                case 3:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStack3Symbol
+                case 4:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStack4Symbol
+                case 5:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStack5Symbol
                 default:
                     cell.imageView?.image = PGLFilterAttribute.ChildStackSymbol
             }
         }
 
-        if aFilterIndent.stack === appStack.viewerStack {
-            if appStack.showFilterImage {
-                    // single filter mode
-                if aFilterIndent.stack is PGLSequenceStack {
-                    cell.imageView?.image = PGLFilterAttribute.SequenceSymbolFilled
-                }
-                else {
-                    cell.imageView?.image = PGLFilterAttribute.CurrentStackSymbol }
-            }
-        }
+        // REVISIT for singleFilter or all mode
+//        if aFilterIndent.stack === appStack.viewerStack {
+//            if appStack.showFilterImage {
+//                    // single filter mode
+//                if aFilterIndent.stack is PGLSequenceStack {
+//                    cell.imageView?.image = PGLFilterAttribute.SequenceSymbolFilled
+//                }
+//                else {
+//                    cell.imageView?.image = PGLFilterAttribute.CurrentStackSymbol }
+//            }
+//        }
 
             // Configure the cell...
         if appStack.isImageControllerOpen {
@@ -389,54 +423,75 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
         return cell
     }
-    override func tableView( _ tableView: UITableView, titleForHeaderInSection section: Int ) -> String? {
-        switch section {
-            case 0:
-                // header
-                return "About"
-            default:
-                return "Filters"
-        }
+    override func tableView( _ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath ) -> Int {
+        let myIndentLevel =  appStack.stackSections()[indexPath.section].stackHeaderIndentLevel()
+        return myIndentLevel
     }
+
+//    override func tableView( _ tableView: UITableView, titleForFooterInSection section: Int ) -> String? {
+//
+//        let myStack = appStack.stackSections()[section].stack()
+//        return myStack.stackName
+//
+//    }
+
     fileprivate func headerCellFor(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
             // header
 
-
-        let myStack = appStack.outputStack
-        switch indexPath.row {
-            case StackHeaderCell.title.rawValue :
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
-                else {
-                    fatalError("PGLStackController headerCell did not load")
-                }
-                cell.cellLabel.text = "Title:"
-                cell.userText.text = myStack.stackName
-                cell.userText.delegate = self
-                cell.userText.tag = StackHeaderCell.title.rawValue
-                cell.userText.delegate = self
-                return cell
-
-            case StackHeaderCell.album.rawValue :
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackAlbumHeader.reuseIdentifer, for: indexPath) as? PGLStackAlbumHeader
-                else {
-                    fatalError("PGLStackController headerCell did not load")
-                }
-                cell.cellLabel.text = "Album:"
-                cell.userText.text = myStack.stackType
-                cell.userText.delegate = self
-                cell.userText.tag = StackHeaderCell.album.rawValue
-                cell.userText.delegate = self
-                addAlbumLookUp(albumUserText: cell.userText)
-                albumUserTextCell = cell.userText
-                return cell
-
+        let myStack = appStack.stackSections()[indexPath.section]
+        switch indexPath.section {
+            case 0:
+                let headerCell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "mainStackHeader", for: indexPath)
+                headerCell.textLabel?.text = myStack.stack().stackName
+                headerCell.detailTextLabel?.text = myStack.stack().stackType
+                headerCell.indentationLevel = myStack.stackHeaderIndentLevel()
+                return headerCell
             default :
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
-                else {
-                    fatalError("PGLStackController headerCell did not load")
-                }
-                return cell
+                let childStackCell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
+                childStackCell.textLabel?.text = myStack.stack().stackName
+                childStackCell.indentationLevel = myStack.stackHeaderIndentLevel()
+                childStackCell.detailTextLabel?.text = ""
+                return childStackCell
+
         }
+
+//        let myStack = appStack.outputStack
+//        switch indexPath.row {
+//            case StackHeaderCell.title.rawValue :
+//                guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
+//                else {
+//                    fatalError("PGLStackController headerCell did not load")
+//                }
+//                cell.cellLabel.text = "Title:"
+//                cell.userText.text = myStack.stackName
+//                cell.userText.delegate = self
+//                cell.userText.tag = StackHeaderCell.title.rawValue
+//                cell.userText.delegate = self
+//                return cell
+//
+//            case StackHeaderCell.album.rawValue :
+//                guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackAlbumHeader.reuseIdentifer, for: indexPath) as? PGLStackAlbumHeader
+//                else {
+//                    fatalError("PGLStackController headerCell did not load")
+//                }
+//                cell.cellLabel.text = "Album:"
+//                cell.userText.text = myStack.stackType
+//                cell.userText.delegate = self
+//                cell.userText.tag = StackHeaderCell.album.rawValue
+//                cell.userText.delegate = self
+//                addAlbumLookUp(albumUserText: cell.userText)
+//                albumUserTextCell = cell.userText
+//                return cell
+//
+//            default :
+//                // or let cell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
+//
+//                guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
+//                else {
+//                    fatalError("PGLStackController headerCell did not load")
+//                }
+//                return cell
+//        }
 
 
     }
@@ -475,15 +530,6 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         theOutputStack.stackType = albumName
         theOutputStack.exportAlbumName = albumName
         albumUserTextCell?.text = albumName
-    }
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-            case StackSections.header.rawValue :
-                return headerCellFor(tableView, indexPath)
-            default:
-                return filterCellFor(tableView, indexPath)
-        }
-
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -658,7 +704,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
     }
 
     func postFilterNavigationChange() {
-        postCurrentFilterChange()  // should only have one sender
+//        postCurrentFilterChange()  // should only have one sender
 
     }
 

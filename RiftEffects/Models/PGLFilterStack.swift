@@ -765,8 +765,7 @@ class PGLFilterStack  {
 //    }
 
     func parentParmName(aParm: PGLFilterAttribute) -> String {
-        // answer name of the parent stack parm
-        return "> " + (aParm.attributeDisplayName ?? "parm")
+        return aParm.parentParmFilterName()
     }
 
 

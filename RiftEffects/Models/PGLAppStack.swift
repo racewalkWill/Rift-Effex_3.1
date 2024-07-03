@@ -417,9 +417,11 @@ class PGLAppStack {
 
     // MARK: flattened Filters
     // cache the flattenFilters.. reset on filter change.
+    /// build the header tree for each indent level - an indent level  is  one or more childStacks
     func flattenFilters() -> [PGLFilterIndent] {
         // make sure to travers the appStack in the same order
         // adds/deletes of filters require the whole flatten array to regenerate.
+        // update the stackController cells subTitles .. parent may change..
 
         var flatAnswer = [PGLFilterIndent]() // empty
         var level = 0
@@ -511,6 +513,32 @@ class PGLAppStack {
     }
     func resetCellFilters() {
         cellFilters = flattenFilters()
+    }
+
+    //MARK: Stack sections
+
+    func stackSections() -> [PGLStackSection] {
+        var answerSections = [PGLStackSection]()
+
+        if cellFilters.isEmpty {
+            return answerSections }
+        var thisStackSection = PGLStackSection( [cellFilters.first!] )
+        var thisStack = thisStackSection.stack()
+        for index in 1..<cellFilters.count {
+            let thisCellIndent = cellFilters[index]
+            if thisCellIndent.stack === thisStack {
+                thisStackSection.filterIndents.append(thisCellIndent)
+            }
+            else {
+                answerSections.append(thisStackSection)
+                
+                thisStackSection = PGLStackSection( [thisCellIndent] )
+                thisStack = thisStackSection.stack()
+            }
+        }
+        // append the last one
+        answerSections.append(thisStackSection)
+        return answerSections
     }
 
     // MARK: Display state
