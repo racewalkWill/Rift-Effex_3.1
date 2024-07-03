@@ -74,7 +74,8 @@ enum VaryDissolveState {
 @MainActor
 class PGLFilterAttribute {
 
-    static let FlowChartSymbol = UIImage(systemName: "flowchart")
+    static let FlowChartSymbol = UIImage(systemName: "point.bottomleft.forward.to.arrowtriangle.uturn.scurvepath")
+            //"flowchart")
     static let PhotoSymbol = UIImage(systemName: "photo.on.rectangle")
     static let PhotoSymbolSingle = UIImage(systemName: "photo")
     
@@ -93,7 +94,9 @@ class PGLFilterAttribute {
     static let SequenceSymbolFilled = UIImage(systemName: "rectangle.portrait.on.rectangle.portrait.fill")
 
     // version 3.2 child stack levels
-    static let ChildStack1Symbol = UIImage(systemName: "square.and.arrow.down")
+    static let ChildStack1Symbol = UIImage(systemName: "square.2.layers.3d")
+    // was  "square.and.arrow.down"
+    
     static let ChildStack2Symbol = UIImage(systemName: "square.2.layers.3d.bottom.filled")
     static let ChildStack3Symbol = UIImage(systemName: "square.3.layers.3d.bottom.filled")
     static let ChildStack4Symbol = UIImage(systemName: "square.stack" )
@@ -1134,7 +1137,11 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     
   override  func setUICellDescription(_ uiCell: UITableViewCell) {
     var content = uiCell.defaultContentConfiguration()
-    let newDescriptionString = self.attributeDisplayName ?? ""
+
+    var newDescriptionString = self.attributeDisplayName ?? ""
+    if inputStack != nil {
+        newDescriptionString = newDescriptionString + " > " + (inputStack?.outputFilterName() ?? "")
+          }
     content.text = newDescriptionString
     content.imageProperties.tintColor = .secondaryLabel
       

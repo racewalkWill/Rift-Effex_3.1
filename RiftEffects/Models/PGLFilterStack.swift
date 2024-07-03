@@ -748,6 +748,13 @@ class PGLFilterStack  {
         return theCurrentFilter.localizedName()
     }
 
+    func outputFilterName() -> String {
+        if activeFilters.isEmpty {
+            return ""
+        }
+        return activeFilters.last!.localizedName()
+    }
+
     func filterNumLabel(maxLen: Int?) -> String {
         // removed category name logic 2021-04-10
         let returnString = String( filterName())

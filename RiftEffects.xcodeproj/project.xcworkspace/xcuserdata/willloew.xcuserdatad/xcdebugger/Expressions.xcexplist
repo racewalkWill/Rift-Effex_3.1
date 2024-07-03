@@ -728,13 +728,7 @@
          contextName = "PGLStackController.tableView(_:didSelectRowAt:):PGLStackController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "indexPath[1]">
-            </PersistentString>
-            <PersistentString
-               value = "indexPath.row">
-            </PersistentString>
-            <PersistentString
-               value = "indexPath[0]">
+               value = "appStack.stackSections()">
             </PersistentString>
             <PersistentString
                value = "appStack.cellFilters">
@@ -1470,6 +1464,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "PGLStackController.tableView(_:indentationLevelForRowAt:):PGLStackController.swift">
+      </ContextState>
+      <ContextState
          contextName = "CVBufferRef.setUpNormalize():CVPixelBufferExtension.swift">
          <PersistentStrings>
             <PersistentString
@@ -1822,6 +1819,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "PGLStackController.tableView(_:numberOfRowsInSection:):PGLStackController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "appStack.stackSections()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "PGLImageController.updateNavigationBar():PGLImageController.swift">
          <PersistentStrings>
             <PersistentString
@@ -1883,6 +1888,14 @@
       </ContextState>
       <ContextState
          contextName = "PGLAppStack.moveTo(filterIndent:):PGLAppStack.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "cellFilters">
+            </PersistentString>
+            <PersistentString
+               value = "stackSections()">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "PGLImageController.randomBtnAction(_:):PGLImageController.swift">

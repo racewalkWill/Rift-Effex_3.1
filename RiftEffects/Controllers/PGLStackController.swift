@@ -543,7 +543,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             return
         }
         if !appStack.cellFilters.isEmpty {
-            let cellIndent = appStack.cellFilters[indexPath.row]
+  //          let cellIndent = appStack.cellFilters[indexPath.row]
+            let cellIndent = appStack.stackSections()[indexPath.section - 1 ].filterIndents[indexPath.row]
+
             appStack.moveTo(filterIndent: cellIndent)
                 // sets the appStack viewerStack and the current filter of the viewerStac,
                 //        let iPhoneCompact = (traitCollection.userInterfaceIdiom == .phone) &&
