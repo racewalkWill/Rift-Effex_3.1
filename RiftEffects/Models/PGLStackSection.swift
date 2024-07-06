@@ -10,9 +10,9 @@ import Foundation
 @MainActor
 
 
-struct PGLStackSection {
+class PGLStackSection {
 
-    var filterIndents: [PGLFilterIndent]
+    var filterIndents = [PGLFilterIndent]()
 
     init( _ filters: [PGLFilterIndent]) {
         if filters.isEmpty {
@@ -21,6 +21,10 @@ struct PGLStackSection {
         self.filterIndents = filters.sorted(by: { $0.filterPosition <  $1.filterPosition })
     }
 
+     func append(_ filter: PGLFilterIndent) {
+        filterIndents.append(filter)
+
+    }
     func stack() -> PGLFilterStack {
         return  filterIndents[0].stack
     }

@@ -33,7 +33,9 @@ class PGLAppStack {
 
     lazy var videoMgr: PGLVideoMgr = PGLVideoMgr()
 
-    lazy var cellFilters = self.flattenFilters()
+    var cellFilters = [PGLFilterIndent]()
+    var stackSectionArray = [PGLStackSection]()
+
         // flat array of filters in the stack trees
 
         /// display just the current filter if true
@@ -264,11 +266,11 @@ class PGLAppStack {
 
         filterIndent.stack.imageCIContext = viewerStack.imageCIContext
         viewerStack = filterIndent.stack
-//        NSLog("PGLAppStack #moveTo( viewerStack now \(viewerStack)")
+        NSLog("PGLAppStack #moveTo( viewerStack now \(viewerStack)")
         viewerStack.activeFilterIndex = filterIndent.filterPosition
         // remove from pushedStacks???
         pushedStacks.removeAll(where: { $0 === viewerStack })
-        postFilterChangeRedraw()
+        postStackChange()
 
 
     }
@@ -434,6 +436,8 @@ class PGLAppStack {
             flatAnswer.append(PGLFilterIndent(level, aFilter, inStack: outputStack,index: stackIndex))
             stackIndex += 1
         }
+        // reset the array of stack sections
+        stackSectionArray = stackSectionsBasic(filterIndents: flatAnswer)
         return flatAnswer
     }
 
@@ -515,30 +519,71 @@ class PGLAppStack {
         cellFilters = flattenFilters()
     }
 
+    func filterIndent(atIndex: IndexPath) -> PGLFilterIndent? {
+        let sectionFilterRow = atIndex.row
+        let currentSections = stackSections()
+        let sectionIndex = atIndex.section - 1
+
+        // range validity checks
+        if (sectionIndex <  0) || (sectionIndex >= currentSections.endIndex) {
+            return nil
+        }
+        if sectionFilterRow >= currentSections[sectionIndex].filterIndents.endIndex {
+            return nil }
+
+        let aFilterIndent = currentSections[sectionIndex].filterIndents[sectionFilterRow]
+        return aFilterIndent
+    }
+    
+    func indexPathFor(filterIndent: PGLFilterIndent) -> IndexPath {
+//        let section = filterIndent.level + 1
+
+        let section = 1
+
+        let row = cellFilters.firstIndex(of: filterIndent) ?? 0
+
+        return IndexPath(row: row, section: section)
+
+    }
+
+    func isLastFilterOfSection(currentFilter: PGLFilterIndent) -> Bool {
+//        guard let aFilterIndent = filterIndent(atIndex: atIndex)
+//            else {  return false }
+        let currentSections = stackSections()
+        if currentSections.isEmpty {
+            return false
+        }
+        let sectionIndex = currentFilter.level
+        let sectionFilterCount = currentSections[sectionIndex].sectionRowCount()
+        let isLastInSection =  (currentFilter.level > 0 ) && (currentFilter.filterPosition == (sectionFilterCount - 1))
+        return isLastInSection
+    }
+
     //MARK: Stack sections
 
-    func stackSections() -> [PGLStackSection] {
+    func stackSectionsBasic(filterIndents: [PGLFilterIndent]) -> [PGLStackSection] {
         var answerSections = [PGLStackSection]()
+        var sectionsDict: [PGLFilterStack: PGLStackSection] = [:]
+        var thisSection: PGLStackSection?
 
-        if cellFilters.isEmpty {
+        if filterIndents.isEmpty {
             return answerSections }
-        var thisStackSection = PGLStackSection( [cellFilters.first!] )
-        var thisStack = thisStackSection.stack()
-        for index in 1..<cellFilters.count {
-            let thisCellIndent = cellFilters[index]
-            if thisCellIndent.stack === thisStack {
-                thisStackSection.filterIndents.append(thisCellIndent)
-            }
-            else {
-                answerSections.append(thisStackSection)
-                
-                thisStackSection = PGLStackSection( [thisCellIndent] )
-                thisStack = thisStackSection.stack()
+
+        for thisCellIndent in filterIndents {
+            thisSection = sectionsDict[thisCellIndent.stack]
+            if thisSection != nil
+                {  thisSection!.append(thisCellIndent) }
+            else
+                { let newSection = PGLStackSection([thisCellIndent])
+                answerSections.append(newSection)
+                sectionsDict[thisCellIndent.stack] = newSection
             }
         }
-        // append the last one
-        answerSections.append(thisStackSection)
-        return answerSections
+        return answerSections.sorted(by: {$0.stackHeaderIndentLevel() >= $1.stackHeaderIndentLevel()})
+    }
+
+    func stackSections() -> [PGLStackSection] {
+        return stackSectionArray
     }
 
     // MARK: Display state
@@ -567,7 +612,17 @@ class PGLAppStack {
 
 }
 @MainActor
-class PGLFilterIndent {
+class PGLFilterIndent: Hashable, Equatable {
+
+    //MARK: Hashable, Equatable
+    nonisolated static func == (lhs: PGLFilterIndent, rhs: PGLFilterIndent) -> Bool {
+        return lhs === rhs
+    }
+
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+
     // supports PGLStackController creation of cells in the tableView
     // indent a filter under it's parent
 
@@ -576,6 +631,7 @@ class PGLFilterIndent {
     var stack: PGLFilterStack
     var filterPosition: Int
 
+    //MARK: init
     init(_ indent: Int, _ onFilter: PGLSourceFilter, inStack: PGLFilterStack, index: Int) {
         level = indent
         filter = onFilter

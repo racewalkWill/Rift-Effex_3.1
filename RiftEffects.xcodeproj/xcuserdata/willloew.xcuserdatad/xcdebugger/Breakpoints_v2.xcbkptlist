@@ -126,8 +126,8 @@
             filePath = "RiftEffects/Controllers/PGLStackController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "404"
-            endingLineNumber = "404"
+            startingLineNumber = "416"
+            endingLineNumber = "416"
             landmarkName = "filterCellFor(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -142,8 +142,8 @@
             filePath = "RiftEffects/Models/PGLFilterStack.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "771"
-            endingLineNumber = "771"
+            startingLineNumber = "783"
+            endingLineNumber = "783"
             landmarkName = "PGLFilterStack"
             landmarkType = "3">
          </BreakpointContent>
@@ -158,8 +158,8 @@
             filePath = "RiftEffects/Models/PGLAppStack.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
+            startingLineNumber = "221"
+            endingLineNumber = "221"
             landmarkName = "loadChildStack(childStackId:onParm:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -174,8 +174,8 @@
             filePath = "RiftEffects/Controllers/PGLStackController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "444"
-            endingLineNumber = "444"
+            startingLineNumber = "457"
+            endingLineNumber = "457"
             landmarkName = "headerCellFor(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -190,8 +190,8 @@
             filePath = "RiftEffects/Controllers/PGLStackController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "369"
-            endingLineNumber = "369"
+            startingLineNumber = "381"
+            endingLineNumber = "381"
             landmarkName = "filterCellFor(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +206,8 @@
             filePath = "RiftEffects/Controllers/PGLStackController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "331"
-            endingLineNumber = "331"
+            startingLineNumber = "332"
+            endingLineNumber = "332"
             landmarkName = "numberOfSections(in:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,8 +222,8 @@
             filePath = "RiftEffects/Controllers/PGLStackController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "437"
-            endingLineNumber = "437"
+            startingLineNumber = "450"
+            endingLineNumber = "450"
             landmarkName = "PGLStackController"
             landmarkType = "3">
          </BreakpointContent>
@@ -238,8 +238,8 @@
             filePath = "RiftEffects/Controllers/PGLStackController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "431"
-            endingLineNumber = "431"
+            startingLineNumber = "444"
+            endingLineNumber = "444"
             landmarkName = "tableView(_:indentationLevelForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -254,8 +254,8 @@
             filePath = "RiftEffects/Models/PGLAppStack.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "437"
-            endingLineNumber = "437"
+            startingLineNumber = "441"
+            endingLineNumber = "441"
             landmarkName = "flattenFilters()"
             landmarkType = "7">
          </BreakpointContent>
@@ -270,8 +270,8 @@
             filePath = "RiftEffects/Controllers/PGLStackController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "353"
-            endingLineNumber = "353"
+            startingLineNumber = "367"
+            endingLineNumber = "367"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -286,8 +286,8 @@
             filePath = "RiftEffects/Models/PGLAppStack.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "496"
-            endingLineNumber = "496"
+            startingLineNumber = "500"
+            endingLineNumber = "500"
             landmarkName = "mapCellRowToStackIndex(index:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -296,14 +296,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "9C596D58-B461-421F-94AA-A4BF2451ED1E"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RiftEffects/Controllers/PGLStackController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "776"
-            endingLineNumber = "776"
+            startingLineNumber = "822"
+            endingLineNumber = "822"
             landmarkName = "tableView(_:trailingSwipeActionsConfigurationForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -318,9 +318,57 @@
             filePath = "RiftEffects/Controllers/PGLStackController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "492"
-            endingLineNumber = "492"
+            startingLineNumber = "505"
+            endingLineNumber = "505"
             landmarkName = "headerCellFor(_:_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3D484233-8D66-4457-8E3F-53EE817492DF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Controllers/PGLStackController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "737"
+            endingLineNumber = "737"
+            landmarkName = "highlightViewerStackCells()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FFC4AE6D-A341-4A1A-9033-6150C9597197"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Controllers/PGLStackController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "730"
+            endingLineNumber = "730"
+            landmarkName = "highlightViewerStackCells()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "684A3A37-E283-4CA0-9151-5EF3F00B1659"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Controllers/PGLStackController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "733"
+            endingLineNumber = "733"
+            landmarkName = "highlightViewerStackCells()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

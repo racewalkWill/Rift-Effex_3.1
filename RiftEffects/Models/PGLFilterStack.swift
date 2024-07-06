@@ -28,7 +28,10 @@ import os
 
 
 @MainActor
-class PGLFilterStack  {
+class PGLFilterStack: Equatable, Hashable  {
+
+
+
     // when the filter is changed - keep the old one until the new filter is applied
     // remove the apply logic.. do not keep the old one until applied.. one less button
     // March 9, 2021 Modified assumption that there is always at least one filter
@@ -80,6 +83,15 @@ class PGLFilterStack  {
     // set to true to use the old image input
     // in the debugger add expression self.doPrintCropClamp = true
     // need to add a break to open the debugger
+
+        //MARK: Hashable Equatable
+    nonisolated static func == (lhs: PGLFilterStack, rhs: PGLFilterStack) -> Bool {
+        return lhs === rhs
+    }
+
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
 
     // MARK: Init default
     nonisolated init(){

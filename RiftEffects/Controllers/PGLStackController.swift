@@ -179,6 +179,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         tableView.reloadData()
         setShiftBtnState()
         updateNavigationBar()
+         highlightViewerStackCells()
 
     }
 
@@ -327,21 +328,34 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
     // MARK: Table Setup
     override func numberOfSections(in tableView: UITableView) -> Int {
         //  return the number of sections
-        let mySectionCount =  appStack.stackSections().count
-        return mySectionCount + 1 // + 1 for the header
+//        let mySectionCount =  appStack.stackSections().count
+//        return mySectionCount + 1 // + 1 for the header
+        return 2
+
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //  return the number of rows
-        switch section {
-            case 0:
-                return 2
-                // header has stackName, type
+//        switch section {
+//            case 0:
+//                return 2
+//                // header has stackName, type
+//
+//            default:
+//                let myRowCount =  appStack.stackSections()[section - 1].sectionRowCount()
+//                return myRowCount
+//        }
 
-            default:
-                let myRowCount =  appStack.stackSections()[section - 1].sectionRowCount()
-                return myRowCount
-        }
+           switch section {
+               case 0:
+                   return 2
+                   // header has stackName, type
+               case 1:
+                   return appStack.flatRowCount()
+               default:
+                   return 0
+           }
+
 
     }
 
@@ -358,16 +372,14 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
     fileprivate func filterCellFor(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
         // filter cell section
         let cell = tableView.dequeueReusableCell(withIdentifier: "filterRowCell", for: indexPath)
-//        let aFilterIndent = appStack.filterAt(indexPath: indexPath)
-        let sectionFilterRow = indexPath.row
-        let currentSections = appStack.stackSections()
-        let sectionIndex = indexPath.section - 1
-        let aFilterIndent = currentSections[sectionIndex].filterIndents[sectionFilterRow]
-        let sectionFilterCount = currentSections[sectionIndex].sectionRowCount()
+
+//        guard let aFilterIndent = appStack.filterIndent(atIndex: indexPath)
+//            else { return cell }   // empty cell
+        let aFilterIndent = appStack.filterAt(indexPath: indexPath)
 
         cell.textLabel?.text = aFilterIndent.descriptorDisplayName  // same text as the filterController cell
         cell.indentationLevel = aFilterIndent.level
-        if (aFilterIndent.level > 0 ) && (aFilterIndent.filterPosition == (sectionFilterCount - 1))    {
+        if appStack.isLastFilterOfSection(currentFilter: aFilterIndent)  {
             // child stack is indented
             // only label the bottom filter with the detailText
             cell.detailTextLabel?.text = aFilterIndent.stack.stackName
@@ -427,6 +439,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             return 0
         }
         let correctedForHeaderIndex = indexPath.section - 1
+//        let correctedForHeaderIndex = indexPath.section
         let myIndentLevel =  appStack.stackSections()[correctedForHeaderIndex].stackHeaderIndentLevel()
         return myIndentLevel
     }
@@ -535,6 +548,14 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         albumUserTextCell?.text = albumName
     }
 
+//    override func tableView( _ tableView: UITableView, didHighlightRowAt indexPath:IndexPath ) {
+//        // make the viewerStack visible for this filter
+//        if let filterIndentHightlighted = appStack.filterIndent(atIndex: indexPath) {
+//            appStack.moveTo(filterIndent: filterIndentHightlighted)
+//        }
+//
+//    }
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         // go to Parms of the filter
@@ -543,8 +564,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             return
         }
         if !appStack.cellFilters.isEmpty {
-  //          let cellIndent = appStack.cellFilters[indexPath.row]
-            let cellIndent = appStack.stackSections()[indexPath.section - 1 ].filterIndents[indexPath.row]
+            let cellIndent = appStack.cellFilters[indexPath.row]
+//            let cellIndent = appStack.stackSections()[indexPath.section - 1 ].filterIndents[indexPath.row]
 
             appStack.moveTo(filterIndent: cellIndent)
                 // sets the appStack viewerStack and the current filter of the viewerStac,
@@ -699,6 +720,31 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
 
 // MARK: Navigation
+
+    func highlightViewerStackCells() {
+        // change background of cells in the current viewerStack
+        // viewerStack is used to add new filter.. thus
+        // a new filter can be added to a childstack if it is highlighted
+
+        for aFilterIndent in appStack.cellFilters {
+            let cellIndex = appStack.indexPathFor(filterIndent: aFilterIndent)
+            guard let cell = tableView.cellForRow(at: cellIndex)
+                else { 
+                Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLStackController  #highlightViewerStackCells failed for cellIndex \(cellIndex)")
+                    return }
+            if aFilterIndent.stack === appStack.viewerStack {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLStackController  #highlightViewerStackCells SETS cellIndex \(cellIndex)")
+                cell.backgroundColor = UIColor.systemGroupedBackground
+                    // .withAlphaComponent(0.2)
+                
+                }
+            else {
+                cell.backgroundColor = nil
+            }
+        }
+
+    }
+
 
     func updateNavigationBar() {
 //        self.navigationItem.title = self.appStack.firstStack()?.stackName
