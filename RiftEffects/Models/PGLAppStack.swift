@@ -553,8 +553,10 @@ class PGLAppStack {
         if currentSections.isEmpty {
             return false
         }
-        let sectionIndex = currentFilter.level
-        let sectionFilterCount = currentSections[sectionIndex].sectionRowCount()
+
+        let mySection = currentSections.first(where: { $0.stack() == currentFilter.stack })
+        let sectionFilterCount = mySection?.sectionRowCount() ?? 1
+
         let isLastInSection =  (currentFilter.level > 0 ) && (currentFilter.filterPosition == (sectionFilterCount - 1))
         return isLastInSection
     }

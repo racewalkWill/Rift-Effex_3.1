@@ -179,7 +179,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         tableView.reloadData()
         setShiftBtnState()
         updateNavigationBar()
-         highlightViewerStackCells()
+//         highlightViewerStackCells()
 
     }
 
@@ -389,6 +389,15 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             cell.detailTextLabel?.text = ""
 //            cell.detailTextLabel?.backgroundColor = UIColor.clear
         }
+        if aFilterIndent.stack === appStack.viewerStack {
+            Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLStackController  #highlightViewerStackCells SETS cellIndex \(indexPath)")
+            cell.backgroundColor = UIColor.systemGroupedBackground
+                // .withAlphaComponent(0.2)
+
+            }
+        else {
+            cell.backgroundColor = nil
+        }
 
         if aFilterIndent.stack is PGLSequenceStack {
             cell.imageView?.image = PGLFilterAttribute.SequenceSymbol }
@@ -434,22 +443,28 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
         return cell
     }
-    override func tableView( _ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath ) -> Int {
-        if indexPath.section == 0 {
-            return 0
-        }
-        let correctedForHeaderIndex = indexPath.section - 1
-//        let correctedForHeaderIndex = indexPath.section
-        let myIndentLevel =  appStack.stackSections()[correctedForHeaderIndex].stackHeaderIndentLevel()
-        return myIndentLevel
-    }
-
-//    override func tableView( _ tableView: UITableView, titleForFooterInSection section: Int ) -> String? {
-//
-//        let myStack = appStack.stackSections()[section].stack()
-//        return myStack.stackName
-//
+//    override func tableView( _ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath ) -> Int {
+//        if indexPath.section == 0 {
+//            return 0
+//        }
+//        let correctedForHeaderIndex = indexPath.section - 1
+////        let correctedForHeaderIndex = indexPath.section
+//        let myIndentLevel =  appStack.stackSections()[correctedForHeaderIndex].stackHeaderIndentLevel()
+//        return myIndentLevel
 //    }
+
+    override func tableView( _ tableView: UITableView, titleForHeaderInSection section: Int ) -> String? {
+
+        switch section {
+                case 0:
+                return "Main Stack"
+            default:
+                return "Filters"
+//                let myStack = appStack.stackSections()[section].stack()
+//                return myStack.stackName
+        }
+
+    }
 
     fileprivate func headerCellFor(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
             // header
