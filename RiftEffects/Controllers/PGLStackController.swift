@@ -198,6 +198,13 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
 
     // MARK: ToolBar
+
+    @IBOutlet weak var openParmsBtn: UIBarButtonItem!
+
+    @IBAction func openParmsAction(_ sender: UIBarButtonItem) {
+        segueToParmController()
+    }
+    
     func addToolBarButtons(toController: UIViewController) {
 
 
@@ -389,15 +396,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             cell.detailTextLabel?.text = ""
 //            cell.detailTextLabel?.backgroundColor = UIColor.clear
         }
-        if aFilterIndent.stack === appStack.viewerStack {
-            Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLStackController  #highlightViewerStackCells SETS cellIndex \(indexPath)")
-            cell.backgroundColor = UIColor.systemGroupedBackground
-                // .withAlphaComponent(0.2)
-
-            }
-        else {
-            cell.backgroundColor = nil
-        }
+        aFilterIndent.setCellViewerStackBackground(aCell: cell, viewerStack: appStack.viewerStack)
 
         if aFilterIndent.stack is PGLSequenceStack {
             cell.imageView?.image = PGLFilterAttribute.SequenceSymbol }
@@ -457,7 +456,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
         switch section {
                 case 0:
-                return "Main Stack"
+                return "Rift-Effex"
             default:
                 return "Filters"
 //                let myStack = appStack.stackSections()[section].stack()
@@ -527,6 +526,16 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
     }
 
+    func setViewerStackBackground(){
+        // what about backgroundConfiguration??
+
+        for aFilterIndent in appStack.cellFilters {
+         let indexPath = appStack.indexPathFor(filterIndent: aFilterIndent)
+            if let aCell = tableView.cellForRow(at: indexPath) {
+                aFilterIndent.setCellViewerStackBackground(aCell: aCell, viewerStack: appStack.viewerStack)
+            }
+        }
+    }
     func addAlbumLookUp(albumUserText: UITextField) {
         let overlayButton = UIButton(type: .custom)
         let bookmarkImage = UIImage(systemName: "bookmark")
@@ -584,18 +593,24 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
             appStack.moveTo(filterIndent: cellIndent)
                 // sets the appStack viewerStack and the current filter of the viewerStac,
-                //        let iPhoneCompact = (traitCollection.userInterfaceIdiom == .phone) &&
-                //                            (traitCollection.horizontalSizeClass == .compact)
-            if splitViewController?.isCollapsed ?? false {
-                performSegue(withIdentifier: "twoContainers", sender: self)
-            } else {
-                performSegue(withIdentifier: "ParmSettings", sender: self)
-            }
+
+            appStack.toggleShowFilterImage()
+            setViewerStackBackground()
+            let selectedCell = tableView.cellForRow(at: indexPath)
+            selectedCell?.setSelected(true, animated: true)
+            // segueToParmController()
         }
 
     
     }
 
+    func segueToParmController() {
+            if splitViewController?.isCollapsed ?? false {
+                performSegue(withIdentifier: "twoContainers", sender: self)
+            } else {
+                performSegue(withIdentifier: "ParmSettings", sender: self)
+            }
+    }
 
     func isLimitedPhotoLibAccess() -> Bool {
         let accessLevel: PHAccessLevel = .readWrite // or .addOnly

@@ -192,7 +192,13 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     
     @IBOutlet weak var stackEditBtn: UIBarButtonItem!
     
-
+    @IBOutlet weak var openParmsBtn: UIBarButtonItem!
+    
+    @IBAction func openParmsAction(_ sender: UIBarButtonItem) {
+        guard let myStackTarget = columns?.control as? PGLStackController
+        else {return }
+        myStackTarget.segueToParmController() // does the current filter need to be set?
+    }
     /*
     // MARK: - Navigation
 

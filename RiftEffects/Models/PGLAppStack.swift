@@ -539,6 +539,8 @@ class PGLAppStack {
 //        let section = filterIndent.level + 1
 
         let section = 1
+            //assumes section 0 is the stack name/album
+            // and section 1 is the filters that are indented for each child stack
 
         let row = cellFilters.firstIndex(of: filterIndent) ?? 0
 
@@ -616,7 +618,7 @@ class PGLAppStack {
 @MainActor
 class PGLFilterIndent: Hashable, Equatable {
 
-    //MARK: Hashable, Equatable
+        //MARK: Hashable, Equatable
     nonisolated static func == (lhs: PGLFilterIndent, rhs: PGLFilterIndent) -> Bool {
         return lhs === rhs
     }
@@ -625,15 +627,15 @@ class PGLFilterIndent: Hashable, Equatable {
         hasher.combine(ObjectIdentifier(self))
     }
 
-    // supports PGLStackController creation of cells in the tableView
-    // indent a filter under it's parent
+        // supports PGLStackController creation of cells in the tableView
+        // indent a filter under it's parent
 
     var level: Int
     var filter: PGLSourceFilter
     var stack: PGLFilterStack
     var filterPosition: Int
 
-    //MARK: init
+        //MARK: init
     init(_ indent: Int, _ onFilter: PGLSourceFilter, inStack: PGLFilterStack, index: Int) {
         level = indent
         filter = onFilter
@@ -650,5 +652,16 @@ class PGLFilterIndent: Hashable, Equatable {
             return filter.localizedName()
         }
 
+    }
+
+    func setCellViewerStackBackground(aCell: UITableViewCell, viewerStack: PGLFilterStack) {
+
+        if stack === viewerStack {
+            aCell.backgroundColor = UIColor.systemGroupedBackground
+                // .withAlphaComponent(0.2)
+        }
+        else {
+            aCell.backgroundColor = nil
+        }
     }
 }
