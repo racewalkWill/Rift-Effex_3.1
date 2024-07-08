@@ -95,7 +95,11 @@ extension PGLFilterStack {
 
             }
                 // postFilterChangeRedraw()
-            postStackChange()
+          //  postStackChange()
+            // triggers stackController updateDisplay
+                // which is also triggered by the postCurrentFilterChange
+                    // don't need to update twice
+
             postTransitionFilterAdd() // makes the redraws run
             postCurrentFilterChange() // makes DoNotDraw = false..
 //        }
@@ -113,7 +117,9 @@ extension PGLFilterStack {
 
             myAppDelegate.appStack.targetAttribute = imageAttribute
             imageAttribute?.setImageCollectionInput(cycleStack:userStartupImageList)
-            postStackChange()
+//            postStackChange()
+                // stackChange triggers the stackUpdateDisplay which is also triggered by postCurrentFilterChange
+                // don't need two updates
             postTransitionFilterAdd() // makes the redraws run
             postCurrentFilterChange() // makes DoNotDraw = false..
         }
