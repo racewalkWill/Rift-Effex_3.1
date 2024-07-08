@@ -111,14 +111,19 @@ extension PGLLibraryController {
     }
     
     fileprivate func applySnapShot(stacks: [FilterStack]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
 
+        // this version of the query differs from the PGLOpenStackController #performTitleQuery
+        // because it preserves the sections.. sections needed in the smaller space
+        // of the LibraryController
+        var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
         if let sections = dataProvider.fetchedResultsController.sections {
             for index in  0..<sections.count
             {
-                if let thisSectionElements = sections[index].objects as? [FilterStack]
-                {
-                    let matchingElements = thisSectionElements.filter({
+                if let thisSectionElements = sections[index].objects as? [CDFilterStack]  {
+                    let theFilterStacks = thisSectionElements.map({$0.asFilterStackStruct()} )
+
+
+                    let matchingElements = theFilterStacks.filter({
                         stacks.contains($0)
                     })
                     if !matchingElements.isEmpty {
