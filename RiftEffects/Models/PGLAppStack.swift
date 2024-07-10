@@ -275,8 +275,13 @@ class PGLAppStack {
 
     }
 
+        /// triggers a single frame redraw
+        /// needs redraw  is reset to false by the Renderer after the frame is drawn
     func postFilterChangeRedraw() {
-        let updateNotification = Notification(name:PGLRedrawFilterChange)
+        // triggers a single frame redraw
+        // it is reset to false by the Renderer after the frame is drawn
+        let updateNotification = Notification(name: PGLCurrentFilterChange)
+                                                // was PGLRedrawFilterChange)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
     }
 
@@ -561,6 +566,23 @@ class PGLAppStack {
 
         let isLastInSection =  (currentFilter.level > 0 ) && (currentFilter.filterPosition == (sectionFilterCount - 1))
         return isLastInSection
+    }
+
+    /// return true if this filter is either last filter of the top stack or
+    /// in single filter mode this is the activeFilter image showing
+    func isOutputFilter(_ aPGLFilter: PGLFilterIndent) -> Bool {
+        if showFilterImage {
+            let thisIsTheOutput =  aPGLFilter.filter === viewerStack.currentFilter()
+            return thisIsTheOutput }
+        else {
+            // only the last filter is the output filter
+            guard let lastFilter = cellFilters.last else {
+                return false
+            }
+            let thisIsTheFinalOutput =  (aPGLFilter.filter === lastFilter.filter)
+            return thisIsTheFinalOutput
+
+        }
     }
 
     //MARK: Stack sections

@@ -102,6 +102,8 @@ class PGLFilterAttribute {
     static let ChildStack4Symbol = UIImage(systemName: "square.stack" )
     static let ChildStack5Symbol = UIImage(systemName: "square.on.square.squareshape.controlhandle")
 
+    static let OutputFilterSymbol = UIImage(systemName: "photo.badge.checkmark.fill")
+
 
                                            // arrow.down.doc
             // or

@@ -420,6 +420,13 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             }
         }
 
+        if appStack.isOutputFilter(aFilterIndent) {
+            // shows in single mode the filter being displayed in the image
+            // or in All mode the last filter of the output
+            cell.imageView?.image = PGLFilterAttribute.OutputFilterSymbol
+        }
+
+
         // REVISIT for singleFilter or all mode
 //        if aFilterIndent.stack === appStack.viewerStack {
 //            if appStack.showFilterImage {

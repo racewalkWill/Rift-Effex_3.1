@@ -127,12 +127,13 @@ class PGLRedraw {
 
     func toggleViewWillAppear() {
         // go twice, then reset
-        if viewWillAppearCounter < 2 {
+        if viewWillAppearCounter < 3 {
             viewWillAppearCounter += 1
-            viewWillAppear = true
+
         } else {
             viewWillAppearCounter = 0
-            viewWillAppear = false
+            
+            filterChanged = false
         }
 
     }
@@ -159,6 +160,7 @@ class PGLRedraw {
     }
 
     func filter(changed: Bool) {
+
         filterChanged = changed
     }
 

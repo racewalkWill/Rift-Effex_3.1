@@ -230,11 +230,11 @@ class Renderer: NSObject, MTKViewDelegate {
             // get this frame drawn
 
         if needsRedraw.filterChanged {
-            needsRedraw.filter(changed: false)
-                // filter change has been drawn
+            // increment a couple frame draws then stop
+            needsRedraw.toggleViewWillAppear()
         }
 
-        needsRedraw.toggleViewWillAppear()
+
 
     }
 

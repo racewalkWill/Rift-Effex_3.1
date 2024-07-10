@@ -704,11 +704,11 @@
                         <viewControllerLayoutGuide type="bottom" id="j3d-oc-3aS"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vua-Lu-kpo">
-                        <rect key="frame" x="0.0" y="0.0" width="242" height="760"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1210" height="760"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iTi-AT-siZ">
-                                <rect key="frame" x="-7" y="712" width="238" height="47"/>
+                                <rect key="frame" x="-7" y="712" width="1206" height="47"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="rij-Pi-lzb"/>
@@ -984,7 +984,7 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="Mxb-eC-ZvV">
+                    <navigationItem key="navigationItem" id="Mxb-eC-ZvV">
                         <rightBarButtonItems>
                             <barButtonItem title="New" image="trash" catalog="system" id="pEQ-Uh-ooY">
                                 <connections>
@@ -1040,7 +1040,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="cxI-vr-Pxp"/>
+        <segue reference="4FJ-we-3bf"/>
         <segue reference="Zrd-6b-Z8z"/>
         <segue reference="Xyz-2Z-Q4q"/>
     </inferredMetricsTieBreakers>

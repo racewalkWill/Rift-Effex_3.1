@@ -51,6 +51,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         if containerStackController?.appStack.viewerStack.isEmptyStack() ?? true {
             addFilterBtn(UIBarButtonItem())
         }
+        
 
     }
 
@@ -157,10 +158,11 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     }
 
     func updateNavigationBar() {
-//        self.navigationItem.title = self.appStack.firstStack()?.stackName
-//        self.navigationItem.title = "Effects"
+
+//        self.navigationItem.title = "Rift-Effex"
         guard let stackTarget = columns?.control as? PGLStackController
         else {return }
+//        self.navigationItem.title = stackTarget.title
 
         stackEditBtn.isHidden = stackTarget.appStack.viewerStack.isEmptyStack()
         setNeedsStatusBarAppearanceUpdate()
