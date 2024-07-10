@@ -283,6 +283,9 @@ class PGLAppStack {
         let updateNotification = Notification(name: PGLCurrentFilterChange)
                                                 // was PGLRedrawFilterChange)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+
+        let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
+        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
     }
 
     func addChildSequenceStackTo(aSequence: PGLSequenceStack, parm: PGLFilterAttribute) -> PGLSequenceStack {

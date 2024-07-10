@@ -425,7 +425,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             // or in All mode the last filter of the output
             cell.imageView?.image = PGLFilterAttribute.OutputFilterSymbol
         }
-
+        aFilterIndent.setCellViewerStackBackground(aCell: cell, viewerStack: appStack.viewerStack)
 
         // REVISIT for singleFilter or all mode
 //        if aFilterIndent.stack === appStack.viewerStack {
@@ -533,16 +533,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
     }
 
-    func setViewerStackBackground(){
-        // what about backgroundConfiguration??
 
-        for aFilterIndent in appStack.cellFilters {
-         let indexPath = appStack.indexPathFor(filterIndent: aFilterIndent)
-            if let aCell = tableView.cellForRow(at: indexPath) {
-                aFilterIndent.setCellViewerStackBackground(aCell: aCell, viewerStack: appStack.viewerStack)
-            }
-        }
-    }
     func addAlbumLookUp(albumUserText: UITextField) {
         let overlayButton = UIButton(type: .custom)
         let bookmarkImage = UIImage(systemName: "bookmark")
@@ -596,13 +587,14 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         }
         if !appStack.cellFilters.isEmpty {
             let cellIndent = appStack.cellFilters[indexPath.row]
-//            let cellIndent = appStack.stackSections()[indexPath.section - 1 ].filterIndents[indexPath.row]
 
             appStack.moveTo(filterIndent: cellIndent)
                 // sets the appStack viewerStack and the current filter of the viewerStac,
 
+//            appStack.toggleShowFilterImage()
+                // toggle causes reload of the data
+//            setViewerStackBackground()
             appStack.toggleShowFilterImage()
-            setViewerStackBackground()
             let selectedCell = tableView.cellForRow(at: indexPath)
             selectedCell?.setSelected(true, animated: true)
             // segueToParmController()
