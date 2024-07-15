@@ -94,8 +94,8 @@
             filePath = "RiftEffects/Models/PGLFilterStack.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "783"
-            endingLineNumber = "783"
+            startingLineNumber = "779"
+            endingLineNumber = "779"
             landmarkName = "PGLFilterStack"
             landmarkType = "3">
          </BreakpointContent>
@@ -337,6 +337,22 @@
             startingLineNumber = "426"
             endingLineNumber = "426"
             landmarkName = "filterCellFor(_:_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4148DEC5-BF47-4EBC-8D8A-D7002A4B802D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Models/PGLFilterStack.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "357"
+            endingLineNumber = "357"
+            landmarkName = "removeLastFilter()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

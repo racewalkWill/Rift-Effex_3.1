@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23077.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vbC-U8-P9f">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23086.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vbC-U8-P9f">
     <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23068.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23076"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -704,11 +704,11 @@
                         <viewControllerLayoutGuide type="bottom" id="j3d-oc-3aS"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vua-Lu-kpo">
-                        <rect key="frame" x="0.0" y="0.0" width="242" height="760"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1210" height="760"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iTi-AT-siZ">
-                                <rect key="frame" x="-7" y="712" width="238" height="47"/>
+                                <rect key="frame" x="-7" y="712" width="1206" height="47"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="rij-Pi-lzb"/>
@@ -840,19 +840,19 @@
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="KJJ-kt-Vuh">
                         <rightBarButtonItems>
-                            <barButtonItem title="Parm" image="wand.and.stars" catalog="system" id="ORw-h3-ICr">
+                            <barButtonItem title="Edit" id="Hs1-5M-SgW" userLabel="Edit">
                                 <connections>
-                                    <action selector="openParmsAction:" destination="dDm-tJ-e98" id="LEp-Sn-0eJ"/>
+                                    <action selector="editStack:" destination="dDm-tJ-e98" id="eKP-4i-Ca0"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="add" id="nc0-tH-Wbu">
+                            <barButtonItem image="plus.square.on.square" catalog="system" id="nc0-tH-Wbu">
                                 <connections>
                                     <action selector="addFilter:" destination="dDm-tJ-e98" id="s8d-dr-G0S"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Edit" id="Hs1-5M-SgW" userLabel="Edit">
+                            <barButtonItem title="Parm" image="wand.and.stars" catalog="system" id="ORw-h3-ICr">
                                 <connections>
-                                    <action selector="editStack:" destination="dDm-tJ-e98" id="eKP-4i-Ca0"/>
+                                    <action selector="openParmsAction:" destination="dDm-tJ-e98" id="LEp-Sn-0eJ"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -1007,19 +1007,19 @@
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="More Btn" image="ellipsis.circle" catalog="system" id="X6h-Dm-yVE"/>
-                            <barButtonItem title="Parm" image="wand.and.stars" catalog="system" id="ajT-Qa-f5T">
+                            <barButtonItem title="Edit" id="rM6-5G-qx6" userLabel="Edit">
                                 <connections>
-                                    <action selector="openParmsAction:" destination="z1U-K0-aGb" id="pYc-nR-04j"/>
+                                    <action selector="stackEditBtn:" destination="z1U-K0-aGb" id="Jz8-fv-3WT"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="add" id="18U-Y9-D7X">
+                            <barButtonItem image="plus.square.on.square" catalog="system" id="18U-Y9-D7X">
                                 <connections>
                                     <action selector="addFilterBtn:" destination="z1U-K0-aGb" id="zi7-F9-C9b"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Edit" id="rM6-5G-qx6" userLabel="Edit">
+                            <barButtonItem title="Parm" image="wand.and.stars" catalog="system" id="ajT-Qa-f5T">
                                 <connections>
-                                    <action selector="stackEditBtn:" destination="z1U-K0-aGb" id="Jz8-fv-3WT"/>
+                                    <action selector="openParmsAction:" destination="z1U-K0-aGb" id="pYc-nR-04j"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -1040,7 +1040,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="cxI-vr-Pxp"/>
+        <segue reference="4FJ-we-3bf"/>
         <segue reference="Zrd-6b-Z8z"/>
         <segue reference="Xyz-2Z-Q4q"/>
     </inferredMetricsTieBreakers>
@@ -1051,6 +1051,7 @@
         <image name="chevron.up" catalog="system" width="128" height="70"/>
         <image name="ellipsis.circle" catalog="system" width="128" height="123"/>
         <image name="playpause" catalog="system" width="128" height="75"/>
+        <image name="plus.square.on.square" catalog="system" width="128" height="116"/>
         <image name="questionmark.square.dashed" catalog="system" width="128" height="114"/>
         <image name="recordingtape" catalog="system" width="128" height="60"/>
         <image name="trash" catalog="system" width="117" height="128"/>

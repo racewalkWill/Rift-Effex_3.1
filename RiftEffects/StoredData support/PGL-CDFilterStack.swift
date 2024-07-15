@@ -72,14 +72,31 @@ extension PGLFilterStack {
 
 
     func forceSaveToNewCDVars(moContext: NSManagedObjectContext) {
+        // a filter deleted from the stack is not included in this refresh..
+        // what to do to refresh so the old stack is the same
+
         for filterIndex in 0..<activeFilters.count {
             let aFilter = activeFilters[filterIndex]
             aFilter.forceSaveToNewCDVars(moContext: moContext)
-            aFilter.storedFilter = nil
+
         }
+        for deletedFilter in removedFilters {
+            // the relationship of the deleted filter-filterStack in the oldstack
+
+
+            deletedFilter.forceSaveToNewCDVars(moContext: moContext)
+            // no relationship exists in the new stack
+        }
+        
+        removedFilters = [PGLSourceFilter]() // reset this
+
         NSLog("PGLFilterStack #forceSaveToNewCDVars name = \(stackName) storedStack = \(String(describing: storedStack))")
         /// restore stored cdStack to saved version
         if let myCDStoredStack = storedStack {
+//            let changes = myCDStoredStack.changedValues()
+//            let committedValues = myCDStoredStack.committedValues(forKeys: nil)
+
+
             moContext.refresh(myCDStoredStack, mergeChanges: false)
                 // refresh sets it to be a fault for reread
                 // make sure the fetchedResults are reread after this
@@ -91,10 +108,20 @@ extension PGLFilterStack {
         
 
         if ((storedStack?.title != stackName ) || (storedStack?.type != stackType)) {
-            // an existing stack name is changed
+                // an existing stack name is changed
+                // save as a new stack
             self.forceSaveToNewCDVars(moContext: moContext) // implied saveAs with the name change
-             // sets storedStack to nil
-        }
+            }
+            else {
+                // just saving this stack
+                // update the relationships for removed filters
+                for aDeletedFilter in removedFilters {
+                    if let aCDStoredFilter: CDStoredFilter = aDeletedFilter.storedFilter {
+                        // there is a cd relationship to remove
+                        storedStack?.removeFromFilters(aCDStoredFilter)
+                    }
+                }
+            }
         if (storedStack == nil ) { // new stack needed
             storedStack = NSEntityDescription.insertNewObject(forEntityName: "CDFilterStack", into: moContext) as? CDFilterStack
             if (storedStack == nil) { fatalError("FAILED CDFilterStack NSEntityDescription.insertNewObject(forEntityName:")}
@@ -279,12 +306,17 @@ extension PGLSourceFilter {
     func forceSaveToNewCDVars(moContext: NSManagedObjectContext) {
         // implied saveAs the top level stack name has changed
         // set all of the core data vars to nil to save as new stack
+        if storedFilter == nil {
+            // no data updated if never saved !
+           return
+        }
         if let myImageParms = imageParms() {
             for anImageParm in myImageParms {
                 if let childInputStack = anImageParm.inputStack {
                     childInputStack.forceSaveToNewCDVars(moContext: moContext) // will clear child filters
                 }
                 if let thisStoredImageValue = anImageParm.storedParmImage {
+                    NSLog("PGLSourceFilter #forceSaveToNewCDVars  \(String(describing: filterName)) ")
                     // force the imageList inputAssets to newCDVars ??
                     // not needed to reset..
 //                    thisStoredImageValue.inputAssets.forceSaveToNewCDVars(moContext: moContext)
@@ -294,6 +326,7 @@ extension PGLSourceFilter {
 
                     anImageParm.storedParmImage = nil
                         // cause creation of new storedValue row
+
                 }
             }
         }
@@ -305,8 +338,9 @@ extension PGLSourceFilter {
             }
 
         }
-
+        storedFilter = nil // force creation of a new cdStoredFilter
     }
+    
     func createCDImageList(moContext: NSManagedObjectContext) {
         // 4EntityModel
         // create new CDImageList for every parm

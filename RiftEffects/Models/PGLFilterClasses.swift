@@ -158,7 +158,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         for anAttribute in attributes {
             anAttribute.releaseVars()
         }
-        storedFilter = nil
+//        storedFilter = nil
 
     }
 

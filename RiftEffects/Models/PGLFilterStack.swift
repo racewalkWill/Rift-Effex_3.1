@@ -75,7 +75,7 @@ class PGLFilterStack: Equatable, Hashable  {
 
     var stackMode = FilterChangeMode.add
         // StackController will change this to .replace if swipe cell command "Change" runs
-
+    var removedFilters = [PGLSourceFilter]()
 
 
 @IBInspectable  var useOldImageFeedback = false
@@ -327,6 +327,8 @@ class PGLFilterStack: Equatable, Hashable  {
             // in range
             let oldFilter = activeFilters[at]
             moveInputsFrom(oldFilter, newFilter)
+            removedFilters.append(oldFilter)
+                // filter relationship change will be updated at save time
 
             activeFilters[at] = newFilter
             if oldFilter.isTransitionFilter() {
@@ -335,11 +337,7 @@ class PGLFilterStack: Equatable, Hashable  {
             if oldFilter.hasAnimation {
                 oldFilter.stopAllAnimation()
             }
-            // a delete and add of storedFilters
-            if let oldStoredFilter = oldFilter.storedFilter {
-                storedStack?.removeFromFilters(oldStoredFilter)}
-            if newFilter.storedFilter != nil {
-                storedStack?.addToFilters(newFilter.storedFilter!)  }
+        
         }
         postFilterChangeRedraw()
         if newFilter.isTransitionFilter() {
@@ -353,17 +351,19 @@ class PGLFilterStack: Equatable, Hashable  {
         var removedFilter: PGLSourceFilter?
         if !activeFilters.isEmpty {
             if let myLastFilter = activeFilters.last {
-               if let storedFilter = myLastFilter.storedFilter  // maybe nil if not saved to core data
-                    { storedStack?.removeFromFilters( storedFilter) }
-            removedFilter = activeFilters.removeLast()
-            if removedFilter?.isTransitionFilter() ?? false  {
-                    postTransitionFilterRemove()
+
+                removedFilter = activeFilters.removeLast()
+                if removedFilter != nil {
+                    removedFilters.append(removedFilter!)
                 }
-            if removedFilter?.hasAnimation ?? false {
-                removedFilter?.stopAllAnimation()
-            }
-            activeFilterIndex = activeFilters.count - 1 // zero based index
-            }
+                if removedFilter?.isTransitionFilter() ?? false  {
+                        postTransitionFilterRemove()
+                    }
+                if removedFilter?.hasAnimation ?? false {
+                    removedFilter?.stopAllAnimation()
+                }
+                activeFilterIndex = activeFilters.count - 1 // zero based index
+                }
         }
         return removedFilter //may be nil
     }
@@ -372,6 +372,7 @@ class PGLFilterStack: Equatable, Hashable  {
             var removedFilter: PGLSourceFilter?
             if !activeFilters.isEmpty {
                     removedFilter = activeFilters.removeLast()
+                    removedFilters.append(removedFilter!)
                     activeFilterIndex = activeFilters.count - 1 // zero based index
             }
                 return removedFilter //may be nil
@@ -379,13 +380,7 @@ class PGLFilterStack: Equatable, Hashable  {
         }
 
     func removeAllFilters() {
-        if storedStack != nil {
-            // then the filters must have storedFilter objects too
-//            let filterRange = NSRange(location: 0, length: (activeFilters.count - 1))
-//            let filterIndexSet = NSIndexSet(indexesIn: filterRange )
-            if let cdFiltersToRemove = (storedStack?.filters) {
-                storedStack?.removeFromFilters(cdFiltersToRemove) }
-        }
+        removedFilters.append(contentsOf: activeFilters)
         for aFilter in activeFilters {
             if aFilter.isTransitionFilter() {
                 postTransitionFilterRemove()
@@ -453,8 +448,9 @@ class PGLFilterStack: Equatable, Hashable  {
                 // now outputs of prior filter go to the new activeOne inputs
                 let newFilter = activeFilters[activeFilterIndex]
                 moveInputsFrom(oldFilter, newFilter)
-                if oldFilter.storedFilter != nil {
-                    storedStack?.removeFromFilters(oldFilter.storedFilter!)}
+
+                removedFilters.append(oldFilter)
+
                 if oldFilter.isTransitionFilter() {
                     postTransitionFilterRemove()
                 }
