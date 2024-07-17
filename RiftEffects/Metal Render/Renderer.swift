@@ -11,6 +11,7 @@ import MetalKit
 import os
 
 @MainActor var TargetSize = CGSize(width: 1040, height: 768)
+@MainActor var FullScreenTargetTransform = CGAffineTransform.identity
 @MainActor var DoNotDraw = false
 
 ///RenderDestinationMetalView drawBasic var
@@ -202,7 +203,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let translate = CGAffineTransform.init(translationX:  (size.width - TargetSize.width)/2, y:  (size.height - TargetSize.height)/2)
             // this uses the old TargetSize compared to the new size
-
+        FullScreenTargetTransform = translate
         mtkViewSize = size
         TargetSize = size
         outputZoomPanFilter = initZoomPanFilter() // inits with new center

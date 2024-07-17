@@ -667,9 +667,12 @@ class PGLFilterAttribute {
     func movePointParms(transform: CGAffineTransform) {
         if moveOnDrawableSizeChange() {
             if let currentValue = getVectorValue() {
+//               NSLog ("#movePointParms transform = \(transform)")
                 let theValuePoint = currentValue.cgPointValue
                 let newPoint = theValuePoint.applying(transform)
                 let newVector = CIVector(cgPoint: newPoint)
+//                Logger(subsystem: LogSubsystem, category: LogCategory).info ( "#movePointParms oldVector = \(currentValue)  newVector = \(newVector)")
+
                 set(newVector)
                 // PGLFilterAttributeVector3 or PGLFilterAttributeVector
                 // will set correctly with either x,y,z vector or an x,y vector

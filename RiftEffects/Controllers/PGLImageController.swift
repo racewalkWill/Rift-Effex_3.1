@@ -1059,7 +1059,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
             // adjustment for point to effectView transforms
             let inViewHeight = view.bounds.height
-              NSLog("PGLImageController #addPositionContorl positionVector = \(positionVector)")
+//              NSLog("PGLImageController #addPositionControl positionVector = \(positionVector)")
             var mappedOrigin = attribute.mapVector2Point(vector: positionVector, viewHeight: inViewHeight, scale: myScaleFactor)
 
             // move mappedOrigin for size of the image
@@ -1067,6 +1067,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             mappedOrigin.x = mappedOrigin.x + newSize.width/2 // shift to right
             mappedOrigin.y = mappedOrigin.y - newSize.height/2 // shift up in ULO
 
+//            NSLog("PGLImageController #addPositionControl mappedOrigin = \(mappedOrigin)")
+//
             let controlFrame = CGRect(origin: mappedOrigin, size: newSize)
             // newOrigin should be the center of the controlFrame
 
@@ -1503,6 +1505,8 @@ extension PGLImageController: UIGestureRecognizerDelegate {
          let viewHeight = view.bounds.height
             let newVector = parm.mapPoint2Vector(point: endingPoint, viewHeight: viewHeight, scale: myScaleFactor)
             parm.set(newVector)
+//        NSLog("PGLImageController #panEnded endingPoint = \(endingPoint)")
+//        NSLog("PGLImageController #panEnded newVector = \(newVector)")
 
     }
 

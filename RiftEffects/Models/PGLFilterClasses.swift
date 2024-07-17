@@ -629,12 +629,15 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
                 anImageParm.resetDrawableSize()
             }
         }
-        // now transform the parms that are vector or CGPoint
 
-        for anAttribute in attributes {
-            anAttribute.movePointParms(transform: newScale)
-        }
 
+    }
+
+    func pointParms(shiftTransform: CGAffineTransform) {
+            // now transform the parms that are vector or CGPoint
+            for anAttribute in attributes {
+                anAttribute.movePointParms(transform: shiftTransform)
+            }
     }
 
     func getSourceFilterLocation(attributeKey: String) -> (source: PGLFilterStack, at: Int)? {

@@ -622,6 +622,12 @@ class PGLAppStack {
         }
     }
 
+    func pointParms(shiftTransform: CGAffineTransform) {
+        for aFilter in cellFilters {
+            aFilter.filter.pointParms(shiftTransform: shiftTransform)
+        }
+    }
+
     func toggleShowFilterImage() {
         showFilterImage = !showFilterImage
         // if the current filter is a child then update the

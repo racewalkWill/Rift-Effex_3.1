@@ -49,6 +49,7 @@ class PGLMetalController: UIViewController {
         setUpMetalRender()
         updateDrawableSize()
 
+
     }
 
     func setUpMetalRender() {
@@ -72,11 +73,8 @@ class PGLMetalController: UIViewController {
         metalRender.needsRedraw.toggleViewWillAppear()
 
 
-         metalRender.isFullScreen = isFullScreen
-//         if isFullScreen {
-//             view.insetsLayoutMarginsFromSafeArea = true
-//             view.sizeToFit()
-//         }
+        metalRender.isFullScreen = isFullScreen
+
             // toggles to redraw 2 times
         metalRender.drawBasicCentered(in: metalView)
             // draw once so that the view has the current stack output image
@@ -101,9 +99,15 @@ class PGLMetalController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         super.viewWillAppear(animated)
+
         setUpMetalRender()
         updateDrawableSize()
-
+            // this  changes FullScreenTargetTransform
+        if isFullScreen {
+            // works fine when loading fullscreen
+            appStack.pointParms(shiftTransform: FullScreenTargetTransform)
+//           NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by \(FullScreenTargetTransform)")
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -182,9 +186,9 @@ class PGLMetalController: UIViewController {
             // double tap is required to fail before the single tap is tested
         // toggle back and forth on the single tap
         FullScreenAspectFillMode = !FullScreenAspectFillMode
-        let translate = CGAffineTransform.identity
+ 
         // parm changes...?
-        appStack.resetDrawableSize(newScale: translate)
+        appStack.resetDrawableSize(newScale: CGAffineTransform.identity)
 
     }
 
@@ -193,6 +197,9 @@ class PGLMetalController: UIViewController {
 //        NSLog("\(self.debugDescription) " + #function + " dismiss")
         FullScreenAspectFillMode = false
         metalRender.isFullScreen = FullScreenAspectFillMode
+
+        appStack.pointParms(shiftTransform: FullScreenTargetTransform.inverted())
+//       NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by FullScreenTargetTransform.inverted ")
 
         self.dismiss(animated: true)
     }
