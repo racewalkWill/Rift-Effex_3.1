@@ -207,7 +207,7 @@ class Renderer: NSObject, MTKViewDelegate {
         mtkViewSize = size
         TargetSize = size
         outputZoomPanFilter = initZoomPanFilter() // inits with new center
-        appStack.resetDrawableSize(newScale: translate)
+        appStack.resetDrawableSize(newScale: FullScreenTargetTransform)
     }
 
     func draw(in view: MTKView) {

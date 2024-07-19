@@ -665,6 +665,7 @@ class PGLFilterAttribute {
     // MARK: Size changes
     /// apply size changes to the point parms so they appear in the same spot
     func movePointParms(transform: CGAffineTransform) {
+//        NSLog(description)
         if moveOnDrawableSizeChange() {
             if let currentValue = getVectorValue() {
 //               NSLog ("#movePointParms transform = \(transform)")

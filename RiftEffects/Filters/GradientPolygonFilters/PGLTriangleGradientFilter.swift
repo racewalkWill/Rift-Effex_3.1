@@ -155,4 +155,19 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
         }
     }
 
+    override func pointParms(shiftTransform: CGAffineTransform) {
+            // now transform the parms that are vector or CGPoint
+            // should move the center first..
+            // the center changes the other attributes!
+            // see #setVectorValue which applies the center move to
+            // all the childern gradients
+
+        if let myCenter = attribute(nameKey: kCIInputCenterKey) {
+            myCenter.movePointParms(transform: shiftTransform)
+        }
+
+    }
+
+
+
 }
