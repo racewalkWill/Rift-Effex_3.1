@@ -49,6 +49,13 @@ extension PGLFilterStack {
 
            exportAlbumIdentifier = cdStack.exportAlbumIdentifier
             exportAlbumName = cdStack.exportAlbumName
+
+            if  cdStack.globalSizeHeight > 0 && cdStack.globalSizeWidth > 0 {
+                mapTargetSize = CGSize(width: cdStack.globalSizeWidth, height: cdStack.globalSizeHeight)
+            }
+
+
+            // read and load filters
             let sortDescription = NSSortDescriptor(key: "stackPosition", ascending: true)
             guard let storedFilters = cdStack.filters else
                 { return }
@@ -61,7 +68,7 @@ extension PGLFilterStack {
                 if let myCDFilter = aCDFilter as? CDStoredFilter {
                     Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLFilterStack init storedStack on filter = \(String(describing: myCDFilter.ciFilterName))" )
 //                    NSLog("PGLFilterStack filters on \(aCDFilter.stackPosition)")
-                    guard let newSource = PGLSourceFilter.readPGLFilter(myCDFilter: myCDFilter)
+                    guard let newSource = PGLSourceFilter.readPGLFilter(myCDFilter: myCDFilter, savedSize: mapTargetSize)
 
                     else { return }
                     appendFilter(newSource)
@@ -122,6 +129,9 @@ extension PGLFilterStack {
                     }
                 }
             }
+
+
+
         if (storedStack == nil ) { // new stack needed
             storedStack = NSEntityDescription.insertNewObject(forEntityName: "CDFilterStack", into: moContext) as? CDFilterStack
             if (storedStack == nil) { fatalError("FAILED CDFilterStack NSEntityDescription.insertNewObject(forEntityName:")}
@@ -167,7 +177,11 @@ extension PGLFilterStack {
 
 
             }
-            return storedStack!  // force error if not set
+            // always write the current TargetSize
+        storedStack!.globalSizeWidth = TargetSize.width
+        storedStack!.globalSizeHeight = TargetSize.height
+
+        return storedStack!  // force error if not set
     }
 
 //    func restoreCDstackImageCache() {
@@ -195,7 +209,7 @@ extension PGLSourceFilter {
     // core data methods
     // MARK: CoreData
 
-    class func readPGLFilter(myCDFilter: CDStoredFilter) -> PGLSourceFilter? {
+    class func readPGLFilter(myCDFilter: CDStoredFilter, savedSize: CGSize?) -> PGLSourceFilter? {
         guard let filterBuilder = PGLFilterCategory.getFilterDescriptor(aFilterName: myCDFilter.ciFilterName!, cdFilterClass: myCDFilter.pglSourceFilterClass!)
             else { return nil }
          guard let newSource = filterBuilder.pglSourceFilter()
@@ -234,6 +248,7 @@ extension PGLSourceFilter {
 //            NSLog("\( String(describing: self) + "-" + #function) typedValue.attributeName \(typedValue.attributeName)")
             if let parmAttribute = newSource.attribute(nameKey: typedValue.attributeName!) {
                 parmAttribute.setStoredValueToAttribute(typedValue)
+                 parmAttribute.resizeFrom(savedSize: savedSize)
                 if parmAttribute.hasAnimation() {  newSource.startAnimationBasic(attributeTarget: parmAttribute) }
             }
 
@@ -917,6 +932,17 @@ extension PGLFilterAttribute {
 
 
     }
+    func resizeStoredTransform(_ savedSize: CGSize?) -> CGAffineTransform {
+        if savedSize == nil {
+            return CGAffineTransform.identity
+        }
+//        let translate = CGAffineTransform.init(translationX:  (savedSize!.width - TargetSize.width)/2, y:  (savedSize!.height - TargetSize.height)/2)
+        let translate = CGAffineTransform.init(translationX:  ( TargetSize.width - savedSize!.width )/2, y:  (TargetSize.height - savedSize!.height)/2)
+        return translate
+
+    }
+
+
 
     @objc func setVaryRate() {
         // copy the stored core data vary values into the attribute
@@ -985,6 +1011,8 @@ extension PGLAttributeRectangle {
         applyCropRect(mappedCropRect: filterRect)
         isCropped = true //var for Vary/Cancel swipe cells on the UI
     }
+
+
 }
 
 extension PGLFilterAttributeAffine {

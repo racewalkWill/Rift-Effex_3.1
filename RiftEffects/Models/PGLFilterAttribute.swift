@@ -682,6 +682,17 @@ class PGLFilterAttribute {
         }
     }
 
+    /// saved on different coordinate TargetSize
+    ///  map points to current Target size
+    ///  ONLY used on read from dataStore
+    func resizeFrom(savedSize: CGSize?) {
+        // abstract superclass
+        // only attribute parms with points need to implement
+        // implementors will apply the #resizeStoredTransform(savedSize) to attribute values
+
+
+    }
+
     // MARK: animation values
 
     func hasAnimation() -> Bool {
@@ -1473,6 +1484,15 @@ class PGLFilterAttributeAffine: PGLFilterAttribute {
         return nil // affine does not directly vary.. UI attributes attached can vary
     }
 
+    override func resizeFrom(savedSize: CGSize?) {
+        // assumes setStoredValueToAttribute has created the filter rect
+        if savedSize != nil {
+            let resizingTransform = resizeStoredTransform(savedSize)
+            affine = affine.concatenating(resizingTransform)
+            setAffine()
+        }
+    }
+
 }
 
 class PGLFilterAttributeColor: PGLFilterAttribute {
@@ -1637,6 +1657,15 @@ class PGLAttributeRectangle: PGLFilterAttribute {
 //        set(oldVector)  // the form of set() does some typecasting to any and back again.. in this subclass set directly
         if oldVector != nil {
             aSourceFilter.setVectorValue(newValue: oldVector!, keyName: attributeName!)
+        }
+    }
+
+    override func resizeFrom(savedSize: CGSize?) {
+        // assumes setStoredValueToAttribute has created the filter rect
+        if savedSize != nil {
+            let resizingTransform = resizeStoredTransform(savedSize)
+            filterRect = filterRect.applying(resizingTransform)
+            applyCropRect(mappedCropRect: filterRect)
         }
     }
 

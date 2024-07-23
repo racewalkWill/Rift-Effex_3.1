@@ -77,6 +77,8 @@ class PGLFilterStack: Equatable, Hashable  {
         // StackController will change this to .replace if swipe cell command "Change" runs
     var removedFilters = [PGLSourceFilter]()
 
+    var mapTargetSize: CGSize?
+
 
 @IBInspectable  var useOldImageFeedback = false
 @IBInspectable  var doPrintCropClamp = false

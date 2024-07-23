@@ -231,6 +231,28 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         }
     }
 
+    override func resizeFrom(savedSize: CGSize?) {
+        // assumes setStoredValueToAttribute has created the vector and set into the filter
+        if !moveOnDrawableSizeChange() {
+            // not a vector that should move..
+            return
+        }
+        if savedSize != nil {
+            let resizingTransform = resizeStoredTransform(savedSize)
+            let filterVector = getVectorValue()?.applying(resizingTransform)
+            if filterVector != nil {
+                aSourceFilter.setVectorValue(newValue: filterVector!, keyName: attributeName!)
+            }
+            if startPoint != nil {
+                startPoint = startPoint!.applying(resizingTransform)
+            }
+            if endPoint != nil {
+                endPoint = endPoint!.applying(resizingTransform)
+            }
+        }
+    }
+
+
     override func performActionOff() {
         super.performActionOff()
         endVectorPan()
