@@ -937,8 +937,15 @@ extension PGLFilterAttribute {
             return CGAffineTransform.identity
         }
 //        let translate = CGAffineTransform.init(translationX:  (savedSize!.width - TargetSize.width)/2, y:  (savedSize!.height - TargetSize.height)/2)
-        let translate = CGAffineTransform.init(translationX:  ( TargetSize.width - savedSize!.width )/2, y:  (TargetSize.height - savedSize!.height)/2)
-        return translate
+//        let translate = CGAffineTransform.init(translationX:  ( TargetSize.width - savedSize!.width )/2, y:  (TargetSize.height - savedSize!.height)/2)
+
+        let xScale = TargetSize.width / savedSize!.width
+        let yScale =  TargetSize.height / savedSize!.height
+
+//        let xScale =  savedSize!.width / TargetSize.width
+//        let yScale =  savedSize!.height  / TargetSize.height
+        let scaleTransform = CGAffineTransform.init(scaleX: xScale, y: yScale)
+        return scaleTransform
 
     }
 
