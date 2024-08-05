@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23086.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vbC-U8-P9f">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23089" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vbC-U8-P9f">
     <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23076"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23077"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -91,11 +91,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="1210" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zlx-Lb-TWU">
-                                <rect key="frame" x="20" y="106" width="511" height="688"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zlx-Lb-TWU">
+                                <rect key="frame" x="20" y="106" width="1170" height="688"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Help is here" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wSZ-Tb-zzU">
-                                <rect key="frame" x="20" y="24" width="511" height="74"/>
+                                <rect key="frame" x="20" y="24" width="1170" height="74"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="511" id="OWd-xn-HUr"/>
                                 </constraints>
@@ -106,12 +106,13 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Zlx-Lb-TWU" firstAttribute="centerX" secondItem="PdK-IK-SwM" secondAttribute="centerX" id="3h5-qA-XNw"/>
                             <constraint firstItem="Zlx-Lb-TWU" firstAttribute="top" secondItem="wSZ-Tb-zzU" secondAttribute="bottom" constant="10" id="NlA-c5-40P"/>
                             <constraint firstItem="wSZ-Tb-zzU" firstAttribute="leading" secondItem="PdK-IK-SwM" secondAttribute="leadingMargin" id="X3S-ZZ-1K7"/>
+                            <constraint firstAttribute="trailing" secondItem="Zlx-Lb-TWU" secondAttribute="trailing" constant="20" symbolic="YES" id="bgy-4w-hdb"/>
                             <constraint firstItem="Whs-gL-mdt" firstAttribute="top" secondItem="Zlx-Lb-TWU" secondAttribute="bottom" id="sIE-NZ-pmS"/>
                             <constraint firstItem="wSZ-Tb-zzU" firstAttribute="top" secondItem="PdK-IK-SwM" secondAttribute="topMargin" id="sMW-4B-foe"/>
                             <constraint firstItem="wSZ-Tb-zzU" firstAttribute="centerX" secondItem="PdK-IK-SwM" secondAttribute="centerX" id="uq6-iu-S1N"/>
+                            <constraint firstItem="Zlx-Lb-TWU" firstAttribute="leading" secondItem="PdK-IK-SwM" secondAttribute="leading" constant="20" symbolic="YES" id="yLp-Mi-I9T"/>
                         </constraints>
                     </view>
                     <connections>
@@ -121,7 +122,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pwx-e6-foM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2044.7236180904522" y="-919.42446043165478"/>
+            <point key="canvasLocation" x="2044.4628099173553" y="-919.42446043165478"/>
         </scene>
         <!--Compact Image Controller-->
         <scene sceneID="8Cz-fE-dCl">
@@ -440,7 +441,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
-                                    <barButtonItem title="Shift" image="chart.bar.doc.horizontal" catalog="system" style="plain" id="3ph-yx-nVM">
+                                    <barButtonItem title="Shift" image="chart.bar.doc.horizontal.page" style="plain" id="3ph-yx-nVM">
                                         <connections>
                                             <action selector="shiftBtnAction:" destination="VjG-Q1-3mN" id="DCI-zf-akv"/>
                                         </connections>
@@ -675,7 +676,7 @@
                         <viewControllerLayoutGuide type="bottom" id="LCb-0n-p2P"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ufz-uZ-e8H">
-                        <rect key="frame" x="0.0" y="0.0" width="242" height="760"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1210" height="760"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
@@ -850,7 +851,7 @@
                                     <action selector="addFilter:" destination="dDm-tJ-e98" id="s8d-dr-G0S"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Parm" image="wand.and.stars" catalog="system" id="ORw-h3-ICr">
+                            <barButtonItem title="Parm" image="wand.and.rays" catalog="system" id="ORw-h3-ICr">
                                 <connections>
                                     <action selector="openParmsAction:" destination="dDm-tJ-e98" id="LEp-Sn-0eJ"/>
                                 </connections>
@@ -1017,7 +1018,7 @@
                                     <action selector="addFilterBtn:" destination="z1U-K0-aGb" id="zi7-F9-C9b"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Parm" image="wand.and.stars" catalog="system" id="ajT-Qa-f5T">
+                            <barButtonItem title="Parm" image="wand.and.rays" catalog="system" id="ajT-Qa-f5T">
                                 <connections>
                                     <action selector="openParmsAction:" destination="z1U-K0-aGb" id="pYc-nR-04j"/>
                                 </connections>
@@ -1041,11 +1042,11 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="4FJ-we-3bf"/>
-        <segue reference="Zrd-6b-Z8z"/>
+        <segue reference="Stf-Ip-3lm"/>
         <segue reference="Xyz-2Z-Q4q"/>
     </inferredMetricsTieBreakers>
     <resources>
-        <image name="chart.bar.doc.horizontal" catalog="system" width="115" height="128"/>
+        <image name="chart.bar.doc.horizontal.page" width="128" height="128"/>
         <image name="chart.dots.scatter" catalog="system" width="128" height="102"/>
         <image name="chevron.down" catalog="system" width="128" height="70"/>
         <image name="chevron.up" catalog="system" width="128" height="70"/>
@@ -1055,21 +1056,21 @@
         <image name="questionmark.square.dashed" catalog="system" width="128" height="114"/>
         <image name="recordingtape" catalog="system" width="128" height="60"/>
         <image name="trash" catalog="system" width="117" height="128"/>
-        <image name="wand.and.stars" catalog="system" width="128" height="112"/>
+        <image name="wand.and.rays" catalog="system" width="128" height="123"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
-            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

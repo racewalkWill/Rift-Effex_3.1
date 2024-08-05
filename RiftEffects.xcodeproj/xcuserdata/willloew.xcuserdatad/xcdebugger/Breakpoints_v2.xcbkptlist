@@ -135,52 +135,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "07C380DB-EE51-44EA-89B2-FF7E3100C35E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/PGLAsset.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "170"
-            endingLineNumber = "170"
-            landmarkName = "imageFrom()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "07C380DB-EE51-44EA-89B2-FF7E3100C35E - 4c1515d8a7d660e6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "RiftEffects.PGLAsset.imageFrom() -&gt; Swift.Optional&lt;__C.CIImage&gt;"
-                  moduleName = "RiftEffects.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/willloew/Developer/Rift-Effex3.1/Rift-Effex_3.1/RiftEffects/Models/PGLAsset.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "170"
-                  endingLineNumber = "170">
-               </Location>
-               <Location
-                  uuid = "07C380DB-EE51-44EA-89B2-FF7E3100C35E - e8cf101eed877693"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.UIImage&gt;, Swift.Optional&lt;Swift.Dictionary&lt;Swift.AnyHashable, Any&gt;&gt;) -&gt; () in RiftEffects.PGLAsset.imageFrom() -&gt; Swift.Optional&lt;__C.CIImage&gt;"
-                  moduleName = "RiftEffects.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/willloew/Developer/Rift-Effex3.1/Rift-Effex_3.1/RiftEffects/Models/PGLAsset.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "153"
-                  endingLineNumber = "153">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "BBAF8E55-F102-4976-99B7-45178D2A4903"
             shouldBeEnabled = "No"
             ignoreCount = "0"
