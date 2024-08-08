@@ -549,6 +549,12 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             action in
             self.saveToPhotoLibrary()
         },
+
+         UIAction(title: "Record", image:UIImage(systemName: "recordingtape")) {
+            action in
+            self.recordButtonTapped(controllerRecordBtn: self.recordBtn)
+        },
+
           UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
             action in
             self.displayPrivacyPolicy(self.moreBtn)

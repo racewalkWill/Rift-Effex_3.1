@@ -14,9 +14,14 @@ import os
 
 extension PGLImageController {
 
-    @objc func recordButtonTapped(controllerRecordBtn: UIBarButtonItem) {
+    @objc func recordButtonTapped(controllerRecordBtn: UIBarButtonItem?) {
+        var theRecordBtn = controllerRecordBtn
+        
         if !RPScreenRecorder.shared().isAvailable {
             fatalError("RPScreenRecorder is NOT available")
+        }
+        if theRecordBtn == nil {
+            theRecordBtn = recordBtn
         }
             // Check the internal recording state.
         if PGLImageController.isActive == false {
@@ -24,15 +29,17 @@ extension PGLImageController {
             startRecording()
             guard let recordImage = UIImage(systemName: "recordingtape.circle.fill")
                 else { return  }
-            controllerRecordBtn.setSymbolImage(recordImage, contentTransition: .automatic)
-            controllerRecordBtn.tintColor = UIColor.red
+            theRecordBtn?.isHidden = false
+            theRecordBtn?.setSymbolImage(recordImage, contentTransition: .automatic)
+            theRecordBtn?.tintColor = UIColor.red
         } else {
                 // If a recording is active, the button stops it.
             stopRecording()
             guard let normalRecordImage = UIImage(systemName: "recordingtape")
                 else { return  }
-            controllerRecordBtn.setSymbolImage(normalRecordImage, contentTransition: .automatic)
-            controllerRecordBtn.tintColor = nil  // returns to system default
+            theRecordBtn?.isHidden = true
+            theRecordBtn?.setSymbolImage(normalRecordImage, contentTransition: .automatic)
+            theRecordBtn?.tintColor = nil  // returns to system default
         }
 
     }

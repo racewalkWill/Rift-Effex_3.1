@@ -213,7 +213,6 @@
                             <constraint firstItem="zCg-lU-rqI" firstAttribute="leading" secondItem="FIa-oA-7jC" secondAttribute="leading" constant="104" id="l3s-cV-ZQD"/>
                             <constraint firstItem="xpj-gS-MzU" firstAttribute="top" secondItem="a5o-Sr-vCZ" secondAttribute="bottom" constant="22" id="oAL-5X-mm3"/>
                             <constraint firstItem="zCg-lU-rqI" firstAttribute="leading" secondItem="a5o-Sr-vCZ" secondAttribute="leading" id="ofy-m9-Y1Z"/>
-                            <constraint firstItem="WIG-ES-l8C" firstAttribute="leading" secondItem="FIa-oA-7jC" secondAttribute="leadingMargin" id="r48-bE-Ho0"/>
                             <constraint firstItem="zCg-lU-rqI" firstAttribute="trailing" secondItem="xpj-gS-MzU" secondAttribute="trailing" id="uAv-Hv-1tF"/>
                             <constraint firstItem="a5o-Sr-vCZ" firstAttribute="top" secondItem="erC-X2-Dkg" secondAttribute="bottom" constant="22" id="wmb-eI-wW4"/>
                             <constraint firstItem="6Ki-pV-gkl" firstAttribute="top" secondItem="wa4-VM-jqe" secondAttribute="top" id="yMh-Me-MJz"/>
@@ -246,7 +245,7 @@
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="More" image="ellipsis.circle" catalog="system" id="EUH-a9-le3"/>
-                            <barButtonItem title="Record" image="recordingtape" catalog="system" id="PJQ-cG-lZ5" userLabel="recordBtn">
+                            <barButtonItem title="Record" image="recordingtape" catalog="system" hidden="YES" id="PJQ-cG-lZ5" userLabel="recordBtn">
                                 <connections>
                                     <action selector="recordBtnAction:" destination="Cot-0o-SSg" id="BnT-Da-DD9"/>
                                 </connections>
@@ -733,7 +732,7 @@
                                     <action selector="helpBtnClick:" destination="rQx-tc-9ix" id="mLh-7n-ij6"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="recordBtn" image="recordingtape" catalog="system" id="23q-Si-nMo">
+                            <barButtonItem title="recordBtn" image="recordingtape" catalog="system" hidden="YES" id="23q-Si-nMo">
                                 <connections>
                                     <action selector="recordBtnAction:" destination="rQx-tc-9ix" id="xWx-vc-bnc"/>
                                 </connections>
@@ -997,7 +996,7 @@
                                     <action selector="helpBtnClick:" destination="z1U-K0-aGb" id="jIY-uB-cJ5"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Record Btn" image="recordingtape" catalog="system" id="GQ9-os-Nsh">
+                            <barButtonItem title="Record Btn" image="recordingtape" catalog="system" hidden="YES" id="GQ9-os-Nsh">
                                 <connections>
                                     <action selector="recordBtnAction:" destination="z1U-K0-aGb" id="U25-R0-a4y"/>
                                 </connections>

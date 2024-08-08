@@ -137,6 +137,11 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
             action in
             imageViewerController.saveToPhotoLibrary()
         },
+             UIAction(title: "Record", image:UIImage(systemName: "recordingtape")) {
+            action in
+            imageViewerController.recordButtonTapped(controllerRecordBtn: self.recordBtyn)
+
+        },
 
             UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
             action in

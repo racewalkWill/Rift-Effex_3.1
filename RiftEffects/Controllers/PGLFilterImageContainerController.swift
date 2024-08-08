@@ -153,6 +153,11 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
             UIAction(title: "Export to Photos", image:UIImage(systemName: "pencil.circle")) {
             action in
             containerImageController.saveToPhotoLibrary()
+
+        },
+             UIAction(title: "Record", image:UIImage(systemName: "recordingtape")) {
+            action in
+            containerImageController.recordButtonTapped(controllerRecordBtn: self.recordBtn)
         },
             UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
             action in
