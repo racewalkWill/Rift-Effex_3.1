@@ -114,6 +114,20 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
             else { return }
         containerImageController.recordButtonTapped(controllerRecordBtn:sender)
     }
+
+    @IBAction func toggleAnimationPauseBtn(_ sender: UIBarButtonItem) {
+    }
+
+    @IBAction func toggleAnimationPause(_ sender: UIBarButtonItem) {
+        let updateNotification = Notification(name:PGLPauseAnimation)
+               NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: nil )
+//        if sender.
+//        guard let playPause = UIImage(systemName: "play.pause.fill")
+//            else { return  }
+//        sender.setSymbolImage(playPause, contentTransition: .automatic)
+    }
+    
+    
         //MARK: Toolbar buttons actions
 
   

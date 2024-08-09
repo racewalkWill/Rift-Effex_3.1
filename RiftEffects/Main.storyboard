@@ -727,6 +727,12 @@
                                     <action selector="newStackBtnClick:" destination="rQx-tc-9ix" id="OlJ-Kr-q1c"/>
                                 </connections>
                             </barButtonItem>
+                            <barButtonItem title="toggleAnimationPause" id="eKf-rs-nX2">
+                                <imageReference key="image" image="playpause" catalog="system" symbolScale="default"/>
+                                <connections>
+                                    <action selector="toggleAnimationPause:" destination="rQx-tc-9ix" id="1gB-i6-Wp2"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem title="Help" image="questionmark.square.dashed" catalog="system" id="S4t-N0-6IZ" userLabel="Help">
                                 <connections>
                                     <action selector="helpBtnClick:" destination="rQx-tc-9ix" id="mLh-7n-ij6"/>
@@ -991,6 +997,12 @@
                                     <action selector="newTrashBtnAction:" destination="z1U-K0-aGb" id="x9H-dK-0aK"/>
                                 </connections>
                             </barButtonItem>
+                            <barButtonItem title="toggleAnimationPause" id="qG0-1L-lmY">
+                                <imageReference key="image" image="playpause" catalog="system" symbolScale="default"/>
+                                <connections>
+                                    <action selector="toggleAnimationPause:" destination="z1U-K0-aGb" id="F2w-zC-ktU"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem title="Help" image="questionmark.square.dashed" catalog="system" id="Cgl-oe-TKV" userLabel="Help">
                                 <connections>
                                     <action selector="helpBtnClick:" destination="z1U-K0-aGb" id="jIY-uB-cJ5"/>
@@ -1031,6 +1043,7 @@
                         <outlet property="randomBtn" destination="0Zt-QC-w2E" id="VFd-iB-3sL"/>
                         <outlet property="recordBtyn" destination="GQ9-os-Nsh" id="SBE-Vt-R7S"/>
                         <outlet property="stackEditBtn" destination="rM6-5G-qx6" id="epe-bP-fU0"/>
+                        <outlet property="toggleAnimationPauseBtn" destination="qG0-1L-lmY" id="Qqh-8F-rSN"/>
                         <segue destination="rQx-tc-9ix" kind="show" identifier="showFilterImageContainer" id="4FJ-we-3bf"/>
                     </connections>
                 </viewController>

@@ -98,8 +98,13 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
             else { return }
         imageViewerController.recordButtonTapped(controllerRecordBtn:sender)
     }
+    @IBOutlet weak var toggleAnimationPauseBtn: UIBarButtonItem!
     
-
+    @IBAction func toggleAnimationPause(_ sender: UIBarButtonItem) {
+        let updateNotification = Notification(name:PGLPauseAnimation)
+               NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: nil )
+    }
+    
     func setMoreBtnMenu() {
             //      if traitCollection.userInterfaceIdiom == .phone {
         guard let imageViewerController = imageController()
