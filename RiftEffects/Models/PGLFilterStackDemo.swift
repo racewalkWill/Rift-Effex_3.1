@@ -120,7 +120,10 @@ extension PGLFilterStack {
 //            postStackChange()
                 // stackChange triggers the stackUpdateDisplay which is also triggered by postCurrentFilterChange
                 // don't need two updates
-            postTransitionFilterAdd() // makes the redraws run
+//            postTransitionFilterAdd() // makes the redraws run
+            // postTransitionFilterAdd()  commented out 2024-08-11
+            //  Transition filter run/pause not relevant if only one initial image is showing
+
             postCurrentFilterChange() // makes DoNotDraw = false..
         }
     }
