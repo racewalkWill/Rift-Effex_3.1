@@ -500,6 +500,28 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
        navigationItem.leftItemsSupplementBackButton = true
     }
 
+     func setAnimation(_ animationState: PGLAnimationState, _ barButtonItem: UIBarButtonItem) {
+        switch animationState {
+            case .none:
+                barButtonItem.isHidden = true
+            case  .paused:
+                barButtonItem.isHidden = false
+                guard let playPause = UIImage(systemName: "play.circle.fill")
+                else { return  }
+                barButtonItem.setSymbolImage(playPause, contentTransition: .automatic)
+            case .running:
+                barButtonItem.isHidden = false
+                guard let playPause = UIImage(systemName: "pause.circle.fill")
+                else { return  }
+                barButtonItem.setSymbolImage(playPause, contentTransition: .automatic)
+        }
+    }
+    
+    func setAnimationToggleBtn(barButtonItem: UIBarButtonItem) {
+        let animationState = appStack.animationState()
+        setAnimation(animationState, barButtonItem)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if metalController === nil {
@@ -514,6 +536,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         if traitCollection.userInterfaceIdiom == .phone {
             metalController?.updateDrawableSize()
         }
+        setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtyn)
     }
 
     func setMoreBtnMenu() {
@@ -701,6 +724,17 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         publishers.append(cancellable!)
 
+        cancellable = myCenter.publisher(for: PGLAnimationStateChanged)
+            .sink() {
+            [weak self]
+            myUpdate in
+            if let userDataDict = myUpdate.userInfo {
+                if let newState = userDataDict["animationState"]  as? PGLAnimationState  {
+                    self?.setAnimation(newState , self!.toggleAnimationPauseBtyn)
+                }
+            }
+        }
+        publishers.append(cancellable!)
     }
 
     fileprivate func loadMetalController() {

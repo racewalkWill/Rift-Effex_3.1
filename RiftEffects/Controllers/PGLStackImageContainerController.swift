@@ -51,12 +51,28 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         if containerStackController?.appStack.viewerStack.isEmptyStack() ?? true {
             addFilterBtn(UIBarButtonItem())
         }
-        
+
+        let myCenter =  NotificationCenter.default
+
+        cancellable = myCenter.publisher(for: PGLAnimationStateChanged)
+            .sink() {
+            [weak self]
+            myUpdate in
+            if let userDataDict = myUpdate.userInfo {
+                if let newState = userDataDict["animationState"]  as? PGLAnimationState  {
+                    containerImageController?.setAnimation(newState , self!.toggleAnimationPauseBtn)
+                }
+            }
+        }
+        publishers.append(cancellable!)
 
     }
 
     override func viewWillAppear(_ animated: Bool) {
         updateNavigationBar()
+        guard let imageViewerController = imageController()
+            else { return }
+        imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
     }
 
 

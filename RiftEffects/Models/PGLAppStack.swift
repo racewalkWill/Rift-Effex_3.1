@@ -635,14 +635,10 @@ class PGLAppStack {
         self.postFilterChangeRedraw() 
     }
 
-    func hasAnimation() -> Bool {
-        // return true if any filter in any stack has animation (dissolves, motion.. etc)
-        if viewerStack.hasAnimationFilter() { return true}
-        else {
-            return  pushedStacks.contains { ( aStack: PGLFilterStack) -> Bool in
-                aStack.hasAnimationFilter() }
-            }
-        }
+    func animationState() -> PGLAnimationState {
+        return appRenderer.animationState()
+    }
+
 
 
 }

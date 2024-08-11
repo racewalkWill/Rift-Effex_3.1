@@ -23,6 +23,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
     }
 
+
     override func viewDidLoad() {
         var containerImageController: PGLCompactImageController?
         var containerFilterController: PGLMainFilterController?
@@ -45,6 +46,19 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         // should make the buttons on the filter controller toolbar visible
         // because this controller isToolbarHidden
 
+        let myCenter =  NotificationCenter.default
+
+        cancellable = myCenter.publisher(for: PGLAnimationStateChanged)
+            .sink() {
+            [weak self]
+            myUpdate in
+            if let userDataDict = myUpdate.userInfo {
+                if let newState = userDataDict["animationState"]  as? PGLAnimationState  {
+                    containerImageController?.setAnimation(newState , self!.toggleAnimationPauseBtn)
+                }
+            }
+        }
+        publishers.append(cancellable!)
     }
 
     override func viewIsAppearing(_ animated: Bool) {
@@ -75,6 +89,12 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 //        self.navigationController?.popViewController(animated: true)
 //    }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard let imageViewerController = imageController()
+            else { return }
+        imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
+    }
 
     @IBAction func newStackBtnClick(_ sender: UIBarButtonItem) {
         // trash icon to start a new stack
@@ -115,16 +135,14 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         containerImageController.recordButtonTapped(controllerRecordBtn:sender)
     }
 
-    @IBAction func toggleAnimationPauseBtn(_ sender: UIBarButtonItem) {
-    }
+
+    @IBOutlet weak var toggleAnimationPauseBtn: UIBarButtonItem!
+    
 
     @IBAction func toggleAnimationPause(_ sender: UIBarButtonItem) {
         let updateNotification = Notification(name:PGLPauseAnimation)
                NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: nil )
-//        if sender.
-//        guard let playPause = UIImage(systemName: "play.pause.fill")
-//            else { return  }
-//        sender.setSymbolImage(playPause, contentTransition: .automatic)
+
     }
     
     

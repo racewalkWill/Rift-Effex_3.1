@@ -7,6 +7,7 @@
 //
 import UIKit
 import os
+import Combine
 
 class PGLTwoColumnSplitController: UIViewController {
     struct PGLColumns {
@@ -15,6 +16,9 @@ class PGLTwoColumnSplitController: UIViewController {
     }
 
     var columns: PGLColumns?
+
+    var publishers = [Cancellable]()
+    var cancellable: Cancellable?
 
     func layoutViews(_ imageView: UIView, _ controlView: UIView) {
             //        let spacer = -5.0
@@ -88,5 +92,13 @@ class PGLTwoColumnSplitController: UIViewController {
         // all of the subclasses use the imageController
         return columns?.imageViewer as? PGLCompactImageController
     }
+
+    override func releaseNotifications() {
+        super.releaseNotifications()
+        for aCancel in publishers {
+            aCancel.cancel()
+        }
+         publishers = [Cancellable]()
+     }
 
 }

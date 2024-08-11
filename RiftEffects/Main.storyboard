@@ -756,6 +756,7 @@
                         <outlet property="newTrashBtn" destination="kGD-tX-jU3" id="pOc-pZ-a39"/>
                         <outlet property="randomBtn" destination="yo5-KQ-1xv" id="jIp-Do-44Z"/>
                         <outlet property="recordBtn" destination="23q-Si-nMo" id="QNL-ug-1B1"/>
+                        <outlet property="toggleAnimationPauseBtn" destination="eKf-rs-nX2" id="6eD-me-4we"/>
                         <segue destination="j8f-0k-czJ" kind="show" identifier="filterImageToParmImage" id="Stf-Ip-3lm"/>
                     </connections>
                 </viewController>

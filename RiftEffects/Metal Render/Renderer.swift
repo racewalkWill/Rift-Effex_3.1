@@ -341,6 +341,10 @@ class Renderer: NSObject, MTKViewDelegate {
             }
         }
     }
+
+    func animationState() -> PGLAnimationState {
+        return needsRedraw.animationState()
+    }
 }
 
 class Primitive {
