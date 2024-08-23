@@ -38,7 +38,7 @@ class Renderer: NSObject, MTKViewDelegate {
     var commandQueue: MTLCommandQueue!
     var colorPixelFormat: MTLPixelFormat!
         //    var texture: MTLTexture!
-    var needsRedraw = PGLRedraw()
+    var needsRedraw: PGLRedraw!
 
         /// RenderDestinationMetalView drawBasic vars
 
@@ -88,6 +88,7 @@ class Renderer: NSObject, MTKViewDelegate {
         let fileType = UserDefaults.standard.string(forKey:  "photosFileType")
         currentPhotoFileFormat = PhotoLibSaveFormat.init(rawValue: fileType ?? "HEIF")
 
+        needsRedraw = PGLRedraw()
         super.init()
         NSLog("\((self .debugDescription) + #function)" )
 

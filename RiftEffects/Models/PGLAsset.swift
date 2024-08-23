@@ -19,8 +19,8 @@ struct PGLDevicePosition {
     var device: AVCaptureDevice.Position = .unspecified
 }
 
-
-class PGLAsset: Hashable, Equatable  {
+@MainActor
+class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable  {
     // a wrapper object around PHAsset
        // holds the sourceInfo so it can be displayed
        // does this cause any caching memory problems??

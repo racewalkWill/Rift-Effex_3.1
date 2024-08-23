@@ -352,7 +352,7 @@ class PGLFilterStack: Equatable, Hashable  {
     func removeLastFilter() -> PGLSourceFilter? {
         var removedFilter: PGLSourceFilter?
         if !activeFilters.isEmpty {
-            if let myLastFilter = activeFilters.last {
+            if activeFilters.last != nil {
 
                 removedFilter = activeFilters.removeLast()
                 if removedFilter != nil {

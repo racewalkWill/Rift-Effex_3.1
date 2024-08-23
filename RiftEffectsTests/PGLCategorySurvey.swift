@@ -14,6 +14,7 @@ import CoreData
 @testable import RiftEffects
 import Accelerate
 
+@MainActor
 class PGLCategorySurvey: XCTestCase {
     let context = CIContext()
     var favoritesAlbumList: PGLAlbumSource?
@@ -172,25 +173,25 @@ class PGLCategorySurvey: XCTestCase {
 
     // MARK: Class var category filterDescriptors
     // MARK: move to PGLDemo
-    static var TransistionFilters =  PGLFilterCategory("CICategoryTransition")!.filterDescriptors
-    static var StylizeFilters =  PGLFilterCategory("CICategoryStylize")!.filterDescriptors
-    static var DistortFilters = PGLFilterCategory("CICategoryDistortionEffect")!.filterDescriptors
-    static var GeometryFilters = PGLFilterCategory("CICategoryGeometryAdjustment")!.filterDescriptors
-    static var GradientFilters = PGLFilterCategory("CICategoryGradient")!.filterDescriptors
-    static var SharpenFilters = PGLFilterCategory("CICategorySharpen")!.filterDescriptors
-    static var BlurFilters = PGLFilterCategory("CICategoryBlur")!.filterDescriptors
-    static var CompositeFilters = PGLFilterCategory("CICategoryCompositeOperation")!.filterDescriptors
-    static var HalfToneFilters = PGLFilterCategory("CICategoryHalftoneEffect")!.filterDescriptors
-    static var ColorAdjFilters = PGLFilterCategory("CICategoryColorAdjustment")!.filterDescriptors
-    static var ColorEffectFilters = PGLFilterCategory("CICategoryColorEffect")!.filterDescriptors
-    static var TileFilters = PGLFilterCategory("CICategoryTileEffect")!.filterDescriptors
-    static var GeneratorFilters = PGLFilterCategory("CICategoryGenerator")!.filterDescriptors
+    @MainActor static var TransistionFilters =  PGLFilterCategory("CICategoryTransition")!.filterDescriptors
+    @MainActor static var StylizeFilters =  PGLFilterCategory("CICategoryStylize")!.filterDescriptors
+    @MainActor static var DistortFilters = PGLFilterCategory("CICategoryDistortionEffect")!.filterDescriptors
+    @MainActor static var GeometryFilters = PGLFilterCategory("CICategoryGeometryAdjustment")!.filterDescriptors
+    @MainActor static var GradientFilters = PGLFilterCategory("CICategoryGradient")!.filterDescriptors
+    @MainActor static var SharpenFilters = PGLFilterCategory("CICategorySharpen")!.filterDescriptors
+    @MainActor static var BlurFilters = PGLFilterCategory("CICategoryBlur")!.filterDescriptors
+    @MainActor static var CompositeFilters = PGLFilterCategory("CICategoryCompositeOperation")!.filterDescriptors
+    @MainActor static var HalfToneFilters = PGLFilterCategory("CICategoryHalftoneEffect")!.filterDescriptors
+    @MainActor static var ColorAdjFilters = PGLFilterCategory("CICategoryColorAdjustment")!.filterDescriptors
+    @MainActor static var ColorEffectFilters = PGLFilterCategory("CICategoryColorEffect")!.filterDescriptors
+    @MainActor static var TileFilters = PGLFilterCategory("CICategoryTileEffect")!.filterDescriptors
+    @MainActor static var GeneratorFilters = PGLFilterCategory("CICategoryGenerator")!.filterDescriptors
 
 
-    static var SingleFilterGroups = [BlurFilters,ColorAdjFilters, ColorEffectFilters,StylizeFilters, DistortFilters,
+    @MainActor static var SingleFilterGroups = [BlurFilters,ColorAdjFilters, ColorEffectFilters,StylizeFilters, DistortFilters,
                                GeometryFilters,SharpenFilters, HalfToneFilters, TileFilters]
-    static var GeneratorGroups = [GeneratorFilters, GradientFilters]
-    static var CompositeGroups = [CompositeFilters, TransistionFilters]
+    @MainActor static var GeneratorGroups = [GeneratorFilters, GradientFilters]
+    @MainActor static var CompositeGroups = [CompositeFilters, TransistionFilters]
 
 // MARK: tests
 

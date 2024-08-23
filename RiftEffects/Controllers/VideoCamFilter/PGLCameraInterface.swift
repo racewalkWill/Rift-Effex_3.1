@@ -16,7 +16,7 @@ import MobileCoreServices
 
 /// connects to device's camera and provides frames to the PGLCameraViewFilter
 /// Manages queues explicitly so mark as Sendable
-class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, @unchecked Sendable {
+class PGLCameraInterface: NSObject, @preconcurrency AVCaptureVideoDataOutputSampleBufferDelegate, @preconcurrency AVCaptureAudioDataOutputSampleBufferDelegate, @unchecked Sendable {
      var myCameraViewFilter: PGLVideoCameraFilter?
 
     private enum SessionSetupResult {
@@ -296,7 +296,7 @@ class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
 
         // MARK: - Video Data Output Delegate
 
-     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    @MainActor func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
          if !renderingEnabled {
              return
          }
@@ -305,9 +305,10 @@ class PGLCameraInterface: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
 
          let renderedCIImage = CIImage(cvImageBuffer: videoPixelBuffer)
 
-         Task {
-             await self.processVideo(frame: renderedCIImage)
-         }
+//         Task {
+//             await self.processVideo(frame: renderedCIImage)
+//         }
+         self.processVideo(frame: renderedCIImage)
         }
 
     @MainActor func processVideo(frame:CIImage) {

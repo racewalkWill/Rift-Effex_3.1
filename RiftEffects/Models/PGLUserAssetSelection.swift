@@ -12,7 +12,8 @@ import os
 
 let PGLAlbumErrorString = "Album Error"
 
-class PGLAlbumSource: Hashable {
+@MainActor
+class PGLAlbumSource: @preconcurrency Hashable {
     var sectionSource: PHAssetCollection?
     var  assetFetch:  PHFetchResult<PHAsset>?
     var identifier: String

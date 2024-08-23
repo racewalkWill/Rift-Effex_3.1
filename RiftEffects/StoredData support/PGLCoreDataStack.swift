@@ -505,9 +505,10 @@ extension CoreDataWrapper {
                 else { return }
 
             // Post transactions relevant to the current view.
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .didFindRelevantTransactions, object: self, userInfo: ["transactions": transactions])
-            }
+            // commented out 2024-08-23  no view is listening for didFindRelevantTransactions
+//            DispatchQueue.main.async {
+//                NotificationCenter.default.post(name: .didFindRelevantTransactions, object: self, userInfo: ["transactions": transactions])
+//            }
 
 
             var newObjectIDs = [NSManagedObjectID]()
