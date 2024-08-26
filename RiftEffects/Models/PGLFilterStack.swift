@@ -334,7 +334,17 @@ class PGLFilterStack: Equatable, Hashable  {
 
             activeFilters[at] = newFilter
             if oldFilter.isTransitionFilter() {
-                postTransitionFilterRemove()
+                // only post a net change in transition
+                // posting both remove and add - does not have order in
+                // notifications execution.
+                if !newFilter.isTransitionFilter() {
+                    postTransitionFilterRemove()
+                } else {
+                    // old filter is not a transition
+                    if newFilter.isTransitionFilter() {
+                        postTransitionFilterAdd()
+                    }
+                }
             }
             if oldFilter.hasAnimation {
                 oldFilter.stopAllAnimation()
@@ -342,9 +352,7 @@ class PGLFilterStack: Equatable, Hashable  {
         
         }
         postFilterChangeRedraw()
-        if newFilter.isTransitionFilter() {
-            postTransitionFilterAdd()
-        }
+
 
     }
 
