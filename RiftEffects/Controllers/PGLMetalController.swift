@@ -15,7 +15,7 @@ import os
 
 @MainActor var FullScreenAspectFillMode = false
 
-class PGLMetalController: UIViewController {
+class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
     var appStack: PGLAppStack! = nil  // model object
 
@@ -127,13 +127,6 @@ class PGLMetalController: UIViewController {
     }
 
     func setGestureRecogniziers() {
-        if tap1Gesture == nil {
-            tap1Gesture = UITapGestureRecognizer(target: self, action: #selector(PGLMetalController.userSingleTap ))
-            if tap1Gesture != nil {
-                tap1Gesture?.numberOfTapsRequired = 1
-                view.addGestureRecognizer(tap1Gesture!)
-            }
-        }
 
         if tap2Gesture == nil {
             tap2Gesture = UITapGestureRecognizer(target: self, action: #selector(PGLMetalController.userDoubleTap ))
@@ -141,6 +134,15 @@ class PGLMetalController: UIViewController {
                 tap2Gesture?.numberOfTapsRequired = 2
                 view.addGestureRecognizer(tap2Gesture!)
             }
+        }
+
+        if tap1Gesture == nil {
+            tap1Gesture = UITapGestureRecognizer(target: self, action: #selector(PGLMetalController.userSingleTap ))
+            if tap1Gesture != nil {
+                tap1Gesture?.numberOfTapsRequired = 1
+                view.addGestureRecognizer(tap1Gesture!)
+            }
+            tap1Gesture?.delegate = self  // so the gestureRecognizer(shouldRequireFailure.. is run
         }
 
         if pinchGesture == nil {
@@ -151,6 +153,16 @@ class PGLMetalController: UIViewController {
             panGesture = UIPanGestureRecognizer(target: self, action: #selector(PGLMetalController.userPan ))
             view.addGestureRecognizer(panGesture!)
         }
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+             shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+       // Don't recognize a single tap until a double-tap fails.
+       if gestureRecognizer == self.tap1Gesture &&
+              otherGestureRecognizer == self.tap2Gesture {
+          return true
+       }
+       return false
     }
 
     func removeGestureRecogniziers() {
