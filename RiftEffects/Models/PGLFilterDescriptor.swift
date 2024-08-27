@@ -26,7 +26,7 @@ struct PGLFilterDescriptor: Equatable, Hashable {
     let  kFilterOrderKey = "FilterOrder"
 
     let filterName: String
-    var displayName: String?
+    var displayName: String
     var inputImageCount = -1
     let userDescription: String
     var uiPosition = PGLFilterCategoryIndex()
@@ -62,16 +62,19 @@ struct PGLFilterDescriptor: Equatable, Hashable {
          // if pglClassType passed as nil then defaults to PGLSourceFilter.self
          
         filterName = ciFilterName  // keep the code name around
+        var tempName: String?
 
         if let aPGLClass = pglClassType {
             pglSourceFilterClass = aPGLClass
             if let pglSourceDisplayName =  pglSourceFilterClass.displayName() {
-              displayName =  pglSourceDisplayName
+                tempName =  pglSourceDisplayName
             }
         }
-         if displayName == nil {
+         if tempName == nil {
              displayName = CIFilter.localizedName(forFilterName: ciFilterName) ?? ciFilterName
-                     // will be localized to Dissolve or other...
+                     // will be localized to Dissolve or other..
+         } else {
+             displayName = tempName!
          }
         userDescription = pglSourceFilterClass.localizedDescription(filterName: ciFilterName)
             // just the filter name if no description is found

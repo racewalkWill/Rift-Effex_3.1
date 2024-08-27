@@ -140,7 +140,7 @@ class PGLRedraw {
         // go twice, then reset
         if viewWillAppearCounter < 3 {
             viewWillAppearCounter += 1
-
+//            NSLog("toggleViewWillAppear: \(viewWillAppearCounter)")
         } else {
             viewWillAppearCounter = 0
             

@@ -433,71 +433,31 @@ extension PGLMainFilterController: UISearchResultsUpdating {
     }
 
 
-    private func findMatches(searchString: String) -> NSCompoundPredicate {
-        /** Each searchString creates an OR predicate for: name, yearIntroduced, introPrice.
-         Example if searchItems contains "Gladiolus 51.99 2001":
-         name CONTAINS[c] "gladiolus"
-         name CONTAINS[c] "gladiolus", yearIntroduced ==[c] 2001, introPrice ==[c] 51.99
-         name CONTAINS[c] "ginger", yearIntroduced ==[c] 2007, introPrice ==[c] 49.98
-         */
-        var searchItemsPredicate = [NSPredicate]()
 
-        /** Below we use NSExpression represent expressions in our predicates.
-         NSPredicate is made up of smaller, atomic parts:
-         two NSExpressions (a left-hand value and a right-hand value).
-         */
-
-        // Name field matching.
-        let titleExpression = NSExpression(forKeyPath: ExpressionKeys.displayName.rawValue)
-        let searchStringExpression = NSExpression(forConstantValue: searchString)
-
-        let titleSearchComparisonPredicate =
-            NSComparisonPredicate(leftExpression: titleExpression,
-                                  rightExpression: searchStringExpression,
-                                  modifier: .direct,
-                                  type: .contains,
-                                  options: [.caseInsensitive, .diacriticInsensitive])
-
-        searchItemsPredicate.append(titleSearchComparisonPredicate)
-
-
-
-        let orMatchPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: searchItemsPredicate)
-
-        Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLMainFilterController \(#function) orMatchPredicate = \(orMatchPredicate)")
-        return orMatchPredicate
-    }
 
     func updateSearchResults(for searchController: UISearchController) {
         // Update the filtered array based on the search text.
-        let searchResults = filters
+        let allFilters : [PGLFilterDescriptor] = filters
 //            mode = .Flat // change later to support search in the grouped mode
 
         // Strip out all the leading and trailing spaces.
         let whitespaceCharacterSet = CharacterSet.whitespaces
-        let strippedString =
+        var strippedString =
             searchController.searchBar.text!.trimmingCharacters(in: whitespaceCharacterSet)
         if !strippedString.isEmpty {
-            let searchItems = strippedString.components(separatedBy: " ") as [String]
+            strippedString = strippedString.lowercased()
+            let resultSet = allFilters.filter( {
+                 let localName = $0.displayName.lowercased()
+                    return localName.contains(strippedString)
+            } )
 
-                // Build all the "AND" expressions for each value in searchString.
-            let andMatchPredicates: [NSPredicate] = searchItems.map { searchString in
-                findMatches(searchString: searchString)
-            }
-
-                // Match up the fields of the Product object.
-            let finalCompoundPredicate =
-            NSCompoundPredicate(andPredicateWithSubpredicates: andMatchPredicates)
-
-            let resultSet = Set(searchResults.filter { finalCompoundPredicate.evaluate(with: $0) } )
             let filteredResults = Array(resultSet)
                 // Apply the filtered results to the search results table.
             displaySearchResults(matchingFilters: filteredResults)
         } else
         {  // empty search string.. show everything
-            displaySearchResults(matchingFilters: searchResults)
+            displaySearchResults(matchingFilters: allFilters)
         }
-
     }
 
     func displaySearchResults(matchingFilters: [PGLFilterDescriptor]) {
