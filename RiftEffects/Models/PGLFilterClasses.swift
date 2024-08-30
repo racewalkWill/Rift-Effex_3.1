@@ -191,7 +191,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
     }
 
-    func isTransitionFilter() -> Bool {
+    func isTransitionCategoryFilter() -> Bool {
         // answers true if filterCategories contains value "CICategoryTransition"
         // only transition filters should have multiple images in a parm imageList
          return filterCategories.contains("CICategoryTransition")

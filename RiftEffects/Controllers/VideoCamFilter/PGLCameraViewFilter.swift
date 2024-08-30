@@ -58,12 +58,12 @@ class PGLVideoCameraFilter: PGLSourceFilter {
     }
 
     func postTransitionFilterAdd() {
-        let updateNotification = Notification(name:PGLTransitionFilterExists)
+        let updateNotification = Notification(name:PGLTransitionExists)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["transitionFilterAdd" : +1 ])
     }
 
     func postTransitionFilterRemove() {
-        let updateNotification = Notification(name:PGLTransitionFilterExists)
+        let updateNotification = Notification(name:PGLTransitionExists)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["transitionFilterAdd" : -1 ])
     }
 

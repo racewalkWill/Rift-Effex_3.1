@@ -247,6 +247,10 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
             return maxAssetsOrImagesCount()  == 1
     }
 
+    func isMultiple() -> Bool {
+        return maxAssetsOrImagesCount()  > 1
+    }
+
     func maxAssetsOrImagesCount() -> Int {
           if hasUncachedAssets {
               return imageAssets.count

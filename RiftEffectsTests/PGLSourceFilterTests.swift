@@ -11,12 +11,12 @@ import Photos
 import os
 
 let TestLogSubsystem = "L-BSoftwareArtist.RiftEffects"
-var TestLogCategory = "PGL"
+let TestLogCategory = "PGL"
 
 @testable import RiftEffects
 
 
-
+@MainActor
 class PGLSourceFilterTests: XCTestCase {
 
     

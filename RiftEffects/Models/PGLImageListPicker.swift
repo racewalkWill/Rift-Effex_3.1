@@ -138,6 +138,7 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
         if let myTargetParm = parmAttribute {
             // when setting inputs to the parm controller
             // not used for the PGLSplitViewController case
+            myTargetParm.postListSizeChange( newList: pickingImageList)
             myTargetParm.inputCollection = pickingImageList
         } else {
             if let mySplitController = controller as? PGLSplitViewController {

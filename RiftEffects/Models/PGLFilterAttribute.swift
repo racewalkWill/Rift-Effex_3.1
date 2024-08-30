@@ -225,7 +225,7 @@ class PGLFilterAttribute {
         defaultValue = attributeDict[kCIAttributeDefault] as? Float // this fails for affineTransform
         identityValue = attributeDict[kCIAttributeIdentity] as? Float // this fails for affineTransform
 
-        isTransitionFilter = pglFilter.isTransitionFilter()
+        isTransitionFilter = pglFilter.isTransitionCategoryFilter()
             // // cache at init time aSourceFilter is unowned var and may  be dereferenced
 
         if attributeClass != nil {
@@ -355,6 +355,51 @@ class PGLFilterAttribute {
         let firstAsset = cycleStack.imageAssets.first
         setImageCollectionInput(cycleStack: cycleStack, firstAssetData: firstAsset)
         
+    }
+
+    func postListSizeChange( newList: PGLImageList) {
+        guard let myCurrentList = inputCollection
+        else { return }
+        if myCurrentList.isMultiple() && newList.isMultiple() {
+            return // no change
+        }
+        if !myCurrentList.isMultiple() && newList.isMultiple() {
+                // change notice
+            postTransitionFilterAdd()
+            return
+        }
+        if myCurrentList.isMultiple() && !newList.isMultiple() {
+            postTransitionFilterRemove()
+            return
+        }
+    }
+
+    func removeTransitionCounts() {
+        // if filter is removed then remove its transition counts
+        guard let myCurrentList = inputCollection
+            else { return }
+        if myCurrentList.isMultiple() {
+            postTransitionFilterRemove()
+        }
+    }
+
+    func addTransitionCounts() {
+        // if filter is removed then remove its transition counts
+        guard let myCurrentList = inputCollection
+            else { return }
+        if myCurrentList.isMultiple() {
+            postTransitionFilterAdd()
+        }
+    }
+
+    func postTransitionFilterAdd() {
+        let updateNotification = Notification(name:PGLTransitionExists)
+        NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["transitionFilterAdd" : +1 ])
+    }
+
+    func postTransitionFilterRemove() {
+        let updateNotification = Notification(name:PGLTransitionExists)
+        NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["transitionFilterAdd" : -1 ])
     }
 
     func setImageCollectionInput(cycleStack: PGLImageList, firstAssetData: PGLAsset?) {

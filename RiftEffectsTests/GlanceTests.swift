@@ -13,6 +13,7 @@ import os
 //@testable import Glance
 @testable import RiftEffects
 
+@MainActor
 class GlanceTests: XCTestCase {
     var testCIImage: CIImage!
     var testImage2: CIImage!

@@ -11,6 +11,7 @@ import os
 
 @testable import RiftEffects
 
+@MainActor
 class PGLFilterDescriptorTests: XCTestCase {
      let standardFilterName = "CIDiscBlur"
     let standardClass = PGLSourceFilter.self
@@ -102,7 +103,7 @@ class PGLFilterDescriptorTests: XCTestCase {
     }
 
     /// generate to the log the filter category, filtername, localized name and description
-    func testFilterNameDescriptionCapture() {
+    @MainActor func testFilterNameDescriptionCapture() {
 
         let allCategories = PGLFilterCategory.allFilterCategories()
         for aCategory in allCategories {

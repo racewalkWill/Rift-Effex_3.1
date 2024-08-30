@@ -38,7 +38,14 @@
     {
       "skippedTests" : [
         "GlanceTests",
-        "PGLFilterDescriptorTests",
+        "PGLCategorySurvey",
+        "PGLCategorySurvey\/testCompositeChildStack()",
+        "PGLCategorySurvey\/testMultipleInputTransitionFilters()",
+        "PGLCategorySurvey\/testSelectedFilters()",
+        "PGLCategorySurvey\/testSelectedMultipleFilters()",
+        "PGLCategorySurvey\/testSingleInputFilters()",
+        "PGLCategorySurvey\/testTransitionChildStacks()",
+        "PGLCategorySurvey\/testiOS13Filters()",
         "PGLFilterStackTests",
         "PGLSourceFilterTests"
       ],

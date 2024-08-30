@@ -68,12 +68,12 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        updateNavigationBar()
-        guard let imageViewerController = imageController()
-            else { return }
-        imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        updateNavigationBar()
+//        guard let imageViewerController = imageController()
+//            else { return }
+//        imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
+//    }
 
 
 

@@ -141,5 +141,21 @@ class PGLTransitionFilter: PGLRectangleFilter {
         
     }
 
+    func removeTransitionCounts() {
+        // when transition filter is removed from a stack
+        // subtract from the PGLNeedsRedraw
+        guard let myImageParms = imageParms() else { return }
+        for anImageParm in myImageParms {
+            anImageParm.removeTransitionCounts()
+        }
+    }
+    func addTransitionCounts() {
+        // when transition filter is added to a stack
+        // add to the PGLNeedsRedraw transition count
+        guard let myImageParms = imageParms() else { return }
+        for anImageParm in myImageParms {
+            anImageParm.addTransitionCounts()
+        }
+    }
 }
 

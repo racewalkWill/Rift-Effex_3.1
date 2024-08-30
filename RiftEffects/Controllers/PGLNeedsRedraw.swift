@@ -11,7 +11,7 @@ import Combine
 
 let PGLRedrawParmControllerOpenNotification = NSNotification.Name(rawValue: "PGLRedrawParmControllerOpenNotification")
 let PGLRedrawFilterChange = NSNotification.Name(rawValue: "PGLRedrawFilterChange")
-let PGLTransitionFilterExists = NSNotification.Name(rawValue: "PGLTransitionFilterExists")
+let PGLTransitionExists = NSNotification.Name(rawValue: "PGLTransitionExists")
 let PGLVaryTimerRunning = NSNotification.Name(rawValue: "PGLVaryTimerRunning")
 let PGLResetNeedsRedraw = NSNotification.Name(rawValue: "PGLResetNeedsRedraw")
 let PGLPauseAnimation = NSNotification.Name(rawValue: "PGLPauseAnimation")
@@ -75,12 +75,13 @@ class PGLRedraw {
         }
         publishers.append(cancellable!)
 
-        cancellable = myCenter.publisher(for: PGLTransitionFilterExists)
+        cancellable = myCenter.publisher(for: PGLTransitionExists)
             .sink() {
             [weak self]
             myUpdate in
             if let userDataDict = myUpdate.userInfo {
                 if let changeCount = userDataDict["transitionFilterAdd"]   {
+                    NSLog("PGLRedraw: transitionExists: \(changeCount) ")
                     self?.changeTransitionFilter(count: changeCount as! Int)
                 }
             }
@@ -176,15 +177,17 @@ class PGLRedraw {
     }
 
     fileprivate func publishAnimationState() {
-        let animationStateChangeNotice = Notification.Name("PGLAnimationStateChanged")
+//        let animationStateChangeNotice = Notification.Name("PGLAnimationStateChanged")
         let userInfo: [String: Any] = ["animationState": animationState()]
-        NotificationCenter.default.post(name: animationStateChangeNotice, object: nil, userInfo: userInfo)
+        NotificationCenter.default.post(name: PGLAnimationStateChanged, object: nil, userInfo: userInfo)
     }
     
     func changeTransitionFilter(count: Int) {
         // count parm is +1 or -1
         // pass neg -1 to decrement
         transitionFilterCount += count
+        if transitionFilterCount < 0 { transitionFilterCount = 0 }
+        NSLog("PGLRedraw: changeTransitionFilter: transitionFilterCount = \(transitionFilterCount) ")
         transitionFilter(exists: transitionFilterCount > 0 )
         if oldAnimationState != animationState() {
             publishAnimationState()

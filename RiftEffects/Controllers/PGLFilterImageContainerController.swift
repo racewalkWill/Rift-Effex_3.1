@@ -89,12 +89,12 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 //        self.navigationController?.popViewController(animated: true)
 //    }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        guard let imageViewerController = imageController()
-            else { return }
-        imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        guard let imageViewerController = imageController()
+//            else { return }
+//        imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
+//    }
 
     @IBAction func newStackBtnClick(_ sender: UIBarButtonItem) {
         // trash icon to start a new stack

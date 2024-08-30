@@ -259,9 +259,7 @@ class PGLFilterStack: Equatable, Hashable  {
         }
         newFilter.setSourceFilter(sourceLocation: (source: self, at: activeFilterIndex), attributeKey: kCIInputImageKey)
         append(newFilter)
-        if newFilter.isTransitionFilter() {
-            postTransitionFilterAdd()
-        }
+        // transistion filter counts updated when parms are changed
         
      
 
@@ -271,14 +269,15 @@ class PGLFilterStack: Equatable, Hashable  {
     fileprivate func moveInputsFrom(_ oldFilter: PGLSourceFilter, _ newFilter: PGLSourceFilter) {
         // strictly this should only be used when replacing a filter
         // keep as many inputs as possible.
+        var reusedInputKeys = [String]()
        let otherKeys = newFilter.imageInputAttributeKeys
         
         for anImageKey in otherKeys{
             if oldFilter.imageInputAttributeKeys.contains(anImageKey) {
                 guard let inputAttribute = oldFilter.attribute(nameKey: anImageKey)
-                else { return }
+                else { continue }
                 guard let newAttribute = newFilter.attribute(nameKey: anImageKey)
-                else { return }
+                else { continue }
 
                 if let oldValue = oldFilter.localFilter.value(forKey: anImageKey) as? CIImage
                     {newFilter.setImageValue(newValue: oldValue, keyName: anImageKey)
@@ -293,6 +292,8 @@ class PGLFilterStack: Equatable, Hashable  {
                 // does NOT setup clones
                 // therefore it does not call
                 // setImageCollectionInput
+
+                reusedInputKeys.append(anImageKey)
                 }
             }
             
@@ -302,7 +303,34 @@ class PGLFilterStack: Equatable, Hashable  {
                     newAttribute?.setImageParmState(newState: ImageParm.missingInput)
                     }
             }
+        // now release any imageLists that where not reused
+        // if the new filter is not a transition filter then remove the transition count
+        for anOldImageKey in oldFilter.imageInputAttributeKeys {
+            if !newFilter.isTransitionCategoryFilter() {
+                    // remove all the old transitions
+                let oldAttribute = oldFilter.attribute(nameKey: anOldImageKey)
+                oldAttribute?.removeTransitionCounts()
+            } else {
+                // check if this attribute should be removed from transition counts
+                if !reusedInputKeys.contains(anOldImageKey) {
+                    let oldAttribute = oldFilter.attribute(nameKey: anOldImageKey)
+                    oldAttribute?.removeTransitionCounts()
+                    }
+                }
+            }
+            // now the case where new filter is transition and old one is not
+            // check the state of the new one
+//                branch for newFilter.isTransitionCategoryFilter()
+            if newFilter.isTransitionCategoryFilter() {
+                if !oldFilter.isTransitionCategoryFilter() {
+                    if let myNewTransition = newFilter as? PGLTransitionFilter {
+                        myNewTransition.addTransitionCounts()
+                    }
+                }
+            }
+
         }
+    
     func performFilterPick(selectedFilter: PGLSourceFilter) {
         switch stackMode {
             case .add :
@@ -329,23 +357,13 @@ class PGLFilterStack: Equatable, Hashable  {
             // in range
             let oldFilter = activeFilters[at]
             moveInputsFrom(oldFilter, newFilter)
+
+
             removedFilters.append(oldFilter)
                 // filter relationship change will be updated at save time
 
             activeFilters[at] = newFilter
-            if oldFilter.isTransitionFilter() {
-                // only post a net change in transition
-                // posting both remove and add - does not have order in
-                // notifications execution.
-                if !newFilter.isTransitionFilter() {
-                    postTransitionFilterRemove()
-                } else {
-                    // old filter is not a transition
-                    if newFilter.isTransitionFilter() {
-                        postTransitionFilterAdd()
-                    }
-                }
-            }
+
             if oldFilter.hasAnimation {
                 oldFilter.stopAllAnimation()
             }
@@ -366,9 +384,9 @@ class PGLFilterStack: Equatable, Hashable  {
                 if removedFilter != nil {
                     removedFilters.append(removedFilter!)
                 }
-                if removedFilter?.isTransitionFilter() ?? false  {
-                        postTransitionFilterRemove()
-                    }
+                if let thisTransitionFilter = removedFilter as? PGLTransitionFilter {
+                    thisTransitionFilter.removeTransitionCounts()
+                }
                 if removedFilter?.hasAnimation ?? false {
                     removedFilter?.stopAllAnimation()
                 }
@@ -392,8 +410,8 @@ class PGLFilterStack: Equatable, Hashable  {
     func removeAllFilters() {
         removedFilters.append(contentsOf: activeFilters)
         for aFilter in activeFilters {
-            if aFilter.isTransitionFilter() {
-                postTransitionFilterRemove()
+            if let thisTransitionFilter = aFilter as? PGLTransitionFilter {
+                thisTransitionFilter.removeTransitionCounts()
             }
             if aFilter.hasAnimation {
                 aFilter.stopAllAnimation()
@@ -461,8 +479,11 @@ class PGLFilterStack: Equatable, Hashable  {
 
                 removedFilters.append(oldFilter)
 
-                if oldFilter.isTransitionFilter() {
-                    postTransitionFilterRemove()
+                if oldFilter.isTransitionCategoryFilter() {
+                    if !oldFilter.imageInputIsEmpty() {
+                        postTransitionFilterRemove()
+                    }
+
                 }
                 if oldFilter.hasAnimation {
                     oldFilter.stopAllAnimation()
@@ -669,12 +690,12 @@ class PGLFilterStack: Equatable, Hashable  {
 
 
     func postTransitionFilterAdd() {
-        let updateNotification = Notification(name:PGLTransitionFilterExists)
+        let updateNotification = Notification(name:PGLTransitionExists)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["transitionFilterAdd" : +1 ])
     }
 
     func postTransitionFilterRemove() {
-        let updateNotification = Notification(name:PGLTransitionFilterExists)
+        let updateNotification = Notification(name:PGLTransitionExists)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["transitionFilterAdd" : -1 ])
     }
 

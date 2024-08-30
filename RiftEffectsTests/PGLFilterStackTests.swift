@@ -15,7 +15,7 @@ import CoreData
 @testable import RiftEffects
 
 
-
+@MainActor
 class PGLFilterStackTests: XCTestCase {
 
     var filterStack: PGLFilterStack!  
