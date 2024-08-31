@@ -241,7 +241,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
                 oldImageInput = image
 // uncomment this logging to see the frame by frame .. also lists the kernel in the filter... for CIDepthOfField it's more than you would think.
 //                if debugOutputImage { NSLog("PGLSourceFilter setInput(image: didSet = \(String(describing: image))") }
-//                localFilter.setValue(image, forKey: kCIInputImageKey)
+//                localFilter.setValue(image, forKey: inputImage)
 
                 setImageValue(newValue: image!, keyName: kCIInputImageKey)
 

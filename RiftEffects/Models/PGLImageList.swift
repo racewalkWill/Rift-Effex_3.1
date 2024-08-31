@@ -279,7 +279,9 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         let newList = PGLImageList(localPGLAssets: imageAssets)
         newList.nextType = NextElement.odd
 //        newList.collectionTitle = "Odd-" + self.collectionTitle  // O for Odd
-        newList.position = 1
+        if isMultiple() {
+            newList.position = 1 }
+
         newList.cachedImages = self.cachedImages
 //        newList.isAssetList = self.isAssetList
 

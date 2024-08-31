@@ -39,32 +39,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B043481E-D866-4A4B-AD47-99D5F4E74BE6"
-            shouldBeEnabled = "Yes"
+            uuid = "B69382F5-E8B3-49FD-B0A7-083DA61646DE"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/PGLFilterStack.swift"
+            filePath = "RiftEffects/Filters/PGLTransitionFilter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "308"
-            endingLineNumber = "308"
-            landmarkName = "moveInputsFrom(_:_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C3C61215-2E7E-4C2D-9712-7268B61F3B03"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Controllers/PGLImageController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "504"
-            endingLineNumber = "504"
-            landmarkName = "setAnimation(_:_:)"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
+            landmarkName = "setImageListClone(cycleStack:sourceKey:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

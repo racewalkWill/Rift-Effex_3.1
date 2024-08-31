@@ -301,6 +301,7 @@ class PGLFilterStack: Equatable, Hashable  {
                  { newFilter.setImageValue(newValue: CIImage.empty(), keyName: anImageKey)
                     let newAttribute = newFilter.attribute(nameKey: anImageKey)
                     newAttribute?.setImageParmState(newState: ImageParm.missingInput)
+                    // a dissolve clones a list to the second input parm
                     }
             }
         // now release any imageLists that where not reused
@@ -323,8 +324,21 @@ class PGLFilterStack: Equatable, Hashable  {
 //                branch for newFilter.isTransitionCategoryFilter()
             if newFilter.isTransitionCategoryFilter() {
                 if !oldFilter.isTransitionCategoryFilter() {
+
                     if let myNewTransition = newFilter as? PGLTransitionFilter {
                         myNewTransition.addTransitionCounts()
+                    }
+
+                }
+                else {
+                    // for dissolves with the clone of the list to the second target parm
+                    // trigger the copy
+
+                    if let firstInput = newFilter.attribute(nameKey: kCIInputImageKey) {
+                        guard let firstList = firstInput.inputCollection
+                            else { return }
+                        newFilter.setImageListClone(cycleStack: firstList, sourceKey: kCIInputImageKey)
+                        // setImageListClone guards against overwriting an existing list
                     }
                 }
             }

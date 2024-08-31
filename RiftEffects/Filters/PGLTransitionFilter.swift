@@ -135,6 +135,12 @@ class PGLTransitionFilter: PGLRectangleFilter {
                     let evenStack = cycleStack.cloneEven(toParm: nextImageAttribute)
                         // sets this cycleStack to odd numbered increments.
                     nextImageAttribute.setImageCollectionInput(cycleStack: evenStack)
+                    nextImageAttribute.setImageParmState(newState: .inputPhoto)
+                    if evenStack.isSingular() {
+                        // added a singular stack to filter with a singular stack
+                        // 1 + 1 = 2 so mark as running transition !
+                        nextImageAttribute.postTransitionFilterAdd()
+                    }
 //                     NSLog("PGLTransitionFilter setImageListClone(cycleStack: evenStack set to nextImageAttribute input")
                 }
         }
