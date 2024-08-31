@@ -37,7 +37,7 @@ class PGLRedraw {
     var appStackVideoMgr: PGLVideoMgr?
     var isFullScreen = false
 
-    private var viewWillAppear = false
+    var viewWillAppear = false
     private var viewWillAppearCounter = 0
 
     private var transitionFilterCount = 0
@@ -141,13 +141,19 @@ class PGLRedraw {
         // go twice, then reset
         if viewWillAppearCounter < 3 {
             viewWillAppearCounter += 1
-//            NSLog("toggleViewWillAppear: \(viewWillAppearCounter)")
+            NSLog("toggleViewWillAppear counter =  \(viewWillAppearCounter)")
+
+//            NSLog("toggleViewWillAppear: \(viewWillAppear)")
         } else {
             viewWillAppearCounter = 0
-            
-            filterChanged = false
+            viewWillAppear = false
+            NSLog("toggleViewWillAppear: \(viewWillAppear)")
         }
 
+    }
+
+    func toggleFilterChanged() {
+        filterChanged = !filterChanged // sets to false if was previously true
     }
 
     func videoExists() -> Bool {

@@ -232,7 +232,11 @@ class Renderer: NSObject, MTKViewDelegate {
             // get this frame drawn
 
         if needsRedraw.filterChanged {
+            needsRedraw.viewWillAppear = true
+            needsRedraw.toggleFilterChanged()
+        }
             // increment a couple frame draws then stop
+        if needsRedraw.viewWillAppear {
             needsRedraw.toggleViewWillAppear()
         }
 
