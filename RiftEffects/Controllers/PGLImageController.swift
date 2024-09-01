@@ -420,7 +420,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
     }
 
-
+    fileprivate func postImageViewWillAppear() {
+        let imageViewWillAppearNotification = Notification(name:PGLImageViewWillAppear)
+        NotificationCenter.default.post(imageViewWillAppearNotification)
+    }
 
 
 
@@ -537,6 +540,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             metalController?.updateDrawableSize()
         }
         setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtyn)
+        postImageViewWillAppear()
+
     }
 
     func setMoreBtnMenu() {
@@ -735,6 +740,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             }
         }
         publishers.append(cancellable!)
+
+        
     }
 
     fileprivate func loadMetalController() {

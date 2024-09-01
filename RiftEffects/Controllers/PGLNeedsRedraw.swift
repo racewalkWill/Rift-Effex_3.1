@@ -16,6 +16,8 @@ let PGLVaryTimerRunning = NSNotification.Name(rawValue: "PGLVaryTimerRunning")
 let PGLResetNeedsRedraw = NSNotification.Name(rawValue: "PGLResetNeedsRedraw")
 let PGLPauseAnimation = NSNotification.Name(rawValue: "PGLPauseAnimation")
 let PGLAnimationStateChanged = NSNotification.Name(rawValue: "PGLAnimationStateChanged")
+let PGLImageViewWillAppear = NSNotification.Name(rawValue: "PGLImageViewWillAppear")
+
 
 enum PGLAnimationState {
     case none
@@ -129,6 +131,15 @@ class PGLRedraw {
             self?.publishAnimationState()
         }
         publishers.append(cancellable!)
+
+        cancellable = myCenter.publisher(for:  PGLImageViewWillAppear )
+            .sink() {
+            [weak self]
+            myUpdate in
+            self?.viewWillAppear = true
+        }
+        publishers.append(cancellable!)
+
 
     } // end init
     
