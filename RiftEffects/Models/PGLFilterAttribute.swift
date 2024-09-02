@@ -357,6 +357,7 @@ class PGLFilterAttribute {
         
     }
 
+    
     func postListSizeChange( newList: PGLImageList) {
         guard let myCurrentList = inputCollection
         else { return }
@@ -384,7 +385,7 @@ class PGLFilterAttribute {
     }
 
     func addTransitionCounts() {
-        // if filter is removed then remove its transition counts
+        // if filter is added then post its transition increment
         guard let myCurrentList = inputCollection
             else { return }
         if myCurrentList.isMultiple() {

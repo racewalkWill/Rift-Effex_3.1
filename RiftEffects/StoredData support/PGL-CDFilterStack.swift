@@ -239,6 +239,8 @@ extension PGLSourceFilter {
                 }
             }
         }
+        // post a transition filter running if images exist for a transition
+        _ = newSource.notifyTransitionsExist()
         // now read the saved non image parm values if they exist
         guard let myStoredValues = myCDFilter.values
             else { return newSource}

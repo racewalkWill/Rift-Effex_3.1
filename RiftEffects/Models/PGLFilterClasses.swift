@@ -198,6 +198,58 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
     }
 
+    func notifyTransitionsExist() -> Bool {
+        // answer true if there are two parms with at least
+        // one image
+        // or one parm with 2 or more images
+        // post transitionFilterAdd if true
+        if !isTransitionCategoryFilter() {
+            return false
+        }
+
+        let transitionAttributes = imageAttributes()
+        if transitionAttributes.isEmpty {
+            return false
+        }
+        let attributesWithTransitions = transitionAttributes.filter( {!$0.imageInputIsEmpty()})
+        if attributesWithTransitions.isEmpty {
+            return false
+        }
+        if attributesWithTransitions.count > 1 {
+            for anImageAtt in attributesWithTransitions {
+                anImageAtt.postTransitionFilterAdd()
+            }
+            return true
+        } else {
+            // exactly one element in attributesWithTransitions
+            // does it have more than one image
+            guard let singleImageAttribute = attributesWithTransitions.first
+            else { return false}
+            guard let singleList = singleImageAttribute.inputCollection
+            else { return false }
+            if singleList.isMultiple() {
+                singleImageAttribute.postTransitionFilterAdd()
+                return true
+            } else {
+                return false
+            }
+            }
+
+    }
+
+
+
+
+
+    func imageAttributes() -> [PGLFilterAttributeImage] {
+        let allImageAttributes = imageInputAttributeKeys.map({attribute(nameKey:$0)}  )
+
+        let converted = allImageAttributes.map({ $0 as! PGLFilterAttributeImage})
+        return converted
+
+    }
+
+
     func setUpStack(onParentImageParm: PGLFilterAttributeImage) -> PGLFilterStack {
         // super class answers normal stack
         // the sourceFilter subclass PGLSequencedFilters
