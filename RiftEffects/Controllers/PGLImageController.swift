@@ -538,6 +538,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         }
         if traitCollection.userInterfaceIdiom == .phone {
             metalController?.updateDrawableSize()
+            NSLog("PGLImageController viewWillAppear \(String(describing: view))")
         }
         setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtyn)
         postImageViewWillAppear()
@@ -765,7 +766,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                         theMetalView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                         theMetalView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
                         
-                        theMetalView.widthAnchor.constraint(equalTo: view.heightAnchor , multiplier: 4/3),
+                        //theMetalView.widthAnchor.constraint(equalTo: view.heightAnchor , multiplier: 4/3),
+                        theMetalView.widthAnchor.constraint(equalTo: view.widthAnchor ),
                         // iphone width constraint
                     ]) }
                 else {  // iPad case
@@ -840,6 +842,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             // kind of yucky.. but the seque navigation bug forces this
             for aControlView in appStack.parmControls {
                 view.addSubview(aControlView.value)
+//                metalController?.view.addSubview(aControlView.value)
+
             }
         }
 
@@ -1105,7 +1109,9 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             let newSize = CGSize(width: 60.0, height: 60.0)
 
             // adjustment for point to effectView transforms
-            let inViewHeight = view.bounds.height
+            // let inViewHeight = view.bounds.height
+             let inViewHeight = metalController!.view.bounds.height 
+
 //              NSLog("PGLImageController #addPositionControl positionVector = \(positionVector)")
             var mappedOrigin = attribute.mapVector2Point(vector: positionVector, viewHeight: inViewHeight, scale: myScaleFactor)
 

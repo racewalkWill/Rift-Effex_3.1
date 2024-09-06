@@ -663,8 +663,12 @@ class PGLFilterAttribute {
         // set the scaling vars
         let theScreenScaling = PGLVectorScaling(viewHeight: viewHeight, viewScale:  scale)
         setScaling(heightScreenScale: theScreenScaling)
-
-        return mapVector2PointScaled(vector: vector)
+        if vector ==  CIVector.init(x: 0.0, y: 0.0) {
+            let offsetVector = CIVector(x: 0.0, y: 100.0)
+            return mapVector2PointScaled(vector: offsetVector)
+        } else {
+            return mapVector2PointScaled(vector: vector)
+        }
     }
 
     /// map the vector to view height and screen scale

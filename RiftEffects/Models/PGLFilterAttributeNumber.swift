@@ -434,10 +434,11 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         return true
     }
 
-    func scaleVector(inputVector: CIVector, scaleBy: CGAffineTransform, divideScale: Bool) -> CIVector {
+    func scaleVector(inputVector: CIVector, scaleBy: CGAffineTransform, invertScale: Bool) -> CIVector {
         var vectorFactor: CGAffineTransform!
         let newVectorPoint = inputVector.cgPointValue
-        if divideScale {
+        NSLog(#function + "invertScale: \(invertScale) : newVectorPoint: \(newVectorPoint)")
+        if invertScale {
             vectorFactor = scaleBy.inverted()
             // divide to smaller
         } else {
@@ -445,6 +446,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
                 // multiply to larger
         }
         let scaledPoint = newVectorPoint.applying(vectorFactor)
+        NSLog(#function + "scaledPoint: \(scaledPoint) ")
         let scaledVectorValue = CIVector.init(cgPoint: scaledPoint)
         return scaledVectorValue
     }

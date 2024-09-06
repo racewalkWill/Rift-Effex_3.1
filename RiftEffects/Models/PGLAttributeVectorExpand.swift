@@ -14,7 +14,7 @@ import CoreImage
 
 class PGLAttributeVectorExpand: PGLFilterAttributeVector {
 
-    var scaler = CGAffineTransform(scaleX: 1000.0, y: 1000.0)
+    var upScaler = CGAffineTransform(scaleX: 1000.0, y: 1000.0)
 
     override func moveOnDrawableSizeChange() -> Bool {
         // only some PGLFilterAttributeVectors should move
@@ -26,7 +26,7 @@ class PGLAttributeVectorExpand: PGLFilterAttributeVector {
         if attributeName != nil {
             if let newVectorValue = value as? CIVector {
 
-                let scaledVectorValue = scaleVector(inputVector: newVectorValue, scaleBy: scaler, divideScale: true)
+                let scaledVectorValue = scaleVector(inputVector: newVectorValue, scaleBy: upScaler, invertScale: true)
 
                 aSourceFilter.setVectorValue(newValue: scaledVectorValue, keyName: attributeName!) }
         }
@@ -38,7 +38,7 @@ class PGLAttributeVectorExpand: PGLFilterAttributeVector {
        guard let filterValue = getValue() as? CIVector
         else { return CIVector.init(cgPoint: CGPoint.zero)}
 
-        let scaledVectorValue = scaleVector(inputVector: filterValue, scaleBy: scaler, divideScale: false)
+        let scaledVectorValue = scaleVector(inputVector: filterValue, scaleBy: upScaler, invertScale: false)
 
         return scaledVectorValue
     }

@@ -14,6 +14,7 @@ class PGLRotateAffineUI: PGLFilterAttributeNumber {
         // was subclass of PGLFilterAttributeNumbe
 
     var affineParent: PGLFilterAttributeAffine?
+    let rotateScaler: Float = 10.0
 //    var rotation: Float = 0.0
 
     // MARK: PGLAttributeUI protocol
@@ -26,7 +27,7 @@ class PGLRotateAffineUI: PGLFilterAttributeNumber {
         attributeType = AttrType.Scalar.rawValue
         // attributeName is index for parm controls must be unique
 
-        sliderMaxValue = 2 * Float.pi
+        sliderMaxValue = 2 * rotateScaler * Float.pi
         sliderMinValue = 0.0
     }
 
@@ -41,12 +42,14 @@ class PGLRotateAffineUI: PGLFilterAttributeNumber {
     }
    override func set(_ value: Any) {
         if let rotation = value as? Float {
-            affineParent?.setRotation(radians: rotation)
+            affineParent?.setRotation(radians: (rotation / rotateScaler) )
         }
     }
 
   override  func getValue() -> Any? {
-      return affineParent?.rotation
+      if let baseRotation =  (affineParent?.rotation) {
+          return rotateScaler * baseRotation}
+      else { return nil}
     }
 
    override func okActionToSetValue() -> Bool {
@@ -113,7 +116,7 @@ class PGLRotateAffineUI: PGLFilterAttributeNumber {
 
 class PGLTranslateAffineUI: PGLFilterAttributeVector {
 
-    var scaler = CGAffineTransform(scaleX: 100.0, y: 100.0)
+    var expandScaler = CGAffineTransform(scaleX: 100.0, y: 100.0)
 
     var affineParent: PGLFilterAttributeAffine?
 
@@ -151,7 +154,7 @@ class PGLTranslateAffineUI: PGLFilterAttributeVector {
     override func set(_ value: Any) {
         if let newTranslationVector = value as? CIVector {
 
-            let scaledValue = scaleVector(inputVector: newTranslationVector, scaleBy: scaler, divideScale: true)
+            let scaledValue = scaleVector(inputVector: newTranslationVector, scaleBy: expandScaler, invertScale: true)
                 // divide by 1000 from the UI
 
             affineParent?.setTranslation(moveBy: scaledValue )  //newTranslationVector
@@ -162,7 +165,7 @@ class PGLTranslateAffineUI: PGLFilterAttributeVector {
 
         let parentValue = affineParent?.translate ?? CIVector(cgPoint: CGPointZero)
 
-        let uiVector = scaleVector(inputVector: parentValue, scaleBy: scaler, divideScale: false)
+        let uiVector = scaleVector(inputVector: parentValue, scaleBy: expandScaler, invertScale: false)
             // multiply by 1000 for the UI
 
        return uiVector
@@ -241,9 +244,12 @@ class PGLTranslateAffineUI: PGLFilterAttributeVector {
 }
 
 class PGLScaleAffineUI: PGLFilterAttributeVector {
+    // scale should default to identity
+    // range should be for 0.1 to 10 for the x and y changes
+    // put the UI position in the center as it can go both larger & smaller
 
-    var scaler = CGAffineTransform(scaleX: 100.0, y: 100.0)
-
+    var expandScaler = CGAffineTransform(scaleX: 100, y: 100)
+    //
     var affineParent: PGLFilterAttributeAffine?
 
 
@@ -275,7 +281,7 @@ class PGLScaleAffineUI: PGLFilterAttributeVector {
     override func set(_ value: Any) {
         if let newVector = value as? CIVector {
 
-        let scaledValue = scaleVector(inputVector: newVector, scaleBy: scaler, divideScale: true)
+        let scaledValue = scaleVector(inputVector: newVector, scaleBy: expandScaler, invertScale: true)
         // divide by 1000 from the UI
 
         affineParent?.setScale(vector: scaledValue)
@@ -283,9 +289,9 @@ class PGLScaleAffineUI: PGLFilterAttributeVector {
     }
 
     override  func getValue() -> Any? {
-        let parentVector = affineParent?.translate ?? CIVector(cgPoint: CGPointZero)
+        let parentVector = affineParent?.scale ?? CIVector(cgPoint: CGPointZero)
 
-        let uiVector = scaleVector(inputVector: parentVector, scaleBy: scaler, divideScale: false)
+        let uiVector = scaleVector(inputVector: parentVector, scaleBy: expandScaler, invertScale: false)
         // multiply by 1000 for the UI
         return uiVector
     }

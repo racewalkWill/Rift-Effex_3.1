@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import os
 
 let PGLRedrawParmControllerOpenNotification = NSNotification.Name(rawValue: "PGLRedrawParmControllerOpenNotification")
 let PGLRedrawFilterChange = NSNotification.Name(rawValue: "PGLRedrawFilterChange")
@@ -137,6 +138,8 @@ class PGLRedraw {
             [weak self]
             myUpdate in
             self?.viewWillAppear = true
+//          Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function) PGLImageViewWillAppear: signaled")
+//            NSLog("PGLRedraw: PGLImageViewWillAppear: signaled ")
         }
         publishers.append(cancellable!)
 
@@ -145,7 +148,11 @@ class PGLRedraw {
     
     func redrawNow() -> Bool {
         // answer true if any condition is true
-        return viewWillAppear || parmControllerIsOpen || transitionFilterExists || varyTimerIsRunning || filterChanged || videoExists() || isFullScreen
+        let needsRedraw = viewWillAppear || parmControllerIsOpen || transitionFilterExists || varyTimerIsRunning || filterChanged || videoExists() || isFullScreen
+//        if needsRedraw {
+//            NSLog ("redrawNow: true")
+//        }
+        return needsRedraw
     }
 
     func toggleViewWillAppear() {
