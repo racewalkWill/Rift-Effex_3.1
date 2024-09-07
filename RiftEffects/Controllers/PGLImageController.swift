@@ -420,7 +420,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
     }
 
-    fileprivate func postImageViewWillAppear() {
+     func postImageViewWillAppear() {
+//        NSLog("\(String(describing: self) + "-" + #function)")
         let imageViewWillAppearNotification = Notification(name:PGLImageViewWillAppear)
         NotificationCenter.default.post(imageViewWillAppearNotification)
     }

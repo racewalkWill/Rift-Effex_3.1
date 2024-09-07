@@ -45,7 +45,14 @@ class PGLTwoColumnSplitController: UIViewController {
             //            stackContainerView.widthAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 4/3)
         ] )
     }
-    
+
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        guard let theImageController = columns?.imageViewer as? PGLImageController
+            else { return }
+        theImageController.postImageViewWillAppear()
+        // make sure a redraw occurs in the Renderer PGLRedraw logic
+    }
     func loadViewColumns(controller: UIViewController, imageViewer: UIViewController ) {
 
         columns = PGLColumns(control: controller, imageViewer: imageViewer)
