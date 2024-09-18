@@ -64,16 +64,27 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
                 }
             }
         }
+
+        cancellable = myCenter.publisher(for: PGLStackChange)
+            .sink() { [weak self]
+            myUpdate in
+            Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLStackImageContainerController  notificationBlock PGLStackChange")
+
+            guard let self = self else { return } // a released object sometimes receives the notification
+                          // the guard is based upon the apple sample app 'Conference-Diffable'
+            self.updateNavigationBar()
+                // flips the 'Edit' button hidden or visible
+        }
         publishers.append(cancellable!)
 
     }
 
-//    override func viewWillAppear(_ animated: Bool) {
-//        updateNavigationBar()
+    override func viewWillAppear(_ animated: Bool) {
+        updateNavigationBar()
 //        guard let imageViewerController = imageController()
 //            else { return }
 //        imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
-//    }
+    }
 
 
 
@@ -104,7 +115,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
             else { return }
 
         imageViewerController.newStackActionBtn(sender)
-        updateNavigationBar()
+
     }
 
     @IBOutlet weak var recordBtyn: UIBarButtonItem!
