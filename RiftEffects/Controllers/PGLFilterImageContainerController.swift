@@ -48,17 +48,10 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
         let myCenter =  NotificationCenter.default
 
-        cancellable = myCenter.publisher(for: PGLAnimationStateChanged)
-            .sink() {
-            [weak self]
-            myUpdate in
-            if let userDataDict = myUpdate.userInfo {
-                if let newState = userDataDict["animationState"]  as? PGLAnimationState  {
-                    containerImageController?.setAnimation(newState , self!.toggleAnimationPauseBtn)
-                }
-            }
-        }
-        publishers.append(cancellable!)
+            ///FilterImageContainer does not have any changes to make for animation state changes
+//        cancellable = myCenter.publisher(for: PGLAnimationStateChanged)
+
+
     }
 
     override func viewIsAppearing(_ animated: Bool) {

@@ -505,6 +505,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
      func setAnimation(_ animationState: PGLAnimationState, _ barButtonItem: UIBarButtonItem) {
+//         NSLog(#function + " \(animationState) ")
         switch animationState {
             case .none:
                 barButtonItem.isHidden = true
@@ -512,13 +513,16 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 barButtonItem.isHidden = false
                 guard let playPause = UIImage(systemName: "play.circle.fill")
                 else { return  }
-                barButtonItem.setSymbolImage(playPause, contentTransition: .automatic)
+                barButtonItem.setSymbolImage(playPause, contentTransition: .replace)
+
             case .running:
                 barButtonItem.isHidden = false
                 guard let playPause = UIImage(systemName: "pause.circle.fill")
                 else { return  }
-                barButtonItem.setSymbolImage(playPause, contentTransition: .automatic)
+                barButtonItem.setSymbolImage(playPause, contentTransition: .replace)
         }
+//         NSLog(#function + " on \(barButtonItem)")
+//         NSLog(#function + " now isHidden:\(barButtonItem.isHidden)")
     }
     
     func setAnimationToggleBtn(barButtonItem: UIBarButtonItem) {
@@ -541,7 +545,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             metalController?.updateDrawableSize()
             NSLog("PGLImageController viewWillAppear \(String(describing: view))")
         }
-        setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtyn)
+        
+        /// this animationToggle is not needed..
+ //       setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtyn)
+
+
         postImageViewWillAppear()
 
     }

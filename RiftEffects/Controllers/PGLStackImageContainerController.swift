@@ -59,9 +59,13 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
             [weak self]
             myUpdate in
             if let userDataDict = myUpdate.userInfo {
+                // isViewLoaded or isBeingPresented??
                 if let newState = userDataDict["animationState"]  as? PGLAnimationState  {
                     containerImageController?.setAnimation(newState , self!.toggleAnimationPauseBtn)
+//                    NSLog(#function + "PGLStackImageContainer PGLAnimationStateChanged toggleAnimationPauseBtn \(self?.toggleAnimationPauseBtn)")
+
                 }
+                self?.navigationController?.setNeedsStatusBarAppearanceUpdate()
             }
         }
 
@@ -74,16 +78,26 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
                           // the guard is based upon the apple sample app 'Conference-Diffable'
             self.updateNavigationBar()
                 // flips the 'Edit' button hidden or visible
+                guard let imageViewerController = imageController()
+                    else { return }
+                imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
         }
         publishers.append(cancellable!)
 
     }
 
     override func viewWillAppear(_ animated: Bool) {
+
+        guard let imageViewerController = imageController()
+            else { return }
+
+        /// THIS makes the pause/play button appear !
+        imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
+
+            //        NSLog(#function + "PGLImageController toggleAnimationPauseBtn \(toggleAnimationPauseBtn)")
+
+
         updateNavigationBar()
-//        guard let imageViewerController = imageController()
-//            else { return }
-//        imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
     }
 
 
@@ -116,6 +130,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
         imageViewerController.newStackActionBtn(sender)
 
+
+
     }
 
     @IBOutlet weak var recordBtyn: UIBarButtonItem!
@@ -130,6 +146,11 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     @IBAction func toggleAnimationPause(_ sender: UIBarButtonItem) {
         let updateNotification = Notification(name:PGLPauseAnimation)
                NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: nil )
+        // could just toggle the sender from here without notification dispatch?
+        guard let imageViewerController = imageController()
+            else { return }
+        imageViewerController.setAnimationToggleBtn(barButtonItem: sender)
+
     }
     
     func setMoreBtnMenu() {

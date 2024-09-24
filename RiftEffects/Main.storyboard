@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23091" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vbC-U8-P9f">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vbC-U8-P9f">
     <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23079"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -675,7 +675,7 @@
                         <viewControllerLayoutGuide type="bottom" id="LCb-0n-p2P"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ufz-uZ-e8H">
-                        <rect key="frame" x="0.0" y="0.0" width="580" height="640"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1210" height="760"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
@@ -704,11 +704,11 @@
                         <viewControllerLayoutGuide type="bottom" id="j3d-oc-3aS"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vua-Lu-kpo">
-                        <rect key="frame" x="0.0" y="0.0" width="580" height="640"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1210" height="760"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iTi-AT-siZ">
-                                <rect key="frame" x="-7" y="592" width="576" height="47"/>
+                                <rect key="frame" x="-7" y="712" width="1206" height="47"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="rij-Pi-lzb"/>
@@ -1054,7 +1054,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="kpj-DB-ZL1"/>
+        <segue reference="4FJ-we-3bf"/>
         <segue reference="Stf-Ip-3lm"/>
         <segue reference="Xyz-2Z-Q4q"/>
     </inferredMetricsTieBreakers>
