@@ -380,8 +380,11 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         // filter cell section
         let cell = tableView.dequeueReusableCell(withIdentifier: "filterRowCell", for: indexPath)
 
-//        guard let aFilterIndent = appStack.filterIndent(atIndex: indexPath)
-//            else { return cell }   // empty cell
+        if !appStack.isIndexPathInRangeForFlattendFilters(indexPath: indexPath) {
+            return cell
+                // empty cell
+        }
+
         let aFilterIndent = appStack.filterAt(indexPath: indexPath)
 
         cell.textLabel?.text = aFilterIndent.descriptorDisplayName  // same text as the filterController cell
@@ -585,8 +588,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             // no segue naviation on header cells
             return
         }
-        if !appStack.cellFilters.isEmpty {
-            let cellIndent = appStack.cellFilters[indexPath.row]
+        if !appStack.flatCellFilters.isEmpty {
+            let cellIndent = appStack.flatCellFilters[indexPath.row]
 
             appStack.moveTo(filterIndent: cellIndent)
                 // sets the appStack viewerStack and the current filter of the viewerStac,
@@ -755,7 +758,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         // viewerStack is used to add new filter.. thus
         // a new filter can be added to a childstack if it is highlighted
 
-        for aFilterIndent in appStack.cellFilters {
+        for aFilterIndent in appStack.flatCellFilters {
             let cellIndex = appStack.indexPathFor(filterIndent: aFilterIndent)
             guard let cell = tableView.cellForRow(at: cellIndex)
                 else { 
@@ -847,7 +850,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         // on swipe from the filter list open the parm controller
           var contextActions = [UIContextualAction]()
 
-        let cellFilter: PGLFilterIndent =  appStack.cellFilters[indexPath.row]
+        let cellFilter: PGLFilterIndent =  appStack.flatCellFilters[indexPath.row]
         let thisSourceFilter = cellFilter.filter
         contextActions = thisSourceFilter.cellFilterAction(stackController: self, indexPath: indexPath)
 
@@ -887,7 +890,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
     }
     func removeFilter(indexPath: IndexPath) {
 
-        let cellIndent = appStack.cellFilters[indexPath.row]
+        let cellIndent = appStack.flatCellFilters[indexPath.row]
         appStack.moveTo(filterIndent: cellIndent)
             // sets the activeFilterIndex of the childStack
             // makes the childStack the viewerStack

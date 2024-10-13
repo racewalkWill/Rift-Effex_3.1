@@ -907,7 +907,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
            Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLStackController trailingSwipeActionsConfigurationForRowAt Change ")
            // set appStack and stack indexes to the selected filter
-           let cellObject = stackController.appStack.cellFilters[indexPath.row]
+           let cellObject = stackController.appStack.flatCellFilters[indexPath.row]
 
             stackController.appStack.moveTo(filterIndent: cellObject) // this is also setting the activeFilterIndes..
             stackController.appStack.setFilterChangeModeToReplace()

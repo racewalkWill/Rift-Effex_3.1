@@ -33,7 +33,7 @@ class PGLAppStack {
 
     lazy var videoMgr: PGLVideoMgr = PGLVideoMgr()
 
-    var cellFilters = [PGLFilterIndent]()
+    var flatCellFilters = [PGLFilterIndent]()
     var stackSectionArray = [PGLStackSection]()
 
         // flat array of filters in the stack trees
@@ -404,7 +404,7 @@ class PGLAppStack {
         if startingActiveRow  == endRow {
             return  // don't change now at the end of all the filters
         }
-        let  nextRowCell = cellFilters[startingActiveRow + 1 ]
+        let  nextRowCell = flatCellFilters[startingActiveRow + 1 ]
 
         moveTo(filterIndent: nextRowCell)
         viewerStack.postFilterNameInTitleBar()
@@ -419,7 +419,7 @@ class PGLAppStack {
         if startingActiveRow  == 0 {
             return  // don't change now at start
         }
-        let  nextRowCell = cellFilters[startingActiveRow - 1 ]
+        let  nextRowCell = flatCellFilters[startingActiveRow - 1 ]
 
         moveTo(filterIndent: nextRowCell)
         viewerStack.postFilterNameInTitleBar()
@@ -452,7 +452,11 @@ class PGLAppStack {
     func filterAt(indexPath: IndexPath) -> PGLFilterIndent {
         // each child stack adds one indent
         // 
-        return cellFilters[indexPath.row]
+        return flatCellFilters[indexPath.row]
+    }
+
+    func isIndexPathInRangeForFlattendFilters(indexPath: IndexPath) -> Bool {
+        return indexPath.row < flatCellFilters.count
     }
 
     func moveFilter(fromSourceRow: IndexPath, destinationRow: IndexPath ) {
@@ -498,7 +502,12 @@ class PGLAppStack {
         if viewerStack.isEmptyStack() {
             return nil }
         let viewerActiveIndex = viewerStack.activeFilterIndex
-        return cellFilters.firstIndex(where: {$0.stack === viewerStack && $0.filterPosition == viewerActiveIndex}) ?? 0
+        if viewerActiveIndex >= flatCellFilters.count  { return nil }
+            // in the case of a removeFilter(indexPath:) in the stack
+            // then the activeFilterIndex may not be updated yet
+        if viewerActiveIndex == -1 { return nil }
+
+        return flatCellFilters.firstIndex(where: {$0.stack === viewerStack && $0.filterPosition == viewerActiveIndex}) ?? 0
     }
 
     func mapCellRowToStackIndex(index: IndexPath) -> Int {
@@ -506,8 +515,8 @@ class PGLAppStack {
         // indexRow of the parent or child stack
         // the reverse of activeFilterCellRow
         var stackFilterIndent: PGLFilterIndent?
-        if cellFilters.count > index.row - 1 {
-             stackFilterIndent = cellFilters[index.row] }
+        if flatCellFilters.count > index.row - 1 {
+             stackFilterIndent = flatCellFilters[index.row] }
         else { return 0 }
         return stackFilterIndent?.filterPosition ?? 0
 
@@ -521,10 +530,10 @@ class PGLAppStack {
 
     func flatRowCount() -> Int {
         // rows including all the rows of childStacks
-        return cellFilters.count
+        return flatCellFilters.count
     }
     func resetCellFilters() {
-        cellFilters = flattenFilters()
+        flatCellFilters = flattenFilters()
     }
 
     func filterIndent(atIndex: IndexPath) -> PGLFilterIndent? {
@@ -550,7 +559,7 @@ class PGLAppStack {
             //assumes section 0 is the stack name/album
             // and section 1 is the filters that are indented for each child stack
 
-        let row = cellFilters.firstIndex(of: filterIndent) ?? 0
+        let row = flatCellFilters.firstIndex(of: filterIndent) ?? 0
 
         return IndexPath(row: row, section: section)
 
@@ -579,7 +588,7 @@ class PGLAppStack {
             return thisIsTheOutput }
         else {
             // only the last filter is the output filter
-            guard let lastFilter = cellFilters.last else {
+            guard let lastFilter = flatCellFilters.last else {
                 return false
             }
             let thisIsTheFinalOutput =  (aPGLFilter.filter === lastFilter.filter)
@@ -617,13 +626,13 @@ class PGLAppStack {
 
     // MARK: Display state
     func resetDrawableSize(newScale: CGAffineTransform) {
-        for aCellIndent in cellFilters {
+        for aCellIndent in flatCellFilters {
             aCellIndent.filter.resetDrawableSize(newScale: newScale)
         }
     }
 
     func pointParms(shiftTransform: CGAffineTransform) {
-        for aFilter in cellFilters {
+        for aFilter in flatCellFilters {
             aFilter.filter.pointParms(shiftTransform: shiftTransform)
         }
     }
