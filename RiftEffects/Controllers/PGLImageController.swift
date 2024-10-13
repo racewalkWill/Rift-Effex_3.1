@@ -266,7 +266,9 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func saveToPhotoLibrary() {
-        self.appStack.saveToPhotoLibrary(metalRender: self.metalController!.metalRender)
+        guard let myMetalController = self.metalController
+            else { return }
+        self.appStack.saveToPhotoLibrary(metalRender: myMetalController.metalRender)
     }
 
 
