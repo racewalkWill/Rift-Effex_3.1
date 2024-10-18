@@ -344,7 +344,58 @@ class PGLFilterStack: Equatable, Hashable  {
             }
 
         }
-    
+
+    /// from the trash icon action choice
+    /// put all images in the stack into an initial Images filter
+    /// remove all other filters and child stacks
+    func removeAllFiltersKeepImages() {
+        // should use removeFilter for dependentcy cleanup
+
+
+    }
+
+        /// from the trash icon action choice
+        /// remove all images in the stack keep filters & child stacks
+        ///  answer all removed images in a new PGLImageList
+    func removeAllImagesAndStopAnimations(collectImagesList: PGLImageList) -> PGLImageList {
+        if isEmptyStack() {
+            return collectImagesList
+        }
+
+        for thisFilter in activeFilters {
+                let imageKeys = thisFilter.imageInputAttributeKeys
+            for anKey in imageKeys {
+                guard let imageAttribute = thisFilter.attribute(nameKey: anKey) as? PGLFilterAttributeImage
+                else { continue }
+                if (imageAttribute.inputStack != nil) {
+                        // drill down child stacks
+                    _ =  imageAttribute.inputStack!.removeAllImagesAndStopAnimations(collectImagesList: collectImagesList)
+                }
+                else {
+                        // not a child stack.. collect this level
+                    guard let thisAttributeImageCollection = imageAttribute.inputCollection
+                    else { continue }
+                    collectImagesList.moveContentsFrom(thisAttributeImageCollection)
+                }
+                if imageAttribute.imageParmState == .inputPhoto {
+                    // other states .inputChildStack or .inputPriorFilter or .missingInput
+                    // do not need to be changed
+                    imageAttribute.set(CIImage.empty() )
+                    imageAttribute.setImageParmState(newState: .missingInput)
+                    imageAttribute.removeTransitionCounts()
+                }
+
+                }
+//            thisFilter.stopAllAnimation()
+
+//            thisFilter.setDefaults()
+            // stop any vary actions
+            //
+            }
+
+        return collectImagesList
+    }
+
     func performFilterPick(selectedFilter: PGLSourceFilter) {
         switch stackMode {
             case .add :

@@ -261,6 +261,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
 
         self.appStack.saveStack(metalRender: self.metalController!.metalRender)
+        saveToPhotoLibrary()
 
         incrementSaveCountForAppReview()
     }
@@ -269,6 +270,14 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         guard let myMetalController = self.metalController
             else { return }
         self.appStack.saveToPhotoLibrary(metalRender: myMetalController.metalRender)
+    }
+
+    func removeFiltersFromStack() {
+        self.appStack.removeFiltersFromStack()
+    }
+
+    func removeImagesFromStack() {
+        self.appStack.removeImagesFromStack()
     }
 
 
@@ -356,37 +365,59 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     }
 
-    func confirmTrashDisplayStack(_ sender: UIBarButtonItem)  {
-
-        let discardAction = UIAlertAction(title: "Discard",
-                  style: .destructive) { (action) in
-            self.hideViewReleaseStack()
-            self.updateStackNameToNavigationBar()
+    fileprivate func trashOldStartNewStack() {
+        self.hideViewReleaseStack()
+        self.updateStackNameToNavigationBar()
             // next back out of the parm controller since the filter is removed
-
-            if ( self.parmController?.isViewLoaded ?? false ) {  // or .isBeingPresented?
-                Logger(subsystem: LogSubsystem, category: LogNavigation).info( "\("#popViewController " + String(describing: self))")
-                self.parmController?.navigationController?.popViewController(animated: true)
+        
+        if ( self.parmController?.isViewLoaded ?? false ) {  // or .isBeingPresented?
+            Logger(subsystem: LogSubsystem, category: LogNavigation).info( "\("#popViewController " + String(describing: self))")
+            self.parmController?.navigationController?.popViewController(animated: true)
                 // parmController in the master section of the splitView has a different navigation stack
                 // from the PGLImageController
-            }
+        }
+    }
+    
+    func confirmTrashDisplayStack(_ sender: UIBarButtonItem)  {
+
+        let discardAction = UIAlertAction(title: "Start Over",
+                  style: .destructive) { (action) in
+            self.trashOldStartNewStack()
            // videoMgr gets resetVars
+        }
 
+        let discardSaveAction = UIAlertAction(title: "Save and Start Over",
+                                              style: .destructive) { (action) in
+            self.saveStack()
+            self.trashOldStartNewStack()
 
+        }
 
+        let removeFilters = UIAlertAction(title: "Remove Filters",
+                                          style: .default) { (action) in
+            self.removeFiltersFromStack()
+                // remove filters keep first one (or keep all images in first image filter?
+        }
+
+        let removeImages = UIAlertAction(title: "Remove Images",
+                                         style: .default) { (action) in
+            // remove all image parm inputs
+            self.removeImagesFromStack()
         }
 
         let cancelAction = UIAlertAction(title: "Cancel",
                   style: .cancel) { (action) in
                    // do nothing
-
         }
 
+
         let alert = UIAlertController(title: "Trash"   ,
-                    message: "Completely remove and start over? This cannot be undone",
+                    message: "This cannot be undone",
                     preferredStyle: .alert)
         alert.addAction(discardAction)
-    
+        alert.addAction(removeFilters)
+        alert.addAction(removeImages)
+
         alert.addAction(cancelAction)
 
         // On iPad, action sheets must be presented from a popover.
@@ -585,10 +616,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             action in
             self.saveStackActionBtn(self.moreBtn)
         },
-          UIAction(title: "Export to Photos", image:UIImage(systemName: "pencil.circle")) {
-            action in
-            self.saveToPhotoLibrary()
-        },
+//          UIAction(title: "Export to Photos", image:UIImage(systemName: "pencil.circle")) {
+//            action in
+//            self.saveToPhotoLibrary()
+//        },
 
          UIAction(title: "Record", image:UIImage(systemName: "recordingtape")) {
             action in

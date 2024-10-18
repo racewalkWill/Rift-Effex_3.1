@@ -742,6 +742,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
                    }
                 hasAnimation = ( animationAttributes.count > 0 )
             attributeTarget.postVaryTimerOff()
+            attributeTarget.varyState = .Initial
                }
     }
 

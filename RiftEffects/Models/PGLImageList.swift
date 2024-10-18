@@ -314,6 +314,20 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         return newList
     }
 
+    func moveContentsFrom(_ source: PGLImageList) {
+
+        self.imageAssets.append(contentsOf: source.imageAssets)
+        self.assetIDs.append(contentsOf: source.assetIDs)
+
+        // now empty the source
+        source.imageAssets.removeAll()
+        source.assetIDs.removeAll()
+        source.userSelection = nil
+        source.position = -1
+        source.cachedImages.removeAll()
+
+    }
+
     func randomPrune(imageParm: PGLFilterAttribute) {
         // prune randomly from imageAssets and assetIDs
         var allowedAssetCount = 1

@@ -146,7 +146,28 @@ class PGLAppStack {
 
     }
 
+//MARK: Remove images,filters
 
+    func removeImagesFromStack() -> PGLImageList {
+        let allImages = PGLImageList()
+        _ = self.outputStack.removeAllImagesAndStopAnimations(collectImagesList: allImages)
+//        resetNeedsRedraw()
+        postStackChange()
+        DoNotDraw = true  // will be reset on any filter change
+        return allImages
+
+    }
+
+    func removeFiltersFromStack() {
+        // pick up the images first
+        let allImages = removeImagesFromStack()
+        releaseTopStack()
+        let newStack = PGLFilterStack()
+        let startingFilter = (PGLFilterDescriptor(kPImages, PGLTransitionFilter.self))!
+        newStack.setDefault(initialList: allImages, filterDescriptor: startingFilter)
+        resetOutputAppStack(newStack)
+
+    }
 
     // MARK: Master Data Object Stacks
     func postStackChange() {
