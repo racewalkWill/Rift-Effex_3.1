@@ -202,6 +202,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
     @IBOutlet weak var openParmsBtn: UIBarButtonItem!
 
     @IBAction func openParmsAction(_ sender: UIBarButtonItem) {
+
+        
         segueToParmController()
     }
     

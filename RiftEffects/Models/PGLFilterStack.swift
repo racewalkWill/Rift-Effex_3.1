@@ -345,14 +345,7 @@ class PGLFilterStack: Equatable, Hashable  {
 
         }
 
-    /// from the trash icon action choice
-    /// put all images in the stack into an initial Images filter
-    /// remove all other filters and child stacks
-    func removeAllFiltersKeepImages() {
-        // should use removeFilter for dependentcy cleanup
-
-
-    }
+  
 
         /// from the trash icon action choice
         /// remove all images in the stack keep filters & child stacks

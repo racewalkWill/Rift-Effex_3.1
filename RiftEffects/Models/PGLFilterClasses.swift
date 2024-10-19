@@ -899,6 +899,23 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         var contextActions = [UIContextualAction]()
         var myAction: UIContextualAction!
 
+        myAction = UIContextualAction(style: .normal, title: "Open") { [weak self] (_, _, completion) in
+            guard self != nil
+                       else { return  }
+            stackController.appStack.viewerStack.activeFilterIndex = indexPath.row
+               // not needed? viewerStack may change.. row is not the index (indented issue on child stack)
+
+           // set appStack and stack indexes to the selected filter
+           let cellObject = stackController.appStack.flatCellFilters[indexPath.row]
+
+            stackController.appStack.moveTo(filterIndent: cellObject) // this is also setting the activeFilterIndes..
+
+           Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLStackController trailingSwipeActionsConfigurationForRowAt Open")
+                stackController.segueToParmController()
+                completion(true)
+               }
+        contextActions.append(myAction)
+        
         myAction = UIContextualAction(style: .normal, title: "Change") { [weak self] (_, _, completion) in
             guard self != nil
                else { return  }
@@ -940,6 +957,8 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
                 completion(true)
                }
         contextActions.append(myAction)
+
+
 
         return contextActions
     }

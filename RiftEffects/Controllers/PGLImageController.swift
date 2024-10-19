@@ -361,7 +361,17 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let newStack = PGLFilterStack()
 
         self.appStack.resetOutputAppStack(newStack)
+
+        // THIS is not working.. skip
         // load new default image from PHPickerViewController
+
+        // from PGLSplitViewController #requestStartupImage()
+//        let imageListPicker = PGLImageListPicker(targetList: PGLImageList(), controller: self)
+//                /// with  a nil  target attribute just picks one image from the photoLibary
+//            guard let pickerViewController = imageListPicker.set(targetAttribute: nil)
+//                else { return }
+//            self.present(pickerViewController, animated: true)
+        // end not working..
 
     }
 
@@ -376,22 +386,25 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 // parmController in the master section of the splitView has a different navigation stack
                 // from the PGLImageController
         }
+
     }
     
     func confirmTrashDisplayStack(_ sender: UIBarButtonItem)  {
 
         let discardAction = UIAlertAction(title: "Start Over",
                   style: .destructive) { (action) in
-            self.trashOldStartNewStack()
+        self.trashOldStartNewStack()
+//            self.hideViewReleaseStack()
+
            // videoMgr gets resetVars
         }
 
-        let discardSaveAction = UIAlertAction(title: "Save and Start Over",
-                                              style: .destructive) { (action) in
-            self.saveStack()
-            self.trashOldStartNewStack()
-
-        }
+//        let discardSaveAction = UIAlertAction(title: "Save and Start Over",
+//                                              style: .destructive) { (action) in
+//            self.saveStack()
+//            self.trashOldStartNewStack()
+//
+//        }
 
         let removeFilters = UIAlertAction(title: "Remove Filters",
                                           style: .default) { (action) in
