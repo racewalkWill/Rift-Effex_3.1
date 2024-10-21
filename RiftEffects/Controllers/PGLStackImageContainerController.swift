@@ -39,7 +39,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
         loadViewColumns(controller: containerStackController!, imageViewer: containerImageController!)
 
-        setMoreBtnMenu() // needs the child imageController loaded 
+        setMoreBtnMenu() // needs the child imageController loaded
+        setHelpBtnMenu()
         // no toolbar on the stackImageContainerController so  toolbar buttons don't show
 //        containerStackController?.addToolBarButtons(toController: self)
 
@@ -102,11 +103,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
 
 
-    @IBAction func helpBtnClick(_ sender: UIBarButtonItem) {
-        guard let imageViewerController = imageController()
-            else { return }
-        imageViewerController.helpBtnAction(sender)
-    }
+
 
     @IBOutlet weak var randomBtn: UIBarButtonItem!
 
@@ -176,32 +173,48 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         let contextMenu = UIMenu(title: "",
                                  children: [ libraryMenu
                                              ,
-             UIAction(title: "Demo..", image:UIImage(systemName: "pencil.circle")) {
-             action in
-            imageViewerController.loadDemoStack(self.moreBtn)
-        },
-            UIAction(title: "Save..", image:UIImage(systemName: "pencil")) {
+        UIAction(title: "Save..", image:UIImage(systemName: "pencil")) {
             action in
                 // self.saveStackAlert(self.moreBtn)
             imageViewerController.saveStackActionBtn(self.moreBtn)
         },
 
-//            UIAction(title: "Export to Photos", image:UIImage(systemName: "pencil.circle")) {
-//            action in
-//            imageViewerController.saveToPhotoLibrary()
-//        },
+
              UIAction(title: "Record", image:UIImage(systemName: "recordingtape")) {
             action in
             imageViewerController.recordButtonTapped(controllerRecordBtn: self.recordBtyn)
 
-        },
-
-            UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
-            action in
-            imageViewerController.displayPrivacyPolicy(self.moreBtn)
         }
         ])
         moreBtn.menu = contextMenu
+    }
+    @IBOutlet weak var helpBtn: UIBarButtonItem!
+    
+    func setHelpBtnMenu() {
+        guard let imageViewerController = imageController()
+            else { return }
+
+        let helpMenu = UIAction.init(title: "Help..", image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
+            action in
+            imageViewerController.helpBtnAction(self.helpBtn)
+
+        }
+
+
+        let contextMenu = UIMenu(title: "",
+                                 children: [ helpMenu ,
+         UIAction(title: "Demo..", image:UIImage(systemName: "pencil.circle")) {
+         action in
+            imageViewerController.loadDemoStack(self.helpBtn)
+        },
+
+
+          UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
+            action in
+            imageViewerController.displayPrivacyPolicy(self.helpBtn)
+        }
+            ] )
+        helpBtn.menu = contextMenu
     }
 
     func setUpdateEditButton() {

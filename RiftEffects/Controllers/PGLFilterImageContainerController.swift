@@ -41,6 +41,8 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         loadViewColumns(controller: containerFilterController!, imageViewer: containerImageController! )
 
         setMoreBtnMenu()
+        setHelpBtnMenu()
+
 
         navigationController?.isToolbarHidden = true
         // should make the buttons on the filter controller toolbar visible
@@ -77,17 +79,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 //        containerFilterController = nil
     }
 
-//    @IBAction func addFilterBtn(_ sender: UIBarButtonItem) {
-//        // Segue back to the stackController
-//        self.navigationController?.popViewController(animated: true)
-//    }
 
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        guard let imageViewerController = imageController()
-//            else { return }
-//        imageViewerController.setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtn)
-//    }
 
     @IBAction func newStackBtnClick(_ sender: UIBarButtonItem) {
         // trash icon to start a new stack
@@ -112,12 +104,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
     @IBOutlet weak var newTrashBtn: UIBarButtonItem!
 
 
-    @IBAction func helpBtnClick(_ sender: UIBarButtonItem) {
-        guard let containerImageController = imageController()
-            else { return }
-        containerImageController.helpBtnAction(sender)
-        
-    }
+   
     @IBOutlet weak var randomBtn: UIBarButtonItem!
 
     @IBOutlet weak var recordBtn: UIBarButtonItem!
@@ -138,6 +125,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
     }
     
+    @IBOutlet weak var helpBtn: UIBarButtonItem!
     
         //MARK: Toolbar buttons actions
 
@@ -164,34 +152,48 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
         }
         let contextMenu = UIMenu(title: "",
-                                 children: [ libraryMenu
-                                             ,
-             UIAction(title: "Demo..", image:UIImage(systemName: "pencil.circle")) {
-             action in
-            containerImageController.loadDemoStack(self.moreBtn)
-        },
+                                 children: [ libraryMenu,
             UIAction(title: "Save..", image:UIImage(systemName: "pencil")) {
             action in
                 // self.saveStackAlert(self.moreBtn)
             containerImageController.saveStackActionBtn(self.moreBtn)
         },
-//            UIAction(title: "Export to Photos", image:UIImage(systemName: "pencil.circle")) {
-//            action in
-//            containerImageController.saveToPhotoLibrary()
-//
-//        },
              UIAction(title: "Record", image:UIImage(systemName: "recordingtape")) {
             action in
             containerImageController.recordButtonTapped(controllerRecordBtn: self.recordBtn)
-        },
-            UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
-            action in
-            containerImageController.displayPrivacyPolicy(self.moreBtn)
         }
 
         ])
         moreBtn.menu = contextMenu
     }
+
+    func setHelpBtnMenu() {
+        guard let imageViewerController = imageController()
+            else { return }
+
+        let helpMenu = UIAction.init(title: "Help..", image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
+            action in
+            imageViewerController.helpBtnAction(self.helpBtn)
+
+        }
+
+
+        let contextMenu = UIMenu(title: "",
+                                 children: [ helpMenu ,
+         UIAction(title: "Demo..", image:UIImage(systemName: "pencil.circle")) {
+         action in
+            imageViewerController.loadDemoStack(self.helpBtn)
+        },
+
+
+          UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
+            action in
+            imageViewerController.displayPrivacyPolicy(self.helpBtn)
+        }
+            ] )
+        helpBtn.menu = contextMenu
+    }
+
 
         // MARK: - Navigation
 

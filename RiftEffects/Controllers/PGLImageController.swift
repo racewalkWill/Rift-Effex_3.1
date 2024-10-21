@@ -621,32 +621,44 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         let contextMenu = UIMenu(title: "",
                                  children: [ libraryMenu ,
-         UIAction(title: "Demo..", image:UIImage(systemName: "pencil.circle")) {
-         action in
-         self.loadDemoStack(self.moreBtn)
-        },
-          UIAction(title: "Save..", image:UIImage(systemName: "pencil")) {
-            action in
-            self.saveStackActionBtn(self.moreBtn)
-        },
-//          UIAction(title: "Export to Photos", image:UIImage(systemName: "pencil.circle")) {
-//            action in
-//            self.saveToPhotoLibrary()
-//        },
+         UIAction(title: "Save..", image:UIImage(systemName: "pencil")) {
+           action in
+           self.saveStackActionBtn(self.moreBtn)
+       },
+
 
          UIAction(title: "Record", image:UIImage(systemName: "recordingtape")) {
             action in
             self.recordButtonTapped(controllerRecordBtn: self.recordBtn)
-        },
-
-          UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
-            action in
-            self.displayPrivacyPolicy(self.moreBtn)
         }
             ] )
         moreBtn.menu = contextMenu
     }
 
+    func setHelpBtnMenu() {
+
+        let helpMenu = UIAction.init(title: "Help..", image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
+            action in
+                self.helpBtnAction(self.helpBtn)
+
+        }
+
+
+        let contextMenu = UIMenu(title: "",
+                                 children: [ helpMenu ,
+         UIAction(title: "Demo..", image:UIImage(systemName: "pencil.circle")) {
+         action in
+         self.loadDemoStack(self.helpBtn)
+        },
+
+
+          UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
+            action in
+            self.displayPrivacyPolicy(self.helpBtn)
+        }
+            ] )
+        helpBtn.menu = contextMenu
+    }
     func loadDemoStack(_ sender: UIBarButtonItem)  {
         appStack.createDemoStack(view: view)
     }
@@ -862,6 +874,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         tintViews.append(contentsOf: [topTintView, bottomTintView, leftTintView, rightTintView])
 
         setMoreBtnMenu()
+        setHelpBtnMenu()
 
 
         if ShowHelpOnOpen {
