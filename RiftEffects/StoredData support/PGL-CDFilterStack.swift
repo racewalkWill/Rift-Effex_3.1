@@ -111,72 +111,106 @@ extension PGLFilterStack {
         }
     }
     func writeCDStack(moContext: NSManagedObjectContext) -> CDFilterStack {
-        NSLog("PGLFilterStack #writeCDStack name = \(stackName) type = \(stackType)")
-        
+        enum StackSaveState: String  {
+            case newStack
+            case existingStack
+            case saveAsNewName
+            case reNameUnTitledStack
 
-        if ((storedStack?.title != stackName ) || (storedStack?.type != stackType)) {
+        }
+
+        var stackState: StackSaveState = .newStack // init
+
+        if storedStack == nil {
+            stackState = .newStack
+        } else {
+            // user entered title and saved stack has no title
+            let savedStackName = storedStack?.title ?? ""
+            let savedStackType = storedStack?.type ?? ""
+
+            if (savedStackName.isEmpty || savedStackType.isEmpty) {
+                stackState = .reNameUnTitledStack
+            } else {
+                // user is changing the name - saveAs
+                if ((savedStackName != stackName ) || (savedStackType != stackType)) {
+                        // an existing stack name is changed
+                        // save as a new stack
+                    stackState = .saveAsNewName
+                } else {
+                    stackState = .existingStack
+                }
+            }
+        }
+
+
+        NSLog("PGLFilterStack #writeCDStack name = \(stackName) type = \(stackType)")
+        NSLog("PGLFilterStack #writeCDStack stackState = \(stackState.rawValue)")
+
+        if stackState == .saveAsNewName {
                 // an existing stack name is changed
                 // save as a new stack
             self.forceSaveToNewCDVars(moContext: moContext) // implied saveAs with the name change
             }
-            else {
-                // just saving this stack
+
+        if stackState == .existingStack || stackState == .reNameUnTitledStack {
+                // .existingStack or reNameUnTitledStack
                 // update the relationships for removed filters
                 for aDeletedFilter in removedFilters {
                     if let aCDStoredFilter: CDStoredFilter = aDeletedFilter.storedFilter {
                         // there is a cd relationship to remove
+                        // the existing storedStack should change for .existingStack and .reNameUnTitledStack
                         storedStack?.removeFromFilters(aCDStoredFilter)
                     }
                 }
             }
 
-
-
-        if (storedStack == nil ) { // new stack needed
+        if (stackState == .newStack || stackState == .saveAsNewName ) { // new stack needed
             storedStack = NSEntityDescription.insertNewObject(forEntityName: "CDFilterStack", into: moContext) as? CDFilterStack
             if (storedStack == nil) { fatalError("FAILED CDFilterStack NSEntityDescription.insertNewObject(forEntityName:")}
             storedStack?.created = Date()
             }
-            storedStack?.modified = Date()  // modified date may equal created on first save
-            storedStack?.title = stackName
-            storedStack?.type = stackType
 
-            storedStack?.exportAlbumName = exportAlbumName
-            storedStack?.exportAlbumIdentifier = exportAlbumIdentifier
+        /// now update with user entered name and type
+        storedStack?.modified = Date()  // modified date may equal created on first save
+        storedStack?.title = stackName
+        storedStack?.type = stackType
 
-            // only on the top level stack should a thumbnail be saved
-            // skip child stack thumbnails
-        if parentAttribute == nil {
+        storedStack?.exportAlbumName = exportAlbumName
+        storedStack?.exportAlbumIdentifier = exportAlbumIdentifier
+
+        // only on the top level stack should a thumbnail be saved
+        // skip child stack thumbnails
+    if parentAttribute == nil {
             storedStack?.thumbnail = stackThumbnail()  // data format of small png image
         }
     //        for aFilter in activeFilters {
-            for filterIndex in 0..<activeFilters.count {
-                let aFilter = activeFilters[filterIndex]
-                if aFilter.storedFilter == nil {
-                    let theFilterStoredObject = aFilter.createCDFilterObject(moContext: moContext, stackPosition: Int16(filterIndex))
-                    // moves images to cache to reduce storage
-                    // does not need to add if the filter exists in the relation already
-                    // storedStack!.addToFilters(theFilterStoredObject)
-                    // add at the correct position !
-                    storedStack?.addToFilters(theFilterStoredObject)
+        for filterIndex in 0..<activeFilters.count {
+            let aFilter = activeFilters[filterIndex]
+            if aFilter.storedFilter == nil {
+                let theFilterStoredObject = aFilter.createCDFilterObject(moContext: moContext, stackPosition: Int16(filterIndex))
+                // moves images to cache to reduce storage
+                // does not need to add if the filter exists in the relation already
+                // storedStack!.addToFilters(theFilterStoredObject)
+                // add at the correct position !
+                storedStack?.addToFilters(theFilterStoredObject)
 
 
-                } else {
-                    // further check on the relationship
-                    aFilter.storedFilter?.stackPosition = Int16(filterIndex)
-                        // always reset this for order changes
+            } else {
+                // further check on the relationship
+                aFilter.storedFilter?.stackPosition = Int16(filterIndex)
+                    // always reset this for order changes
 
-                    if aFilter.storedFilter?.stack == nil {
-                        // make sure we have the order correct
-                        // appends cdStoredfilter to the stack relationship
+                if aFilter.storedFilter?.stack == nil {
+                    // make sure we have the order correct
+                    // appends cdStoredfilter to the stack relationship
 
-                        storedStack?.addToFilters(aFilter.storedFilter!)
-                    }
+                    storedStack?.addToFilters(aFilter.storedFilter!)
                 }
-                aFilter.writeFilter(moContext: moContext) // handles imageparms move to cache etc..
-
-
             }
+            aFilter.writeFilter(moContext: moContext) // handles imageparms move to cache etc..
+
+
+        }
             // always write the current TargetSize
         storedStack!.globalSizeWidth = TargetSize.width
         storedStack!.globalSizeHeight = TargetSize.height
