@@ -137,7 +137,7 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
     // MARK: startup Pick
 
     func requestStartupImage() {
-        if startupImageList == nil {
+//        if startupImageList == nil {
             let newList = PGLImageList()
 
             imageListPicker = PGLImageListPicker(targetList: newList, controller: self)
@@ -148,7 +148,7 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
                 self.present(pickerViewController, animated: true)
             }
         }
-    }
+//    }
 
 
 

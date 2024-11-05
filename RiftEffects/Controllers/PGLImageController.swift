@@ -361,18 +361,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let newStack = PGLFilterStack()
 
         self.appStack.resetOutputAppStack(newStack)
-
-        // THIS is not working.. skip
-        // load new default image from PHPickerViewController
-
-        // from PGLSplitViewController #requestStartupImage()
-//        let imageListPicker = PGLImageListPicker(targetList: PGLImageList(), controller: self)
-//                /// with  a nil  target attribute just picks one image from the photoLibary
-//            guard let pickerViewController = imageListPicker.set(targetAttribute: nil)
-//                else { return }
-//            self.present(pickerViewController, animated: true)
-        // end not working..
-
+       
     }
 
     fileprivate func trashOldStartNewStack() {
@@ -385,6 +374,17 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             self.parmController?.navigationController?.popViewController(animated: true)
                 // parmController in the master section of the splitView has a different navigation stack
                 // from the PGLImageController
+        }
+
+        if let myParentSplit = splitViewController as? PGLSplitViewController {
+            // navigate back any open controllers
+            // myParentSplit is not found on navigation back from parm to select filter
+            // myParentSplit is found on forward navigation from stack to filter controller..
+            // with no splitController then the startupImage stuff does not run
+            // this is with filterController open to select a filter.. it goes  blank
+            // and you are stil selecting a filter... not too bad of result.
+            myParentSplit.requestStartupImage()
+            self.showStackControllerAction()
         }
 
     }
