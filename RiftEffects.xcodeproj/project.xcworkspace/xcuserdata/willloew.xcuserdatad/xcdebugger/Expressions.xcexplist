@@ -2820,16 +2820,7 @@
          contextName = "PGLSelectParmController.tableView(_:didSelectRowAt:):PGLSelectParmController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "imageController?.panner">
-            </PersistentString>
-            <PersistentString
-               value = "appStack?.targetAttribute">
-            </PersistentString>
-            <PersistentString
-               value = "tappedAttribute">
-            </PersistentString>
-            <PersistentString
-               value = "currentFilter">
+               value = "imageController?.rectController">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

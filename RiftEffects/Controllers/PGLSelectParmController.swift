@@ -765,6 +765,13 @@ class PGLSelectParmController: PGLCommonController,
                     else { return }
 
                     croppingFilter.cropAttribute = thisCropAttribute
+                    if imageController!.rectController == nil {
+                        // in iOS 18.1 the second display has rectController == nil
+                        // restore if needed.
+                        imageController!.addRectControl(attribute: thisCropAttribute)
+                        imageController!.setRectTintAndCornerViews(attribute: thisCropAttribute)
+                        
+                    }
                     guard let activeRectController = imageController?.rectController
                         else {return }
                     activeRectController.thisCropAttribute = thisCropAttribute

@@ -148,19 +148,20 @@ class PGLCommonController: UIViewController, UIAdaptivePresentationControllerDel
         for aParmControlTuple in appStack.parmControls {
             if aParmControlTuple.key == viewNamed {
                 // show this view
-                Logger(subsystem: LogSubsystem, category: LogCategory).debug("highlight  \(viewNamed) isHidden = false, hightlight = true")
+                Logger(subsystem: LogSubsystem, category: LogCategory).debug("highlight  \(viewNamed) isHidden = \(aParmControlTuple.value.isHidden)")
                 if let imageControl = (aParmControlTuple.value) as? UIImageView {
                     
                     togglePosition(theControlView: imageControl, enable: true)
                     imageControl.isHighlighted = true
+                    imageControl.isHidden = false
                     imageControl.superview?.bringSubviewToFront(imageControl)
 
-                    Logger(subsystem: LogSubsystem, category: LogCategory).debug("highlight UIImageView isHidden = false, hightlight = true")
+                    Logger(subsystem: LogSubsystem, category: LogCategory).debug("highlight UIImageView isHidden \(aParmControlTuple.value.isHidden)")
                 } else {if let viewControl = (aParmControlTuple.value) as? UITextField {
                     viewControl.isHidden = false
                     viewControl.isHighlighted = true
                     viewControl.becomeFirstResponder()
-                    Logger(subsystem: LogSubsystem, category: LogCategory).debug("highlight UITextField isHidden = false, hightlight = true")
+                    Logger(subsystem: LogSubsystem, category: LogCategory).debug("highlight UITextField set isHidden = false, hightlight = true")
                     }
 
                 }
