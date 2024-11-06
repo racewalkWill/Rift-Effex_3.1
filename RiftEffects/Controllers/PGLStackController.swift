@@ -13,7 +13,7 @@ import Combine
 
 let PGLShowStackImageContainer = NSNotification.Name(rawValue: "PGLShowStackImageContainer")
 
-class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate {
+class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate {
     // tableview of the filters in the stack
     // opens on cell select the masterFilterController to pick new filter
     // on swipe cell "Parms" opens parmController to change filter parms
@@ -47,6 +47,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
     }
 
     // MARK: View LifeCycle
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
@@ -111,16 +113,14 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             if appStack.outputStack.isEmptyStack() {
                     // just skip ahead to the filter controller since there is no filter now
 
-                Logger(subsystem: LogSubsystem, category: LogNavigation).info("PGLStackController  notificationBlock emptyStack segue to filter controller")
+//                Logger(subsystem: LogSubsystem, category: LogNavigation).info("PGLStackController  notificationBlock emptyStack segue to filter controller")
                 self.performSegue(withIdentifier: "showFilterController" , sender: nil)
             }
         }
-        let stackInfoHeaderCellNib = UINib(nibName: PGLStackInfoHeader.nibName, bundle: nil)
-        tableView.register(stackInfoHeaderCellNib ,forCellReuseIdentifier: PGLStackInfoHeader.reuseIdentifer)
+        registerCellNibs()
 
-        let stackAlbumHeaderCellNib = UINib(nibName: PGLStackAlbumHeader.nibName, bundle: nil)
-        tableView.register(stackAlbumHeaderCellNib ,forCellReuseIdentifier: PGLStackAlbumHeader.reuseIdentifer)
 
+        
         // provide the album names (aka stackTypes) for the header album choice menu
         // see setAlbumChoiceMenu that creates UIActions for the menu with the stackTypes
         
@@ -327,6 +327,20 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
     }
 
+    func isLimitedPhotoLibAccess() -> Bool {
+        let accessLevel: PHAccessLevel = .readWrite // or .addOnly
+        let authorizationStatus = PHPhotoLibrary.authorizationStatus(for: accessLevel)
+
+        switch authorizationStatus {
+            case .limited :
+            return true
+        default:
+            // all other authorizationStatus values
+           return false
+        }
+    }
+
+
     // MARK: - Table view delegate
     override func indexPathForPreferredFocusedView(in tableView: UITableView) -> IndexPath? {
         guard let targetRow = appStack.activeFilterCellRow()
@@ -345,15 +359,6 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //  return the number of rows
-//        switch section {
-//            case 0:
-//                return 2
-//                // header has stackName, type
-//
-//            default:
-//                let myRowCount =  appStack.stackSections()[section - 1].sectionRowCount()
-//                return myRowCount
-//        }
 
            switch section {
                case 0:
@@ -368,6 +373,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
     }
 
+    // MARK: TableView cells
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //             headers don't count for indexPath.
         if indexPath.section == 0 {
@@ -376,6 +383,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
                 return filterCellFor(tableView, indexPath)
                 }
     }
+
+
+
 
 
     fileprivate func filterCellFor(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
@@ -432,18 +442,6 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         }
         aFilterIndent.setCellViewerStackBackground(aCell: cell, viewerStack: appStack.viewerStack)
 
-        // REVISIT for singleFilter or all mode
-//        if aFilterIndent.stack === appStack.viewerStack {
-//            if appStack.showFilterImage {
-//                    // single filter mode
-//                if aFilterIndent.stack is PGLSequenceStack {
-//                    cell.imageView?.image = PGLFilterAttribute.SequenceSymbolFilled
-//                }
-//                else {
-//                    cell.imageView?.image = PGLFilterAttribute.CurrentStackSymbol }
-//            }
-//        }
-
             // Configure the cell...
         if appStack.isImageControllerOpen {
                 // disable the detail disclosure button until the image controller shows
@@ -454,90 +452,12 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
 
         return cell
     }
-//    override func tableView( _ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath ) -> Int {
-//        if indexPath.section == 0 {
-//            return 0
-//        }
-//        let correctedForHeaderIndex = indexPath.section - 1
-////        let correctedForHeaderIndex = indexPath.section
-//        let myIndentLevel =  appStack.stackSections()[correctedForHeaderIndex].stackHeaderIndentLevel()
-//        return myIndentLevel
-//    }
-
-    override func tableView( _ tableView: UITableView, titleForHeaderInSection section: Int ) -> String? {
-
-        switch section {
-                case 0:
-                return "Rift-Effex"
-            default:
-                return "Filters"
-//                let myStack = appStack.stackSections()[section].stack()
-//                return myStack.stackName
-        }
-
-    }
-
-    fileprivate func headerCellFor(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
-            // header
-
-//        let myStack = appStack.stackSections()[indexPath.section]
-//        switch indexPath.section {
-//            case 0:
-//                let headerCell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "mainStackHeader", for: indexPath)
-//                headerCell.textLabel?.text = myStack.stack().stackName
-//                headerCell.detailTextLabel?.text = myStack.stack().stackType
-//                headerCell.indentationLevel = myStack.stackHeaderIndentLevel()
-//                return headerCell
-//            default :
-//                let childStackCell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
-//                childStackCell.textLabel?.text = myStack.stack().stackName
-//                childStackCell.indentationLevel = myStack.stackHeaderIndentLevel()
-//                childStackCell.detailTextLabel?.text = ""
-//                return childStackCell
-//
-//        }
-
-        let myStack = appStack.outputStack
-        switch indexPath.row {
-            case StackHeaderCell.title.rawValue :
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
-                else {
-                    fatalError("PGLStackController headerCell did not load")
-                }
-                cell.cellLabel.text = "Title:"
-                cell.userText.text = myStack.stackName
-                cell.userText.delegate = self
-                cell.userText.tag = StackHeaderCell.title.rawValue
-                cell.userText.delegate = self
-                return cell
-
-            case StackHeaderCell.album.rawValue :
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackAlbumHeader.reuseIdentifer, for: indexPath) as? PGLStackAlbumHeader
-                else {
-                    fatalError("PGLStackController headerCell did not load")
-                }
-                cell.cellLabel.text = "Album:"
-                cell.userText.text = myStack.stackType
-                cell.userText.delegate = self
-                cell.userText.tag = StackHeaderCell.album.rawValue
-                cell.userText.delegate = self
-                addAlbumLookUp(albumUserText: cell.userText)
-                albumUserTextCell = cell.userText
-                return cell
-
-            default :
-                // or let cell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
-
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
-                else {
-                    fatalError("PGLStackController headerCell did not load")
-                }
-                return cell
-        }
 
 
-    }
 
+
+
+// MARK: Stack Name input
 
     func addAlbumLookUp(albumUserText: UITextField) {
         let overlayButton = UIButton(type: .custom)
@@ -616,18 +536,93 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
             }
     }
 
-    func isLimitedPhotoLibAccess() -> Bool {
-        let accessLevel: PHAccessLevel = .readWrite // or .addOnly
-        let authorizationStatus = PHPhotoLibrary.authorizationStatus(for: accessLevel)
 
-        switch authorizationStatus {
-            case .limited :
-            return true
-        default:
-            // all other authorizationStatus values
-           return false
-        }
+
+    // MARK: Header setup
+
+    fileprivate func registerCellNibs() {
+        let stackInfoHeaderCellNib = UINib(nibName: PGLStackInfoHeader.nibName, bundle: nil)
+        tableView.register(stackInfoHeaderCellNib ,forCellReuseIdentifier: PGLStackInfoHeader.reuseIdentifer)
+
+        let stackAlbumHeaderCellNib = UINib(nibName: PGLStackAlbumHeader.nibName, bundle: nil)
+        tableView.register(stackAlbumHeaderCellNib ,forCellReuseIdentifier: PGLStackAlbumHeader.reuseIdentifer)
+
+        let effexButtonsCellNib = UINib(nibName: PGLEffexButtonsHeader.nibName, bundle: nil)
+        tableView.register(effexButtonsCellNib , forHeaderFooterViewReuseIdentifier: PGLEffexButtonsHeader.reuseIdentifer)
     }
+
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 0
+        }
+        if section == 1 {
+            return 50
+        }
+        return 0 
+    }
+
+    override func tableView( _ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            return UITableViewHeaderFooterView()
+        }
+        if section == 1 {
+            if  let myButtonHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: PGLEffexButtonsHeader.reuseIdentifer) as? PGLEffexButtonsHeader {
+
+                myButtonHeader.addFilterBtn.addTarget(self, action: #selector(addFilterToStack ), for: .touchUpInside)
+                myButtonHeader.editFiltersBtn.addTarget(self, action: #selector(editFilterStack ), for: .touchUpInside)
+
+                return myButtonHeader
+            }
+        }
+        return nil // no other headers
+    }
+
+
+    fileprivate func headerCellFor(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+            // header
+
+        let myStack = appStack.outputStack
+        if indexPath.section == 0 {
+            switch indexPath.row {
+                case StackHeaderCell.title.rawValue :
+                    guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
+                    else {
+                        fatalError("PGLStackController headerCell did not load")
+                    }
+                    cell.cellLabel.text = "Title:"
+                    cell.userText.text = myStack.stackName
+                    cell.userText.delegate = self
+                    cell.userText.tag = StackHeaderCell.title.rawValue
+                    cell.userText.delegate = self
+                    return cell
+
+                case StackHeaderCell.album.rawValue :
+                    guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackAlbumHeader.reuseIdentifer, for: indexPath) as? PGLStackAlbumHeader
+                    else {
+                        fatalError("PGLStackController headerCell did not load")
+                    }
+                    cell.cellLabel.text = "Album:"
+                    cell.userText.text = myStack.stackType
+                    cell.userText.delegate = self
+                    cell.userText.tag = StackHeaderCell.album.rawValue
+                    cell.userText.delegate = self
+                    addAlbumLookUp(albumUserText: cell.userText)
+                    albumUserTextCell = cell.userText
+                    return cell
+
+                default :
+                        // or let cell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
+
+                    guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
+                    else {
+                        fatalError("PGLStackController headerCell did not load")
+                    }
+                    return cell
+            }
+        }
+        return UITableViewCell()
+    }
+
 
         // MARK: Bar Buttons
 
@@ -644,6 +639,21 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         postFilterNavigationChange()
         performSegue(withIdentifier: "showFilterController", sender: self)
             // chooses new filter
+    }
+
+    @objc func addFilterToStack() {
+        // hideParmControls()
+        self.appStack.setFilterChangeModeToAdd()
+
+        postFilterNavigationChange()
+        performSegue(withIdentifier: "showFilterController", sender: self)
+            // chooses new filter
+    }
+
+    @objc func editFilterStack()
+    {
+        toggleEditing()
+
     }
 
     @IBAction func showImageControllerAction(_ sender: UIBarButtonItem) {
@@ -956,7 +966,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate,  UINavigat
         appStack.moveFilter(fromSourceRow: sourceIndexPath, destinationRow: destinationIndexPath )
     }
 
-        // MARK: - Navigation
+        // MARK: - Edit Btn
 
     func setUpdateEditButton() {
 

@@ -57,6 +57,8 @@
 		A37426BB2B7FD5AB001A5EC7 /* PGLViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37426BA2B7FD5AB001A5EC7 /* PGLViewControllerExtension.swift */; };
 		A375F25F26DFE47E00721D3A /* PGLStackProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A375F25E26DFE47E00721D3A /* PGLStackProvider.swift */; };
 		A37D23AE2825C27D00EE3723 /* PGLParmImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37D23AD2825C27D00EE3723 /* PGLParmImageController.swift */; };
+		A38735A72CDBD98F000EE038 /* PGLEffexButtonsHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */; };
+		A38735AB2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */; };
 		A38F9D76250442B800B58F6B /* CVPixelBufferExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */; };
 		A392D5EE26C3EBDA00688952 /* PGLRandomFilterMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A392D5ED26C3EBDA00688952 /* PGLRandomFilterMaker.swift */; };
 		A39466802832DFDD00A67319 /* PGLStackImageContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A394667F2832DFDD00A67319 /* PGLStackImageContainerController.swift */; };
@@ -236,6 +238,8 @@
 		A375F25E26DFE47E00721D3A /* PGLStackProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackProvider.swift; sourceTree = "<group>"; };
 		A37D23AD2825C27D00EE3723 /* PGLParmImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLParmImageController.swift; sourceTree = "<group>"; };
 		A384CF912B968DA300ACC220 /* iPad3.0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = iPad3.0.xctestplan; sourceTree = "<group>"; };
+		A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PGLEffexButtonsHeader.xib; sourceTree = "<group>"; };
+		A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLEffexButtonsHeader.swift; sourceTree = "<group>"; };
 		A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVPixelBufferExtension.swift; sourceTree = "<group>"; };
 		A392D5ED26C3EBDA00688952 /* PGLRandomFilterMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLRandomFilterMaker.swift; sourceTree = "<group>"; };
 		A394667F2832DFDD00A67319 /* PGLStackImageContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackImageContainerController.swift; sourceTree = "<group>"; };
@@ -543,6 +547,7 @@
 				A3BF506624D32A3400CD5114 /* TextCell.swift */,
 				A3651FA12A9BD4E1006F50F6 /* PGLStackAlbumHeader.swift */,
 				A3D04B122A8444A300E6DB16 /* PGLStackInfoHeader.swift */,
+				A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */,
 				A3BF506724D32A3400CD5114 /* OutlineItemCell.swift */,
 				A3BF506924D32A3400CD5114 /* TitleSupplementaryView.swift */,
 				A3BF506A24D32A3400CD5114 /* StackDataCell.swift */,
@@ -728,6 +733,7 @@
 				A3BF506124D32A3400CD5114 /* TableCell.xib */,
 				A3D04B132A8444A300E6DB16 /* PGLStackInfoHeader.xib */,
 				A3651FA22A9BD4E1006F50F6 /* PGLStackAlbumHeader.xib */,
+				A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */,
 			);
 			path = "cell xib";
 			sourceTree = "<group>";
@@ -843,6 +849,7 @@
 				A320F62A26699FA8008F6090 /* PrivacyPolicy.rtf in Resources */,
 				A3D04B152A8444A300E6DB16 /* PGLStackInfoHeader.xib in Resources */,
 				A3BF50F024D32A3400CD5114 /* TableCell.xib in Resources */,
+				A38735A72CDBD98F000EE038 /* PGLEffexButtonsHeader.xib in Resources */,
 				A3BF50F124D32A3400CD5114 /* Assets.xcassets in Resources */,
 				A3E6243D2691261A0017372F /* Settings.bundle in Resources */,
 				A35FF77C26DC324E00D78252 /* CoreDataSampleLicense.txt in Resources */,
@@ -961,6 +968,7 @@
 				A3BF510824D32A3400CD5114 /* PGLFilterClasses.swift in Sources */,
 				A3AD94762B7CF96E00125E74 /* PGLTwoColumnSplitController.swift in Sources */,
 				A39A42972B768C3D00D553B1 /* PGLAssetVideoPlayer.swift in Sources */,
+				A38735AB2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift in Sources */,
 				A3BF513624D32A3400CD5114 /* PGLAssetCollection.swift in Sources */,
 				A3FB765C28D7AF6500595461 /* PGLWindowSceneDelegate.swift in Sources */,
 				A34BB8BE295E4834007BFBA7 /* PGLAttributeWeightsVector.swift in Sources */,
