@@ -359,11 +359,11 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
                 if let newVaryAttribute = varyTimerAttribute() {
                     if !hasAnimation() { // add Point 1
 
-                        let facesAction = PGLTableCellAction(action: "Faces", newAttribute: newVaryAttribute, canPerformAction: true, targetAttribute: self)
-                        facesAction.performDissolveWrapper = true
-                        allActions.append(facesAction)
-                        let varyAction = PGLTableCellAction(action: "From", newAttribute: nil , canPerformAction: true, targetAttribute: self)
-                                           allActions.append(varyAction)
+//                        let facesAction = PGLTableCellAction(action: "Faces", newAttribute: newVaryAttribute, canPerformAction: true, targetAttribute: self)
+//                        facesAction.performDissolveWrapper = true
+//                        allActions.append(facesAction)
+                    let varyAction = PGLTableCellAction(action: "From", newAttribute: nil , canPerformAction: true, targetAttribute: self)
+                   allActions.append(varyAction)
                     }
             }
             case .VaryPt1:

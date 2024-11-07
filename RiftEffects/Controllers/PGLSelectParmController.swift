@@ -442,20 +442,20 @@ class PGLSelectParmController: PGLCommonController,
         //                let detector = PGLDetector(ciFilter: PGLFaceCIFilter())
         // create the wrapper filter
 //        "PGLSelectParmController #setDissolveWrapper start"
-        guard let selectedFilter = currentFilter
-            else {return}
-        let wrapperDesc = PGLFilterDescriptor("CIDissolveTransition", PGLDissolveWrapperFilter.self)!
-        let wrapperFilter = wrapperDesc.pglSourceFilter() as! PGLDissolveWrapperFilter
-
-        let faceDetector =  DetectorFramework.Active.init(ciFilter: selectedFilter.localFilter)
-
-        faceDetector.setCIContext(detectorContext: appStack.getViewerStack().imageCIContext)
-
-        faceDetector.filterAttribute = tappedAttribute
-
-        selectedFilter.setWrapper(outputFilter: wrapperFilter, detector: faceDetector)
-
-        currentFilter?.hasAnimation = false  //  current filter is NOT animating. The wrapper is
+//        guard let selectedFilter = currentFilter
+//            else {return}
+//        let wrapperDesc = PGLFilterDescriptor("CIDissolveTransition", PGLDissolveWrapperFilter.self)!
+//        let wrapperFilter = wrapperDesc.pglSourceFilter() as! PGLDissolveWrapperFilter
+//
+//        let faceDetector =  DetectorFramework.Active.init(ciFilter: selectedFilter.localFilter)
+//
+//        faceDetector.setCIContext(detectorContext: appStack.getViewerStack().imageCIContext)
+//
+//        faceDetector.filterAttribute = tappedAttribute
+//
+//        selectedFilter.setWrapper(outputFilter: wrapperFilter, detector: faceDetector)
+//
+//        currentFilter?.hasAnimation = false  //  current filter is NOT animating. The wrapper is
 
     }
 
@@ -947,8 +947,9 @@ class PGLSelectParmController: PGLCommonController,
 
                         if anActionCell.performDissolveWrapper
                             {
-                            Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLSelectParmController #trailingSwipe completion starts #setDissolveWrapper")
-                                self.setDissolveWrapper() }
+//                            Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLSelectParmController #trailingSwipe completion starts #setDissolveWrapper")
+//                                self.setDissolveWrapper()
+                        }
                         else {
                             Logger(subsystem: LogSubsystem, category: LogCategory).info( "PGLSelectParmController #trailingSwipe completion starts performAction")
                                 cellDataAttribute.performAction(self)  // run the command
