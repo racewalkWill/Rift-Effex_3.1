@@ -198,7 +198,7 @@ class PGLSelectParmController: PGLCommonController,
         splitViewController?.delegate = self
 
 
-        navigationItem.title = "Parms"//viewerStack.stackName
+        navigationItem.title = "Effex"//viewerStack.stackName
 
 
 //        NSLog ("PGLSelectParmController #viewDidLoad completed")
@@ -573,16 +573,28 @@ class PGLSelectParmController: PGLCommonController,
 
     func numberOfSections(in tableView: UITableView) -> Int {
         //  return the number of sections
-       
-       return filterParms.count
 
+           let imageCount  = filterParms[sectionImages].count
+           let parmCount = filterParms[sectionParms].count
+
+        if imageCount > 0 {
+            if parmCount > 0 {
+                return 2
+            }
+            else {
+                return 1
+            }
+        } else {  // no image parms
+            return 2 // list images section as empty
+            }
     }
+
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case sectionImages:
                 return "Images"
         case sectionParms:
-                return "Parms"
+                return "Settings"
 //        case sectionOther:
 //            return "Other"
         default:

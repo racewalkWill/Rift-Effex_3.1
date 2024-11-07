@@ -179,7 +179,7 @@ class PGLMainFilterController:  UIViewController,
         appStack = myAppDelegate.appStack
         stackData = { self.appStack.viewerStack }
         // closure is evaluated when referenced
-        navigationItem.title = "Filters" //thisStack.stackName
+        navigationItem.title = "Effex" //thisStack.stackName
 
         let myCenter =  NotificationCenter.default
 
@@ -472,7 +472,7 @@ extension PGLMainFilterController: UISearchResultsUpdating {
         snapshot.appendSections([Header.AllFilter.rawValue])
 //            snapshot.insertSections([0], beforeSection: 0)
 
-        let allHeaderItem = Item(title: "Categories", descriptor: nil)
+        let allHeaderItem = Item(title: "Groups", descriptor: nil)
         snapshot.appendItems([allHeaderItem], toSection: Header.AllFilter.rawValue)
 
         snapshot.appendItems(filterItems, toSection: Header.AllFilter.rawValue)
@@ -627,9 +627,9 @@ extension PGLMainFilterController {
         snapshot.appendSections(sections)
         dataSource.apply(snapshot, animatingDifferences: false)
         var headerSnapShot = NSDiffableDataSourceSectionSnapshot<Item>()
-        var headerItemTitle = "A-Z Filters" // for FilterNavigatorMode.Grouped
+        var headerItemTitle = "A-Z Effex" // for FilterNavigatorMode.Grouped
         if mode == FilterNavigatorMode.Flat {
-            headerItemTitle = "Categories"
+            headerItemTitle = "Groups"
         }
         let headerItem = Item(title: headerItemTitle, descriptor: nil)
         headerSnapShot.append([headerItem])
