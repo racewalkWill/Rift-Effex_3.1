@@ -378,7 +378,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //             headers don't count for indexPath.
         if indexPath.section == 0 {
-                return headerCellFor(tableView, indexPath)}
+                return titleAlbumCell(tableView, indexPath)}
             else {
                 return filterCellFor(tableView, indexPath)
                 }
@@ -569,7 +569,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
             if  let myButtonHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: PGLEffexButtonsHeader.reuseIdentifer) as? PGLEffexButtonsHeader {
 
                 myButtonHeader.addFilterBtn.addTarget(self, action: #selector(addFilterToStack ), for: .touchUpInside)
-                myButtonHeader.editFiltersBtn.addTarget(self, action: #selector(editFilterStack ), for: .touchUpInside)
+                myButtonHeader.editFiltersBtn.addTarget(self, action: #selector(toggleEditing ), for: .touchUpInside)
 
                 return myButtonHeader
             }
@@ -578,7 +578,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     }
 
 
-    fileprivate func headerCellFor(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+    fileprivate func titleAlbumCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
             // header
 
         let myStack = appStack.outputStack
@@ -626,35 +626,19 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
         // MARK: Bar Buttons
 
-    @IBOutlet weak var editStackBtn: UIBarButtonItem!
-    
-    @IBAction func editStack(_ sender: Any) {
-        toggleEditing()
-    }
-    
-    @IBAction func addFilter(_ sender: UIBarButtonItem) {
-        // hideParmControls()
-        self.appStack.setFilterChangeModeToAdd()
-
-        postFilterNavigationChange()
-        performSegue(withIdentifier: "showFilterController", sender: self)
-            // chooses new filter
-    }
-
     @objc func addFilterToStack() {
         // hideParmControls()
         self.appStack.setFilterChangeModeToAdd()
 
         postFilterNavigationChange()
-        performSegue(withIdentifier: "showFilterController", sender: self)
-            // chooses new filter
+        if let myParentTwoColumnStack = parent as? PGLStackImageContainerController {
+            myParentTwoColumnStack.addFilterBtn()
+        } else {
+            performSegue(withIdentifier: "showFilterController", sender: self)
+                // chooses new filter
+        }
     }
 
-    @objc func editFilterStack()
-    {
-        toggleEditing()
-
-    }
 
     @IBAction func showImageControllerAction(_ sender: UIBarButtonItem) {
 
@@ -791,10 +775,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
 
     func updateNavigationBar() {
-//        self.navigationItem.title = self.appStack.firstStack()?.stackName
-//        self.navigationItem.title = "Effects"
 
-        editStackBtn.isHidden = appStack.viewerStack.isEmptyStack()
         setNeedsStatusBarAppearanceUpdate()
     }
 
@@ -968,18 +949,11 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
         // MARK: - Edit Btn
 
-    func setUpdateEditButton() {
 
-            if (tableView.isEditing) {
-                // change to "Done"
-                editStackBtn.title = "Done"
-            } else {
-                editStackBtn.title = "Edit" }
-    }
 
     @objc func toggleEditing() {
         tableView.setEditing(!tableView.isEditing, animated: true)
-        setUpdateEditButton()
+
     }
 
 }

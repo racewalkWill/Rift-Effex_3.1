@@ -44,13 +44,17 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         // no toolbar on the stackImageContainerController so  toolbar buttons don't show
 //        containerStackController?.addToolBarButtons(toController: self)
 
-        setUpdateEditButton()
         updateNavigationBar()
 //        setNeedsStatusBarAppearanceUpdate()
 
         // if the stack is empty go to the addFilter directly
         if containerStackController?.appStack.viewerStack.isEmptyStack() ?? true {
-            addFilterBtn(UIBarButtonItem())
+
+            guard let myStackTarget = columns?.control as? PGLStackController
+            else {return }
+            myStackTarget.appStack.setFilterChangeModeToAdd()
+            myStackTarget.postFilterNavigationChange()
+            performSegue(withIdentifier: "showFilterImageContainer", sender: self)
         }
 
         let myCenter =  NotificationCenter.default
@@ -217,53 +221,26 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         helpBtn.menu = contextMenu
     }
 
-    func setUpdateEditButton() {
-        guard let stackTarget = columns?.control as? PGLStackController
-        else {return }
-       // update the edit button
-       if (stackTarget.tableView.isEditing) {
-                // change to "Done"
-                stackEditBtn!.title = "Done"
-       } else {
-           stackEditBtn!.title = "Edit" }
-    }
+
 
     func updateNavigationBar() {
 
 //        self.navigationItem.title = "Rift-Effex"
         guard let stackTarget = columns?.control as? PGLStackController
         else {return }
-//        self.navigationItem.title = stackTarget.title
-
-        stackEditBtn.isHidden = stackTarget.appStack.viewerStack.isEmptyStack()
         setNeedsStatusBarAppearanceUpdate()
     }
 
 
-    @objc func toggleEditing() {
-        guard let myStackTarget = columns?.control as? PGLStackController
-        else {return }
 
-        guard let myTableView = myStackTarget.tableView else {
-            return
-        }
-        myTableView.setEditing(!myTableView.isEditing, animated: true)
-        setUpdateEditButton()
-    }
 
-    @IBAction func addFilterBtn(_ sender: Any) {
-        guard let myStackTarget = columns?.control as? PGLStackController
-        else {return }
-        myStackTarget.appStack.setFilterChangeModeToAdd()
-        myStackTarget.postFilterNavigationChange()
+
+    
+    func addFilterBtn() {
         performSegue(withIdentifier: "showFilterImageContainer", sender: self)
     }
 
-    @IBAction func stackEditBtn(_ sender: UIBarButtonItem) {
-        toggleEditing()
-    }
-    
-    @IBOutlet weak var stackEditBtn: UIBarButtonItem!
+
     
     @IBOutlet weak var openParmsBtn: UIBarButtonItem!
     

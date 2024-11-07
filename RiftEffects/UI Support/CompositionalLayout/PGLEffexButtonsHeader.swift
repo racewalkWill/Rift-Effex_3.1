@@ -19,9 +19,8 @@ class PGLEffexButtonsHeader: UITableViewHeaderFooterView {
     
     @IBOutlet weak var editFiltersBtn: UIButton!
     
-    @IBAction func addFilterBtnClick(_ sender: UIButton) {
-    }
     @IBAction func editFiltersBtn(_ sender: UIButton) {
+        sender.isSelected.toggle()
     }
     
 }
