@@ -673,13 +673,20 @@ class PGLSelectParmController: PGLCommonController,
 //        NSLog("PGLSelectParmController cellForRowAt cell = \(cell)")
         thisCellAttribute?.setUICellDescription(cell)
         thisCellAttribute?.uiIndexPath = indexPath
-        if thisCellAttribute?.inputParmType() == ImageParm.inputPriorFilter {
-            cell.accessoryType = .none
-            // input from prior cell always overrides any other image input
-            // can't change or choose image.. remove the disclosure indicator of the cell
-        } else {
-            if thisCellAttribute?.inputParmType() != ImageParm.notAnImageParm {
-                cell.accessoryType = .detailDisclosureButton
+        if let myInputType = thisCellAttribute?.inputParmType() {
+            switch myInputType {
+                case .inputPriorFilter, .notAnImageParm, .inputChildStack :
+                    cell.accessoryType  = .none
+                        // input from prior cell always overrides any other image input
+                        // can't change or choose image.. remove the disclosure indicator of the cell
+                    cell.backgroundConfiguration?.backgroundColor = .systemBackground
+                case .missingInput:
+                    cell.accessoryType = .detailDisclosureButton
+                    cell.backgroundConfiguration?.backgroundColor = .secondarySystemBackground
+
+                default:
+                    cell.accessoryType = .detailDisclosureButton
+                    cell.backgroundConfiguration?.backgroundColor = .systemBackground
             }
         }
         return cell
