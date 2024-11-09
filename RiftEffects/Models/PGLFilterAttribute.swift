@@ -148,12 +148,6 @@ class PGLFilterAttribute {
         didSet {
             if oldValue != nil {
                 oldValue?.releaseVars()
-                // delete the old stored imageList
-//                aSourceFilter.removeOldImageList(imageParmName: attributeName!)
-//                if let oldStoredList = aSourceFilter.getImageList(imageParmName: attributeName!) {
-//                    aSourceFilter.storedFilter?.removeFromImages(oldStoredList)
-//                NSLog("PGLFilterAttribute inputCollection changed.. old stored value removed") }
-
 
             }
         }
@@ -483,16 +477,6 @@ class PGLFilterAttribute {
     func getSourceDescription(imageType: ImageParm) -> String {
         return inputSourceDescription ?? ""
 
-//        var answerDescription: String
-//        switch imageType {
-//        case .photo:
-//             answerDescription = ParmInput.Photo.rawValue  // "Photo"
-//        case .filter:
-//            answerDescription = ParmInput.Filter.rawValue // "Filter"
-//
-//        }
-//       answerDescription = answerDescription + " " + inputSourceDescription
-//        return answerDescription
     }
 
     func hasImageInput() -> Bool? {
@@ -1206,9 +1190,18 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     var content = uiCell.defaultContentConfiguration()
 
     var newDescriptionString = self.attributeDisplayName ?? ""
+    let sourceString = inputSourceDescription ?? ""
+
     if inputStack != nil {
-        newDescriptionString = newDescriptionString + " > " + (inputStack?.outputFilterName() ?? "")
-          }
+        newDescriptionString = newDescriptionString + " < " + (inputStack?.outputFilterName() ?? "")
+    } else {
+        if sourceString.isEmpty {
+            newDescriptionString = newDescriptionString + " < " + "Photos"
+        }
+        else {
+            newDescriptionString = newDescriptionString + " < " + sourceString
+        }
+    }
     content.text = newDescriptionString
     content.imageProperties.tintColor = .secondaryLabel
       

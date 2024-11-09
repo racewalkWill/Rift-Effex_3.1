@@ -213,11 +213,8 @@ class PGLFilterStack: Equatable, Hashable  {
     }
 
     func stackFilterName(_ forFilter: PGLSourceFilter, index: Int?) -> (String) {
-        // answer filter number , filter name , and arrow point chars
-        // "2 Source In ->"
-        let positionNumber =  1 + (index ?? activeFilterIndex) // zero based array
-        let positionString = "\(positionNumber)"
-        let answer = (positionString + " " + forFilter.filterName + "->")
+
+        let answer =  forFilter.filterName ?? ""
 //        NSLog("PGLFilterStack #stackFilterName = \(answer)")
         return answer
     }
