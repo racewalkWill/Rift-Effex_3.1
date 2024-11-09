@@ -29,6 +29,7 @@ class PGLImageCIFilter: CIFilter {
 
 
     @objc class func customAttributes() -> [String: Any] {
+        // Pics  or Images
         let customDict:[String: Any] = [
             kCIAttributeFilterDisplayName : "Images",
 

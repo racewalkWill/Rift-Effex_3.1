@@ -1285,7 +1285,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
             allActions.append(changeAction)
         }
         else {
-            let newAction = PGLTableCellAction(action: "More", newAttribute: filterInputActionCell(), canPerformAction: false, targetAttribute: self)
+            let newAction = PGLTableCellAction(action: "+Effex", newAttribute: filterInputActionCell(), canPerformAction: false, targetAttribute: self)
             // this will segue to filterBranch.. opens the filterController
             allActions.append(newAction) }
 
