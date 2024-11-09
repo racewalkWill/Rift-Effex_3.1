@@ -595,12 +595,24 @@ class PGLSelectParmController: PGLCommonController,
                 return "Images"
         case sectionParms:
                 return "Settings"
-//        case sectionOther:
-//            return "Other"
+
         default:
-                return "Speed"
+                return ""
         }
        
+
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch section {
+        case sectionImages:
+                return 20
+        case sectionParms:
+                return 15
+
+        default:
+                return 0
+        }
 
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -593,6 +593,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                     cell.userText.text = myStack.stackName
                     cell.userText.delegate = self
                     cell.userText.tag = StackHeaderCell.title.rawValue
+                    cell.userText.returnKeyType = .done
                     cell.userText.delegate = self
                     return cell
 
@@ -605,6 +606,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                     cell.userText.text = myStack.stackType
                     cell.userText.delegate = self
                     cell.userText.tag = StackHeaderCell.album.rawValue
+                    cell.userText.returnKeyType = .done
                     cell.userText.delegate = self
                     addAlbumLookUp(albumUserText: cell.userText)
                     albumUserTextCell = cell.userText
@@ -990,6 +992,7 @@ extension PGLStackController {
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
         textField.resignFirstResponder()
         return true
     }
