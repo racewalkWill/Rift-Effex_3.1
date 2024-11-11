@@ -235,7 +235,7 @@
                                     <action selector="newStackActionBtn:" destination="Cot-0o-SSg" id="5ZK-Is-TWK"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="q7I-R2-kMZ"/>
+                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="q7I-R2-kMZ" userLabel="TemplateBtn"/>
                             <barButtonItem title="More" image="ellipsis.circle" catalog="system" id="EUH-a9-le3"/>
                             <barButtonItem title="Record" image="recordingtape" catalog="system" hidden="YES" id="PJQ-cG-lZ5" userLabel="recordBtn">
                                 <connections>
@@ -251,9 +251,9 @@
                         <outlet property="leftTintView" destination="wa4-VM-jqe" id="Ad7-Kr-gKI"/>
                         <outlet property="moreBtn" destination="EUH-a9-le3" id="zCC-Ct-vgG"/>
                         <outlet property="parmSlider" destination="zCg-lU-rqI" id="iU8-Va-3cX"/>
-                        <outlet property="randomBtn" destination="q7I-R2-kMZ" id="wnG-Ih-ZAj"/>
                         <outlet property="recordBtn" destination="PJQ-cG-lZ5" id="FXX-V1-6FI"/>
                         <outlet property="rightTintView" destination="6Ki-pV-gkl" id="pC4-6T-dRi"/>
+                        <outlet property="templateBtn" destination="q7I-R2-kMZ" id="zhY-fg-O8X"/>
                         <outlet property="toggleAnimationPauseBtyn" destination="Jl0-kr-4aK" id="B7A-SM-sqP"/>
                         <outlet property="topTintView" destination="WIG-ES-l8C" id="4WK-Ii-zR6"/>
                         <outletCollection property="sliders" destination="xpj-gS-MzU" collectionClass="NSMutableArray" id="DVW-U3-NZP"/>
@@ -667,7 +667,7 @@
                         <viewControllerLayoutGuide type="bottom" id="LCb-0n-p2P"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ufz-uZ-e8H">
-                        <rect key="frame" x="0.0" y="0.0" width="242" height="760"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1210" height="760"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
@@ -696,11 +696,11 @@
                         <viewControllerLayoutGuide type="bottom" id="j3d-oc-3aS"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vua-Lu-kpo">
-                        <rect key="frame" x="0.0" y="0.0" width="242" height="760"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1210" height="760"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iTi-AT-siZ">
-                                <rect key="frame" x="-7" y="712" width="238" height="47"/>
+                                <rect key="frame" x="-7" y="712" width="1206" height="47"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="rij-Pi-lzb"/>
@@ -726,11 +726,7 @@
                                     <action selector="newStackBtnClick:" destination="rQx-tc-9ix" id="OlJ-Kr-q1c"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="yo5-KQ-1xv">
-                                <connections>
-                                    <action selector="randomBtnClick:" destination="rQx-tc-9ix" id="ikc-WC-rpU"/>
-                                </connections>
-                            </barButtonItem>
+                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="yo5-KQ-1xv"/>
                             <barButtonItem title="More" image="ellipsis.circle" catalog="system" id="HAf-fe-yaR"/>
                             <barButtonItem title="recordBtn" image="recordingtape" catalog="system" hidden="YES" id="23q-Si-nMo">
                                 <connections>
@@ -743,8 +739,8 @@
                         <outlet property="helpBtn" destination="S4t-N0-6IZ" id="twi-K9-QuD"/>
                         <outlet property="moreBtn" destination="HAf-fe-yaR" id="LdN-K3-I4g"/>
                         <outlet property="newTrashBtn" destination="kGD-tX-jU3" id="pOc-pZ-a39"/>
-                        <outlet property="randomBtn" destination="yo5-KQ-1xv" id="jIp-Do-44Z"/>
                         <outlet property="recordBtn" destination="23q-Si-nMo" id="QNL-ug-1B1"/>
+                        <outlet property="templateBtn" destination="yo5-KQ-1xv" id="jIp-Do-44Z"/>
                         <outlet property="toggleAnimationPauseBtn" destination="eKf-rs-nX2" id="6eD-me-4we"/>
                         <segue destination="j8f-0k-czJ" kind="show" identifier="filterImageToParmImage" id="Stf-Ip-3lm"/>
                     </connections>
@@ -981,11 +977,7 @@
                                     <action selector="newTrashBtnAction:" destination="z1U-K0-aGb" id="x9H-dK-0aK"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="0Zt-QC-w2E">
-                                <connections>
-                                    <action selector="randomBtnClick:" destination="z1U-K0-aGb" id="phg-u0-ed9"/>
-                                </connections>
-                            </barButtonItem>
+                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="0Zt-QC-w2E"/>
                             <barButtonItem title="Record Btn" image="recordingtape" catalog="system" hidden="YES" id="GQ9-os-Nsh">
                                 <connections>
                                     <action selector="recordBtnAction:" destination="z1U-K0-aGb" id="U25-R0-a4y"/>
@@ -1004,8 +996,8 @@
                         <outlet property="moreBtn" destination="X6h-Dm-yVE" id="xPk-mE-gvb"/>
                         <outlet property="newTrashBtn" destination="pEQ-Uh-ooY" id="LYx-ax-Q7i"/>
                         <outlet property="openParmsBtn" destination="ajT-Qa-f5T" id="bRo-Tf-qxQ"/>
-                        <outlet property="randomBtn" destination="0Zt-QC-w2E" id="VFd-iB-3sL"/>
                         <outlet property="recordBtyn" destination="GQ9-os-Nsh" id="SBE-Vt-R7S"/>
+                        <outlet property="templateBtn" destination="0Zt-QC-w2E" id="VFd-iB-3sL"/>
                         <outlet property="toggleAnimationPauseBtn" destination="qG0-1L-lmY" id="Qqh-8F-rSN"/>
                         <segue destination="rQx-tc-9ix" kind="show" identifier="showFilterImageContainer" id="4FJ-we-3bf"/>
                     </connections>
@@ -1016,7 +1008,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="cxI-vr-Pxp"/>
+        <segue reference="4FJ-we-3bf"/>
         <segue reference="Stf-Ip-3lm"/>
         <segue reference="Xyz-2Z-Q4q"/>
     </inferredMetricsTieBreakers>

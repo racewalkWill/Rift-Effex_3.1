@@ -54,7 +54,7 @@ class PGLDemo {
     static let CompositeGroups = [CompositeFilters, TransistionFilters]
 
     var setInputToPrior = false
-    var imageController: PGLImageController?
+    var iPhoneCompact = true
 
 
         // MARK: Demo
@@ -299,7 +299,7 @@ class PGLDemo {
     func blendTemplate(appStack: PGLAppStack) {
             // set better parm values
 
-        let filterNames = ["Images","CIBumpDistortion", "CIBlendWithMask", "CIRadialGradient", "CIDissolveTransition" ]
+        let filterNames = ["CIDissolveTransition","CIBumpDistortion", "CIBlendWithMask", "CIRadialGradient", "CIDissolveTransition" ]
         templateDemoSetup( currentAppStack: appStack)
 
         let targetStack = appStack.viewerStack
@@ -343,25 +343,28 @@ class PGLDemo {
         }
 
             // set up blend demo parms
-            // values from LogParms = true and review of the log on iPad
+            // values from LogParmValues = true and review of the log on iPad
             //            CIBumpDistortion setVectorValue(newValue:keyName:)( [1110 848] , inputCenter )
             //            CIBumpDistortion setNumberValue(newValue:keyName:)( 473.0233 , inputRadius )
             //            CIBumpDistortion setNumberValue(newValue:keyName:)( 0.9302326 , inputScale )
             //            CIRadialGradient setVectorValue(newValue:keyName:)( [1149 892] , inputCenter )
             //            CIRadialGradient setNumberValue(newValue:keyName:)( 483.7209 , inputRadius0 )
             //            CIRadialGradient setNumberValue(newValue:keyName:)( 223.2558 , inputRadius1 )
+            // values for iPhone 14 Pro
+            //            CIBumpDistortion setVectorValue(newValue:keyName:)( [780 570] , inputCenter )
+            //            CIRadialGradient setVectorValue(newValue:keyName:)( [995 667] , inputCenter )
+            let  bumpInputCenter = if iPhoneCompact {CIVector(x: 780, y: 570)} else {CIVector(x: 995, y: 667)}
+            let   radialInputCenter =  if iPhoneCompact {CIVector(x: 995, y: 667)} else {CIVector(x: 1149, y: 892)}
+
         for aMultipleInputFilter in ([imageFilter, dissolveFilter]) {
             aMultipleInputFilter?.setTimerDt(lengthSeconds: 3.0)
             _ = aMultipleInputFilter?.notifyTransitionsExist()
         }
-
-
-
-
-        bumpFilter?.setVectorValue(newValue:CIVector(x: 1110, y: 848), keyName: "inputCenter")
+        
+        bumpFilter?.setVectorValue(newValue: bumpInputCenter, keyName: "inputCenter")
         bumpFilter?.setNumberValue(newValue: 473.0233, keyName: "inputRadius")
         bumpFilter?.setNumberValue(newValue: 0.9302326, keyName: "inputScale")
-        gradientFilter?.setVectorValue(newValue: CIVector(x:1149, y:892), keyName: "inputCenter")
+        gradientFilter?.setVectorValue(newValue: radialInputCenter, keyName: "inputCenter")
         gradientFilter?.setNumberValue(newValue: 483.7209, keyName: "inputRadius0")
         gradientFilter?.setNumberValue(newValue: 223.2558, keyName: "inputRadius1")
 

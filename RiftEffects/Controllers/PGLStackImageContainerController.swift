@@ -41,6 +41,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
         setMoreBtnMenu() // needs the child imageController loaded
         setHelpBtnMenu()
+        setTemplateBtnMenu()
+
         // no toolbar on the stackImageContainerController so  toolbar buttons don't show
 //        containerStackController?.addToolBarButtons(toController: self)
 
@@ -109,17 +111,17 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
 
 
-    @IBOutlet weak var randomBtn: UIBarButtonItem!
+    @IBOutlet weak var templateBtn: UIBarButtonItem!
 
-    @IBAction func randomBtnClick(_ sender: UIBarButtonItem) {
-        guard let imageViewerController = imageController()
-            else { return }
-        guard let stackController = columns?.control as? PGLStackController
-        else {return }
-        imageViewerController.randomBtnAction(sender)
-        stackController.updateDisplay()
-        updateNavigationBar()
-    }
+//    @IBAction func randomBtnClick(_ sender: UIBarButtonItem) {
+//        guard let imageViewerController = imageController()
+//            else { return }
+//        guard let stackController = columns?.control as? PGLStackController
+//        else {return }
+//        imageViewerController.randomBtnAction(sender)
+//        stackController.updateDisplay()
+//        updateNavigationBar()
+//    }
 
     @IBOutlet weak var moreBtn: UIBarButtonItem!
 
@@ -204,14 +206,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
         }
 
-
         let contextMenu = UIMenu(title: "",
                                  children: [ helpMenu ,
-         UIAction(title: "Demo..", image:UIImage(systemName: "pencil.circle")) {
-         action in
-            imageViewerController.loadDemoStack(self.helpBtn)
-        },
-
 
           UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
             action in
@@ -221,6 +217,33 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         helpBtn.menu = contextMenu
     }
 
+    func setTemplateBtnMenu() {
+        guard let imageViewerController = imageController()
+            else { return }
+
+        let randomAction = UIAction.init(title: "Random..", image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+            action in
+            imageViewerController.templateBtnAction(self.templateBtn)
+
+        }
+        let contextMenu = UIMenu(title: "",
+                                 children: [ randomAction ,
+             UIAction(title: "Blend..", image:UIImage(systemName: "pencil")) {
+               action in
+                let demoGenerator = PGLDemo()
+
+                demoGenerator.blendTemplate(appStack: imageViewerController.appStack)
+            },
+             UIAction(title: "Sequence..", image:UIImage(systemName: "pencil.circle")) {
+             action in
+            imageViewerController.loadDemoStack(self.templateBtn)
+            }
+
+        ])
+
+     templateBtn.menu = contextMenu
+
+    }
 
 
     func updateNavigationBar() {

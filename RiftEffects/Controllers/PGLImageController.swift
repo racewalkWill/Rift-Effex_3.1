@@ -121,19 +121,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 //
 //    }
 
+    @IBOutlet weak var templateBtn: UIBarButtonItem!
     @IBOutlet weak var helpBtn: UIBarButtonItem!
     
     @IBOutlet weak var moreBtn: UIBarButtonItem!
 
-    @IBOutlet weak var randomBtn: UIBarButtonItem! {
-        didSet{
-            if isLimitedPhotoLibAccess() {
-                randomBtn.isEnabled = false
-                // if user changes privacy settings then the view is reloaded
-                // and the button is enabled.. without quitting the app
-                }
-            }
-    }
+
+
 
     @IBOutlet weak var toggleAnimationPauseBtyn: UIBarButtonItem!
 
@@ -150,7 +144,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     }
     
-    @IBAction func randomBtnAction(_ sender: UIBarButtonItem) {
+    @IBAction func templateBtnAction(_ sender: UIBarButtonItem) {
         NSLog("PGLImageController addRandom button click")
 
         let demoGenerator = PGLDemo()
@@ -589,10 +583,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     }
 
-    func setRandomBtnMenu() {
+    func setTemplateBtnMenu() {
         let randomAction = UIAction.init(title: "Random..", image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
             action in
-            self.randomBtnAction(self.randomBtn)
+            self.templateBtnAction(self.templateBtn)
 
         }
         let contextMenu = UIMenu(title: "",
@@ -600,16 +594,17 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
              UIAction(title: "Blend..", image:UIImage(systemName: "pencil")) {
                action in
                 let demoGenerator = PGLDemo()
+                demoGenerator.iPhoneCompact = false  // now on the iPad
                 demoGenerator.blendTemplate(appStack: self.appStack)
             },
              UIAction(title: "Sequence..", image:UIImage(systemName: "pencil.circle")) {
              action in
-             self.loadDemoStack(self.randomBtn)
+             self.loadDemoStack(self.templateBtn)
             }
 
         ])
 
-     randomBtn.menu = contextMenu
+     templateBtn.menu = contextMenu
 
     }
 
@@ -883,7 +878,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         setMoreBtnMenu()
         setHelpBtnMenu()
-        setRandomBtnMenu()
+        setTemplateBtnMenu()
 
 
         if ShowHelpOnOpen {

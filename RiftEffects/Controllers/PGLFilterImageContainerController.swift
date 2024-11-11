@@ -41,7 +41,9 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         loadViewColumns(controller: containerFilterController!, imageViewer: containerImageController! )
 
         setMoreBtnMenu()
+        setTemplateBtnMenu()
         setHelpBtnMenu()
+
 
 
         navigationController?.isToolbarHidden = true
@@ -88,12 +90,12 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         imageViewerController.newStackActionBtn(sender)
     }
     
-    @IBAction func randomBtnClick(_ sender: UIBarButtonItem) {
-        guard let containerImageController = imageController()
-            else { return }
-        containerImageController.randomBtnAction(sender)
-
-    }
+//    @IBAction func randomBtnClick(_ sender: UIBarButtonItem) {
+//        guard let containerImageController = imageController()
+//            else { return }
+//        containerImageController.randomBtnAction(sender)
+//
+//    }
     @IBAction func moreBtnClick(_ sender: UIBarButtonItem) {
         // see the setMoreBtnMenu()
 
@@ -105,7 +107,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
 
    
-    @IBOutlet weak var randomBtn: UIBarButtonItem!
+    @IBOutlet weak var templateBtn: UIBarButtonItem!
 
     @IBOutlet weak var recordBtn: UIBarButtonItem!
     
@@ -165,6 +167,34 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
         ])
         moreBtn.menu = contextMenu
+    }
+
+    func setTemplateBtnMenu() {
+        guard let imageViewerController = imageController()
+            else { return }
+
+        let randomAction = UIAction.init(title: "Random..", image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+            action in
+            imageViewerController.templateBtnAction(self.templateBtn)
+
+        }
+        let contextMenu = UIMenu(title: "",
+                                 children: [ randomAction ,
+             UIAction(title: "Blend..", image:UIImage(systemName: "pencil")) {
+               action in
+                let demoGenerator = PGLDemo()
+
+                demoGenerator.blendTemplate(appStack: imageViewerController.appStack)
+            },
+             UIAction(title: "Sequence..", image:UIImage(systemName: "pencil.circle")) {
+             action in
+            imageViewerController.loadDemoStack(self.templateBtn)
+            }
+
+        ])
+
+     templateBtn.menu = contextMenu
+
     }
 
     func setHelpBtnMenu() {
