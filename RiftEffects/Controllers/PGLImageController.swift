@@ -53,6 +53,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 // MARK: Property vars
 
     static var LibraryMenuIdentifier = UIAction.Identifier("Library")
+    static var TemplateMenuIdentifier = UIAction.Identifier("Template")
 //
 
 
@@ -150,28 +151,16 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
     
     @IBAction func randomBtnAction(_ sender: UIBarButtonItem) {
-//        NSLog("PGLImageController addRandom button click")
-        let setInputToPrior = appStack.viewerStack.stackHasFilter()
-        if appStack.showFilterImage {
-            // turn off the single filter view
-            appStack.toggleShowFilterImage() }
+        NSLog("PGLImageController addRandom button click")
+
         let demoGenerator = PGLDemo()
 //        appStack.removeDefaultEmptyFilter()
-        demoGenerator.appStack = appStack // pass on the stacks
-        let startingDemoFilter = demoGenerator.multipleInputTransitionFilters()
 
-        appStack.viewerStack.activeFilterIndex = 0
-        if setInputToPrior {
-            startingDemoFilter.setInputImageParmState(newState: ImageParm.inputPriorFilter)
-        }
-        postCurrentFilterChange() // triggers PGLImageController to set view.isHidden to false
-            // show the new results !
-
-        showStackControllerAction()
-        updateStackNameToNavigationBar()
+        let startingDemoFilter = demoGenerator.generateRandomStack( thisAppStack: appStack )
 
 
     }
+
 
 
 
@@ -277,7 +266,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func removeImagesFromStack() {
-        self.appStack.removeImagesFromStack()
+        _ = self.appStack.removeImagesFromStack()
     }
 
 
@@ -461,7 +450,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
     
 
-    fileprivate func postCurrentFilterChange() {
+     func postCurrentFilterChange() {
         let updateFilterNotification = Notification(name:PGLCurrentFilterChange)
         NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
     }
@@ -600,6 +589,30 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     }
 
+    func setRandomBtnMenu() {
+        let randomAction = UIAction.init(title: "Random..", image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+            action in
+            self.randomBtnAction(self.randomBtn)
+
+        }
+        let contextMenu = UIMenu(title: "",
+                                 children: [ randomAction ,
+             UIAction(title: "Blend..", image:UIImage(systemName: "pencil")) {
+               action in
+                let demoGenerator = PGLDemo()
+                demoGenerator.blendTemplate(appStack: self.appStack)
+            },
+             UIAction(title: "Sequence..", image:UIImage(systemName: "pencil.circle")) {
+             action in
+             self.loadDemoStack(self.randomBtn)
+            }
+
+        ])
+
+     randomBtn.menu = contextMenu
+
+    }
+
     func setMoreBtnMenu() {
 
         let libraryMenu = UIAction.init(title: "Library..", image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
@@ -646,11 +659,6 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         let contextMenu = UIMenu(title: "",
                                  children: [ helpMenu ,
-         UIAction(title: "Demo..", image:UIImage(systemName: "pencil.circle")) {
-         action in
-         self.loadDemoStack(self.helpBtn)
-        },
-
 
           UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
             action in
@@ -875,6 +883,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         setMoreBtnMenu()
         setHelpBtnMenu()
+        setRandomBtnMenu()
 
 
         if ShowHelpOnOpen {

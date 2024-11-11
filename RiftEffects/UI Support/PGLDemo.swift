@@ -53,6 +53,8 @@ class PGLDemo {
     static let GeneratorGroups = [GeneratorFilters, GradientFilters]
     static let CompositeGroups = [CompositeFilters, TransistionFilters]
 
+    var setInputToPrior = false
+    var imageController: PGLImageController?
 
     func fetchFavoritesList(onImageParm: PGLFilterAttribute) ->  PGLAlbumSource? {
 
@@ -205,10 +207,10 @@ class PGLDemo {
         }
     }
 
-    func multipleInputTransitionFilters() -> PGLSourceFilter{
-        // answer first addedFilter
+    func generateRandomStack( thisAppStack: PGLAppStack    ) {
 
 
+        templateDemoSetup( currentAppStack: thisAppStack)
         var firstRandomFilter: PGLSourceFilter
 
         if PGLDemo.CurrentDemoGroup >= PGLDemo.CompositeGroups.count {
@@ -244,22 +246,104 @@ class PGLDemo {
         } else {
             PGLDemo.Category1Index = 0 // reset
         }
-        return firstRandomFilter
+        templateDemoCompletion(startingDemoFilter: firstRandomFilter)
     }
 
     // MARK: Run
-    func runMakeRandom(stackController: PGLStackController) {
-        appStack = stackController.appStack // pass on the stacks
-        let setInputToPrior = appStack.viewerStack.stackHasFilter()
-        let startingDemoFilter = multipleInputTransitionFilters()
+//    func runMakeRandom(stackController: PGLStackController) {
+//        appStack = stackController.appStack // pass on the stacks
+//        let setInputToPrior = appStack.viewerStack.stackHasFilter()
+//        let startingDemoFilter = generateRandomStack()
+//
+//        appStack.viewerStack.activeFilterIndex = 0
+//        if setInputToPrior {
+//            startingDemoFilter.setInputImageParmState(newState: ImageParm.inputPriorFilter)
+//        }
+//        stackController.postCurrentFilterChange() // triggers PGLImageController to set view.isHidden to false
+//       
+//
+//    }
+
+    // MARK: Setup
+
+    func templateDemoSetup( currentAppStack: PGLAppStack) {
+        appStack = currentAppStack
+        if appStack.showFilterImage {
+            // turn off the single filter view
+            appStack.toggleShowFilterImage() }
+        setInputToPrior = appStack.viewerStack.stackHasFilter()
+    }
+
+    func templateDemoCompletion( startingDemoFilter: PGLSourceFilter ) {
 
         appStack.viewerStack.activeFilterIndex = 0
         if setInputToPrior {
             startingDemoFilter.setInputImageParmState(newState: ImageParm.inputPriorFilter)
         }
-        stackController.postCurrentFilterChange() // triggers PGLImageController to set view.isHidden to false
-       
+        
+        let updateFilterNotification = Notification(name:PGLCurrentFilterChange)
+        NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
+            // triggers PGLImageController to set view.isHidden to false
+            // show the new results !
 
+        let goToStack = Notification(name: PGLLoadedDataStack)
+        NotificationCenter.default.post(goToStack)
+
+//        imageController?.updateStackNameToNavigationBar()
+    }
+
+    //MARK: Templates
+
+    fileprivate func addTemplateFilterTo(_ filter0: PGLSourceFilter?,_ imageAttribute: PGLFilterAttributeImage?, _ targetStack: PGLFilterStack, _ appStack: PGLAppStack ) {
+
+        targetStack.appendFilter(filter0!)
+        appStack.targetAttribute = imageAttribute
+        if imageAttribute?.inputParmType() == ImageParm.missingInput {
+            setInputTo(imageParm: imageAttribute!)
+            }
+
+    }
+    
+    func blendTemplate(appStack: PGLAppStack) {
+        // set better parm values
+
+        let filterNames = ["Images","CIBumpDistortion", "CIBlendWithMask", "CIRadialGradient" ]
+        templateDemoSetup( currentAppStack: appStack)
+        if let firstFilter = PGLSourceFilter(filter: "Images") {
+            let targetStack = appStack.viewerStack
+            let imageFilter = targetStack.demoLoadFilter(ciFilterString: filterNames[0])
+            imageFilter?.setDefaults()
+
+            let bumpFilter = targetStack.demoLoadFilter(ciFilterString: filterNames[1])
+            let blendMaskFilter = targetStack.demoLoadFilter(ciFilterString: filterNames[2])
+            let gradientFilter = targetStack.demoLoadFilter(ciFilterString: filterNames[3])
+
+            var imageTarget: PGLFilterAttributeImage? = blendMaskFilter?.getInputImageAttribute()
+            addTemplateFilterTo(blendMaskFilter, imageTarget, targetStack, appStack)
+
+            // create child stack of images and bump
+            // add to background image
+            guard let backgroundImageAttribute = blendMaskFilter?.attribute(nameKey: kCIInputBackgroundImageKey)
+            else { return }
+            appStack.addChildStackTo(parm: backgroundImageAttribute)
+            let childStack = appStack.viewerStack // the new childStack
+
+            imageTarget = imageFilter?.getInputImageAttribute()
+            addTemplateFilterTo(imageFilter, imageTarget, childStack, appStack)
+
+            imageTarget = bumpFilter?.getInputImageAttribute()
+            addTemplateFilterTo(bumpFilter, imageTarget, childStack, appStack)
+
+            // add radial gradient as mask
+
+            guard let maskImageTarget = blendMaskFilter?.attribute(nameKey: kCIInputMaskImageKey) as? PGLFilterAttributeImage
+                else { return  }
+            appStack.addChildStackTo(parm: maskImageTarget)
+            let maskChildStack = appStack.viewerStack // the new childStac
+            addTemplateFilterTo(gradientFilter, maskImageTarget, maskChildStack, appStack)
+
+            templateDemoCompletion( startingDemoFilter: firstFilter)
+        }
     }
 
 }

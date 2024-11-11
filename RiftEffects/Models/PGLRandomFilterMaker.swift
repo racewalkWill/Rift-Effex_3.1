@@ -29,8 +29,10 @@ class PGLRandomFilterMaker: PGLTransitionFilter {
                 else { return  }
 
             Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLStackController trailingSwipeActionsConfigurationForRowAt runMakeRandom")
+            if let myAppStack = stackController.appStack {
+                self.demoCreator.generateRandomStack( thisAppStack: myAppStack)
+            }
 
-            self.demoCreator.runMakeRandom(stackController: stackController)
             completion(true)
         }
         normalSwipeActions.append(makeRandomFiltersAction)

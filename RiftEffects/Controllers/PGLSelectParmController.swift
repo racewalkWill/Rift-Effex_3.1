@@ -679,7 +679,7 @@ class PGLSelectParmController: PGLCommonController,
                     cell.accessoryType  = .none
                         // input from prior cell always overrides any other image input
                         // can't change or choose image.. remove the disclosure indicator of the cell
-                    cell.backgroundConfiguration?.backgroundColor = .systemBackground
+
                 case .missingInput:
                     cell.accessoryType = .detailDisclosureButton
                     cell.backgroundConfiguration?.backgroundColor = .secondarySystemBackground
