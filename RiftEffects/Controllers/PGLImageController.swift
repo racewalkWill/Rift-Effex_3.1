@@ -1064,7 +1064,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 //        if appStack.videoMgr.videoState != .None
 //            { hideVideoPlayBtn() }
         panner?.isEnabled = false
-        Logger(subsystem: LogSubsystem, category: LogCategory).debug("hide all controls hide = true")
+//        Logger(subsystem: LogSubsystem, category: LogCategory).debug("hide all controls hide = true")
         toggleViewControls(hide: true, uiTypeToShow: nil )
             // toggle all view controls to hide
         parmSlider?.isHidden = true

@@ -97,6 +97,7 @@ class PGLTransitionFilter: PGLRectangleFilter {
             dt = attributeValueRange / Double(varyTotalFrames)
         }
 
+        logParm(#function, lengthSeconds.debugDescription, self.localizedName())
 
     }
 

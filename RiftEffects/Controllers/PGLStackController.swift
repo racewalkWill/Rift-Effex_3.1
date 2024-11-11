@@ -814,6 +814,10 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 //        }
         let segueId = segue.identifier
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function) + \(String(describing: segueId))")
+        let filterName = appStack.currentFilter?.filterName
+
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info(" \(String(describing: segueId))  + \(String(describing:filterName) )")
+
 
         switch segueId {
             case "showImageController":

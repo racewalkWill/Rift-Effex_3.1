@@ -37,7 +37,7 @@ class PGLSourceFilter :  PGLAnimation  {
         //
 
         /// in the debugger execute expression PGLSourceFilter.LogParmValues = true
-static let LogParmValues = true
+static let LogParmValues = false
         // set to true to capture parm  set value messages & values
         // enter in the debug
         //      po PGLSourceFilter.LogParmValues = true
@@ -84,8 +84,8 @@ static let LogParmValues = true
 //            NSLog("PGLSourceFilter stepTime now = \(stepTime)")
         }
     }
-    let defaultDt = 0.005
-    var dt = 0.005{
+    let defaultDt = 0.01
+    var dt = 0.01{
         didSet{
             wrapper?.dt = dt
             // wrapper if active needs the rate of change dt
@@ -527,6 +527,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
 
         localFilter.setValue( newValue, forKey: keyName)
+        logParm(#function, newValue.debugDescription, keyName)
         /*
          var sizedInput: CIImage
         if isTransitionFilter() {
