@@ -527,7 +527,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
 
         localFilter.setValue( newValue, forKey: keyName)
-        logParm(#function, newValue.debugDescription, keyName)
+//        logParm(#function, newValue.debugDescription, keyName)
         /*
          var sizedInput: CIImage
         if isTransitionFilter() {

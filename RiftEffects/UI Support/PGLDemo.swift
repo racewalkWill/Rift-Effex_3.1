@@ -406,4 +406,37 @@ class PGLDemo {
 
     }
 
+    func toneTemplate(appStack: PGLAppStack ) {
+        let filterNames = ["CIDissolveTransition","CIToneCurve" ]
+        templateDemoSetup( currentAppStack: appStack)
+        let targetStack = appStack.viewerStack
+        if let imageFilter = targetStack.demoLoadFilter(ciFilterString: filterNames[0]) {
+            imageFilter.setDefaults()
+            addTemplateFilterTo(imageFilter, imageFilter.getInputImageAttribute(), targetStack, appStack)
+            let toneFilter = targetStack.demoLoadFilter(ciFilterString: filterNames[1])
+
+            let toneImageAttribute = toneFilter?.getInputImageAttribute()
+            addTemplateFilterTo(toneFilter, toneImageAttribute, targetStack, appStack)
+            imageFilter.setTimerDt(lengthSeconds: 3.0)
+            _ = imageFilter.notifyTransitionsExist()
+
+            // iPhone tone curve points - to observe set LogParmValues = true
+//            CIToneCurve setVectorValue(newValue:keyName:)( [0.489 0.179] , inputPoint1 )
+//            CIToneCurve setVectorValue(newValue:keyName:)( [0.46 0.488] , inputPoint2 )
+//            CIToneCurve setVectorValue(newValue:keyName:)( [1.023 0.512] , inputPoint3 )
+            toneFilter?.setVectorValue(newValue: CIVector(x: 0.489, y: 0.179), keyName: "inputPoint1")
+            toneFilter?.setVectorValue(newValue: CIVector(x: 0.46, y: 0.488), keyName: "inputPoint2")
+            toneFilter?.setVectorValue(newValue: CIVector(x: 1.023, y: 0.512), keyName: "inputPoint3")
+            templateDemoCompletion( startingDemoFilter: imageFilter)
+
+        }
+
+
+
+        // set toneCurve parms and vary settings
+
+
+
+    }
+
 }
