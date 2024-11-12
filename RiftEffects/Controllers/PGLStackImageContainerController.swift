@@ -8,6 +8,7 @@
 
 import UIKit
 import os
+/// iPhone two column Stack and Image
 class PGLStackImageContainerController: PGLTwoColumnSplitController {
         //  2024-05-22 changed to use the super class PGLColumns.control and PGLColumns.imageViewer
         // removed duplicate vars var containerImageController,containerStackController
@@ -160,7 +161,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
             //      if traitCollection.userInterfaceIdiom == .phone {
         guard let imageViewerController = imageController()
             else { return }
-        let libraryMenu = UIAction.init(title: "Library..", image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
+        let libraryMenu = UIAction.init(title: MenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
             action in
            imageViewerController.openStackActionBtn(self.moreBtn)
 
@@ -179,14 +180,14 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         let contextMenu = UIMenu(title: "",
                                  children: [ libraryMenu
                                              ,
-        UIAction(title: "Save..", image:UIImage(systemName: "pencil")) {
+                                             UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "pencil")) {
             action in
                 // self.saveStackAlert(self.moreBtn)
             imageViewerController.saveStackActionBtn(self.moreBtn)
         },
 
 
-             UIAction(title: "Record", image:UIImage(systemName: "recordingtape")) {
+                                             UIAction(title: MenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
             action in
             imageViewerController.recordButtonTapped(controllerRecordBtn: self.recordBtyn)
 
@@ -200,7 +201,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         guard let imageViewerController = imageController()
             else { return }
 
-        let helpMenu = UIAction.init(title: "Help..", image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
+        let helpMenu = UIAction.init(title: MenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
             action in
             imageViewerController.helpBtnAction(self.helpBtn)
 
@@ -209,7 +210,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         let contextMenu = UIMenu(title: "",
                                  children: [ helpMenu ,
 
-          UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
+                                             UIAction(title: MenuLabel.Privacy.rawValue, image:UIImage(systemName: "info.circle")) {
             action in
             imageViewerController.displayPrivacyPolicy(self.helpBtn)
         }
@@ -221,24 +222,36 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         guard let imageViewerController = imageController()
             else { return }
 
-        let randomAction = UIAction.init(title: "Random..", image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+        let randomAction =
+        UIAction.init(title: MenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
             action in
             imageViewerController.templateBtnAction(self.templateBtn)
 
         }
         let contextMenu = UIMenu(title: "",
                                  children: [ randomAction ,
-             UIAction(title: "Blend..", image:UIImage(systemName: "pencil")) {
+         UIAction(title: MenuLabel.Blend.rawValue, image:UIImage(systemName: "pencil")) {
                action in
                 let demoGenerator = PGLDemo()
 
                 demoGenerator.blendTemplate(appStack: imageViewerController.appStack)
             },
-             UIAction(title: "Sequence..", image:UIImage(systemName: "pencil.circle")) {
+         UIAction(title: MenuLabel.Sequence.rawValue, image:UIImage(systemName: "pencil.circle")) {
              action in
             imageViewerController.loadDemoStack(self.templateBtn)
-            }
-
+            },
+         UIAction(title: MenuLabel.Edge.rawValue, image:UIImage(systemName: "pencil.circle")) {
+             action in
+            imageViewerController.loadDemoStack(self.templateBtn)
+            },
+         UIAction(title: MenuLabel.Tone.rawValue, image:UIImage(systemName: "pencil.circle")) {
+             action in
+            imageViewerController.loadDemoStack(self.templateBtn)
+            },
+         UIAction(title: MenuLabel.Difference.rawValue, image:UIImage(systemName: "pencil.circle")) {
+             action in
+            imageViewerController.loadDemoStack(self.templateBtn)
+            },
         ])
 
      templateBtn.menu = contextMenu

@@ -584,20 +584,20 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func setTemplateBtnMenu() {
-        let randomAction = UIAction.init(title: "Random..", image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+        let randomAction = UIAction.init(title: MenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
             action in
             self.templateBtnAction(self.templateBtn)
 
         }
         let contextMenu = UIMenu(title: "",
                                  children: [ randomAction ,
-             UIAction(title: "Blend..", image:UIImage(systemName: "pencil")) {
+                                             UIAction(title: MenuLabel.Blend.rawValue, image:UIImage(systemName: "pencil")) {
                action in
                 let demoGenerator = PGLDemo()
                 demoGenerator.iPhoneCompact = false  // now on the iPad
                 demoGenerator.blendTemplate(appStack: self.appStack)
             },
-             UIAction(title: "Sequence..", image:UIImage(systemName: "pencil.circle")) {
+             UIAction(title: MenuLabel.Blend.rawValue, image:UIImage(systemName: "pencil.circle")) {
              action in
              self.loadDemoStack(self.templateBtn)
             }
@@ -610,7 +610,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func setMoreBtnMenu() {
 
-        let libraryMenu = UIAction.init(title: "Library..", image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
+        let libraryMenu = UIAction.init(title: MenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
             action in
             self.openStackActionBtn(self.moreBtn)
         }
@@ -629,13 +629,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         let contextMenu = UIMenu(title: "",
                                  children: [ libraryMenu ,
-         UIAction(title: "Save..", image:UIImage(systemName: "pencil")) {
+                                             UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "pencil")) {
            action in
            self.saveStackActionBtn(self.moreBtn)
        },
 
 
-         UIAction(title: "Record", image:UIImage(systemName: "recordingtape")) {
+                                             UIAction(title: MenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
             action in
             self.recordButtonTapped(controllerRecordBtn: self.recordBtn)
         }
@@ -645,7 +645,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func setHelpBtnMenu() {
 
-        let helpMenu = UIAction.init(title: "Help..", image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
+        let helpMenu = UIAction.init(title: MenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
             action in
                 self.helpBtnAction(self.helpBtn)
 
@@ -655,7 +655,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let contextMenu = UIMenu(title: "",
                                  children: [ helpMenu ,
 
-          UIAction(title: "Privacy.. ", image:UIImage(systemName: "info.circle")) {
+          UIAction(title: MenuLabel.Privacy.rawValue , image:UIImage(systemName: "info.circle")) {
             action in
             self.displayPrivacyPolicy(self.helpBtn)
         }
