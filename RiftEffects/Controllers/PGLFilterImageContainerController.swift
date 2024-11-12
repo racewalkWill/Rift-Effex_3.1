@@ -186,10 +186,26 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
                 demoGenerator.blendTemplate(appStack: imageViewerController.appStack)
             },
-                                             UIAction(title: MenuLabel.Sequence.rawValue, image:UIImage(systemName: "pencil.circle")) {
+         UIAction(title: MenuLabel.Sequence.rawValue, image:UIImage(systemName: "pencil.circle")) {
              action in
             imageViewerController.loadDemoStack(self.templateBtn)
-            }
+            },
+         UIAction(title: MenuLabel.Edge.rawValue, image:UIImage(systemName: "pencil.circle")) {
+             action in
+            let demoGenerator = PGLDemo()
+            demoGenerator.edgeTemplate(appStack: imageViewerController.appStack)
+            },
+
+        // PLACE HOLDER add demo methods
+         UIAction(title: MenuLabel.Tone.rawValue, image:UIImage(systemName: "pencil.circle")) {
+             action in
+            imageViewerController.loadDemoStack(self.templateBtn)
+            },
+        // PLACE HOLDER add demo methods
+         UIAction(title: MenuLabel.Difference.rawValue, image:UIImage(systemName: "pencil.circle")) {
+             action in
+            imageViewerController.loadDemoStack(self.templateBtn)
+            },
 
         ])
 

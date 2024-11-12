@@ -294,6 +294,14 @@ class PGLDemo {
 
     }
 
+    func createSequenceFilter() -> PGLSequencedFilters {
+        let theDescriptor = PGLFilterDescriptor(kPSequencedFilter, PGLSequencedFilters.self)
+
+        guard let seqFilter = theDescriptor?.pglSourceFilter() as? PGLSequencedFilters
+        else {   fatalError("Did not create SequencedFilters" ) }
+        return seqFilter
+    }
+
         //MARK: Templates
 
     func blendTemplate(appStack: PGLAppStack) {
@@ -371,5 +379,31 @@ class PGLDemo {
         templateDemoCompletion( startingDemoFilter: imageFilter)
     }
 }
+
+    func edgeTemplate(appStack: PGLAppStack ) {
+
+        let filterNames = [ "CIEdges", "CIEdgeWork", "CIGaborGradients", "CICannyEdgeDetector"  ]
+
+        templateDemoSetup( currentAppStack: appStack)
+
+
+        let targetStack = appStack.viewerStack
+        let edgeSequence = createSequenceFilter()
+
+        addTemplateFilterTo(edgeSequence, edgeSequence.getInputImageAttribute(), targetStack, appStack)
+        edgeSequence.addChildSequenceStack(appStack: appStack)
+
+        for filterName in filterNames {
+            if let anEdgeFilter = targetStack.demoLoadFilter(ciFilterString: filterName)
+            {
+                edgeSequence.filterSequence()?.appendFilter(anEdgeFilter)
+            }
+
+        }
+        templateDemoCompletion( startingDemoFilter: edgeSequence)
+        targetStack.postTransitionFilterAdd() // makes the redraws run
+        targetStack.postCurrentFilterChange() // makes DoNotDraw =
+
+    }
 
 }

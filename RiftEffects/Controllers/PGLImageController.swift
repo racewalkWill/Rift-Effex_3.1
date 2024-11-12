@@ -600,7 +600,24 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
              UIAction(title: MenuLabel.Blend.rawValue, image:UIImage(systemName: "pencil.circle")) {
              action in
              self.loadDemoStack(self.templateBtn)
-            }
+            },
+         UIAction(title: MenuLabel.Edge.rawValue, image:UIImage(systemName: "pencil.circle")) {
+             action in
+            let demoGenerator = PGLDemo()
+            demoGenerator.edgeTemplate(appStack: self.appStack)
+            },
+                                             
+        // place holder - change to demo methods
+         UIAction(title: MenuLabel.Tone.rawValue, image:UIImage(systemName: "pencil.circle")) {
+             action in
+            self.loadDemoStack(self.templateBtn)
+            },
+    // place holder - change to demo methods
+         UIAction(title: MenuLabel.Difference.rawValue, image:UIImage(systemName: "pencil.circle")) {
+             action in
+           self.loadDemoStack(self.templateBtn)
+            },
+
 
         ])
 

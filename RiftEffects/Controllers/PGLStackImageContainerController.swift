@@ -242,7 +242,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
             },
          UIAction(title: MenuLabel.Edge.rawValue, image:UIImage(systemName: "pencil.circle")) {
              action in
-            imageViewerController.loadDemoStack(self.templateBtn)
+            let demoGenerator = PGLDemo()
+            demoGenerator.edgeTemplate(appStack: imageViewerController.appStack)
             },
          UIAction(title: MenuLabel.Tone.rawValue, image:UIImage(systemName: "pencil.circle")) {
              action in
