@@ -614,9 +614,12 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             demoGenerator.toneTemplate(appStack: self.appStack)
             },
     // place holder - change to demo methods
-         UIAction(title: MenuLabel.Difference.rawValue, image:UIImage(systemName: "pencil.circle")) {
+         UIAction(title: MenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: "pencil.circle")) {
              action in
-           self.loadDemoStack(self.templateBtn)
+            let demoGenerator = PGLDemo()
+            demoGenerator.iPhoneCompact = false  // now on the iPad
+            demoGenerator.kaleidoscopeTemplate(appStack: self.appStack)
+
             },
 
 

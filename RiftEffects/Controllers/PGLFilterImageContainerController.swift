@@ -203,10 +203,11 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
             demoGenerator.toneTemplate(appStack: imageViewerController.appStack)
             },
         // PLACE HOLDER add demo methods
-         UIAction(title: MenuLabel.Difference.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
-            imageViewerController.loadDemoStack(self.templateBtn)
-            },
+                                             UIAction(title: MenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: "pencil.circle")) {
+            action in
+            let demoGenerator = PGLDemo()
+            demoGenerator.kaleidoscopeTemplate(appStack: imageViewerController.appStack)
+        }
 
         ])
 

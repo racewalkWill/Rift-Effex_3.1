@@ -14,7 +14,7 @@ enum MenuLabel: String {
     case Sequence = "Sequence Demo"
     case Edge = "Edge Demo"
     case Tone = "Tone Demo"
-    case Difference = "Difference Demo"
+    case Kaleidoscope = "Kaleidoscope Demo"
     case Help = "Help..."
     case Privacy = "Privacy Policy"
     case Library = "Library..."

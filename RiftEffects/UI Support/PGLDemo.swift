@@ -420,22 +420,64 @@ class PGLDemo {
             imageFilter.setTimerDt(lengthSeconds: 3.0)
             _ = imageFilter.notifyTransitionsExist()
 
-            // iPhone tone curve points - to observe set LogParmValues = true
-//            CIToneCurve setVectorValue(newValue:keyName:)( [0.489 0.179] , inputPoint1 )
-//            CIToneCurve setVectorValue(newValue:keyName:)( [0.46 0.488] , inputPoint2 )
-//            CIToneCurve setVectorValue(newValue:keyName:)( [1.023 0.512] , inputPoint3 )
+                // iPhone tone curve points - to observe set LogParmValues = true
+                //            CIToneCurve setVectorValue(newValue:keyName:)( [0.489 0.179] , inputPoint1 )
+                //            CIToneCurve setVectorValue(newValue:keyName:)( [0.46 0.488] , inputPoint2 )
+                //            CIToneCurve setVectorValue(newValue:keyName:)( [1.023 0.512] , inputPoint3 )
             toneFilter?.setVectorValue(newValue: CIVector(x: 0.489, y: 0.179), keyName: "inputPoint1")
             toneFilter?.setVectorValue(newValue: CIVector(x: 0.46, y: 0.488), keyName: "inputPoint2")
             toneFilter?.setVectorValue(newValue: CIVector(x: 1.023, y: 0.512), keyName: "inputPoint3")
             templateDemoCompletion( startingDemoFilter: imageFilter)
 
         }
+    }
+
+    func kaleidoscopeTemplate(appStack: PGLAppStack )  {
+        let filterNames = ["CIDissolveTransition", "CIColorBurnBlendMode","CIGaussianBlur", "CIKaleidoscope" ]
+        templateDemoSetup( currentAppStack: appStack)
+        let targetStack = appStack.viewerStack
+        if let imageFilter = targetStack.demoLoadFilter(ciFilterString: filterNames[0]) {
+            imageFilter.setDefaults()
+            addTemplateFilterTo(imageFilter, imageFilter.getInputImageAttribute(), targetStack, appStack)
+            let colorBurnFilter = targetStack.demoLoadFilter(ciFilterString: filterNames[1])
+            let colorBurnImageAttribute = colorBurnFilter?.getInputImageAttribute()
+
+            addTemplateFilterTo(colorBurnFilter, colorBurnImageAttribute, targetStack, appStack)
+            imageFilter.setTimerDt(lengthSeconds: 3.0)
+            _ = imageFilter.notifyTransitionsExist()
+
+            let kaleidoscopeFilter = targetStack.demoLoadFilter(ciFilterString: filterNames[3])
+            let kaleidoscopeImageAttribute = kaleidoscopeFilter?.getInputImageAttribute()
+            
+            addTemplateFilterTo(kaleidoscopeFilter, kaleidoscopeImageAttribute, targetStack, appStack)
+
+            // add child stack to color burn with the gaussian blur and another kaleidoscope
+
+            guard let colorBurnBackgroundAttribute = colorBurnFilter?.attribute(nameKey: kCIInputBackgroundImageKey) else { return  }
+            appStack.addChildStackTo(parm: colorBurnBackgroundAttribute )
+            let childStack = appStack.viewerStack
+
+            let kaleidoscopeFilter2 = childStack.demoLoadFilter(ciFilterString: filterNames[3])
+            addTemplateFilterTo(kaleidoscopeFilter2, kaleidoscopeFilter2?.getInputImageAttribute(), childStack, appStack)
 
 
+            let gaussianBlurFilter = childStack.demoLoadFilter(ciFilterString: filterNames[2])
+            addTemplateFilterTo(gaussianBlurFilter, gaussianBlurFilter?.getInputImageAttribute(), childStack, appStack)
 
-        // set toneCurve parms and vary settings
+            let kaleidoscope1Center1 = if iPhoneCompact {CIVector(x: 627 , y: 517)} else {CIVector(x: 882, y: 782)}
+            let kaleidoscope1Center2 = if iPhoneCompact {CIVector(x: 595, y: 432)} else {CIVector(x: 932, y: 623)}
 
+            kaleidoscopeFilter?.setVectorValue(newValue: kaleidoscope1Center1, keyName: kCIInputCenterKey)
+            kaleidoscopeFilter2?.setVectorValue(newValue: kaleidoscope1Center1, keyName: kCIInputCenterKey)
 
+            kaleidoscopeFilter?.setNumberValue(newValue: 5, keyName: "inputCount")
+            kaleidoscopeFilter2?.setNumberValue(newValue: 11, keyName: "inputCount")
+
+            kaleidoscopeFilter?.setNumberValue(newValue: 0.1461, keyName: "inputAngle")
+            kaleidoscopeFilter2?.setNumberValue(newValue: 0.8036, keyName: "inputAngle")
+
+            templateDemoCompletion( startingDemoFilter: imageFilter)
+        }
 
     }
 
