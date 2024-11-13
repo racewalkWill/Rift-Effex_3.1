@@ -155,12 +155,12 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         }
         let contextMenu = UIMenu(title: "",
                                  children: [ libraryMenu,
-                                             UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "pencil")) {
+         UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "pencil")) {
             action in
                 // self.saveStackAlert(self.moreBtn)
             containerImageController.saveStackActionBtn(self.moreBtn)
         },
-                                             UIAction(title: MenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
+         UIAction(title: MenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
             action in
             containerImageController.recordButtonTapped(controllerRecordBtn: self.recordBtn)
         }

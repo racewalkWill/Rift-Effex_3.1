@@ -26,6 +26,8 @@
 		A32F2139283BBA83006C026F /* PGLNavSecondaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32F2138283BBA83006C026F /* PGLNavSecondaryController.swift */; };
 		A32F213B283BBAF1006C026F /* PGLNavPrimaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32F213A283BBAF1006C026F /* PGLNavPrimaryController.swift */; };
 		A32F213D283BBF3A006C026F /* PGLFilterImageContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32F213C283BBF3A006C026F /* PGLFilterImageContainerController.swift */; };
+		A333185C2CE42D5D00FA8A45 /* SaveButtons.xib in Resources */ = {isa = PBXBuildFile; fileRef = A333185B2CE42D5D00FA8A45 /* SaveButtons.xib */; };
+		A333185E2CE42E5100FA8A45 /* PGLSaveButtonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A333185D2CE42E5100FA8A45 /* PGLSaveButtonRow.swift */; };
 		A33BD1B129626597007D3527 /* PGLButtonCellUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33BD1B029626597007D3527 /* PGLButtonCellUI.swift */; };
 		A33C441D28E8D4E50096E7EE /* PGLSequencedFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33C441C28E8D4E50096E7EE /* PGLSequencedFilters.swift */; };
 		A33E82032B15458D008F79B3 /* PGLScaleFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33E82022B15458D008F79B3 /* PGLScaleFrame.swift */; };
@@ -206,6 +208,8 @@
 		A32F2138283BBA83006C026F /* PGLNavSecondaryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLNavSecondaryController.swift; sourceTree = "<group>"; };
 		A32F213A283BBAF1006C026F /* PGLNavPrimaryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLNavPrimaryController.swift; sourceTree = "<group>"; };
 		A32F213C283BBF3A006C026F /* PGLFilterImageContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterImageContainerController.swift; sourceTree = "<group>"; };
+		A333185B2CE42D5D00FA8A45 /* SaveButtons.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SaveButtons.xib; sourceTree = "<group>"; };
+		A333185D2CE42E5100FA8A45 /* PGLSaveButtonRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSaveButtonRow.swift; sourceTree = "<group>"; };
 		A33BD1B029626597007D3527 /* PGLButtonCellUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLButtonCellUI.swift; sourceTree = "<group>"; };
 		A33C441C28E8D4E50096E7EE /* PGLSequencedFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSequencedFilters.swift; sourceTree = "<group>"; };
 		A33E82022B15458D008F79B3 /* PGLScaleFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLScaleFrame.swift; sourceTree = "<group>"; };
@@ -550,6 +554,7 @@
 				A3651FA12A9BD4E1006F50F6 /* PGLStackAlbumHeader.swift */,
 				A3D04B122A8444A300E6DB16 /* PGLStackInfoHeader.swift */,
 				A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */,
+				A333185D2CE42E5100FA8A45 /* PGLSaveButtonRow.swift */,
 				A3BF506724D32A3400CD5114 /* OutlineItemCell.swift */,
 				A3BF506924D32A3400CD5114 /* TitleSupplementaryView.swift */,
 				A3BF506A24D32A3400CD5114 /* StackDataCell.swift */,
@@ -737,6 +742,7 @@
 				A3D04B132A8444A300E6DB16 /* PGLStackInfoHeader.xib */,
 				A3651FA22A9BD4E1006F50F6 /* PGLStackAlbumHeader.xib */,
 				A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */,
+				A333185B2CE42D5D00FA8A45 /* SaveButtons.xib */,
 			);
 			path = "cell xib";
 			sourceTree = "<group>";
@@ -857,6 +863,7 @@
 				A3E6243D2691261A0017372F /* Settings.bundle in Resources */,
 				A35FF77C26DC324E00D78252 /* CoreDataSampleLicense.txt in Resources */,
 				A3651FA42A9BD4E1006F50F6 /* PGLStackAlbumHeader.xib in Resources */,
+				A333185C2CE42D5D00FA8A45 /* SaveButtons.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -883,6 +890,7 @@
 			files = (
 				A3BF511924D32A3400CD5114 /* RiftEffects.xcdatamodeld in Sources */,
 				A303930F27AADED800E2A3D4 /* PGLCompactPresentationController.swift in Sources */,
+				A333185E2CE42E5100FA8A45 /* PGLSaveButtonRow.swift in Sources */,
 				A3BF510E24D32A3400CD5114 /* PGLImageCIFilter.swift in Sources */,
 				A3BF512124D32A3400CD5114 /* AppDelegate.swift in Sources */,
 				A326F7A52B1FDEB30070D759 /* PGLFilterAttributeVectorUI.swift in Sources */,

@@ -37,6 +37,8 @@ let  PGLUserAlertNotice = NSNotification.Name(rawValue: "PGLUserAlertNotice")
 let  PGLUpdateLibraryMenu = NSNotification.Name(rawValue: "PGLUpdateLibraryMenu")
 let  PGLHideImageViewReleaseStack = NSNotification.Name(rawValue: "PGLHideImageViewReleaseStack")
 let PGLHideParmUIControls = NSNotification.Name(rawValue: "PGLHideParmUIControls")
+let PGLStackStartSave =  NSNotification.Name(rawValue:  "PGLStackStartSave")
+let PGLStackSavePerform = NSNotification.Name(rawValue:  "PGLStackSavePerform")
 
 let ExportAlbumId = "ExportAlbumId"
 let ExportAlbum = "ExportAlbum"
@@ -150,7 +152,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let demoGenerator = PGLDemo()
 //        appStack.removeDefaultEmptyFilter()
 
-        let startingDemoFilter = demoGenerator.generateRandomStack( thisAppStack: appStack )
+        demoGenerator.generateRandomStack( thisAppStack: appStack )
 
 
     }
@@ -161,12 +163,19 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     // MARK: save btn Actions
 
     func saveStackActionBtn(_ sender: UIBarButtonItem) {
+        notifyStackStartSave()
+    }
+
+    func basicSaveStackAction () {
+        // stack controller save button sends notification
         self.updateStackNameToNavigationBar()
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
        saveStack()
-
     }
 
+    func notifyStackStartSave() {
+        NotificationCenter.default.post(name:PGLStackStartSave, object: nil)
+    }
 
    func openStackActionBtn(_ sender: UIBarButtonItem) {
 
@@ -649,14 +658,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
 
         let contextMenu = UIMenu(title: "",
-                                 children: [ libraryMenu ,
-                                             UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "pencil")) {
+         children: [ libraryMenu ,
+
+         UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "pencil")) {
            action in
            self.saveStackActionBtn(self.moreBtn)
        },
-
-
-                                             UIAction(title: MenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
+         UIAction(title: MenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
             action in
             self.recordButtonTapped(controllerRecordBtn: self.recordBtn)
         }
@@ -833,7 +841,23 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         }
         publishers.append(cancellable!)
 
-        
+
+        cancellable = myCenter.publisher(for: PGLSaveStackAction)
+            .sink() {
+            [weak self]
+            myUpdate in
+            self?.saveStack()
+        }
+        publishers.append(cancellable!)
+
+        cancellable = myCenter.publisher(for: PGLStackSavePerform)
+            .sink() {
+            [weak self]
+            myUpdate in
+                self?.basicSaveStackAction()
+        }
+        publishers.append(cancellable!)
+
     }
 
     fileprivate func loadMetalController() {

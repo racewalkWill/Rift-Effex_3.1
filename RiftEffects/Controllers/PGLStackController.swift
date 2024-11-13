@@ -12,6 +12,7 @@ import os
 import Combine
 
 let PGLShowStackImageContainer = NSNotification.Name(rawValue: "PGLShowStackImageContainer")
+let PGLSaveStackAction = NSNotification.Name(rawValue: "PGLSaveStackAction")
 
 class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate {
     // tableview of the filters in the stack
@@ -32,9 +33,14 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     var existingStackTypes: [String]!
     var albumUserTextCell: UITextField?
+    var saveStackBtn: UIButton?
 
     var publishers = [Cancellable]()
     var cancellable: Cancellable?
+
+    /// default to title and album input cells as hidden
+    private var showStackTitleAlbumCells = false
+    private var titleAlbumSectionRowCount: Int = 0
 
     enum StackSections: Int {
         case header = 0
@@ -44,6 +50,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     enum StackHeaderCell: Int {
         case title = 0
         case album = 1
+        case saveBtn = 2
     }
 
     // MARK: View LifeCycle
@@ -101,6 +108,14 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
             self.selectActiveFilterRow()
         }
+        publishers.append(cancellable!)
+
+        cancellable = myCenter.publisher(for:  PGLStackStartSave)
+            .sink() { [weak self]
+            myUpdate in
+                self?.toggleStackTitleAlbumCellsVisible()
+        }
+        publishers.append(cancellable!)
 
         updateNavigationBar()
         setLongPressGesture()
@@ -362,8 +377,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
            switch section {
                case 0:
-                   return 2
-                   // header has stackName, type
+                   // may be zero or 3
+                   return titleAlbumSectionRowCount
+                   //  stackName, type, saveBtn input rows
                case 1:
                    return appStack.flatRowCount()
                default:
@@ -547,6 +563,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         let stackAlbumHeaderCellNib = UINib(nibName: PGLStackAlbumHeader.nibName, bundle: nil)
         tableView.register(stackAlbumHeaderCellNib ,forCellReuseIdentifier: PGLStackAlbumHeader.reuseIdentifer)
 
+        let saveButtonsCellNib = UINib(nibName: PGLSaveButtonRow.nibName, bundle: nil)
+        tableView.register(saveButtonsCellNib , forCellReuseIdentifier: PGLSaveButtonRow.reuseIdentifer)
+
         let effexButtonsCellNib = UINib(nibName: PGLEffexButtonsHeader.nibName, bundle: nil)
         tableView.register(effexButtonsCellNib , forHeaderFooterViewReuseIdentifier: PGLEffexButtonsHeader.reuseIdentifer)
     }
@@ -612,6 +631,13 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                     albumUserTextCell = cell.userText
                     return cell
 
+                case StackHeaderCell.saveBtn.rawValue :
+                    guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLSaveButtonRow.reuseIdentifer, for: indexPath) as? PGLSaveButtonRow
+                    else { fatalError("PGLStackController did not load save buttons") }
+                    cell.cancelBtn.addTarget(self, action: #selector(cancelStackSave), for: .touchUpInside)
+                    cell.saveBtn.addTarget(self, action: #selector(saveStack), for: .touchUpInside)
+                    saveStackBtn = cell.saveBtn
+                    return cell
                 default :
                         // or let cell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
 
@@ -650,6 +676,28 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
             // show the new results !
 
 
+    }
+
+    @objc func cancelStackSave() {
+      toggleStackTitleAlbumCellsVisible()
+    }
+
+    @objc func saveStack() {
+        // post notication to the imageController
+        let notifier = Notification(name: PGLStackSavePerform)
+        NotificationCenter.default.post(notifier)
+        toggleStackTitleAlbumCellsVisible()
+
+    }
+
+    func toggleStackTitleAlbumCellsVisible() {
+        showStackTitleAlbumCells = !showStackTitleAlbumCells
+        if showStackTitleAlbumCells {
+            titleAlbumSectionRowCount = 3
+        } else {
+            titleAlbumSectionRowCount = 0
+        }
+        tableView.reloadData()
     }
 
 //    func showStackControllerAction() {
@@ -696,6 +744,10 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                 return
             }
             longPressStart = longPressIndexPath // assign to var
+        }
+        if longPressStart?.section == 0 {
+            // header cells album,title buttons
+            return
         }
         if sender.state == .recognized {  // could also use .ended but there is slight delay
             // open popup with filter userDescription
@@ -990,6 +1042,7 @@ extension PGLStackController {
             default:
                 return
         }
+        saveStackBtn?.setTitle("Save As", for: .normal)
         Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLStackController textFieldDidEndEditing name - \(thisStack.stackName) type - \(thisStack.stackType) - tag \(textField.tag) ")
        
 
@@ -1006,6 +1059,9 @@ extension PGLStackController {
         // trigger the imageController  to refresh
         let stackNotification = Notification(name:PGLStackNameChange)
         NotificationCenter.default.post(stackNotification)
+
+        
+
 
     }
 
