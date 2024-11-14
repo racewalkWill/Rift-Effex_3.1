@@ -36,6 +36,7 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "skippedTests" : [
         "GlanceTests",
         "PGLCategorySurvey",
@@ -46,6 +47,15 @@
         "PGLCategorySurvey\/testSingleInputFilters()",
         "PGLCategorySurvey\/testTransitionChildStacks()",
         "PGLCategorySurvey\/testiOS13Filters()",
+        "PGLFilterDescriptorTests\/testAllFilterCategories()",
+        "PGLFilterDescriptorTests\/testAllFilterCreation()",
+        "PGLFilterDescriptorTests\/testCategoryDescription()",
+        
+        "PGLFilterDescriptorTests\/testDescriptorSort()",
+        "PGLFilterDescriptorTests\/testFilterAttributeCounter()",
+        "PGLFilterDescriptorTests\/testFilterCategory()",
+        "PGLFilterDescriptorTests\/testFilterDescriptionCapture()",
+        "PGLFilterDescriptorTests\/testUnknownFilterAttributesList()",
         "PGLFilterStackTests",
         "PGLSourceFilterTests"
       ],

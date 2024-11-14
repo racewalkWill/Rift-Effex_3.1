@@ -582,7 +582,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     override func tableView( _ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
-            return UITableViewHeaderFooterView()
+            if showStackTitleAlbumCells {
+                return UITableViewHeaderFooterView()
+            } else { return nil }
         }
         if section == 1 {
             if  let myButtonHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: PGLEffexButtonsHeader.reuseIdentifer) as? PGLEffexButtonsHeader {
