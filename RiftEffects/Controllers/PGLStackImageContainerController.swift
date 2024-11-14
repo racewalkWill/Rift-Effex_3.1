@@ -265,8 +265,10 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     func updateNavigationBar() {
 
 //        self.navigationItem.title = "Rift-Effex"
+  
         guard let stackTarget = columns?.control as? PGLStackController
         else {return }
+        self.navigationItem.title = stackTarget.appStack.outputStack.stackName
         setNeedsStatusBarAppearanceUpdate()
     }
 

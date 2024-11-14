@@ -667,7 +667,7 @@
                         <viewControllerLayoutGuide type="bottom" id="LCb-0n-p2P"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ufz-uZ-e8H">
-                        <rect key="frame" x="0.0" y="0.0" width="242" height="760"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1210" height="760"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
@@ -696,11 +696,11 @@
                         <viewControllerLayoutGuide type="bottom" id="j3d-oc-3aS"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vua-Lu-kpo">
-                        <rect key="frame" x="0.0" y="0.0" width="242" height="760"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1210" height="760"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iTi-AT-siZ">
-                                <rect key="frame" x="-7" y="712" width="238" height="47"/>
+                                <rect key="frame" x="-7" y="712" width="1206" height="47"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="rij-Pi-lzb"/>
@@ -726,8 +726,6 @@
                                     <action selector="newStackBtnClick:" destination="rQx-tc-9ix" id="OlJ-Kr-q1c"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="yo5-KQ-1xv"/>
-                            <barButtonItem title="More" image="ellipsis.circle" catalog="system" id="HAf-fe-yaR"/>
                             <barButtonItem title="recordBtn" image="recordingtape" catalog="system" hidden="YES" id="23q-Si-nMo">
                                 <connections>
                                     <action selector="recordBtnAction:" destination="rQx-tc-9ix" id="xWx-vc-bnc"/>
@@ -737,10 +735,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="helpBtn" destination="S4t-N0-6IZ" id="twi-K9-QuD"/>
-                        <outlet property="moreBtn" destination="HAf-fe-yaR" id="LdN-K3-I4g"/>
                         <outlet property="newTrashBtn" destination="kGD-tX-jU3" id="pOc-pZ-a39"/>
                         <outlet property="recordBtn" destination="23q-Si-nMo" id="QNL-ug-1B1"/>
-                        <outlet property="templateBtn" destination="yo5-KQ-1xv" id="jIp-Do-44Z"/>
                         <outlet property="toggleAnimationPauseBtn" destination="eKf-rs-nX2" id="6eD-me-4we"/>
                         <segue destination="j8f-0k-czJ" kind="show" identifier="filterImageToParmImage" id="Stf-Ip-3lm"/>
                     </connections>
@@ -964,7 +960,11 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="Mxb-eC-ZvV">
+                    <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="Mxb-eC-ZvV">
+                        <leftBarButtonItems>
+                            <barButtonItem title="More Btn" image="ellipsis.circle" catalog="system" id="X6h-Dm-yVE"/>
+                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="0Zt-QC-w2E"/>
+                        </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem title="toggleAnimationPause" hidden="YES" id="qG0-1L-lmY">
                                 <imageReference key="image" image="playpause" catalog="system" symbolScale="default"/>
@@ -978,13 +978,11 @@
                                     <action selector="newTrashBtnAction:" destination="z1U-K0-aGb" id="x9H-dK-0aK"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="0Zt-QC-w2E"/>
                             <barButtonItem title="Record Btn" image="recordingtape" catalog="system" hidden="YES" id="GQ9-os-Nsh">
                                 <connections>
                                     <action selector="recordBtnAction:" destination="z1U-K0-aGb" id="U25-R0-a4y"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="More Btn" image="ellipsis.circle" catalog="system" id="X6h-Dm-yVE"/>
                             <barButtonItem title="Parm" image="wand.and.rays" catalog="system" hidden="YES" id="ajT-Qa-f5T">
                                 <connections>
                                     <action selector="openParmsAction:" destination="z1U-K0-aGb" id="pYc-nR-04j"/>
@@ -1009,8 +1007,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="cxI-vr-Pxp"/>
-        <segue reference="Zrd-6b-Z8z"/>
+        <segue reference="4FJ-we-3bf"/>
+        <segue reference="Stf-Ip-3lm"/>
         <segue reference="Xyz-2Z-Q4q"/>
     </inferredMetricsTieBreakers>
     <resources>

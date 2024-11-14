@@ -40,8 +40,8 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         }
         loadViewColumns(controller: containerFilterController!, imageViewer: containerImageController! )
 
-        setMoreBtnMenu()
-        setTemplateBtnMenu()
+//        setMoreBtnMenu()
+//        setTemplateBtnMenu()
         setHelpBtnMenu()
 
 
@@ -50,7 +50,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         // should make the buttons on the filter controller toolbar visible
         // because this controller isToolbarHidden
 
-        let myCenter =  NotificationCenter.default
+//         let myCenter =  NotificationCenter.default
 
             ///FilterImageContainer does not have any changes to make for animation state changes
 //        cancellable = myCenter.publisher(for: PGLAnimationStateChanged)
@@ -96,18 +96,13 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 //        containerImageController.randomBtnAction(sender)
 //
 //    }
-    @IBAction func moreBtnClick(_ sender: UIBarButtonItem) {
-        // see the setMoreBtnMenu()
 
-    }
-
-    @IBOutlet weak var moreBtn: UIBarButtonItem!
 
     @IBOutlet weak var newTrashBtn: UIBarButtonItem!
 
 
    
-    @IBOutlet weak var templateBtn: UIBarButtonItem!
+
 
     @IBOutlet weak var recordBtn: UIBarButtonItem!
     
@@ -133,87 +128,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
   
         // MARK: Menu
-    func setMoreBtnMenu() {
-            //      if traitCollection.userInterfaceIdiom == .phone {
-        guard let containerImageController = imageController()
-            else { return }
-        let libraryMenu = UIAction.init(title: MenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
-            action in
-           containerImageController.openStackActionBtn(self.moreBtn)
 
-        }
-
-        if let mySplitView =  splitViewController as? PGLSplitViewController {
-                //                if traitCollection.userInterfaceIdiom == .pad {
-                //                    libraryMenu.attributes = [.disabled] // always disabled on iPad
-                //                } else {
-            if !mySplitView.stackProviderHasRows() {
-                libraryMenu.attributes = [.disabled]
-                    //                    }
-            }
-
-        }
-        let contextMenu = UIMenu(title: "",
-                                 children: [ libraryMenu,
-         UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "pencil")) {
-            action in
-                // self.saveStackAlert(self.moreBtn)
-            containerImageController.saveStackActionBtn(self.moreBtn)
-        },
-         UIAction(title: MenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
-            action in
-            containerImageController.recordButtonTapped(controllerRecordBtn: self.recordBtn)
-        }
-
-        ])
-        moreBtn.menu = contextMenu
-    }
-
-    func setTemplateBtnMenu() {
-        guard let imageViewerController = imageController()
-            else { return }
-
-        let randomAction = UIAction.init(title: MenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
-            action in
-            imageViewerController.templateBtnAction(self.templateBtn)
-
-        }
-        let contextMenu = UIMenu(title: "",
-                                 children: [ randomAction ,
-                                             UIAction(title: MenuLabel.Blend.rawValue, image:UIImage(systemName: "pencil")) {
-               action in
-                let demoGenerator = PGLDemo()
-
-                demoGenerator.blendTemplate(appStack: imageViewerController.appStack)
-            },
-         UIAction(title: MenuLabel.Sequence.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
-            imageViewerController.loadDemoStack(self.templateBtn)
-            },
-         UIAction(title: MenuLabel.Edge.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
-            let demoGenerator = PGLDemo()
-            demoGenerator.edgeTemplate(appStack: imageViewerController.appStack)
-            },
-
-        // PLACE HOLDER add demo methods
-         UIAction(title: MenuLabel.Tone.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
-            let demoGenerator = PGLDemo()
-            demoGenerator.toneTemplate(appStack: imageViewerController.appStack)
-            },
-        // PLACE HOLDER add demo methods
-                                             UIAction(title: MenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: "pencil.circle")) {
-            action in
-            let demoGenerator = PGLDemo()
-            demoGenerator.kaleidoscopeTemplate(appStack: imageViewerController.appStack)
-        }
-
-        ])
-
-     templateBtn.menu = contextMenu
-
-    }
 
     func setHelpBtnMenu() {
         guard let imageViewerController = imageController()

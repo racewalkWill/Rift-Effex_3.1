@@ -112,8 +112,12 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
         cancellable = myCenter.publisher(for:  PGLStackStartSave)
             .sink() { [weak self]
-            myUpdate in
-                self?.toggleStackTitleAlbumCellsVisible()
+                myUpdate in 
+                if !(self?.showStackTitleAlbumCells ?? false) {
+                    // two messages to show from the image controller
+                    // only the stack controller should toggle back/forth
+                    self?.toggleStackTitleAlbumCellsVisible()
+                }
         }
         publishers.append(cancellable!)
 
@@ -693,6 +697,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     }
 
     func toggleStackTitleAlbumCellsVisible() {
+
         showStackTitleAlbumCells = !showStackTitleAlbumCells
         if showStackTitleAlbumCells {
             titleAlbumSectionRowCount = 3

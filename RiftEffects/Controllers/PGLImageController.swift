@@ -606,7 +606,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 demoGenerator.iPhoneCompact = false  // now on the iPad
                 demoGenerator.blendTemplate(appStack: self.appStack)
             },
-             UIAction(title: MenuLabel.Blend.rawValue, image:UIImage(systemName: "pencil.circle")) {
+             UIAction(title: MenuLabel.Sequence.rawValue, image:UIImage(systemName: "pencil.circle")) {
              action in
              self.loadDemoStack(self.templateBtn)
             },
