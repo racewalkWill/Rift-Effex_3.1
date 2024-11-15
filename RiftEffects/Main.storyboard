@@ -222,6 +222,10 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="xsN-wc-6kV">
+                        <leftBarButtonItems>
+                            <barButtonItem title="More" image="folder.badge.gearshape" catalog="system" id="EUH-a9-le3"/>
+                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="q7I-R2-kMZ" userLabel="TemplateBtn"/>
+                        </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem title="toggleAnimationPause" hidden="YES" id="Jl0-kr-4aK">
                                 <imageReference key="image" image="playpause" catalog="system" symbolScale="default"/>
@@ -235,8 +239,6 @@
                                     <action selector="newStackActionBtn:" destination="Cot-0o-SSg" id="5ZK-Is-TWK"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="q7I-R2-kMZ" userLabel="TemplateBtn"/>
-                            <barButtonItem title="More" image="ellipsis.circle" catalog="system" id="EUH-a9-le3"/>
                             <barButtonItem title="Record" image="recordingtape" catalog="system" hidden="YES" id="PJQ-cG-lZ5" userLabel="recordBtn">
                                 <connections>
                                     <action selector="recordBtnAction:" destination="Cot-0o-SSg" id="BnT-Da-DD9"/>
@@ -962,7 +964,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="Mxb-eC-ZvV">
                         <leftBarButtonItems>
-                            <barButtonItem title="More Btn" image="ellipsis.circle" catalog="system" id="X6h-Dm-yVE"/>
+                            <barButtonItem title="More Btn" image="folder.badge.gearshape" catalog="system" id="X6h-Dm-yVE"/>
                             <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="0Zt-QC-w2E"/>
                         </leftBarButtonItems>
                         <rightBarButtonItems>
@@ -1016,7 +1018,7 @@
         <image name="chart.dots.scatter" catalog="system" width="128" height="102"/>
         <image name="chevron.down" catalog="system" width="128" height="70"/>
         <image name="chevron.up" catalog="system" width="128" height="70"/>
-        <image name="ellipsis.circle" catalog="system" width="128" height="123"/>
+        <image name="folder.badge.gearshape" catalog="system" width="128" height="93"/>
         <image name="playpause" catalog="system" width="128" height="75"/>
         <image name="questionmark.square.dashed" catalog="system" width="128" height="114"/>
         <image name="recordingtape" catalog="system" width="128" height="60"/>

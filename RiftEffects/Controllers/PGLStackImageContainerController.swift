@@ -70,7 +70,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
                 // isViewLoaded or isBeingPresented??
                 if let newState = userDataDict["animationState"]  as? PGLAnimationState  {
                     containerImageController?.setAnimation(newState , self!.toggleAnimationPauseBtn)
-//                    NSLog(#function + "PGLStackImageContainer PGLAnimationStateChanged toggleAnimationPauseBtn \(self?.toggleAnimationPauseBtn)")
+                    NSLog(#function + "PGLStackImageContainer PGLAnimationStateChanged toggleAnimationPauseBtn \(self?.toggleAnimationPauseBtn)")
 
                 }
                 self?.navigationController?.setNeedsStatusBarAppearanceUpdate()
@@ -180,7 +180,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         let contextMenu = UIMenu(title: "",
                                  children: [ libraryMenu
                                              ,
-                                             UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "pencil")) {
+                                             UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) {
             action in
                 // self.saveStackAlert(self.moreBtn)
             imageViewerController.saveStackActionBtn(self.moreBtn)

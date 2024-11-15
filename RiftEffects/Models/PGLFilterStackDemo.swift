@@ -88,7 +88,7 @@ extension PGLFilterStack {
                 /// add filters to the sequence
             for aFilterString in sequenceFilters {
 
-                guard let thisFilter = demoLoadFilter(ciFilterString: aFilterString)
+                guard let thisFilter = demoCreateFilter(ciFilterString: aFilterString)
                 else { continue }
                 thisFilter.setDemoParms()
                 seqFilter.filterSequence()?.appendFilter(thisFilter)
@@ -107,7 +107,7 @@ extension PGLFilterStack {
     }
 
     func loadStartup(userStartupImageList: PGLImageList) {
-        if let startingFilter = demoLoadFilter(ciFilterString: "Images") {
+        if let startingFilter = demoCreateFilter(ciFilterString: "Images") {
             append(startingFilter)
             let imageAttribute = startingFilter.getInputImageAttribute()
             guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
@@ -124,7 +124,7 @@ extension PGLFilterStack {
     }
 
 
-    func demoLoadFilter(ciFilterString: String) -> PGLSourceFilter? {
+    func demoCreateFilter(ciFilterString: String) -> PGLSourceFilter? {
             // an Fatal Error if filter is not created
         let aMappedClass = CIFilterToPGLFilter.Map[ciFilterString]
         if (aMappedClass?.count ?? 0) > 1
@@ -177,7 +177,7 @@ extension PGLSourceFilter {
         parentAttr.inputStack = maskChildStack
         parentAttr.setImageParmState(newState: .inputChildStack)
 
-        if let childFilter = maskChildStack.demoLoadFilter(ciFilterString: childFilterName) {
+        if let childFilter = maskChildStack.demoCreateFilter(ciFilterString: childFilterName) {
 
             let childInputAttribute = childFilter.getInputImageAttribute()
             if let newInputList = childImageInputs {

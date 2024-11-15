@@ -660,7 +660,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let contextMenu = UIMenu(title: "",
          children: [ libraryMenu ,
 
-         UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "pencil")) {
+         UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) {
            action in
            self.saveStackActionBtn(self.moreBtn)
        },

@@ -201,7 +201,7 @@ class PGLRedraw {
     }
 
     fileprivate func publishAnimationState() {
-//        let animationStateChangeNotice = Notification.Name("PGLAnimationStateChanged")
+        let animationStateChangeNotice = Notification.Name("PGLAnimationStateChanged")
         let userInfo: [String: Any] = ["animationState": animationState()]
         NotificationCenter.default.post(name: PGLAnimationStateChanged, object: nil, userInfo: userInfo)
     }
