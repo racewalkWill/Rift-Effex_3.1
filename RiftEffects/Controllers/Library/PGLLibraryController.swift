@@ -12,7 +12,8 @@ import os
 import Combine
 
 let ThumbnailPreferredHeight: CGFloat = 75.0
-let ThumbnailSpacing: CGFloat = 10.0
+let ThumbnailiPhonePreferredHeight: CGFloat = 50
+let ThumbnailSpacing: CGFloat = 5.0
 
 class PGLLibraryController:  UIViewController, NSFetchedResultsControllerDelegate {
     // combines example CollectionViewSample from WWDC21
@@ -278,16 +279,18 @@ extension PGLLibraryController {
 
     /// - Tag: Grid
     private func createLayout() -> UICollectionViewLayout {
+        let myTraitIdiom = traitCollection.userInterfaceIdiom
+        let preferredHeight = if (myTraitIdiom == .phone) {  ThumbnailiPhonePreferredHeight } else {  ThumbnailPreferredHeight  }
         let sectionProvider = { (sectionIndex: Int,
             layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.8),
-                                                 heightDimension: .estimated(ThumbnailPreferredHeight))
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.90),
+                                                 heightDimension: .estimated(preferredHeight))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
             // If there's space, adapt and go 2-up + peeking 3rd item.
 
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.8),
-                                                   heightDimension: .estimated(ThumbnailPreferredHeight))
+                                                   heightDimension: .estimated(preferredHeight))
 
             let containerGroup = NSCollectionLayoutGroup.horizontal(
                 layoutSize: groupSize, subitems: [item])

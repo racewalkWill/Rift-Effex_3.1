@@ -20,7 +20,7 @@ struct PGLAppearance {
         return UIFont(descriptor: boldFontDescriptor, size: 0)
     }()
 
-    static let postImageHeightRatio = 0.8
+    static let postImageHeightRatio = 0.6
 
     static let titleFont: UIFont = {
         let descriptor = UIFontDescriptor
