@@ -227,7 +227,7 @@ class PGLSelectParmController: PGLCommonController,
         currentFilter = viewerStack.currentFilter()
 
 
-        setShiftBtnState()
+        setShiftLabelState()
             // if only one filter then shift to this filter does not change anything
 //         NSLog ("PGLSelectParmController #updateDisplay end ")
 
@@ -353,17 +353,13 @@ class PGLSelectParmController: PGLCommonController,
 
     // MARK: NavigationBar
 
-    @IBAction func shiftBtnAction(_ sender: UIBarButtonItem) {
-        appStack.toggleShowFilterImage()
-        setShiftBtnState()
-        // setChevronState called in setShiftBtnState()
 
-    }
 
 
     @IBAction func filterShiftLabelAction(_ sender: UIBarButtonItem) {
         // dispatch to shiftBtn..
-        shiftBtnAction(sender)
+        appStack.toggleShowFilterImage()
+        setShiftLabelState()
     }
 
     @IBAction func upChevronAction(_ sender: UIBarButtonItem) {
@@ -375,9 +371,9 @@ class PGLSelectParmController: PGLCommonController,
         
     }
 
-    func setShiftBtnState() {
-        shiftBtn.isEnabled = (appStack.flatRowCount() > 1)
-        filterShiftLabel.isEnabled = shiftBtn.isEnabled
+    func setShiftLabelState() {
+
+        filterShiftLabel.isEnabled = (appStack.flatRowCount() > 1)
         if (appStack.showFilterImage) {
             filterShiftLabel.title = StackDisplayMode.Single.rawValue
         } else {

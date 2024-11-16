@@ -434,11 +434,6 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
-                                    <barButtonItem title="Shift" image="chart.bar.doc.horizontal.page" style="plain" id="3ph-yx-nVM">
-                                        <connections>
-                                            <action selector="shiftBtnAction:" destination="VjG-Q1-3mN" id="DCI-zf-akv"/>
-                                        </connections>
-                                    </barButtonItem>
                                     <barButtonItem title="Item" id="c9Y-Ed-ZeW" userLabel="filterShiftLabel">
                                         <connections>
                                             <action selector="filterShiftLabelAction:" destination="VjG-Q1-3mN" id="gpE-0t-UX8"/>
@@ -652,7 +647,6 @@
                         <outlet property="filterLabel" destination="sEW-y3-MfP" id="mTz-Ab-b1Y"/>
                         <outlet property="filterShiftLabel" destination="c9Y-Ed-ZeW" id="jK5-m2-B5b"/>
                         <outlet property="parmsTableView" destination="qzX-VM-dr8" id="J9S-87-VTd"/>
-                        <outlet property="shiftBtn" destination="3ph-yx-nVM" id="EtB-y3-a8c"/>
                         <outlet property="upChevron" destination="A6h-K5-gwp" id="gCa-S8-4Fc"/>
                     </connections>
                 </viewController>
@@ -1014,7 +1008,6 @@
         <segue reference="Xyz-2Z-Q4q"/>
     </inferredMetricsTieBreakers>
     <resources>
-        <image name="chart.bar.doc.horizontal.page" width="128" height="128"/>
         <image name="chart.dots.scatter" catalog="system" width="128" height="102"/>
         <image name="chevron.down" catalog="system" width="128" height="70"/>
         <image name="chevron.up" catalog="system" width="128" height="70"/>
@@ -1028,16 +1021,16 @@
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
-            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
