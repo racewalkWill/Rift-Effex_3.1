@@ -107,7 +107,8 @@ extension PGLFilterStack {
     }
 
     func loadStartup(userStartupImageList: PGLImageList) {
-        if let startingFilter = demoCreateFilter(ciFilterString: "Images") {
+        // this is the initial startup
+        if let startingFilter = demoCreateFilter(ciFilterString: defaultFilterName) {
             append(startingFilter)
             let imageAttribute = startingFilter.getInputImageAttribute()
             guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate

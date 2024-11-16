@@ -18,8 +18,8 @@ import os
 //let defaultFilterName = "CISourceInCompositing"
 // let defaultFilterName = "CILinearGradient"
 //let defaultFilterName = "CIAdditionCompositing"
-//let defaultFilterName = "CIDissolveTransition"
- let defaultFilterName = kPImages
+let defaultFilterName = "CIDissolveTransition"
+// let defaultFilterName = kPImages
 
 
 //let defaultFilterPosition = PGLFilterCategoryIndex(category: 6, filter: 0, catCodeName: "CICategoryCompositeOperations", filtCodeName: defaultFilterName)
@@ -37,7 +37,7 @@ class PGLFilterStack: Equatable, Hashable  {
     // March 9, 2021 Modified assumption that there is always at least one filter
     //  now stack may have no filters. isEmpty
     
-    let defaultFilterPosition = PGLFilterCategoryIndex(category: 11, filter: 13, catCodeName: "CICategoryTransition", filtCodeName: defaultFilterName)
+    let defaultFilterPosition = PGLFilterCategoryIndex(category: 11, filter: 3, catCodeName: "CICategoryTransition", filtCodeName: defaultFilterName)
     let  kFilterSettingsKey = "FilterSettings"
     let  kFilterOrderKey = "FilterOrder"
 
@@ -105,12 +105,7 @@ class PGLFilterStack: Equatable, Hashable  {
     // let defaultImageName = "GridImage"
 
     func setStartupDefault() {
-//        setDefault(initialImage: PGLTestImage.gridImage(withSize: CGSize(width: 791.5, height: 834.0)) ) //(0.0, 0.0, 791.5, 834.0)
-//        let startingImage = (CIImage(image: (UIImage(named: "John+Ann" ))!))!
-//        let johnAnnId = "ABB0A167-F79A-4916-9172-8ADC8377EF0E/L0/001"
-            // get more ids by a break at PGLFilterAttribute setImageCollectionInput(cycleStack: PGLImageList)
-            // in the futureit would be good to select the users favorites..
-            // have an option to also pull a saved collection from the data store.. need to keep the name in some app attributes.
+
         let startImageList = PGLImageList(localAssetIDs: [String](), albumIds: [String]()  )
         let startingFilter = (PGLFilterDescriptor(defaultFilterName, PGLTransitionFilter.self))!
 
