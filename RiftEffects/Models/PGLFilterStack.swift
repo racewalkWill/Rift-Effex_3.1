@@ -18,8 +18,8 @@ import os
 //let defaultFilterName = "CISourceInCompositing"
 // let defaultFilterName = "CILinearGradient"
 //let defaultFilterName = "CIAdditionCompositing"
-let defaultFilterName = "CIDissolveTransition"
-// let defaultFilterName = kPImages
+//let defaultFilterName = "CIDissolveTransition"
+ let defaultFilterName = kPImages
 
 
 //let defaultFilterPosition = PGLFilterCategoryIndex(category: 6, filter: 0, catCodeName: "CICategoryCompositeOperations", filtCodeName: defaultFilterName)
