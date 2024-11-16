@@ -1193,13 +1193,19 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     let sourceString = inputSourceDescription ?? ""
 
     if inputStack != nil {
-        newDescriptionString = newDescriptionString + " <- " + (inputStack?.outputFilterName() ?? "")
+        newDescriptionString = newDescriptionString + " -> " + (inputStack?.outputFilterName() ?? "")
     } else {
         if sourceString.isEmpty {
-            newDescriptionString = newDescriptionString + " <- " + "Photos"
+            if inputParmType() == .missingInput {
+                newDescriptionString = newDescriptionString + " ----> "
+            }
+            else {
+                newDescriptionString = newDescriptionString + " -> " + "Photos"
+            }
+
         }
         else {
-            newDescriptionString = newDescriptionString + " <- " + sourceString
+            newDescriptionString = newDescriptionString + " -> " + sourceString
         }
     }
     content.text = newDescriptionString
