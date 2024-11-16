@@ -19,7 +19,7 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
     var appStack: PGLAppStack! = nil  // model object
 
-    var filterStack: () -> PGLFilterStack?  = { PGLFilterStack() } // a function is assigned to this var that answers the filterStack
+//    var filterStack: () -> PGLFilterStack?  = { PGLFilterStack() } // a function is assigned to this var that answers the filterStack
     var metalRender: Renderer!
         // Metal View setup for Core Image Rendering
         // see listing 1-7 in
@@ -59,7 +59,7 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
                 return
         }
         appStack = myAppDelegate.appStack
-        filterStack = { self.appStack.outputOrViewFilterStack() }
+//        filterStack = { self.appStack.outputOrViewFilterStack() }
 
         guard let metalView = view as? MTKView else {
             Logger(subsystem: LogSubsystem, category: LogCategory).fault ( "PGLMetalController viewDidLoad fatalError(metal view not set up in storyboard")
@@ -88,7 +88,7 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
     }
     override func resetVars() {
 
-        filterStack = { nil }
+//        filterStack = { nil }
         metalRender = nil
     }
 

@@ -1879,10 +1879,10 @@ extension PGLImageController {
 //        NSLog("newImageController = \(newImageController.debugDescription)")
         // turns on gesture recogniziers to dismiss, zoom, pan
 
-        let nav = UINavigationController(rootViewController: newImageController)
-                nav.modalPresentationStyle = .fullScreen
-        
-        self.navigationController?.present(nav, animated: true)
+//        let nav = UINavigationController(rootViewController: newImageController)
+//                nav.modalPresentationStyle = .fullScreen
+        newImageController.modalPresentationStyle = .fullScreen
+        self.navigationController?.present(newImageController, animated: true)
 //       present(newImageController, animated: true )
     }
 }
