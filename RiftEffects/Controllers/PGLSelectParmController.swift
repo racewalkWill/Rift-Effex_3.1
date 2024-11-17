@@ -19,6 +19,7 @@ enum ImageParm: Int {
     case inputChildStack = 1 // input from a child stack
     case inputPriorFilter = 2  // previous filter in the stack is input
     case missingInput = 3
+    case rectangleInput = 4
 }
 
 
@@ -679,7 +680,8 @@ class PGLSelectParmController: PGLCommonController,
                 case .missingInput:
                     cell.accessoryType = .detailDisclosureButton
                     cell.backgroundConfiguration?.backgroundColor = .secondarySystemBackground
-
+                case .rectangleInput:
+                    cell.accessoryType = .disclosureIndicator
                 default:
                     cell.accessoryType = .detailDisclosureButton
                     cell.backgroundConfiguration?.backgroundColor = .systemBackground

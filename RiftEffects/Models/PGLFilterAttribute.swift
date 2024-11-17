@@ -101,7 +101,7 @@ class PGLFilterAttribute {
     static let ChildStack3Symbol = UIImage(systemName: "square.3.layers.3d.bottom.filled")
     static let ChildStack4Symbol = UIImage(systemName: "square.stack" )
     static let ChildStack5Symbol = UIImage(systemName: "square.on.square.squareshape.controlhandle")
-
+    static let CropSymbool = UIImage(systemName: "crop")
     static let OutputFilterSymbol = UIImage(systemName: "photo.badge.checkmark.fill")
 
 
@@ -1228,6 +1228,8 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
             content.image = PGLFilterAttribute.MissingPhotoInput
         case ImageParm.notAnImageParm :
             content.image = nil // other symbols are set???
+        case ImageParm.rectangleInput :
+            content.image = PGLFilterAttribute.CropSymbool
     }
 
     uiCell.contentConfiguration = content
@@ -1622,6 +1624,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
    
     var oldVector: CIVector?
     var isCropped = false
+    var imageParmState = ImageParm.rectangleInput
 
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
@@ -1646,6 +1649,11 @@ class PGLAttributeRectangle: PGLFilterAttribute {
         }
         else { // no meaningful value
                 return ""}
+    }
+
+    override func inputParmType() -> ImageParm {
+
+        return imageParmState
     }
 
     override  func setUICellDescription(_ uiCell: UITableViewCell) {

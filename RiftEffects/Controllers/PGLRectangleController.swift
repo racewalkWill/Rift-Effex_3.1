@@ -52,7 +52,7 @@ class PGLRectangleController: UIViewController {
 
     @IBOutlet var frameImageView: PGLFramedView! {
         didSet {
-//            frameImageView.initFrame()
+            frameImageView.initFrame()
         }
     }
     @IBOutlet weak var upperLeft: UIView!
@@ -172,7 +172,7 @@ class PGLFramedView: UIImageView {
 
 
     }
-    func rectImage(imageRect: CGRect, fillColor: UIColor = UIColor.systemGroupedBackground) -> UIImage {
+    func rectImage(imageRect: CGRect, fillColor: UIColor = UIColor.systemBlue) -> UIImage {
 
         let renderer = UIGraphicsImageRenderer(size: imageRect.size)
 
@@ -196,7 +196,7 @@ class PGLFramedView: UIImageView {
         let image = renderer.image { rendererContext in
             let cgContext = rendererContext.cgContext
             cgContext.setStrokeColor(UIColor.black.cgColor)
-            cgContext.setFillColor(UIColor.blue.cgColor) // makes the highlight stand out
+            cgContext.setFillColor(UIColor.clear.cgColor) // makes the highlight stand out
             let rectPath = UIBezierPath(rect: imageRect)
             rectPath.lineWidth = lineWidth
 
