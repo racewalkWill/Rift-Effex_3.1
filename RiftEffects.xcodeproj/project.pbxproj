@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A303930F27AADED800E2A3D4 /* PGLCompactPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */; };
 		A308939F251E977400F244D6 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A308939E251E977400F244D6 /* Launch Screen.storyboard */; };
+		A30BF4332CEA503A0062C84C /* PGLRandomParms.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30BF4322CEA503A0062C84C /* PGLRandomParms.swift */; };
 		A313B1E22AE3298B007AE850 /* PGLVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A313B1E12AE3298B007AE850 /* PGLVideo.swift */; };
 		A316B9E425D9AD25000C8299 /* PGLDataStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A316B9E325D9AD25000C8299 /* PGLDataStoreTests.swift */; };
 		A3181C042974C84F00834D89 /* PGLNeedsRedraw.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3181C032974C84F00834D89 /* PGLNeedsRedraw.swift */; };
@@ -192,6 +193,7 @@
 /* Begin PBXFileReference section */
 		A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCompactPresentationController.swift; sourceTree = "<group>"; };
 		A308939E251E977400F244D6 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		A30BF4322CEA503A0062C84C /* PGLRandomParms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLRandomParms.swift; sourceTree = "<group>"; };
 		A313B1E12AE3298B007AE850 /* PGLVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLVideo.swift; sourceTree = "<group>"; };
 		A316B9E325D9AD25000C8299 /* PGLDataStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLDataStoreTests.swift; sourceTree = "<group>"; };
 		A3181C032974C84F00834D89 /* PGLNeedsRedraw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLNeedsRedraw.swift; sourceTree = "<group>"; };
@@ -599,6 +601,7 @@
 				A3BF507C24D32A3400CD5114 /* PGLFilterClasses.swift */,
 				A392D5ED26C3EBDA00688952 /* PGLRandomFilterMaker.swift */,
 				A3BF50A724D32A3400CD5114 /* PGLFilterAttribute.swift */,
+				A30BF4322CEA503A0062C84C /* PGLRandomParms.swift */,
 				A3DDDEE629D85EF1003B8545 /* PGLFilterAttrChildStack.swift */,
 				A3BF505424D32A3400CD5114 /* PGLFilterAttributeNumber.swift */,
 				A3BF50A024D32A3400CD5114 /* PGLFilterStack.swift */,
@@ -914,6 +917,7 @@
 				A3BB9E092B73ED4D0041F914 /* AVAssetExtension.swift in Sources */,
 				A320F6262669550E008F6090 /* PGLInfoPrivacyController.swift in Sources */,
 				A3BF50EB24D32A3400CD5114 /* PGLVisionDetection.swift in Sources */,
+				A30BF4332CEA503A0062C84C /* PGLRandomParms.swift in Sources */,
 				A3BF511324D32A3400CD5114 /* PGLFilterAttributeAttributedString.swift in Sources */,
 				A3BF512824D32A3400CD5114 /* PGLFilterStack.swift in Sources */,
 				A35BADAC2614C8FF00C8B2AA /* PGLPopUpFilterInfo.swift in Sources */,

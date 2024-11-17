@@ -94,6 +94,7 @@ class PGLDemo {
             stack.appendFilter(thisFilter)
                 // will parmState to inputPriorState if there is prior input
             setImageInputs(thisFilter)
+            thisFilter.setRandomParms()
         }
     }
 

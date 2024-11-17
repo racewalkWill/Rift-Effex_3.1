@@ -259,7 +259,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
     }
 
-    // MARK: Filter Updates
+    // MARK: Demo Updates
 
     /// some parms based on center points need to change if the image sizng changes
     ///  does not change non position vector parms (such as color vectors)
@@ -271,6 +271,11 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 //            aParm.applyParmSizeChange(changeAffine: changeAffine)
 //        }
 //    }
+    func setRandomParms() {
+        for anAttribute in self.attributes {
+            anAttribute.setRandomValue()
+        }
+    }
 
     // MARK: input/output
     fileprivate func setDetectorsInput(_ image: CIImage?, _ source: String?) {
@@ -1044,6 +1049,7 @@ class PGLDetector: PGLDetection {
     }
 
     // MARK: animation
+
 
     func setInputTime(time: Double) {
         inputTime = time

@@ -134,6 +134,7 @@ extension PGLFilterStack {
         else { fatalError("Demo Load Filter Error ") }
         let thisFilter = thisDescriptor.pglSourceFilter()
 
+        thisFilter?.setRandomParms()
 
         return thisFilter
     }

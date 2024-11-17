@@ -75,7 +75,7 @@ class PGLFilterAttributeTime: PGLFilterAttribute {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
         sliderMaxValue = 10 // seconds per image
         sliderMinValue = 0.001 // seconds per image - this is 100 images/second
-        defaultValue = 0.1
+        defaultValue = 0.5
 
     }
 
@@ -171,24 +171,19 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
 
             var cornerPoint: CGPoint?
 //            NSLog("PGLFilterAttributeVector does not have default")
-            let insetRect = CGRect(x: 0, y: 0, width: TargetSize.width, height: TargetSize.height).insetBy(dx: 200.0, dy: 200.0)
-            // assuming LLO here...
-            // now trying ULO
+            let insetRect = CGRect(x: 30, y: 30, width: TargetSize.width, height: TargetSize.height).insetBy(dx: 200.0, dy: 200.0)
+            // assuming LLO here... Lower Left Origin coordinates
             switch attributeName {
                 case "inputTopLeft":
-                   // cornerPoint = insetRect.origin  // ULO
                   cornerPoint = CGPoint(x: insetRect.origin.x, y: insetRect.maxY)  //LLO
 
                 case "inputTopRight" :
-//                    cornerPoint = CGPoint(x: insetRect.maxX, y: insetRect.origin.y) // ULO
                    cornerPoint = CGPoint(x: insetRect.maxX, y: insetRect.maxY)  //LLO
 
                 case "inputBottomLeft":
-//                    cornerPoint = CGPoint(x: insetRect.origin.x, y: insetRect.maxY) // ULO
                     cornerPoint = insetRect.origin //LLO
 
                 case "inputBottomRight":
-//                    cornerPoint = CGPoint(x: insetRect.maxX, y: insetRect.maxY) //ULO
                     cornerPoint = CGPoint(x: insetRect.maxX, y: insetRect.origin.y) //LLO 
 
                 default:
@@ -197,8 +192,6 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             if cornerPoint != nil {
 
                 aSourceFilter.setVectorValue(newValue: CIVector(cgPoint: cornerPoint!), keyName: attributeName!)
-//                let newValue = getVectorValue()
-//                NSLog("PGLFilterAttributeVector set default of \(self) \(attributeName) to \(newValue)")
                 
             }
         }
