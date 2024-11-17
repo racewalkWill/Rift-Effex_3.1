@@ -227,7 +227,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
 
-    var tintViews = [UIView]()
+
 
     func isLimitedPhotoLibAccess() -> Bool {
         let accessLevel: PHAccessLevel = .readWrite // or .addOnly
@@ -919,7 +919,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         loadMetalController()
         registerImageControllerNotifications()
 
-        tintViews.append(contentsOf: [topTintView, bottomTintView, leftTintView, rightTintView])
+
 
         setMoreBtnMenu()
         setHelpBtnMenu()
@@ -1119,7 +1119,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         thisRectController.croppingFilter = aRectInputFilter
 //        thisRectController.thisCropAttribute = aRectInputFilter.cropAttribute
-        showCropTintViews(setIsHidden: false)
+        showRectView(setIsHidden: false)
         
     }
 
@@ -1355,12 +1355,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     // MARK: rectangle
     var rectController: PGLRectangleController?
 
-    @IBOutlet weak var topTintView: UIView!
 
-    @IBOutlet weak var bottomTintView: UIView!
-    @IBOutlet weak var leftTintView: UIView!
-
-    @IBOutlet weak var rightTintView: UIView!
 
 
     func cropAction(rectAttribute: PGLAttributeRectangle) {
@@ -1421,16 +1416,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             rectCropView.isHidden = true
 
             // there are constraint errors reported from here..
-             NSLayoutConstraint.activate([
-                topTintView.bottomAnchor.constraint(equalTo: rectCropView.topAnchor),
-                bottomTintView.topAnchor.constraint(equalTo: rectCropView.bottomAnchor),
-                leftTintView.rightAnchor.constraint(equalTo: rectCropView.leftAnchor),
-                rightTintView.leftAnchor.constraint(equalTo: rectCropView.rightAnchor)
-                ] )
-            for aTintView in tintViews {
-                view.bringSubviewToFront(aTintView)
-                // they are set to hidden in IB
-            }
+
 
             // next is not needed??
             for aCorner in rectController!.controlViewCorners {
@@ -1445,10 +1431,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         
 
     }
-    func showCropTintViews(setIsHidden: Bool) {
-        for aTintView in tintViews {
-            aTintView.isHidden = setIsHidden
-        }
+    func showRectView(setIsHidden: Bool) {
+
         if rectController != nil {
 //            NSLog("PGLImageController #showCropTintViews isHidden changing to \(setIsHidden)")
             rectController!.view.isHidden = setIsHidden
@@ -1461,7 +1445,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func hideRectControl() {
-        showCropTintViews(setIsHidden: true)
+        showRectView(setIsHidden: true)
         if rectController != nil {
             rectController!.view.isHidden = true
         }
