@@ -164,45 +164,32 @@ class PGLRectangleController: UIViewController {
 }
 
 class PGLFramedView: UIImageView {
-   let rectLineWidth:CGFloat = 12.0
+   let rectLineWidth:CGFloat = 20.0
 
     func initFrame() {
-        image = rectImage(imageRect: bounds)
-        highlightedImage = rectHighLight(imageRect: bounds)
+         highlightedImage = rectHighLight(imageRect: bounds)
+        image = highlightedImage
 
 
     }
-    func rectImage(imageRect: CGRect, fillColor: UIColor = UIColor.systemBlue) -> UIImage {
 
-        let renderer = UIGraphicsImageRenderer(size: imageRect.size)
-
-        let image = renderer.image { rendererContext in
-            let rectPath = UIBezierPath(rect: imageRect)
-            rectPath.lineWidth = rectLineWidth
-            rectPath.stroke()
-        }
-//        NSLog("PGLFramedView rectImage fillCollor")
-        return image
-    }
-
-    func rectHighLight(imageRect: CGRect, fillColor: UIColor = UIColor.systemGroupedBackground) -> UIImage {
+    func rectHighLight(imageRect: CGRect, fillColor: UIColor = UIColor.clear) -> UIImage {
 
 //        NSLog("PGLFramedView #rectHighLight")
-
-        let lineWidth = rectLineWidth
 
         let renderer = UIGraphicsImageRenderer(size: imageRect.size)
 
         let image = renderer.image { rendererContext in
             let cgContext = rendererContext.cgContext
             cgContext.setStrokeColor(UIColor.black.cgColor)
-            cgContext.setFillColor(UIColor.clear.cgColor) // makes the highlight stand out
+            cgContext.setFillColor(fillColor.cgColor) // makes the highlight stand out
+
             let rectPath = UIBezierPath(rect: imageRect)
-            rectPath.lineWidth = lineWidth
+            rectPath.lineWidth = rectLineWidth
 
             rectPath.stroke()
             rectPath.fill() // the fill color for highlight
-            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLFramedView #rectImageHighLight path = \(rectPath)" )
+//            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLFramedView #rectImageHighLight path = \(rectPath)" )
         }
         return image
     }
