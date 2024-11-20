@@ -950,19 +950,19 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
          appStack.isImageControllerOpen = true
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
 //        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( self.appStack.parmControls)")
-        if traitCollection.userInterfaceIdiom == .phone {
-            // assumes that addPositionControl has created all the parmControls
-            // on iPhone they are added/removed as navigation occurs
-            // the iPhone segue navigation with the twoControllers creates multiple
-            // PGLImageControllers.. so add the parmControls as each imageController
-            // becomes visible..
-            // kind of yucky.. but the seque navigation bug forces this
-            for aControlView in appStack.parmControls {
-                view.addSubview(aControlView.value)
-//                metalController?.view.addSubview(aControlView.value)
-
-            }
-        }
+//        if traitCollection.userInterfaceIdiom == .phone {
+//            // assumes that addPositionControl has created all the parmControls
+//            // on iPhone they are added/removed as navigation occurs
+//            // the iPhone segue navigation with the twoControllers creates multiple
+//            // PGLImageControllers.. so add the parmControls as each imageController
+//            // becomes visible..
+//            // kind of yucky.. but the seque navigation bug forces this
+//            for aControlView in appStack.parmControls {
+//                view.addSubview(aControlView.value)
+////                metalController?.view.addSubview(aControlView.value)
+//
+//            }
+//        }
 
 
     }
@@ -994,11 +994,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         appStack.isImageControllerOpen = false // selection of new image or image list is started
         removeGestureRecogniziers()
         releaseVars()
-        if traitCollection.userInterfaceIdiom == .phone {
-            for aControlView in appStack.parmControls {
-                aControlView.value.removeFromSuperview()
-            }
-        }
+//        if traitCollection.userInterfaceIdiom == .phone {
+//            for aControlView in appStack.parmControls {
+//                aControlView.value.removeFromSuperview()
+//            }
+//        }
         super.viewDidDisappear(animated)
 
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
