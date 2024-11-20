@@ -1634,6 +1634,11 @@ class PGLAttributeRectangle: PGLFilterAttribute {
             if (myVector.x < 1.0 && myVector.y < 1.0 && myVector.z < 1.0 && myVector.w < 1.0) {
                 filterRect = CGRect(x: myVector.x, y: myVector.y, width: myVector.z, height: myVector.w)
             }  // else keep the default rect of 300
+            else {
+                // default to TargetSize or effectively no crop
+                filterRect = CGRect(origin: CGPoint.zero, size: TargetSize)
+                applyCropRect(mappedCropRect: filterRect)
+            }
         }
         if let rectangleFilter = pglFilter as? PGLRectangleFilter {
             rectangleFilter.cropAttribute = self
@@ -1685,7 +1690,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
     }
 
     override func performAction(_ controller: PGLSelectParmController?) {
-//        NSLog("PGLFilterAttributeRectangle #performAction ")
+        NSLog("PGLFilterAttributeRectangle #performAction ")
        controller?.cropAction(rectAttribute: self)
         controller?.hideRectController()
         isCropped = true
