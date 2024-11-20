@@ -1257,17 +1257,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             newView.tintColor = .systemBackground
             newView.isUserInteractionEnabled = true
 
-            if traitCollection.userInterfaceIdiom != .phone {
-                // on iPhone the viewDidAppear will add the subviews
-                //  addPositionControl has created all the parmControls
-                // on iPhone they are added/removed as navigation occurs
-                // the iPhone segue navigation with the twoControllers creates multiple
-                // PGLImageControllers.. so add the parmControls as each imageController
-                // becomes visible.. see PGLImageController viewDidAppear
+            view.addSubview(newView)
 
-                // kind of yucky.. but the seque navigation bug forces this
-                view.addSubview(newView)
-            }
             appStack.parmControls[attribute.attributeName!] = newView
             newView.isHidden = true
         }
