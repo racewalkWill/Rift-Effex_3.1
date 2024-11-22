@@ -43,15 +43,18 @@ class PGLHelpPageController: UIPageViewController {
     // pop up modal 4 pages intro pics with comments
     // PGLImageController checks for first startup and shows this Help
     // PGLImageController turns off first startup boolean
-    var iPhoneImageNames = [ "iPhone1-Pick",
-                             "iPhone2-Parm",
-                             "iPhone3-ImagePick",
-                             "iPhone5-ParmAdjust",
-                             "iPhone6-LongPress",
+    var iPhoneImageNames = [ "iPhone0-Roadmap",
+                             "iPhone1-SettingsOpen",
+                            "iPhone2-OpenImagePicker",
+
+                             "iPhone3-AddFilter",
+                             "iPhone4-MorePick",
+                             "iPhone5-EffexHighlight",
+                             "iPhone6-SaveEffex",
                              "iPhone4-MorePick",
                              "iPhone7-ParmVary" ]
 
-    var iPadImageNames = [ "Help1-Pick",
+    var iPadImageNames = [ "Help1-Pick 1",
                            "Help2-Parm",
                            "iPhone3-ImagePick",  //Help3-ImagePick",
                            "Help5-ParmAdjust",
@@ -59,14 +62,22 @@ class PGLHelpPageController: UIPageViewController {
                            "Help4-MorePick",
                            "Help7-ParmVary"]
 
-    var helpText = [
-                    "SELECT a filter, TAP the info button, then PICK an image from your photo library", //1
-                     "Tap to open your photo library", //2
-                     "Pick an image - then '<Back'", // 3
-                     "Select a filter parm, and adjust the control",//5
-                     "Long touch for filter description", // 6
-                     "Swipe, touch More (more filters) or Pick (Images)", // 4
-                     "Swipe to Vary" // 7
+    var helpText = [ "Roadmap - PICK an image from the Library. TAP Effex Filter. TAP and SWIPE Settings. Add another Effex Filter. Repeat as needed. Save when happy.  -->", // 0
+                     "Effex - Swipe left 'Open' to Settings for that filter  -->", //1
+                    "Settings - Tap Image 'Info' button to open the photo picker -->", //2
+
+
+                     "Effex - Touch Effex '+' button to add another effex filter after selected filter -->", //3
+                     "Settings - tap on Image row - Swipe to '+Effex' for image from another filter. Or 'Library' for image from saved Library  -->", // 4
+                     "Effex - Tap a row again to highlight and view only the selected filter effex -->", //New 5
+                     "Effex - Save menu then type title/album names. Tapping 'Save' button puts it in the Library and the image into Photos",  // 6
+                     "Settings - Swipe to 'Vary' values over time", // 5
+                     "Filters - Long touch on a row for the popup filter description", // 6
+
+                     "Touch photo(s) to select then Done", // 3
+                     "Demo menu for Effex with images from your Favorites Library",
+                     "Trash menu - Start over and discard everything or keep all effex filters and remove images or remove all filters and keep selected images"
+
     ]
     var imageNames: [String]!
     var currentIndex: Int!
