@@ -38,14 +38,18 @@ import UIKit
 import os
 class PGLHelpSinglePage: UIViewController {
 
+    var thisSectionTitle: String!
+    @IBOutlet weak var SectionTitle: UILabel! { didSet
+        {
+            SectionTitle.text = thisSectionTitle
+        }}
+
+
     var instructionText: String!
     @IBOutlet weak var helpText: UILabel! {
         didSet {
             helpText.text = instructionText
-        }
-    }
-
-
+        } }
 
     @IBOutlet weak var imageView: UIImageView!
     var photoName: String?

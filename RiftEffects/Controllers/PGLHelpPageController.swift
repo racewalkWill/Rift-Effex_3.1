@@ -39,58 +39,71 @@ import Foundation
 import UIKit
 import os
 
+    /// Help only shows automatically on first startup
+    ///  then shows from ? button tap
 class PGLHelpPageController: UIPageViewController {
     // pop up modal 4 pages intro pics with comments
     // PGLImageController checks for first startup and shows this Help
     // PGLImageController turns off first startup boolean
-    var iPhoneImageNames = [ "iPhone0-Roadmap",
-                             "iPhone1-SettingsOpen",
-                            "iPhone2-OpenImagePicker",
 
-                             "iPhone3-AddFilter",
-                             "iPhone4-MorePick",
-                             "iPhone5-EffexHighlight",
-                             "iPhone6-SaveEffex",
-                             "iPhone4-MorePick",
-                             "iPhone7-ParmVary" ]
-
-    var iPadImageNames = [ "Help1-Pick 1",
-                           "Help2-Parm",
-                           "iPhone3-ImagePick",  //Help3-ImagePick",
-                           "Help5-ParmAdjust",
-                           "Help6-longPress",
-                           "Help4-MorePick",
-                           "Help7-ParmVary"]
-
-    var helpText = [ "Roadmap - PICK an image from the Library. TAP Effex Filter. TAP and SWIPE Settings. Add another Effex Filter. Repeat as needed. Save when happy.  -->", // 0
-                     "Effex - Swipe left 'Open' to Settings for that filter  -->", //1
-                    "Settings - Tap Image 'Info' button to open the photo picker -->", //2
+    struct HelpInfo {
+        var helpTitle: String
+        var iPhoneImage: String
+        var iPadImage: String
+        var helpText: String
 
 
-                     "Effex - Touch Effex '+' button to add another effex filter after selected filter -->", //3
-                     "Settings - tap on Image row - Swipe to '+Effex' for image from another filter. Or 'Library' for image from saved Library  -->", // 4
-                     "Effex - Tap a row again to highlight and view only the selected filter effex -->", //New 5
-                     "Effex - Save menu then type title/album names. Tapping 'Save' button puts it in the Library and the image into Photos",  // 6
-                     "Settings - Swipe to 'Vary' values over time", // 5
-                     "Filters - Long touch on a row for the popup filter description", // 6
-
-                     "Touch photo(s) to select then Done", // 3
-                     "Demo menu for Effex with images from your Favorites Library",
-                     "Trash menu - Start over and discard everything or keep all effex filters and remove images or remove all filters and keep selected images"
-
-    ]
-    var imageNames: [String]!
+    }
+    var helpSections: [ Int:HelpInfo ] = [:]
     var currentIndex: Int!
-    var instructionText: String!
+    var iPhoneFormat = true
 
+
+    fileprivate func loadHelpInfo() {
+        helpSections[0] = HelpInfo(helpTitle: "Roadmap", iPhoneImage: "iPhone0-Roadmap", iPadImage: "",
+                                   helpText: "PICK an image from the Library. TAP Effex Filter. TAP and SWIPE Settings. Add another Effex Filter. Repeat as needed. Save when happy. Swipe left for more.. -->")
+
+        helpSections[1] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone1-SettingsOpen", iPadImage: "",
+                                   helpText: "SWIPE left 'Open' to Settings for that filter  -->")
+
+        helpSections[2] = HelpInfo(helpTitle: "Settings", iPhoneImage: "iPhone2-OpenImagePicker", iPadImage: "",
+                                   helpText: "TAP Image 'Info' button to open the photo picker -->")
+
+        helpSections[3] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone3-AddFilter", iPadImage: "",
+                                   helpText: "TOUCH Effex '+' button to add another effex filter after selected filter -->")
+
+        helpSections[4] = HelpInfo(helpTitle: "Settings", iPhoneImage: "iPhone4-MorePick", iPadImage: "",
+                                   helpText: "TAP on Image row - SWIPE to '+Effex' for image from another filter. Or 'Library' for image from saved Library  -->")
+        helpSections[5] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone5-EffexHighlight", iPadImage: "",
+                                   helpText: "TAP a row again to highlight and view only the selected filter effex image -->")
+
+        helpSections[6] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone6-SaveEffex", iPadImage: "",
+                                   helpText: "TAP Save bar button to open text boxes, then type title/album names. TAP 'Save' button saves the effex in the Library and the image into Photos")
+
+        helpSections[7] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone7-ParmVary", iPadImage: "",
+                                   helpText: "Settings - Swipe to 'Vary' values over time")
+        helpSections[8] = HelpInfo(helpTitle: "Trash", iPhoneImage: "iPhone8-Trash", iPadImage: "",
+                                    helpText: "Trash button - Start over and discard everything, OR keep selected images and remove all effex filters, OR keep all effex filters without images ")
+
+        helpSections[9] = HelpInfo(helpTitle: "Photo Picker", iPhoneImage: "iPhone9-PhotoPick", iPadImage: "",
+                                   helpText: "Touch photo(s) to select, then Done")
+
+        helpSections[10] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone10-DemoBtn", iPadImage: "",
+                                    helpText: "Demo bar button for Effex with images from your Favorites Library")
+
+
+    }
+    
     override func viewDidLoad() {
+        loadHelpInfo()
+
         super.viewDidLoad()
 
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         if  (traitCollection.userInterfaceIdiom) == .phone {
-            imageNames = iPhoneImageNames
+            iPhoneFormat = true
         } else {
-            imageNames = iPadImageNames
+            iPhoneFormat = false
         }
 
         if let viewController = viewPhotoCommentController(currentIndex ?? 0) {
@@ -107,6 +120,7 @@ class PGLHelpPageController: UIPageViewController {
 
       }
 
+    /// Help only shows automatically on first startup
     override func viewWillDisappear(_ animated: Bool) {
 
         if ShowHelpOnOpen { UserDefaults.standard.setValue(false, forKey: ShowHelpPageAtStartupKey)}
@@ -123,8 +137,10 @@ class PGLHelpPageController: UIPageViewController {
           return nil
       }
         page.photoIndex = index
-        page.photoName = imageNames[index]
-        page.instructionText = helpText[index]
+        page.photoName = if iPhoneFormat
+                        {helpSections[index]?.iPhoneImage } else {helpSections[index]?.iPadImage}
+        page.instructionText = helpSections[index]?.helpText
+        page.thisSectionTitle = helpSections[index]?.helpTitle
 
       return page
     }
@@ -146,7 +162,7 @@ class PGLHelpPageController: UIPageViewController {
                             viewControllerAfter viewController: UIViewController) -> UIViewController? {
       if let viewController = viewController as? PGLHelpSinglePage,
         let index = viewController.photoIndex,
-        (index + 1) < imageNames.count {
+         (index + 1) < helpSections.count {
         return viewPhotoCommentController(index + 1)
       }
 
@@ -154,7 +170,7 @@ class PGLHelpPageController: UIPageViewController {
     }
 
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
-      return imageNames.count
+      return helpSections.count
     }
 
     func presentationIndex(for pageViewController: UIPageViewController) -> Int {
