@@ -60,35 +60,35 @@ class PGLHelpPageController: UIPageViewController {
 
 
     fileprivate func loadHelpInfo() {
-        helpSections[0] = HelpInfo(helpTitle: "Roadmap", iPhoneImage: "iPhone0-Roadmap", iPadImage: "",
-                                   helpText: "PICK an image from the Library. TAP Effex Filter. TAP and SWIPE Settings. Add another Effex Filter. Repeat as needed. Save when happy. Swipe left for more.. -->")
+        helpSections[0] = HelpInfo(helpTitle: "Roadmap", iPhoneImage: "iPhone0-Roadmap", iPadImage: "iPad0-RoadMap",
+                                   helpText: "PICK an image from the Library. TAP Effex Filter. TAP and SWIPE filter to open Settings. Add (+) another Effex Filter. Repeat as needed. Save when happy. Swipe left for more.. -->")
 
-        helpSections[1] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone1-SettingsOpen", iPadImage: "",
+        helpSections[1] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone1-SettingsOpen", iPadImage: "iPad1-SettingsOpen",
                                    helpText: "SWIPE left 'Open' to Settings for that filter  -->")
 
-        helpSections[2] = HelpInfo(helpTitle: "Settings", iPhoneImage: "iPhone2-OpenImagePicker", iPadImage: "",
+        helpSections[2] = HelpInfo(helpTitle: "Settings", iPhoneImage: "iPhone2-OpenImagePicker", iPadImage: "iPad2-OpenImagePicker",
                                    helpText: "TAP Image 'Info' button to open the photo picker -->")
 
-        helpSections[3] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone3-AddFilter", iPadImage: "",
+        helpSections[3] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone3-AddFilter", iPadImage: "iPad3-AddFilter",
                                    helpText: "TOUCH Effex '+' button to add another effex filter after selected filter -->")
 
-        helpSections[4] = HelpInfo(helpTitle: "Settings", iPhoneImage: "iPhone4-MorePick", iPadImage: "",
+        helpSections[4] = HelpInfo(helpTitle: "Settings", iPhoneImage: "iPhone4-MorePick", iPadImage: "iPad4-MoreInput",
                                    helpText: "TAP on Image row - SWIPE to '+Effex' for image from another filter. Or 'Library' for image from saved Library  -->")
-        helpSections[5] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone5-EffexHighlight", iPadImage: "",
+        helpSections[5] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone5-EffexHighlight", iPadImage: "iPad5-EffexHighlight",
                                    helpText: "TAP a row again to highlight and view only the selected filter effex image -->")
 
-        helpSections[6] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone6-SaveEffex", iPadImage: "",
+        helpSections[6] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone6-SaveEffex", iPadImage: "iPad6-SaveEffex",
                                    helpText: "TAP Save bar button to open text boxes, then type title/album names. TAP 'Save' button saves the effex in the Library and the image into Photos")
 
-        helpSections[7] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone7-ParmVary", iPadImage: "",
+        helpSections[7] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone7-ParmVary", iPadImage: "iPad7-VarySetting",
                                    helpText: "Settings - Swipe to 'Vary' values over time")
-        helpSections[8] = HelpInfo(helpTitle: "Trash", iPhoneImage: "iPhone8-Trash", iPadImage: "",
+        helpSections[8] = HelpInfo(helpTitle: "Trash", iPhoneImage: "iPhone8-Trash", iPadImage: "iPad8-Trash",
                                     helpText: "Trash button - Start over and discard everything, OR keep selected images and remove all effex filters, OR keep all effex filters without images ")
 
-        helpSections[9] = HelpInfo(helpTitle: "Photo Picker", iPhoneImage: "iPhone9-PhotoPick", iPadImage: "",
+        helpSections[9] = HelpInfo(helpTitle: "Photo Picker", iPhoneImage: "iPhone9-PhotoPick", iPadImage: "iPad9-PhotoPick",
                                    helpText: "Touch photo(s) to select, then Done")
 
-        helpSections[10] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone10-DemoBtn", iPadImage: "",
+        helpSections[10] = HelpInfo(helpTitle: "Effex", iPhoneImage: "iPhone10-DemoBtn", iPadImage: "iPad10-DemoBtn",
                                     helpText: "Demo bar button for Effex with images from your Favorites Library")
 
 
