@@ -55,6 +55,8 @@ class PGLTwoColumnSplitController: UIViewController {
     }
     func loadViewColumns(controller: UIViewController, imageViewer: UIViewController ) {
 
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function) + \(controller)")
+
         columns = PGLColumns(control: controller, imageViewer: imageViewer)
 
         addChild(columns!.imageViewer)

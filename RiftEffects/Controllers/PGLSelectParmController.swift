@@ -199,15 +199,15 @@ class PGLSelectParmController: PGLCommonController,
         splitViewController?.delegate = self
 
 
-        navigationItem.title = "Effex"//viewerStack.stackName
+        navigationItem.title = "Effex" //viewerStack.stackName
 
 
 //        NSLog ("PGLSelectParmController #viewDidLoad completed")
-        if traitCollection.userInterfaceIdiom == .pad {
+//        if traitCollection.userInterfaceIdiom == .pad {
 //            navigationController?.isToolbarHidden = true
             // commented out because this makes the stackController toolbar
             // hidden.. for some strange reason!
-        } // was true
+//        } // was true
         // don't hide if iPhone
      
 //        let lib = PHAsset.fetchAssets(withLocalIdentifiers: ["empty"], options: nil)

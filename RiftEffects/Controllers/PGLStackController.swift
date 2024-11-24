@@ -1026,7 +1026,14 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 /// UITextFieldDelegate Header cells text editing
 extension PGLStackController {
 
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        // see the StackSaveState logic in #writeCDStack..
+        saveStackBtn?.setTitle("Save", for: .normal)
+    }
+        /// make sure that textField is not editing on first display !
+        ///  only enter here after the user selects and edits the text
     func textFieldDidEndEditing(_ textField: UITextField) {
+
        let thisStack = appStack.outputStack
 
             // first stack is the highest level.. not a child stack
@@ -1034,22 +1041,46 @@ extension PGLStackController {
 
         newText = newText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
-        switch textField.tag {
-            case StackHeaderCell.title.rawValue:
-                if newText == thisStack.stackName { return }
+        if newText == thisStack.stackName {
+            if newText == thisStack.stackType {
+                saveStackBtn?.setTitle("Save", for: .normal)
+                    // don't change to the Save As button text
+            }  }
+        else {
+            saveStackBtn?.setTitle("Save As", for: .normal)
+        }
 
+        switch textField.tag {
+            /// also the case of one field is changed then tab into the other. Save As should still  be button text
+            case StackHeaderCell.title.rawValue:
+                if newText == thisStack.stackName {
+                    if saveStackBtn?.title(for: .normal) != "Save As" {
+                            // don't overwrite the text change if on the other unchanged field
+                        saveStackBtn?.setTitle("Save", for: .normal)
+                    }
+
+                    return }
+                // else stackName is changed
+                saveStackBtn?.setTitle("Save As", for: .normal)
                 thisStack.stackName = newText
                 postStackNameChange()
                 
             case StackHeaderCell.album.rawValue:
-                if newText == thisStack.stackType { return }
+                if newText == thisStack.stackType {
+                    if saveStackBtn?.title(for: .normal) != "Save As" {
+                        // don't overwrite the text change if on the other unchanged field
+                        saveStackBtn?.setTitle("Save", for: .normal)
+                    }
+                    return }
+                // else the album title is changed
+                saveStackBtn?.setTitle("Save As", for: .normal)
                 thisStack.stackType = newText
                 thisStack.exportAlbumName = thisStack.stackType
                 postStackNameChange()
             default:
                 return
         }
-        saveStackBtn?.setTitle("Save As", for: .normal)
+
         Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLStackController textFieldDidEndEditing name - \(thisStack.stackName) type - \(thisStack.stackType) - tag \(textField.tag) ")
        
 

@@ -16,6 +16,7 @@ A class to set up the Core Data stack, observe Core Data notifications, process 
 import Foundation
 @preconcurrency import CoreData
 import os
+import UIKit
 
 // MARK: - Core Data Stack
 
@@ -49,17 +50,12 @@ class CoreDataWrapper: @unchecked Sendable  {
         container.persistentStoreDescriptions = [description]
         container.loadPersistentStores(completionHandler: { (_, error) in
             guard let error = error as NSError? else { return }
-            fatalError("###\(#function): Failed to load persistent stores:\(error)")
-//            DispatchQueue.main.async {
-//                // put back on the main UI loop for the user alert
-//                let alert = UIAlertController(title: "Data Store Error", message: " \(error.localizedDescription)", preferredStyle: .alert)
-//
-//                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
-//                    Logger(subsystem: LogSubsystem, category: LogCategory).notice("The userSaveErrorAlert \(error.localizedDescription)")
-//                }))
-//                let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
-//                myAppDelegate.displayUser(alert: alert)
-//            }
+//            fatalError("###\(#function): Failed to load persistent stores:\(error)")
+            DispatchQueue.main.async {
+
+                let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
+                myAppDelegate.displayDataError(error: error)
+            }
         })
         container.viewContext.retainsRegisteredObjects = false
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy

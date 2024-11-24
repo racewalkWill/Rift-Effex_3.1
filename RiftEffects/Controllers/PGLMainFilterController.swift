@@ -725,7 +725,7 @@ extension PGLMainFilterController {
                 let filterSegue = "filterImageToParmImage"
                 if let myTwoController = navigationController?.viewControllers.first(where: {$0 is PGLFilterImageContainerController}) {
                     myTwoController.performSegue(withIdentifier: filterSegue, sender: self)
-                        //  on iPhone goes to filterImageContainer.
+                        //  on iPhone goes to parmImageContainer.
                 }
 
 

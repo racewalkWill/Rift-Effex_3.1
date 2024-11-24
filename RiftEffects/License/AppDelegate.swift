@@ -161,6 +161,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
+    func displayDataError( error: Error?) {
+        let alertStringMsg = "\(String(describing: error?.localizedDescription))"
+        let alert = UIAlertController(title: "Data Store Error", message: alertStringMsg, preferredStyle: .alert)
+        let action = UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default)
+        alert.addAction(action)
+        displayUser(alert: alert)
+
+    }
+
     /// drill down to the front view controller from the windowScene window
     func frontViewController() -> UIViewController? {
         guard let lastWindow = windowSceneDelegate?.window

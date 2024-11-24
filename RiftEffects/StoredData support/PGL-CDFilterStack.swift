@@ -551,34 +551,34 @@ extension PGLFilterAttributeImage {
 
         // create related CDImageList
         if self.inputCollection != nil {
-            if storedParmImage?.inputAssets == nil {
-            guard let storedImageList =  NSEntityDescription.insertNewObject(forEntityName: "CDImageList", into: moContext) as? CDImageList
-                else {
-                DispatchQueue.main.async {
-                    // put back on the main UI loop for the user alert
-                    let alert = UIAlertController(title: "Data Create Error", message: "Data creation failure ", preferredStyle: .alert)
+            if storedParmImage?.inputAssets == nil{
+                guard let storedImageList =  NSEntityDescription.insertNewObject(forEntityName: "CDImageList", into: moContext) as? CDImageList
+                    else {
+                    DispatchQueue.main.async {
+                        // put back on the main UI loop for the user alert
+                        let alert = UIAlertController(title: "Data Create Error", message: "Data creation failure ", preferredStyle: .alert)
 
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
-                        Logger(subsystem: LogSubsystem, category: LogCategory).error ("The userSaveErrorAlert Data Create Error.")
-                    }))
-                    let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
-                    myAppDelegate.displayUser(alert: alert)
-                    }
-                return
-            }
-                storedParmImage?.inputAssets = storedImageList // sets up the relationship parm to inputAssets
-            }
-            if let theAssetIdentifiers = self.inputCollection?.assetIDs {
-                // on the iPhone PHPicker the imageAssets do not have the identifiers
-                // use the inputCollection identifiers
-                let cloudAssetIDs = localId2CloudId(localIdentifiers: theAssetIdentifiers)
-                storedParmImage?.inputAssets?.assetIDs = cloudAssetIDs
-            }
+                        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
+                            Logger(subsystem: LogSubsystem, category: LogCategory).error ("The userSaveErrorAlert Data Create Error.")
+                        }))
+                        let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
+                        myAppDelegate.displayUser(alert: alert)
+                        }
+                    return
+                }
+                    storedParmImage?.inputAssets = storedImageList // sets up the relationship parm to inputAssets
+                }
+                if let theAssetIdentifiers = self.inputCollection?.assetIDs {
+                    // on the iPhone PHPicker the imageAssets do not have the identifiers
+                    // use the inputCollection identifiers
+                    let cloudAssetIDs = localId2CloudId(localIdentifiers: theAssetIdentifiers)
+                    storedParmImage?.inputAssets?.assetIDs = cloudAssetIDs
+                }
             else {
-            if let imageListAssets = self.inputCollection?.imageAssets {
+                if let imageListAssets = self.inputCollection?.imageAssets {
 
-                let cloudIDs = localId2CloudId(localIdentifiers: imageListAssets.map({$0.localIdentifier}))
-                storedParmImage?.inputAssets?.assetIDs = cloudIDs }
+                    let cloudIDs = localId2CloudId(localIdentifiers: imageListAssets.map({$0.localIdentifier}))
+                    storedParmImage?.inputAssets?.assetIDs = cloudIDs }
 
                 }
             // albums are set in the getAssets(localIds: [String],albums: [String])
@@ -588,6 +588,7 @@ extension PGLFilterAttributeImage {
                 let myAlbumIds = localListAssets.map({$0.albumId})
 
                 for eachAlbumID in myAlbumIds {
+                    if eachAlbumID.isEmpty { continue }
                     let thisAlbumMapping  = localId2CloudId(localIdentifiers: [ eachAlbumID ] )
                     mappedCloudIds.append(contentsOf: thisAlbumMapping)
                 }
@@ -614,10 +615,44 @@ extension PGLFilterAttributeImage {
 
     }
 
+    func localId2CloudIdRetrying(locals: [String]) -> [String : Result<PHCloudIdentifier, any Error>] {
+        // use a while loop as the surrounding code is concurrent
+        var mappedIdentifiers = [String : Result<PHCloudIdentifier, any Error>]()
+        let library = PHPhotoLibrary.shared()
+
+        mappedIdentifiers = library.cloudIdentifierMappings(forLocalIdentifiers: locals)
+        if mappedIdentifiers.count == locals.count {
+            return mappedIdentifiers
+        } else {
+            var tryCount = 0
+            let maxTryCount = 10
+            while mappedIdentifiers.count < locals.count {
+                mappedIdentifiers = library.cloudIdentifierMappings(forLocalIdentifiers: locals)
+                if mappedIdentifiers.count == locals.count {
+                    break
+                }
+                tryCount += 1
+                if tryCount > maxTryCount {
+                    break
+                    // give up and return mappedIdentifiers with any errors
+                }
+            } // while loop for maxTryCount
+            Logger(subsystem: LogSubsystem, category: LogCategory).info("localId2CloudIdWaiting: \(tryCount) tries" )
+
+        }
+        Logger(subsystem: LogSubsystem, category: LogCategory).info("localId2CloudIdWaiting: success on first iteration" )
+
+        return mappedIdentifiers
+
+    }
+
     func localId2CloudId(localIdentifiers: [String]) -> [String] {
         var mappedIdentifiers = [String]()
-       let library = PHPhotoLibrary.shared()
-        let iCloudIDs = library.cloudIdentifierMappings(forLocalIdentifiers: localIdentifiers)
+//       let library = PHPhotoLibrary.shared()
+        // need to wait for cloudIdentifierMappings..
+
+//        let iCloudIDs = library.cloudIdentifierMappings(forLocalIdentifiers: localIdentifiers)
+        let iCloudIDs = localId2CloudIdRetrying(locals: localIdentifiers)
         for aCloudID in iCloudIDs {
             //'Dictionary<String, Result<PHCloudIdentifier, Error>>.Element' (aka '(key: String, value: Result<PHCloudIdentifier, Error>)')
             let cloudResult: Result = aCloudID.value
@@ -628,11 +663,17 @@ extension PGLFilterAttributeImage {
                     mappedIdentifiers.append(newValue)
                 case .failure(_):
                     // do error notify to user
-//                    let iCloudError = savePhotoError.otherSaveError
-//                    userSaveErrorAlert(withError: iCloudError)
+                    let iCloudError = savePhotoError.otherSaveError
+                    // dispatch to PGLAppStack
+                    DispatchQueue.main.async {
+                        let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
+                        myAppDelegate.displayDataError(error: iCloudError)
+                    }
+
                     Logger(subsystem: LogSubsystem, category: LogCategory).error("iCloud Error occurred in localId2CloudId" )
             }
         }
+        NSLog(#function + "success + \(String(describing: mappedIdentifiers.first))" )
         return mappedIdentifiers
     }
 
