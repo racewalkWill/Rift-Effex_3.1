@@ -283,11 +283,24 @@ class PGLAppStack {
     }
     func moveTo(filterIndent: PGLFilterIndent) {
         Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLAppStack #moveTo(filterIndent: \(filterIndent.filterPosition)")
-
-
+        /// check if move is needed - already on the correct filter?
+        if viewerStack ===  filterIndent.stack {
+            // on the right stack
+            let currentActiveIndex = viewerStack.activeFilterIndex
+            if currentActiveIndex == filterIndent.filterPosition {
+                // already on the current filter
+              return
+                // no change needed
+            }
+        }
+        ///  move to the new filter
         filterIndent.stack.imageCIContext = viewerStack.imageCIContext
+            // set the context from the old viewStack
+
         viewerStack = filterIndent.stack
-        NSLog("PGLAppStack #moveTo( viewerStack now \(viewerStack)")
+        viewerStack.activeFilterIndex = filterIndent.filterPosition
+
+//        NSLog("PGLAppStack #moveTo( viewerStack now \(viewerStack)")
         viewerStack.activeFilterIndex = filterIndent.filterPosition
         // remove from pushedStacks???
         pushedStacks.removeAll(where: { $0 === viewerStack })

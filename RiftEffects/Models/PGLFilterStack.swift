@@ -153,17 +153,16 @@ class PGLFilterStack: Equatable, Hashable  {
         }
     }
     func filterAt(tabIndex: Int) -> PGLSourceFilter {
-        if( ( activeFilterIndex >= 0 )
-            //            && (0 <= tabIndex )
-                        && (tabIndex < activeFilters.count)
-            // two different errors don't tackle both in same method
-            // activeFilterIndex = - 1 is first filter was removed
-            // so start over with default
-            )
-        { return activeFilters[tabIndex]
-        } else {
-            //            setDefault()
+            /// check tabIndex is in range of zero based activeFilters array
+            /// callers always pass in the activeFilterIndex as the value of tabIndex
+        if( ( tabIndex >= 0 ) && (tabIndex < activeFilters.count) )
+            // activeFilterIndex = - 1 means empty stack first filter was removed
+            { return activeFilters[tabIndex] }
+        else {
             return activeFilters[0]
+            // this would be an array error on empty stack
+            // but negative 1 as the tabIndex does not call this..
+            // by CIEmptyImage is displayed in #stackOutputImage
         }
     }
     func moveActiveAhead() {
