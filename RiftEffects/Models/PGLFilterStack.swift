@@ -152,6 +152,9 @@ class PGLFilterStack: Equatable, Hashable  {
             aFilter.hasAnimation
         }
     }
+
+    /// callers must verify that isEmpty() returns false
+    ///  an empty stack can not answer a filter
     func filterAt(tabIndex: Int) -> PGLSourceFilter {
             /// check tabIndex is in range of zero based activeFilters array
             /// callers always pass in the activeFilterIndex as the value of tabIndex
@@ -167,6 +170,10 @@ class PGLFilterStack: Equatable, Hashable  {
     }
     func moveActiveAhead() {
         //advance activeFilterIndex
+        if isEmptyStack()
+            { return }
+        // empty stack.. do nothing
+
         activeFilterIndex = min(activeFilterIndex + 1, activeFilters.count - 1) // zero based array
         // don't advance past the last one
         postFilterChangeRedraw()
@@ -174,6 +181,11 @@ class PGLFilterStack: Equatable, Hashable  {
 
     func moveActiveBack() {
         //advance activeFilterIndex
+        if isEmptyStack() {
+            return
+        }
+        // empty stack.. do nothing
+
         activeFilterIndex = max(activeFilterIndex - 1, 0)
         // don't advance past the last one
         postFilterChangeRedraw()
@@ -720,10 +732,13 @@ class PGLFilterStack: Equatable, Hashable  {
 
     func basicFilterOutput() -> CIImage {
         //bypass all the input changes and chaining
-
+        if isEmptyStack() {
+            return CIImage.empty()
+        }
         return  currentFilter().outputImage() ??
             CIImage.empty()
     }
+
     func postFilterChangeRedraw() {
         let updateNotification = Notification(name:PGLRedrawFilterChange)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
@@ -794,6 +809,8 @@ class PGLFilterStack: Equatable, Hashable  {
     // MARK: Navigation / numbering
 
 
+    /// callers must verify that stack is notEmpty before calling this method.
+    /// an empty stack can not return a current filter
     func currentFilter() -> PGLSourceFilter {
 //        NSLog("\( String(describing: self) + "-" + #function)" + " activeFilterIndex = \(activeFilterIndex)")
         
@@ -801,16 +818,17 @@ class PGLFilterStack: Equatable, Hashable  {
     }
 
 
-    func priorFilter() -> PGLSourceFilter? {
-        // either move to prior in the stack or just the first if only 1
-
-        moveActiveBack() // this changes the filter by adding to the stack
-        //        filterUpdate(updatedFilter: currentFilter()!)
-        return filterAt(tabIndex: activeFilterIndex)
-    }
+//    func priorFilter() -> PGLSourceFilter? {
+//        // either move to prior in the stack or just the first if only 1
+//
+//        moveActiveBack() // this changes the filter by adding to the stack
+//        //        filterUpdate(updatedFilter: currentFilter()!)
+//        return filterAt(tabIndex: activeFilterIndex)
+//    }
 
     func postFilterNameInTitleBar() {
            /// update the navigationItem title to the current filter name
+        if isEmptyStack() { return }
        let newFilterName = currentFilter().localizedName()
        let filterNameUpdateNotification = Notification(name:PGLCurrentSequenceFilterName,
                                                        object: nil,
@@ -824,12 +842,13 @@ class PGLFilterStack: Equatable, Hashable  {
         return  activeFilterIndex + 1
     }
 
-    func currentFilterPosition() -> PGLFilterCategoryIndex {
-        let theCurrentFilter = filterAt(tabIndex: activeFilterIndex)
-        return theCurrentFilter.uiPosition
-    }
+//    func currentFilterPosition() -> PGLFilterCategoryIndex {
+//        let theCurrentFilter = filterAt(tabIndex: activeFilterIndex)
+//        return theCurrentFilter.uiPosition
+//    }
 
     func filterName() -> String {
+        if isEmptyStack() { return "" }
         if activeFilterIndex < 0 { return ""}
         if activeFilters.count == 0 {return "" }
         let theCurrentFilter = filterAt(tabIndex: activeFilterIndex)

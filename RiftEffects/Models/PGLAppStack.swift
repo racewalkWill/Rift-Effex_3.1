@@ -617,6 +617,9 @@ class PGLAppStack {
     /// return true if this filter is either last filter of the top stack or
     /// in single filter mode this is the activeFilter image showing
     func isOutputFilter(_ aPGLFilter: PGLFilterIndent) -> Bool {
+        if viewerStack.isEmptyStack() {
+            return false
+        }
         if showFilterImage {
             let thisIsTheOutput =  aPGLFilter.filter === viewerStack.currentFilter()
             return thisIsTheOutput }
