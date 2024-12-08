@@ -479,7 +479,7 @@ class PGLDemo {
             addDemoFilterWithImages(gaussianBlurFilter,  childStack, appStack)
 
             let kaleidoscope1Center1 = if iPhoneCompact {CIVector(x: 627 , y: 517)} else {CIVector(x: 882, y: 782)}
-            let kaleidoscope1Center2 = if iPhoneCompact {CIVector(x: 595, y: 432)} else {CIVector(x: 932, y: 623)}
+//            let kaleidoscope1Center2 = if iPhoneCompact {CIVector(x: 595, y: 432)} else {CIVector(x: 932, y: 623)}
 
             kaleidoscopeFilter?.setVectorValue(newValue: kaleidoscope1Center1, keyName: kCIInputCenterKey)
             kaleidoscopeFilter2?.setVectorValue(newValue: kaleidoscope1Center1, keyName: kCIInputCenterKey)

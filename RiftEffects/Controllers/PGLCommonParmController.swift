@@ -25,8 +25,8 @@ class PGLCommonController: UIViewController, UIAdaptivePresentationControllerDel
        return  myAppDelegate.appStack
     }
 
-    var publishers = [Cancellable]()
-    var cancellable: Cancellable?
+    var publishers = [any Cancellable]()
+    var cancellable: (any Cancellable)?
 
         // MARK:  UIFontPickerViewControllerDelegate
     func showFontPicker(_ sender: Any) {

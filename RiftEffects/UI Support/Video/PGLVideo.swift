@@ -115,13 +115,13 @@ extension PGLImageController {
 
     }
 
-    func screenRecorder(
-        _ screenRecorder: RPScreenRecorder,
-        didStopRecordingWith previewViewController: RPPreviewViewController?,
-        error: Error?
-    ) {
-        NSLog(" didStopRecordingWith ")
-    }
+//    func screenRecorder(
+//        _ screenRecorder: RPScreenRecorder,
+//        didStopRecordingWith previewViewController: RPPreviewViewController?,
+//        error: Error?
+//    ) {
+//        NSLog(" didStopRecordingWith ")
+//    }
 
 
 

@@ -283,7 +283,7 @@ class MetalFilter: CIFilter, MetalRenderable
         return true
     }}
     
-    let device: MTLDevice = MTLCreateSystemDefaultDevice()!
+    let device: any MTLDevice = MTLCreateSystemDefaultDevice()!
     let colorSpace = CGColorSpaceCreateDeviceRGB()
     
     lazy var ciMetalContext: CIContext =
@@ -293,21 +293,21 @@ class MetalFilter: CIFilter, MetalRenderable
         return CIContext(mtlDevice: self.device)
     }()
     
-    lazy var commandQueue: MTLCommandQueue =
+    lazy var commandQueue: any MTLCommandQueue =
     {
         [unowned self] in
         
         return self.device.makeCommandQueue()
     }()!
     
-    lazy var defaultLibrary: MTLLibrary =
+    lazy var defaultLibrary: any MTLLibrary =
     {
         [unowned self] in
         
         return self.device.makeDefaultLibrary()!
     }()
     
-    var pipelineState: MTLComputePipelineState!
+    var pipelineState: (any MTLComputePipelineState)?
     
     let functionName: String
     
@@ -316,8 +316,8 @@ class MetalFilter: CIFilter, MetalRenderable
     var threadgroupsPerGrid: MTLSize?
     
     var textureDescriptor: MTLTextureDescriptor?
-    var kernelInputTexture: MTLTexture?
-    var kernelOutputTexture: MTLTexture?
+    var kernelInputTexture: (any MTLTexture)?
+    var kernelOutputTexture: (any MTLTexture)?
 
     override var outputImage: CIImage!
     {
@@ -356,8 +356,8 @@ class MetalFilter: CIFilter, MetalRenderable
         {
             pipelineState = try self.device.makeComputePipelineState(function: kernelFunction)
             
-            let maxTotalThreadsPerThreadgroup = Double(pipelineState.maxTotalThreadsPerThreadgroup)
-            let threadExecutionWidth = Double(pipelineState.threadExecutionWidth)
+            let maxTotalThreadsPerThreadgroup = Double(pipelineState!.maxTotalThreadsPerThreadgroup)
+            let threadExecutionWidth = Double(pipelineState!.threadExecutionWidth)
             
             let threadsPerThreadgroupSide = stride(from: 0,
                 to: Int(sqrt(maxTotalThreadsPerThreadgroup)),
@@ -427,7 +427,7 @@ class MetalFilter: CIFilter, MetalRenderable
         
         let commandEncoder = commandBuffer?.makeComputeCommandEncoder()
         
-        commandEncoder?.setComputePipelineState(pipelineState)
+        commandEncoder?.setComputePipelineState(pipelineState!)
         
         // populate float buffers using kCIAttributeIdentity as buffer index
         for inputKey in inputKeys where (attributes[inputKey] as! [String:AnyObject])[kCIAttributeClass] as? String == "NSNumber"

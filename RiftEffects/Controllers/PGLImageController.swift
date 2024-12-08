@@ -47,7 +47,7 @@ let ShowHelpPageAtStartupKey = "DisplayStartHelp"
 let kBtnVideoPlay = "VideoPlayBtn"
 
 @MainActor
-class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavigationBarDelegate, RPScreenRecorderDelegate, @preconcurrency RPPreviewViewControllerDelegate {
+class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavigationBarDelegate,  RPScreenRecorderDelegate, @preconcurrency RPPreviewViewControllerDelegate {
 
 
     // controller in detail view - shows the image as filtered - knows the current filter
@@ -76,7 +76,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     // MARK: video vars
    static  var isActive = false
-    weak var previewControllerDelegate: RPPreviewViewControllerDelegate?
+    weak var previewControllerDelegate: (any RPPreviewViewControllerDelegate)?
      var controlsWindow: UIWindow?
 //    var cameraView: UIView?
    
@@ -987,7 +987,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
        for aCancel in publishers {
            aCancel.cancel()
        }
-        publishers = [Cancellable]()
+       publishers = [any Cancellable]()
     }
     
     func viewDidDisappear(animated: Bool) {

@@ -59,8 +59,8 @@ class PGLMainFilterController:  UIViewController,
     static let tableViewCellIdentifier = "cellID"
     private static let nibName = "TableCell"
 
-    var publishers = [Cancellable]()
-    var cancellable: Cancellable?
+    var publishers = [any Cancellable]()
+    var cancellable: (any Cancellable)?
 
     deinit {
 //        releaseVars()
@@ -73,7 +73,7 @@ class PGLMainFilterController:  UIViewController,
         for aCancel in publishers {
             aCancel.cancel()
         }
-        publishers = [Cancellable]()
+       publishers = [any Cancellable]()
     }
 
         ///empty method   does not need to release

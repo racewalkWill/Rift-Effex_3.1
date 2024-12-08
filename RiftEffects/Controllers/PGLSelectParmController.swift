@@ -99,7 +99,7 @@ class PGLSelectParmController: PGLCommonController,
       for aCancel in publishers {
           aCancel.cancel()
       }
-        publishers = [Cancellable]()
+      publishers = [any Cancellable]()
     }
 
         ///empty method   does not need to release
@@ -344,7 +344,7 @@ class PGLSelectParmController: PGLCommonController,
         // don't update the model targetAttribute.. the imageController needs it.
         let updateNotification = Notification(name:PGLRedrawParmControllerOpenNotification)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["parmControllerIsOpen" : false as AnyObject])
-        publishers = [Cancellable]()
+        publishers = [any Cancellable]()
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

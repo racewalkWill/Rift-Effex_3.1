@@ -282,7 +282,7 @@ extension PGLLibraryController {
         let myTraitIdiom = traitCollection.userInterfaceIdiom
         let preferredHeight = if (myTraitIdiom == .phone) {  ThumbnailiPhonePreferredHeight } else {  ThumbnailPreferredHeight  }
         let sectionProvider = { (sectionIndex: Int,
-            layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+                                 layoutEnvironment: (any NSCollectionLayoutEnvironment)) -> NSCollectionLayoutSection? in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.90),
                                                  heightDimension: .estimated(preferredHeight))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)

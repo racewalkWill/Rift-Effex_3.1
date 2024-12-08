@@ -17,7 +17,7 @@ import os
 class PGLFilterAttributeVectorUI: PGLFilterAttributeVector {
 
     override func getVectorValue() -> CIVector? {
-        if let myParent = self.aSourceFilter as? PGLCenterPoint {
+        if let myParent = self.aSourceFilter as? (any PGLCenterPoint) {
                 // PGLScaleDownFrame & PGLTriangleGradientFilter are current adopters of the protocol
             return CIVector(cgPoint: myParent.centerPoint )
         }

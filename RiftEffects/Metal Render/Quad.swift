@@ -41,9 +41,9 @@ struct Quad {
      1,  1,  0,
      1, -1,  0
   ]
-    let vertexBuffer: MTLBuffer
+    let vertexBuffer: any MTLBuffer
 
-    init(device: MTLDevice, scale: Float = 1) {
+    init(device: any MTLDevice, scale: Float = 1) {
       vertices = vertices.map {
         $0 * scale
       }

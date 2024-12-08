@@ -36,8 +36,8 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
         return provider
     }()
 
-    var publishers = [Cancellable]()
-    var cancellable: Cancellable?
+    var publishers = [any Cancellable]()
+    var cancellable: (any Cancellable)?
 
 //    lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = setFetchController()
 //    lazy var moContext: NSManagedObjectContext = PersistentContainer.viewContext
@@ -154,7 +154,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        publishers = [Cancellable]()
+        publishers = [any Cancellable]()
     }
 
 
@@ -540,7 +540,7 @@ extension PGLOpenStackController: @preconcurrency NSFetchedResultsControllerDele
 //    }
 
     // swiftlint:disable force_unwrapping
-     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
       switch type {
       case .insert:
 //        tableView.insertRows(at: [newIndexPath!], with: .fade)

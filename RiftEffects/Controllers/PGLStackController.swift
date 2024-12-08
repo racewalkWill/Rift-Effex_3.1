@@ -35,8 +35,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     var albumUserTextCell: UITextField?
     var saveStackBtn: UIButton?
 
-    var publishers = [Cancellable]()
-    var cancellable: Cancellable?
+    var publishers = [any Cancellable]()
+    var cancellable: (any Cancellable)?
 
     /// default to title and album input cells as hidden
     private var showStackTitleAlbumCells = false
@@ -206,7 +206,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         for aCancel in publishers {
             aCancel.cancel()
         }
-        publishers = [Cancellable]()
+        publishers = [any Cancellable]()
     }
 
         ///empty method PGLStackController  does not need to release

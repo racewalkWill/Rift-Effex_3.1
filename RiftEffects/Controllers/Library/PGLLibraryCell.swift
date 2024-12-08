@@ -29,7 +29,7 @@ class PGLLibraryCell: UICollectionViewCell {
 
     // Set on each cell to track asset use. The cell will call cancel on the token when
     // preparing for reuse or when it deinitializes.
-    public var assetToken: Cancellable?
+    public var assetToken: (any Cancellable)?
     let dateFormatter = DateFormatter()
 
     private let imageView = UIImageView()

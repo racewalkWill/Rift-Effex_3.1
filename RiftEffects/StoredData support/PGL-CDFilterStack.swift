@@ -684,7 +684,7 @@ extension PGLFilterAttributeImage {
         //  PHPhotosError.identifierNotFound -it's missing
         //  PHPhotosError.multipleIdentifiersFound - multiple matches - prompt to pick one
         var localIDs = [String]()
-        let localIdentifiers: [PHCloudIdentifier: Result<String, Error>]
+        let localIdentifiers: [PHCloudIdentifier: Result<String, any Error>]
            = PHPhotoLibrary
                 .shared()
                 .localIdentifierMappings(
@@ -777,7 +777,7 @@ extension PGLAppStack {
 
 
 
-    func userSaveErrorAlert(withError: Error) {
+    func userSaveErrorAlert(withError: any Error) {
         DispatchQueue.main.async {
             // all UI needs to be in the main queue including creation of UIAlertController
         let alert = UIAlertController(title: "Save Error", message: "Try again with 'Save As' command", preferredStyle: .alert)

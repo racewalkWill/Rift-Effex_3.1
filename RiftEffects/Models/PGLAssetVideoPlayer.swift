@@ -48,8 +48,8 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
     var videoCIFrame: CIImage?
     var statusObserver: NSKeyValueObservation?
 
-    var playVideoToken: NSObjectProtocol?
-    var stopVideoToken: NSObjectProtocol?
+    var playVideoToken: (any NSObjectProtocol)?
+    var stopVideoToken: (any NSObjectProtocol)?
 
     var imageOrientation = PGLDevicePosition()
     lazy var videoPropertyOrientation =  propertyOrientation()

@@ -63,7 +63,7 @@ extension NSManagedObjectContext {
     /**
      Handles save error by presenting an alert.
      */
-    private func handleSavingError(_ error: Error, contextualInfo: ContextSaveContextualInfo) {
+    private func handleSavingError(_ error: any Error, contextualInfo: ContextSaveContextualInfo) {
 
 //        Logger(subsystem: LogSubsystem, category: LogCategory).error("\(String(describing: error) )" )
 

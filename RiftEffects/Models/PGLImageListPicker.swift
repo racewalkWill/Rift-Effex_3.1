@@ -175,7 +175,7 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
 
   }
 
-    func handleVideoCompletion(asset: PGLAsset, object: Any?, error: Error? = nil) {
+    func handleVideoCompletion(asset: PGLAsset, object: Any?, error: (any Error)? = nil) {
         //based on sample app PHPickerDemo same  method
 
 //        if let livePhoto = object as? PHLivePhoto {

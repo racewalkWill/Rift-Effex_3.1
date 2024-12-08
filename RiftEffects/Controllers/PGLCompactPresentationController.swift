@@ -12,7 +12,7 @@ class PGLCompactPresentationController: UIPresentationController {
     // in  the compact width on the iPhone the presentations are changing to full width
     // and covering.. can not be dismissed if in  full screen mode.
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 //        NSLog("viewWillTransition...")
 

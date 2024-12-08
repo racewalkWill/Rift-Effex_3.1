@@ -34,7 +34,10 @@ let RendererScale:Float32 = 0.98
 // 2/12/2020 leave as false - makes the cropped produce an empty image if in single filter edit mode.
 @MainActor var ShowHelpOnOpen = false
 
-@UIApplicationMain
+//@UIApplicationMain   //@main
+// see https://github.com/swiftlang/swift-evolution/blob/main/proposals/0383-deprecate-uiapplicationmain-and-nsapplicationmain.md
+
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
@@ -47,7 +50,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var activityIndicator: UIActivityIndicatorView?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    /// added required implementations of  the  protocol UIApplicationDelegate
+    func application(
+        _ application: UIApplication,
+        willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
+    ) -> Bool
+    {
+        return true
+    }
+
+    /// older parts of the protocol
+    func application(_ application: UIApplication,
+            didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
             // Override point for customization after application launch.
     //******* START ONLY One time to push schema to cloudKit
 
@@ -161,7 +175,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
-    func displayDataError( error: Error?) {
+    func displayDataError( error: (any Error)?) {
         let alertStringMsg = "\(String(describing: error?.localizedDescription))"
         let alert = UIAlertController(title: "Data Store Error", message: alertStringMsg, preferredStyle: .alert)
         let action = UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default)

@@ -70,7 +70,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
                 // isViewLoaded or isBeingPresented??
                 if let newState = userDataDict["animationState"]  as? PGLAnimationState  {
                     containerImageController?.setAnimation(newState , self!.toggleAnimationPauseBtn)
-                    NSLog(#function + "PGLStackImageContainer PGLAnimationStateChanged toggleAnimationPauseBtn \(self?.toggleAnimationPauseBtn)")
+//                    NSLog(#function + "PGLStackImageContainer PGLAnimationStateChanged toggleAnimationPauseBtn \(String(describing: self?.toggleAnimationPauseBtn))")
 
                 }
                 self?.navigationController?.setNeedsStatusBarAppearanceUpdate()

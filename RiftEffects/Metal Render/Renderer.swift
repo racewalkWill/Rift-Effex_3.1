@@ -34,8 +34,8 @@ struct RenderVertex {
 @MainActor
 class Renderer: NSObject, MTKViewDelegate {
 
-    var device: MTLDevice!
-    var commandQueue: MTLCommandQueue!
+    var device: (any MTLDevice)?
+    var commandQueue: (any MTLCommandQueue)?
     var colorPixelFormat: MTLPixelFormat!
         //    var texture: MTLTexture!
     var needsRedraw: PGLRedraw!
@@ -74,13 +74,13 @@ class Renderer: NSObject, MTKViewDelegate {
             /// RenderDestinationMetalView
 
         self.device = MTLCreateSystemDefaultDevice()!
-        self.commandQueue = self.device.makeCommandQueue()!
+        self.commandQueue = self.device?.makeCommandQueue()!
 
             // Set up the Core Image context's options:
             // - Name the context to make CI_PRINT_TREE debugging easier.
             // - Disable caching because the image differs every frame.
             // - Allow the context to use the low-power GPU, if available.
-        self.ciMetalContext = CIContext(mtlCommandQueue: self.commandQueue,
+        self.ciMetalContext = CIContext(mtlCommandQueue: self.commandQueue! ,
                                         options: [.name: "Renderer",
                                                   .cacheIntermediates: false,
                                                   .allowLowPower: true])
@@ -249,7 +249,13 @@ class Renderer: NSObject, MTKViewDelegate {
     func drawBasicCentered(in view: MTKView) {
             // adapted from sample app RenderMetalDestinationView
         _ = inFlightSemaphore.wait(timeout: DispatchTime.distantFuture)
-        if let commandBuffer = commandQueue.makeCommandBuffer() {
+        let desc = MTLCommandBufferDescriptor()
+        desc.errorOptions = .encoderExecutionStatus
+        if let commandBuffer = commandQueue?.makeCommandBuffer(descriptor: desc)
+
+//        if let commandBuffer = commandQueue.makeCommandBuffer()
+        {
+
 
                 // Add a completion handler that signals `inFlightSemaphore` when Metal and the GPU have fully
                 // finished processing the commands that the app encoded for this frame.
@@ -257,7 +263,15 @@ class Renderer: NSObject, MTKViewDelegate {
                 // Core Image writes to in this frame.
                 // Therefore, the CPU can overwrite the buffer contents without corrupting any rendering operations.
             let semaphore = inFlightSemaphore
+
             commandBuffer.addCompletedHandler { (_ commandBuffer)-> Swift.Void in
+                if let error = commandBuffer.error as NSError? {
+                    NSLog("%@", error)
+                }
+//                if commandBuffer.error != nil {
+////                    fatalError("Command buffer failed: \(commandBuffer.error!)")
+//                    NSLog("Command buffer failed: \(commandBuffer.error!)")
+//                }
                 semaphore.signal()
             }
 
@@ -277,7 +291,7 @@ class Renderer: NSObject, MTKViewDelegate {
                                                       height: Int(dSize.height),
                                                       pixelFormat: view.colorPixelFormat,
                                                       commandBuffer: commandBuffer,
-                                                      mtlTextureProvider: { () -> MTLTexture in
+                                                      mtlTextureProvider: { () -> (any MTLTexture) in
                         // Core Image calls the texture provider block lazily when starting a task to render to the destination.
                     return drawable.texture
                 })
@@ -353,7 +367,7 @@ class Renderer: NSObject, MTKViewDelegate {
 }
 
 class Primitive {
-    class func cube(device: MTLDevice, size: Float) -> MDLMesh {
+    class func cube(device: any MTLDevice, size: Float) -> MDLMesh {
         let allocator = MTKMeshBufferAllocator(device: device)
         let mesh = MDLMesh(boxWithExtent: [size, size, size],
                            segments: [1, 1, 1],

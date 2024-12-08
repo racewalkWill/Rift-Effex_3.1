@@ -110,7 +110,7 @@ class PGLFilterCategory {
             answerFilters.append(contentsOf: aCategory.filterDescriptors)
         }
 
-        return answerFilters.sorted(by: {$0.displayName ?? "Filter" <= $1.displayName ?? "Filter"})
+        return answerFilters.sorted(by: {$0.displayName <= $1.displayName})
 
     }
 

@@ -48,8 +48,8 @@ class PGLRedraw {
 
     let myCenter =  NotificationCenter.default
 
-    var publishers = [Cancellable]()
-    var cancellable: Cancellable?
+    var publishers = [any Cancellable]()
+    var cancellable: (any Cancellable)?
     init(){
         // register for changes
 
@@ -201,7 +201,7 @@ class PGLRedraw {
     }
 
     fileprivate func publishAnimationState() {
-        let animationStateChangeNotice = Notification.Name("PGLAnimationStateChanged")
+
         let userInfo: [String: Any] = ["animationState": animationState()]
         NotificationCenter.default.post(name: PGLAnimationStateChanged, object: nil, userInfo: userInfo)
     }

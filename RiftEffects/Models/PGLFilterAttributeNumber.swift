@@ -349,7 +349,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             // calling method trailingSwipeAction... will change the varyState - user may not complete the swipe
             // varyState updated in the completion blocks in trailingSwipeAction of PGLSelectParmController
             case .Initial:
-                if let newVaryAttribute = varyTimerAttribute() {
+                if varyTimerAttribute() != nil {
                     if !hasAnimation() { // add Point 1
 
 //                        let facesAction = PGLTableCellAction(action: "Faces", newAttribute: newVaryAttribute, canPerformAction: true, targetAttribute: self)

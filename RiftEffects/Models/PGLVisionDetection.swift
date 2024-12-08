@@ -39,7 +39,8 @@ class PGLVisionDetector: PGLDetection {
     var features = [PGLFaceBounds]()
 
     var inputTime: Double = 0.0 // ranges -1.0 to +1.0 for animation
-    lazy var faceDetectionRequest = VNDetectFaceRectanglesRequest(completionHandler: self.handleDetectedFaces)
+//    lazy var faceDetectionRequest = VNDetectFaceRectanglesRequest(completionHandler: self.handleDetectedFaces)
+    // preferBackgroundProcessing = false to fix swift6 compiler error?
 
     required init(ciFilter: CIFilter?) {
         localFilter = ciFilter
@@ -70,6 +71,9 @@ class PGLVisionDetector: PGLDetection {
     func setInput(image: CIImage?, source: String?) {
         // searches for features in the image
          // called every imageUpdate by the PGLFilterStack->filter.setInput->detectors#setInput
+        let faceDetectionRequest = VNDetectFaceRectanglesRequest(completionHandler: self.handleDetectedFaces)
+        faceDetectionRequest.preferBackgroundProcessing = false
+
 
          if let anInputImage = image {
             if anInputImage.extent.isEmpty { return }
@@ -105,7 +109,7 @@ class PGLVisionDetector: PGLDetection {
 
     }
 
-     fileprivate func handleDetectedFaces(request: VNRequest?, error: Error?) {
+    fileprivate func handleDetectedFaces(request: VNRequest?, error: (any Error)?) {
            if let nsError = error as NSError? {
                self.presentAlert("Face Detection Error", error: nsError)
                return

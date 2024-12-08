@@ -92,7 +92,7 @@ static let LogParmValues = false
         }
     // rate of change for animation & increment timers
     }
-    var detectors = [PGLDetection]()
+    var detectors = [any PGLDetection]()
     lazy var thumbNail = getThumbnail() // only set when referenced need to reset on changes..
     unowned var wrapper: PGLDissolveWrapperFilter?
 private  var userDescription: String?
@@ -422,7 +422,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
     }
 
-    func firstDetector() -> PGLDetection? {
+    func firstDetector() -> (any PGLDetection)? {
         return detectors.first
     }
     func outputImageBasic() -> CIImage? {
@@ -785,7 +785,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         
     }
 
-    func setWrapper(outputFilter: PGLDissolveWrapperFilter, detector: PGLDetection) {
+    func setWrapper(outputFilter: PGLDissolveWrapperFilter, detector: any PGLDetection) {
 
 //        output.setImageAnimation()
         wrapper = outputFilter

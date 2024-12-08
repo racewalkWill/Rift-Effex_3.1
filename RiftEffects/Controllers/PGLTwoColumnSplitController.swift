@@ -17,8 +17,8 @@ class PGLTwoColumnSplitController: UIViewController {
 
     var columns: PGLColumns?
 
-    var publishers = [Cancellable]()
-    var cancellable: Cancellable?
+    var publishers = [any Cancellable]()
+    var cancellable: (any Cancellable)?
 
     func layoutViews(_ imageView: UIView, _ controlView: UIView) {
             //        let spacer = -5.0
@@ -107,7 +107,7 @@ class PGLTwoColumnSplitController: UIViewController {
         for aCancel in publishers {
             aCancel.cancel()
         }
-         publishers = [Cancellable]()
+        publishers = [any Cancellable]()
      }
 
 }

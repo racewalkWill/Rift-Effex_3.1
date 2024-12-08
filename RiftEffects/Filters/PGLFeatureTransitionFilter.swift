@@ -16,7 +16,7 @@ import os
 class PGLFeatureTransitionFilter: PGLTransitionFilter {
 
 //    var detectorFilter = ((PGLFilterDescriptor(kPFaceFilter,PGLDetector.self)?.pglSourceFilter() ) as! PGLDetector)
-    var detectorFilter: PGLDetection?
+    var detectorFilter: (any PGLDetection)?
         // note that superclass PGLSourceFilter has array of detectors.. this should be the first one???
         // var detectors = [PGLDetector]()
         // alternatively this detector is processing multiple images as they cycle .. so just one makes sense too
@@ -155,7 +155,7 @@ class PGLDissolveWrapperFilter: PGLFeatureTransitionFilter {
         // reverses setWrapper
         stopWrapperAnimation()
         detectorFilter?.releaseContext()
-        detectors = [PGLDetection]()
+        detectors = [any PGLDetection]()
         detectorFilter = nil
 //        internalFilter = nil
     }
@@ -204,7 +204,7 @@ class PGLDissolveWrapperFilter: PGLFeatureTransitionFilter {
             return thisOutput
     }
 
-    func updateInputs(detector: PGLDetection) {
+    func updateInputs(detector: any PGLDetection) {
         let theFaceImages = detector.featureImagePair()
         self.setImageValue(newValue: theFaceImages.inputFeature, keyName: kCIInputImageKey)
         self.setImageValue(newValue: theFaceImages.targetFeature, keyName:kCIInputTargetImageKey)
