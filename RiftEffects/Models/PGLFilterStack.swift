@@ -67,7 +67,7 @@ class PGLFilterStack: Equatable, Hashable  {
     var frameValueDeltas = PGLFilterChange()
     var storedStack: CDFilterStack?
         // was weak var managedObject write/read to Core Data
-    var thumbnail: UIImage? //  for Core Data store
+    var thumbnail: Data? //  for Core Data store
 
     var stackType = ""
     var exportAlbumName: String?

@@ -43,9 +43,10 @@ extension PGLFilterStack {
             storedStack = cdStack
             stackName = cdStack.title ?? "untitled"
             stackType = cdStack.type ?? "unTyped"
-            if let thumbNailPGNImage = cdStack.thumbnail {
-                thumbnail = UIImage(data: thumbNailPGNImage) // thumbnail is png format data aCDStack.thumbnail
-            }
+
+            thumbnail = cdStack.thumbnail
+
+            
 
            exportAlbumIdentifier = cdStack.exportAlbumIdentifier
             exportAlbumName = cdStack.exportAlbumName
@@ -181,7 +182,7 @@ extension PGLFilterStack {
         // only on the top level stack should a thumbnail be saved
         // skip child stack thumbnails
     if parentAttribute == nil {
-            storedStack?.thumbnail = stackThumbnail()  // data format of small png image
+        storedStack?.thumbnail = thumbnail  // data format of small png image as Data
         }
     //        for aFilter in activeFilters {
         for filterIndex in 0..<activeFilters.count {
@@ -227,13 +228,19 @@ extension PGLFilterStack {
 //    }
 
   
-    func stackThumbnail() -> Data? {
-        // output image in thumbnail size and png data format
+//    func stackThumbnail() -> Data? {
+//        // output image in thumbnail size and png data format
+//
+//        let outputImage = stackOutputImage(false)
+//        let uiOutput = outputImage.thumbnailUIImage()
+//       return uiOutput.pngData() // converts to data
+//
+//    }
 
-        let outputImage = stackOutputImage(false)
-        let uiOutput = outputImage.thumbnailUIImage()
-       return uiOutput.pngData() // converts to data
-
+    func setThumbnail(image: CIImage) {
+            // output image in thumbnail size and png data format
+        let uiOutput = image.thumbnailUIImage()
+        thumbnail = uiOutput.pngData()
     }
 
 }

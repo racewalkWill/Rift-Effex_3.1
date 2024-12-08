@@ -110,7 +110,7 @@ class Renderer: NSObject, MTKViewDelegate {
             guard let currentOutputImage = ciMetalContext.createCGImage(croppedOutput, from: croppedOutput.extent) else { return nil }
 
             Logger(subsystem: LogSubsystem, category: LogCategory).debug("Renderer #captureImage croppedOutput = \(croppedOutput)")
-
+            filterStack()?.setThumbnail(image: ciOutput)
             return UIImage( cgImage: currentOutputImage, scale: UIScreen.main.scale, orientation: .up)
                 // kaliedoscope needs down.. portraits need up.. why.. they both look .up in the imageController
 
@@ -168,7 +168,7 @@ class Renderer: NSObject, MTKViewDelegate {
             // cropForInfiniteExtent returns image
             // if infinite then crops to TargetSize
         {
-
+            filterStack()?.setThumbnail(image: ciOutput)
             let rgbSpace = CGColorSpaceCreateDeviceRGB()
             let options = [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 1.0 as CGFloat]
             guard let heifData =  ciMetalContext.heifRepresentation(of: ciOutput, format: .RGBA8, colorSpace: rgbSpace, options: options)
