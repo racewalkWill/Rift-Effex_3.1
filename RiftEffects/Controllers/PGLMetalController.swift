@@ -44,13 +44,13 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
     //MARK: View Load/Unload
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setUpMetalRender()
-        updateDrawableSize()
-
-
-    }
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        setUpMetalRender()
+//        updateDrawableSize()
+//
+//
+//    }
 
     func setUpMetalRender() {
         // called by viewDidLoad and viewWillAppear
