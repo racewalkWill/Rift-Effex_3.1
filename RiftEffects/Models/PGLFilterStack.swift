@@ -371,6 +371,7 @@ class PGLFilterStack: Equatable, Hashable  {
                         // not a child stack.. collect this level
                     guard let thisAttributeImageCollection = imageAttribute.inputCollection
                     else { continue }
+                    imageAttribute.removeTransitionCounts() // call this before the images are removed
                     collectImagesList.moveContentsFrom(thisAttributeImageCollection)
                 }
                 if imageAttribute.imageParmState == .inputPhoto {
@@ -378,7 +379,7 @@ class PGLFilterStack: Equatable, Hashable  {
                     // do not need to be changed
                     imageAttribute.set(CIImage.empty() )
                     imageAttribute.setImageParmState(newState: .missingInput)
-                    imageAttribute.removeTransitionCounts()
+
                 }
 
                 }
