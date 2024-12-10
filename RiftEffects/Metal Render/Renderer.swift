@@ -252,11 +252,7 @@ class Renderer: NSObject, MTKViewDelegate {
         let desc = MTLCommandBufferDescriptor()
         desc.errorOptions = .encoderExecutionStatus
         if let commandBuffer = commandQueue?.makeCommandBuffer(descriptor: desc)
-
-//        if let commandBuffer = commandQueue.makeCommandBuffer()
         {
-
-
                 // Add a completion handler that signals `inFlightSemaphore` when Metal and the GPU have fully
                 // finished processing the commands that the app encoded for this frame.
                 // This completion indicates that Metal and the GPU no longer need the dynamic buffers that
@@ -264,17 +260,15 @@ class Renderer: NSObject, MTKViewDelegate {
                 // Therefore, the CPU can overwrite the buffer contents without corrupting any rendering operations.
             let semaphore = inFlightSemaphore
 
-            commandBuffer.addCompletedHandler { (_ commandBuffer)-> Swift.Void in
+                // added @Sendable per DTS Engineer Quinn to the below completionHandler
+                // otherwise a hidden assert in the Swift 6 will crash the app
+                // see https://developer.apple.com/forums/thread/764777?answerId=807248022#807248022
+            commandBuffer.addCompletedHandler { @Sendable (_ commandBuffer)-> Swift.Void in
                 if let error = commandBuffer.error as NSError? {
                     NSLog("%@", error)
                 }
-//                if commandBuffer.error != nil {
-////                    fatalError("Command buffer failed: \(commandBuffer.error!)")
-//                    NSLog("Command buffer failed: \(commandBuffer.error!)")
-//                }
-                semaphore.signal()
+             semaphore.signal()
             }
-
             if let drawable = view.currentDrawable {
                 let dSize = view.drawableSize
 
