@@ -55,7 +55,9 @@ class PGLExcludeFilters {
 "CIRoundedRectangleGenerator",
 "CIPDF417BarcodeGenerator",
 //"WarpItMetalFilter"
-
+"FaceFilter",
+"VideoCam",
+"Random Filters"
         ]
 
 
