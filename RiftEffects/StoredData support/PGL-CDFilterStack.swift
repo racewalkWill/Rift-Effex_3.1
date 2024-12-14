@@ -70,8 +70,7 @@ extension PGLFilterStack {
                     Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLFilterStack init storedStack on filter = \(String(describing: myCDFilter.ciFilterName))" )
 //                    NSLog("PGLFilterStack filters on \(aCDFilter.stackPosition)")
                     guard let newSource = PGLSourceFilter.readPGLFilter(myCDFilter: myCDFilter, savedSize: mapTargetSize)
-
-                    else { return }
+                    else { continue }
                     appendFilter(newSource)
 
                 }
@@ -253,6 +252,10 @@ extension PGLSourceFilter {
     class func readPGLFilter(myCDFilter: CDStoredFilter, savedSize: CGSize?) -> PGLSourceFilter? {
         guard let filterBuilder = PGLFilterCategory.getFilterDescriptor(aFilterName: myCDFilter.ciFilterName!, cdFilterClass: myCDFilter.pglSourceFilterClass!)
             else { return nil }
+        if PGLExcludeFilters.list.contains(filterBuilder.filterName) {
+            // don't load excluded filters - they have problems
+            return nil
+        }
          guard let newSource = filterBuilder.pglSourceFilter()
              else { return nil}
         if let aStoredCIFilter = myCDFilter.ciFilter {
