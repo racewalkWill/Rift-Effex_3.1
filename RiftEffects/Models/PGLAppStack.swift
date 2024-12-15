@@ -166,6 +166,7 @@ class PGLAppStack {
         let startingFilter = (PGLFilterDescriptor(defaultFilterName, PGLTransitionFilter.self))!
         newStack.setDefault(initialList: allImages, filterDescriptor: startingFilter)
         resetOutputAppStack(newStack)
+        DoNotDraw = false
 
     }
 
@@ -675,11 +676,22 @@ class PGLAppStack {
     }
 
     func toggleShowFilterImage() {
+        // do not toggle if the stacks will not produce image output
+        // it needs to have an image input set before it can toggle
+        if !stackOutputExists() {
+            return
+        }
+
         showFilterImage = !showFilterImage
         // if the current filter is a child then update the
         // viewer stack too
         self.postFilterChangeRedraw() 
     }
+
+    func stackOutputExists() -> Bool {
+        return outputStack.stackImageInputsExist()
+    }
+
 
     func animationState() -> PGLAnimationState {
         return appRenderer.animationState()

@@ -373,8 +373,10 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
             return otherKeys
         }
 
-    func imageInputIsEmpty() -> Bool {
-        // used for images filter to remove if no input is set
+
+
+    func hasImageParmMissingInput() -> Bool {
+       // answer true if one image Parm is missing an input
         for imageAttributeKey in imageInputAttributeKeys {
             if let inputAttribute = attribute(nameKey: imageAttributeKey )
             {
@@ -384,6 +386,24 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
             }
         }
         return false // default return - all inputs are populated or none are image inputs
+    }
+
+    func allImageParmsMissingInput() -> Bool {
+        // answer false if no image parms or all imageParms are missing inputs
+        if imageInputAttributeKeys.isEmpty {
+            return false
+        }
+        for imageAttributeKey in imageInputAttributeKeys {
+            if let inputAttribute = attribute(nameKey: imageAttributeKey )
+            {
+                if  inputAttribute.inputParmType() != ImageParm.missingInput
+                {   // found a parm with an image input
+                    return false }
+            }
+
+        }
+        // default return
+        return true // all of the imageParms are missing input
     }
 
     func setInputImageParmState(newState: ImageParm) {
@@ -434,7 +454,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         for anAttribute in attributes {
                     anAttribute.updateFromInputStack()
                 }
-        if imageInputIsEmpty() {
+        if hasImageParmMissingInput() {
             return CIImage.empty()
             
         }

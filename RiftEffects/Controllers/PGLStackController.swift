@@ -539,6 +539,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 //            appStack.toggleShowFilterImage()
                 // toggle causes reload of the data
 //            setViewerStackBackground()
+            // if there are no image inputs after a trash action
+            // then toggleShowFilterImage() should fail..
+            // there's no images
             appStack.toggleShowFilterImage()
             let selectedCell = tableView.cellForRow(at: indexPath)
             selectedCell?.setSelected(true, animated: true)

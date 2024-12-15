@@ -75,7 +75,7 @@ class PGLDisparityFilter: PGLRectangleFilter {
 //        }
     }
 
-    override func imageInputIsEmpty() -> Bool {
+    override func hasImageParmMissingInput() -> Bool {
         // used for images filter to remove if no input is set
         // for disparity only two images are needed.. others are optional
         for imageAttributeKey in [kCIInputImageKey] {

@@ -241,7 +241,7 @@ class PGLFilterStack: Equatable, Hashable  {
 
             newFilter.setInput(image: priorOutput ,source: stackFilterName(currentFilter, index: activeFilterIndex))
 
-            if !currentFilter.imageInputIsEmpty() {
+            if !currentFilter.hasImageParmMissingInput() {
                 // issue - when current filter input is fixed then newFilter state should change too
                 // see check in #imageUpdate empty to inputPriorFilter state
                 newFilter.setInputImageParmState(newState: ImageParm.inputPriorFilter) }
@@ -490,7 +490,8 @@ class PGLFilterStack: Equatable, Hashable  {
         if (activeFilters.count > 1) {
             return false
         }
-        return activeFilters[0].imageInputIsEmpty()
+        return activeFilters[0].allImageParmsMissingInput()
+        // was hasImageParmMissingInput()
     }
 
     func stackHasFilter() -> Bool {
@@ -542,7 +543,8 @@ class PGLFilterStack: Equatable, Hashable  {
                 removedFilters.append(oldFilter)
 
                 if oldFilter.isTransitionCategoryFilter() {
-                    if !oldFilter.imageInputIsEmpty() {
+                    if !oldFilter.allImageParmsMissingInput() {
+                        // was .hasImageParmMissingInput() {
                         postTransitionFilterRemove()
                     }
 
@@ -655,7 +657,7 @@ class PGLFilterStack: Equatable, Hashable  {
 //                    if doPrintCropClamp {   NSLog("PGLFilterStack imageUpdate clamped and cropped to  \(String(describing: thisImage?.extent))") }
                 }
                 filter.setInput(image: thisImage, source: nil)
-                if filter.imageInputIsEmpty() {
+                if filter.hasImageParmMissingInput() {
                     if let changedAttribute = filter.getInputImageAttribute() {
                         changedAttribute.setImageParmState(newState: ImageParm.inputPriorFilter)
                     }
@@ -776,7 +778,15 @@ class PGLFilterStack: Equatable, Hashable  {
         // the sequence stack filters get input from the
         // parent SequencedFilters
         let thisfilter = activeFilters[atFilterIndex]
-        return thisfilter.imageInputIsEmpty()
+        return thisfilter.hasImageParmMissingInput()
+    }
+
+    func stackImageInputsExist() -> Bool {
+            // answer false if all the filters with image inputs are empty
+        // answer true if at least one active filter has an image input
+        // answer true if the filters don't need image inputs
+
+        return activeFilters.contains { !$0.allImageParmsMissingInput() }
     }
 
     // MARK: flattened Filters

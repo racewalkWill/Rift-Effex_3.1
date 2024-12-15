@@ -116,7 +116,7 @@ class PGLSequencedFilters: PGLSourceFilter {
         return sequenceStack
     }
 
-    override func imageInputIsEmpty() -> Bool {
+    override func hasImageParmMissingInput() -> Bool {
         // only one of the image inputs is required for sequencedFilters
         // do not test the optional background or mask image for inputs
 
