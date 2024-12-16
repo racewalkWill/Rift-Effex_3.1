@@ -504,8 +504,19 @@ class PGLAppStack {
 
         let sourceStack = sourceIndentCell.stack
         let targetStack = targetIndentCell.stack
-            // may be different stacks
-            // could be a move from or to a child stack from a parent stack
+
+//        if targetStack !== sourceStack {
+//                // may be different stacks
+//                // could be a move from or to a child stack from a parent stack
+//            // test for parent state
+//            if targetStack.isChildStack(){
+//                if targetIndentCell.filterPosition == 0 {
+//                    // should insert into source stack
+//                    targetStack = sourceStack
+//                }
+//            }
+//        }
+
 
         let sourceFilter = sourceStack.activeFilters.remove(at: sourceIndentCell.filterPosition)
         targetStack.activeFilters.insert(sourceFilter, at: targetIndentCell.filterPosition)

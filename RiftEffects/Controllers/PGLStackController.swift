@@ -1013,6 +1013,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         // if moving down the stack then inserts after the existing destination
 
         appStack.moveFilter(fromSourceRow: sourceIndexPath, destinationRow: destinationIndexPath )
+        updateDisplay()  // or just reloadData?
     }
 
         // MARK: - Edit Btn

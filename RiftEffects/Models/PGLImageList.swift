@@ -46,7 +46,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
     var position = 0 {
         didSet {
-            NSLog("PGLImageList position set to  \(position)")
+            if PGLSourceFilter.LogParmValues { NSLog("PGLImageList position set to  \(position)") }
         }
     }
     var targetSize: CGSize { get {

@@ -499,7 +499,7 @@ class PGLFilterStack: Equatable, Hashable  {
     }
 
     fileprivate func childStackResetParent() {
-        if parentAttribute != nil {
+        if isChildStack() {
             // update the parent state too
             if let parentImageAttribute = parentAttribute as? PGLFilterAttributeImage {
                 parentImageAttribute.setImageParmState(newState: ImageParm.missingInput)
@@ -509,6 +509,10 @@ class PGLFilterStack: Equatable, Hashable  {
                 }
             }
         }
+    }
+
+    func isChildStack() -> Bool {
+        return parentAttribute != nil
     }
 
     func removeFilter(position: Int) -> PGLSourceFilter?{
