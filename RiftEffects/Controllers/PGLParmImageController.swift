@@ -51,14 +51,15 @@ class PGLParmImageController: PGLTwoColumnSplitController {
     override func viewDidDisappear(_ animated: Bool) {
         guard let containerImageController = imageController()
             else { return }
-        guard let containerParmController = columns?.control as? PGLSelectParmController
-        else {return }
+
         containerImageController.releaseVars()
         containerImageController.removeFromParent()
 
-
+        guard let containerParmController = columns?.control as? PGLSelectParmController
+        else {return }
         containerParmController.removeFromParent()
         columns = nil
+        super.viewDidDisappear(animated)
     }
 
     @IBAction func parmImageBackBtn(_ sender: UIBarButtonItem) {

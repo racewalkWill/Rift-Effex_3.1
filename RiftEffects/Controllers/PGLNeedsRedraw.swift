@@ -46,14 +46,14 @@ class PGLRedraw {
     private var transitionFilterCount = 0
     private var varyTimerCount = 0
 
-    let myCenter =  NotificationCenter.default
+//    let myCenter =  NotificationCenter.default
 
     var publishers = [any Cancellable]()
     var cancellable: (any Cancellable)?
     init(){
         // register for changes
 
-        cancellable = myCenter.publisher(for: PGLRedrawParmControllerOpenNotification)
+        cancellable = NotificationCenter.default.publisher(for: PGLRedrawParmControllerOpenNotification)
             .sink() {   [weak self]
                 myUpdate in
                 if let userDataDict = myUpdate.userInfo {
@@ -66,7 +66,7 @@ class PGLRedraw {
         publishers.append(cancellable!)
 
 
-        cancellable = myCenter.publisher(for: PGLRedrawFilterChange )
+        cancellable = NotificationCenter.default.publisher(for: PGLRedrawFilterChange )
             .sink() {
             [weak self]
             myUpdate in
@@ -78,7 +78,7 @@ class PGLRedraw {
         }
         publishers.append(cancellable!)
 
-        cancellable = myCenter.publisher(for: PGLTransitionExists)
+        cancellable = NotificationCenter.default.publisher(for: PGLTransitionExists)
             .sink() {
             [weak self]
             myUpdate in
@@ -91,7 +91,7 @@ class PGLRedraw {
         }
         publishers.append(cancellable!)
 
-        cancellable = myCenter.publisher(for:  PGLVaryTimerRunning  )
+        cancellable = NotificationCenter.default.publisher(for:  PGLVaryTimerRunning  )
             .sink() {
             [weak self]
             myUpdate in
@@ -103,7 +103,7 @@ class PGLRedraw {
         }
         publishers.append(cancellable!)
 
-        cancellable = myCenter.publisher(for:  PGLPauseAnimation )
+        cancellable = NotificationCenter.default.publisher(for:  PGLPauseAnimation )
             .sink() {
             [weak self]
             myUpdate in
@@ -114,7 +114,7 @@ class PGLRedraw {
         publishers.append(cancellable!)
 
         //PGLResetNeedsRedraw
-        cancellable = myCenter.publisher(for: PGLResetNeedsRedraw )
+        cancellable = NotificationCenter.default.publisher(for: PGLResetNeedsRedraw )
             .sink() {
             [weak self]
             myUpdate in
@@ -133,7 +133,7 @@ class PGLRedraw {
         }
         publishers.append(cancellable!)
 
-        cancellable = myCenter.publisher(for:  PGLImageViewWillAppear )
+        cancellable = NotificationCenter.default.publisher(for:  PGLImageViewWillAppear )
             .sink() {
             [weak self]
             myUpdate in

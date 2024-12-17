@@ -106,6 +106,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
 
         updateNavigationBar()
+        super.viewWillAppear(animated)
     }
 
 

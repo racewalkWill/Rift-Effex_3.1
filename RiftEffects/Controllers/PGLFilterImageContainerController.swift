@@ -79,6 +79,8 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
             else { return }
         containerFilterController.removeFromParent()
 //        containerFilterController = nil
+        columns = nil
+        super.viewDidDisappear(animated)
     }
 
 

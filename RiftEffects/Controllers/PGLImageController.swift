@@ -583,7 +583,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         }
         if traitCollection.userInterfaceIdiom == .phone {
             metalController?.updateDrawableSize()
-            NSLog("PGLImageController viewWillAppear \(String(describing: view))")
+            NSLog(String(describing:self) + "viewWillAppear \(String(describing: view))")
         }
         
         /// this animationToggle is not needed..
@@ -693,6 +693,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             ] )
         helpBtn.menu = contextMenu
     }
+    
     func loadDemoStack(_ sender: UIBarButtonItem)  {
         appStack.createDemoStack(view: view)
     }
@@ -866,7 +867,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         if let myMetalControllerView = storyboard!.instantiateViewController(withIdentifier: "MetalController") as? PGLMetalController {
                 // does the metalView extend under the navigation bar?? change constraints???
                 //            myMetalControllerView.view.frame = self.view.bounds
-            Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self)) start" )
+            Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self)) loadMetalController start" )
             addChild(myMetalControllerView)
                 // tried to use NSLayoutConstraint instead of setting the frame..
             if let theMetalView = myMetalControllerView.view {
@@ -901,7 +902,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 myScaleFactor = theMetalView.contentScaleFactor
                 myScaleTransform = CGAffineTransform(scaleX: myScaleFactor, y: myScaleFactor )
                 myMetalControllerView.didMove(toParent: self)
-                Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self)) completed" )
+                Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self)) loadMetalController() completed" )
             }
             
         }
@@ -925,7 +926,15 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         setMoreBtnMenu()
         setHelpBtnMenu()
-        setTemplateBtnMenu()
+        let iPad = UIDevice.current.userInterfaceIdiom == .pad
+        // alternatively !(splitViewController?.isCollapsed
+        if iPad  {
+            // on iPhone the TwoColumnControllers have different buttons
+            // to hook up for the menu
+            // this fixes problem with memory leak  - too many ImageController instances
+            setTemplateBtnMenu()
+        }
+
 
 
         if ShowHelpOnOpen {
@@ -982,9 +991,29 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         /// control memory growth by setting metalController  to nil  Build a new one as needed
            metalController = nil
         moreBtn.menu = nil // reset in the load.
+        helpBtn.menu = nil
 
 
     }
+
+    override func resetVars()
+    {
+        filterStack = { PGLFilterStack() }
+       // set to nil in the releaseVars  metalController = nil
+        parmController = nil
+        metalController = nil
+        tappedControl = nil
+        panner = nil
+        tapGesture = nil
+        tap2Gesture = nil
+        tappedControl = nil
+        templateBtn = nil
+        
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+
+
+    }
+
    override func releaseNotifications() {
        for aCancel in publishers {
            aCancel.cancel()
