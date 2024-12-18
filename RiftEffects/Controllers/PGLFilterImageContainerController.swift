@@ -91,20 +91,8 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
             else { return }
         imageViewerController.newStackActionBtn(sender)
     }
-    
-//    @IBAction func randomBtnClick(_ sender: UIBarButtonItem) {
-//        guard let containerImageController = imageController()
-//            else { return }
-//        containerImageController.randomBtnAction(sender)
-//
-//    }
-
 
     @IBOutlet weak var newTrashBtn: UIBarButtonItem!
-
-
-   
-
 
     @IBOutlet weak var recordBtn: UIBarButtonItem!
     

@@ -202,18 +202,19 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         guard let imageViewerController = imageController()
             else { return }
 
-        let helpMenu = UIAction.init(title: MenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
+        let helpMenu = UIAction.init(title: MenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) { [weak self]
             action in
-            imageViewerController.helpBtnAction(self.helpBtn)
+            guard let theHelpBtn = self?.helpBtn else { return }
+            imageViewerController.helpBtnAction(theHelpBtn)
 
         }
 
         let contextMenu = UIMenu(title: "",
                                  children: [ helpMenu ,
-
-                                             UIAction(title: MenuLabel.Privacy.rawValue, image:UIImage(systemName: "info.circle")) {
+            UIAction(title: MenuLabel.Privacy.rawValue, image:UIImage(systemName: "info.circle")) { [weak self]
             action in
-            imageViewerController.displayPrivacyPolicy(self.helpBtn)
+            guard let theHelpBtn = self?.helpBtn else { return }
+            imageViewerController.displayPrivacyPolicy(theHelpBtn)
         }
             ] )
         helpBtn.menu = contextMenu
@@ -225,7 +226,9 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
         let randomAction =
         UIAction.init(title: MenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+            [weak self]
             action in
+            guard let self else { return }
             imageViewerController.templateBtnAction(self.templateBtn)
 
         }

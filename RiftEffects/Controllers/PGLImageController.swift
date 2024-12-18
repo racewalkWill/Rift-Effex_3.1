@@ -596,7 +596,9 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func setTemplateBtnMenu() {
         let randomAction = UIAction.init(title: MenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+            [weak self ]
             action in
+            guard let self else { return }
             self.templateBtnAction(self.templateBtn)
 
         }
@@ -609,24 +611,32 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 demoGenerator.blendTemplate(appStack: self.appStack)
             },
              UIAction(title: MenuLabel.Sequence.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
+            [weak self ]
+            action in
+            guard let self else { return }
              self.loadDemoStack(self.templateBtn)
             },
          UIAction(title: MenuLabel.Edge.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
+            [weak self ]
+            action in
+            guard let self else { return }
             let demoGenerator = PGLDemo()
             demoGenerator.edgeTemplate(appStack: self.appStack)
             },
                                              
         // place holder - change to demo methods
          UIAction(title: MenuLabel.Tone.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
+            [weak self ]
+            action in
+            guard let self else { return }
             let demoGenerator = PGLDemo()
             demoGenerator.toneTemplate(appStack: self.appStack)
             },
     // place holder - change to demo methods
          UIAction(title: MenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
+            [weak self ]
+            action in
+            guard let self else { return }
             let demoGenerator = PGLDemo()
             demoGenerator.iPhoneCompact = false  // now on the iPad
             demoGenerator.kaleidoscopeTemplate(appStack: self.appStack)
