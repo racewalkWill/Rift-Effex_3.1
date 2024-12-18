@@ -936,7 +936,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         setMoreBtnMenu()
         setHelpBtnMenu()
-        let iPad = UIDevice.current.userInterfaceIdiom == .pad
+        var iPad: Bool
+
+        if splitViewController != nil  {
+            iPad = !(splitViewController!.isCollapsed)
+        } else {
+            iPad = UIDevice.current.userInterfaceIdiom == .pad
+        }
         // alternatively !(splitViewController?.isCollapsed
         if iPad  {
             // on iPhone the TwoColumnControllers have different buttons
