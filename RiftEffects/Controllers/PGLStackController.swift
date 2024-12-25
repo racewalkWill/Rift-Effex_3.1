@@ -525,30 +525,26 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        // go to Parms of the filter
         if indexPath.section == StackSections.header.rawValue {
             // no segue naviation on header cells
             return
         }
         if !appStack.flatCellFilters.isEmpty {
             let cellIndent = appStack.flatCellFilters[indexPath.row]
+            let didMoveToFilter = appStack.moveTo(filterIndent: cellIndent)
 
-            appStack.moveTo(filterIndent: cellIndent)
-                // sets the appStack viewerStack and the current filter of the viewerStac,
+                /// make the imageController show the new output either single filter or stack output
+            appStack.showFilterImage = !appStack.showFilterImage
 
-//            appStack.toggleShowFilterImage()
-                // toggle causes reload of the data
-//            setViewerStackBackground()
-            // if there are no image inputs after a trash action
-            // then toggleShowFilterImage() should fail..
-            // there's no images
-            appStack.toggleShowFilterImage()
+            let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
+            NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+
+            self.updateDisplay()
+
             let selectedCell = tableView.cellForRow(at: indexPath)
             selectedCell?.setSelected(true, animated: true)
-            // segueToParmController()
+                // setSelected does NOT call this delegate didSelectRowAt again
         }
-
-    
     }
 
     func segueToParmController() {
@@ -952,7 +948,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     func removeFilter(indexPath: IndexPath) {
 
         let cellIndent = appStack.flatCellFilters[indexPath.row]
-        appStack.moveTo(filterIndent: cellIndent)
+        _ = appStack.moveTo(filterIndent: cellIndent)
             // sets the activeFilterIndex of the childStack
             // makes the childStack the viewerStack
 

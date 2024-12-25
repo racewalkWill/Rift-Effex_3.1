@@ -282,7 +282,7 @@ class PGLAppStack {
         // any filter - parent or child.
         
     }
-    func moveTo(filterIndent: PGLFilterIndent) {
+    func moveTo(filterIndent: PGLFilterIndent) -> Bool {
         Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLAppStack #moveTo(filterIndent: \(filterIndent.filterPosition)")
         /// check if move is needed - already on the correct filter?
         if viewerStack ===  filterIndent.stack {
@@ -290,7 +290,7 @@ class PGLAppStack {
             let currentActiveIndex = viewerStack.activeFilterIndex
             if currentActiveIndex == filterIndent.filterPosition {
                 // already on the current filter
-              return
+              return false
                 // no change needed
             }
         }
@@ -306,6 +306,7 @@ class PGLAppStack {
         // remove from pushedStacks???
         pushedStacks.removeAll(where: { $0 === viewerStack })
         postStackChange()
+        return true
 
 
     }
@@ -441,7 +442,7 @@ class PGLAppStack {
         }
         let  nextRowCell = flatCellFilters[startingActiveRow + 1 ]
 
-        moveTo(filterIndent: nextRowCell)
+       _ = moveTo(filterIndent: nextRowCell)
         viewerStack.postFilterNameInTitleBar()
     }
 
@@ -456,7 +457,7 @@ class PGLAppStack {
         }
         let  nextRowCell = flatCellFilters[startingActiveRow - 1 ]
 
-        moveTo(filterIndent: nextRowCell)
+      _ =  moveTo(filterIndent: nextRowCell)
         viewerStack.postFilterNameInTitleBar()
     }
 

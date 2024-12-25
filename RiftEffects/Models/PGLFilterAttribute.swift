@@ -1759,7 +1759,8 @@ class PGLAttributeRectangle: PGLFilterAttribute {
         // apply to the filter
 
         let newVector = CIVector(x: mappedCropRect.origin.x, y: mappedCropRect.origin.y, z: mappedCropRect.size.width, w: mappedCropRect.size.height)
-
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+        NSLog("     newVector \(newVector) from \(mappedCropRect)")
         oldVector = self.getVectorValue()  // save old value for cancel action
         aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
         // let the parent filter do the work in CIImage.methods  see PGLRectangleFilter outputImage()

@@ -137,13 +137,13 @@
          contextName = "PGLStackController.textFieldDidEndEditing(_:):PGLStackController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "StackHeaderCell.title.rawValue">
-            </PersistentString>
-            <PersistentString
                value = "textField.text">
             </PersistentString>
             <PersistentString
                value = "textField.tag">
+            </PersistentString>
+            <PersistentString
+               value = "StackHeaderCell.title.rawValue">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -583,13 +583,16 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "PGLCenterScaler.setAspectFitTransform(imageExtent:):PGLCenterScaler.swift">
+      </ContextState>
+      <ContextState
          contextName = "PGLSelectParmController.sliderValueDidChange(_:):PGLSelectParmController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "sender.value">
+               value = "target.uiIndexTag">
             </PersistentString>
             <PersistentString
-               value = "target.uiIndexTag">
+               value = "sender.value">
             </PersistentString>
             <PersistentString
                value = "sender.tag">
@@ -658,16 +661,16 @@
                value = "avPlayerItem.availableMediaCharacteristicsWithMediaSelectionOptions">
             </PersistentString>
             <PersistentString
-               value = "playerLooper?.loopingPlayerItems">
+               value = "playerLooper?.status">
+            </PersistentString>
+            <PersistentString
+               value = "avPlayerItem.status">
             </PersistentString>
             <PersistentString
                value = "myTracks[1].assetTrack">
             </PersistentString>
             <PersistentString
-               value = "playerLooper?.status">
-            </PersistentString>
-            <PersistentString
-               value = "avPlayerItem.status">
+               value = "playerLooper?.loopingPlayerItems">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -741,13 +744,13 @@
          contextName = "PGLStackController.updateDisplay():PGLStackController.swift">
          <PersistentStrings>
             <PersistentString
+               value = "tableView.isHidden">
+            </PersistentString>
+            <PersistentString
                value = "tableView">
             </PersistentString>
             <PersistentString
                value = "appStack.cellFilters">
-            </PersistentString>
-            <PersistentString
-               value = "tableView.isHidden">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -758,13 +761,13 @@
          contextName = "PGLFilterStack.imageUpdate(_:_:):PGLFilterStack.swift">
          <PersistentStrings>
             <PersistentString
-               value = "PGLSourceFilter.LogParmValues">
-            </PersistentString>
-            <PersistentString
                value = "cropRect">
             </PersistentString>
             <PersistentString
                value = "self.doPrintCropClamp = false">
+            </PersistentString>
+            <PersistentString
+               value = "PGLSourceFilter.LogParmValues">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -801,6 +804,14 @@
       </ContextState>
       <ContextState
          contextName = "PGLImageController.cropAction(rectAttribute:):PGLImageController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Renderer.mtkView(_:drawableSizeWillChange:):Renderer.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "TargetSize">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "PGLTriangleGradientFilter.init(filter:position:):PGLTriangleGradientFilter.swift">
@@ -1018,13 +1029,13 @@
          contextName = "PGLSelectParmController.pickImage(_:):PGLSelectParmController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.splitViewController?.view.frame">
-            </PersistentString>
-            <PersistentString
                value = "picker">
             </PersistentString>
             <PersistentString
                value = "self.splitViewController">
+            </PersistentString>
+            <PersistentString
+               value = "self.splitViewController?.view.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1194,10 +1205,10 @@
                value = "containerFilterController?.navigationController?">
             </PersistentString>
             <PersistentString
-               value = "view">
+               value = "self.children">
             </PersistentString>
             <PersistentString
-               value = "self.children">
+               value = "view">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -1305,10 +1316,10 @@
          contextName = "PGLMainFilterController.selectCurrentFilterRow():PGLMainFilterController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "thePath.section">
+               value = "stackData()?.isEmptyStack()">
             </PersistentString>
             <PersistentString
-               value = "stackData()?.isEmptyStack()">
+               value = "thePath.section">
             </PersistentString>
             <PersistentString
                value = "thePath.row">
@@ -2090,6 +2101,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "PGLCenterScaler.displayTransform(image:):PGLCenterScaler.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "displayTransform!.inverted()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "PGLNavStackImageController.viewDidLoad():PGLNavStackImageController.swift">
          <PersistentStrings>
             <PersistentString
@@ -2554,10 +2573,10 @@
                value = "primaryController as? PGLImageController">
             </PersistentString>
             <PersistentString
-               value = "splitViewController">
+               value = "supplementaryController as? PGLImageController">
             </PersistentString>
             <PersistentString
-               value = "supplementaryController as? PGLImageController">
+               value = "splitViewController">
             </PersistentString>
             <PersistentString
                value = "(secondaryController as? UINavigationController).visibleViewController">
@@ -2568,13 +2587,13 @@
          contextName = "PGLMetalController.viewDidLoad():PGLMetalController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "metalView.device">
-            </PersistentString>
-            <PersistentString
                value = "view">
             </PersistentString>
             <PersistentString
                value = "metalView.contentMode">
+            </PersistentString>
+            <PersistentString
+               value = "metalView.device">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2700,10 +2719,10 @@
          contextName = "closure #1 in PGLAsset.setupStopVideoListener():PGLAsset.swift">
          <PersistentStrings>
             <PersistentString
-               value = "avPlayerItem.status">
+               value = "videoPlayer?.status">
             </PersistentString>
             <PersistentString
-               value = "videoPlayer?.status">
+               value = "avPlayerItem.status">
             </PersistentString>
             <PersistentString
                value = "playerLooper?.status">

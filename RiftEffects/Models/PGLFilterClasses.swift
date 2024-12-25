@@ -37,7 +37,7 @@ class PGLSourceFilter :  PGLAnimation  {
         //
 
         /// in the debugger execute expression PGLSourceFilter.LogParmValues = true
-static let LogParmValues = false
+static let LogParmValues = true
         // set to true to capture parm  set value messages & values
         // enter in the debug
         //      po PGLSourceFilter.LogParmValues = true
@@ -1266,7 +1266,8 @@ class PGLRectangleFilter : PGLSourceFilter {
 
         let scaleTransform = CGAffineTransform(scaleX: widthScale, y: heightScale)
         let translate = scaleTransform.translatedBy(x: -ciOutput.extent.minX, y: -ciOutput.extent.minY)
-
+//       Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+//       NSLog("     translate \(translate) from \(stackCropRect)")
         let returnImage =  ciOutput.transformed(by: translate)
         return returnImage
     }

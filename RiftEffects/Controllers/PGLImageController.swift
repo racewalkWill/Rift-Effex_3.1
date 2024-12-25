@@ -1416,6 +1416,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         // start with the scale of the glkView - scaleFactor = 2.. then do the flip
 
             let mappedFrame = newFrame.applying(finalTransform)
+            NSLog("PGLImageController cropAction mappedFrame \(mappedFrame) from \(newFrame)")
+
             rectAttribute.applyCropRect(mappedCropRect: mappedFrame)
         }
 

@@ -101,12 +101,12 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
         super.viewWillAppear(animated)
 
         setUpMetalRender()
-        updateDrawableSize()
+//        updateDrawableSize()
             // this  changes FullScreenTargetTransform
         if isFullScreen {
             // works fine when loading fullscreen
             appStack.pointParms(shiftTransform: FullScreenTargetTransform)
-//           NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by \(FullScreenTargetTransform)")
+           NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by \(FullScreenTargetTransform)")
         }
     }
     
@@ -206,12 +206,12 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
     @objc func userDoubleTap(sender: UITapGestureRecognizer) {
         // two taps dismiss
-//        NSLog("\(self.debugDescription) " + #function + " dismiss")
+        NSLog("\(self.debugDescription) " + #function + " dismiss FullScreenAspectFillMode = false ")
         FullScreenAspectFillMode = false
         metalRender.isFullScreen = FullScreenAspectFillMode
 
         appStack.pointParms(shiftTransform: FullScreenTargetTransform.inverted())
-//       NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by FullScreenTargetTransform.inverted ")
+       NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by FullScreenTargetTransform.inverted ")
 
         self.dismiss(animated: true)
     }
