@@ -1764,6 +1764,14 @@ class PGLAttributeRectangle: PGLFilterAttribute {
         oldVector = self.getVectorValue()  // save old value for cancel action
         aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
         // let the parent filter do the work in CIImage.methods  see PGLRectangleFilter outputImage()
+        filterRect = mappedCropRect // save the rect
+
+    }
+
+    override func movePointParms(transform: CGAffineTransform) {
+           // adjust the crop for a move of parms
+        let newCropRect = filterRect.applying(transform)
+        applyCropRect(mappedCropRect: newCropRect)
 
     }
 

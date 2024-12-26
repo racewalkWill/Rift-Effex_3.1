@@ -152,6 +152,7 @@
 		A3CE5B2E24DB5DA80062A98C /* PGLCategorySurvey.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CE5B2D24DB5DA80062A98C /* PGLCategorySurvey.swift */; };
 		A3D04B142A8444A300E6DB16 /* PGLStackInfoHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D04B122A8444A300E6DB16 /* PGLStackInfoHeader.swift */; };
 		A3D04B152A8444A300E6DB16 /* PGLStackInfoHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3D04B132A8444A300E6DB16 /* PGLStackInfoHeader.xib */; };
+		A3D68B312D1DC895007FD92E /* PGLMaskFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D68B302D1DC895007FD92E /* PGLMaskFilter.swift */; };
 		A3D9FF09292A9EFE00BAE158 /* VertexDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D9FF08292A9EFE00BAE158 /* VertexDescriptor.swift */; };
 		A3D9FF0B292A9F1400BAE158 /* Quad.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D9FF0A292A9F1400BAE158 /* Quad.swift */; };
 		A3DBD2D12BEC1D66009A6317 /* PGLVideoFrameQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DBD2D02BEC1D66009A6317 /* PGLVideoFrameQueue.swift */; };
@@ -347,6 +348,7 @@
 		A3CE5B2D24DB5DA80062A98C /* PGLCategorySurvey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCategorySurvey.swift; sourceTree = "<group>"; };
 		A3D04B122A8444A300E6DB16 /* PGLStackInfoHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackInfoHeader.swift; sourceTree = "<group>"; };
 		A3D04B132A8444A300E6DB16 /* PGLStackInfoHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PGLStackInfoHeader.xib; sourceTree = "<group>"; };
+		A3D68B302D1DC895007FD92E /* PGLMaskFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMaskFilter.swift; sourceTree = "<group>"; };
 		A3D9FF08292A9EFE00BAE158 /* VertexDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VertexDescriptor.swift; sourceTree = "<group>"; };
 		A3D9FF0A292A9F1400BAE158 /* Quad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Quad.swift; sourceTree = "<group>"; };
 		A3DBD2D02BEC1D66009A6317 /* PGLVideoFrameQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLVideoFrameQueue.swift; sourceTree = "<group>"; };
@@ -697,6 +699,7 @@
 				A3552BE929463170002FBC72 /* PGLColorVectorNumeric.swift */,
 				A35D412C294B678B00EDEB4E /* PGLVectorBasedFilter.swift */,
 				A3CA2BFE295A01FD00502A8A /* PGLConvolutionFilter.swift */,
+				A3D68B302D1DC895007FD92E /* PGLMaskFilter.swift */,
 			);
 			path = Filters;
 			sourceTree = "<group>";
@@ -896,6 +899,7 @@
 				A303930F27AADED800E2A3D4 /* PGLCompactPresentationController.swift in Sources */,
 				A333185E2CE42E5100FA8A45 /* PGLSaveButtonRow.swift in Sources */,
 				A3BF510E24D32A3400CD5114 /* PGLImageCIFilter.swift in Sources */,
+				A3D68B312D1DC895007FD92E /* PGLMaskFilter.swift in Sources */,
 				A3BF512124D32A3400CD5114 /* AppDelegate.swift in Sources */,
 				A326F7A52B1FDEB30070D759 /* PGLFilterAttributeVectorUI.swift in Sources */,
 				A39F88042A4C7E6F000AE342 /* PGLLibraryCell.swift in Sources */,

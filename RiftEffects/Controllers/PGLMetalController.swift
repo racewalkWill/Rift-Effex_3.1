@@ -101,15 +101,30 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
         super.viewWillAppear(animated)
 
         setUpMetalRender()
-//        updateDrawableSize()
-            // this  changes FullScreenTargetTransform
+        updateDrawableSize()
         if isFullScreen {
             // works fine when loading fullscreen
             appStack.pointParms(shiftTransform: FullScreenTargetTransform)
            NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by \(FullScreenTargetTransform)")
         }
+
+//        DoNotDraw = true
+                // blank the screen briefly fixes fullscreen small to big jump
+
     }
-    
+
+//    override func viewDidAppear(_ animated: Bool) {
+//
+//        updateDrawableSize()
+//        if isFullScreen {
+//            // works fine when loading fullscreen
+//            appStack.pointParms(shiftTransform: FullScreenTargetTransform)
+//           NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by \(FullScreenTargetTransform)")
+//        }
+//        DoNotDraw = false
+//        super.viewDidAppear(animated)
+//    }
+
     override func viewDidDisappear(_ animated: Bool) {
         resetVars()
     }
