@@ -164,14 +164,16 @@ class Renderer: NSObject, MTKViewDelegate {
             // provide a UIImage for save to photoLibrary
             // uses existing ciContext in a background process..
         let cropSize = TargetSize
-        if let ciOutput = filterStack()?.stackOutputImage(false).cropForInfiniteExtent(cropSize: cropSize)
-            // cropForInfiniteExtent returns image
-            // if infinite then crops to TargetSize
+        if let ciOutput = filterStack()?.stackOutputImage(false)
+
         {
+            let targetRect = CGRect(origin: CGPoint.zero, size: cropSize)
+
+            let croppedOutput = ciOutput.cropped(to: targetRect)
             filterStack()?.setThumbnail(image: ciOutput)
             let rgbSpace = CGColorSpaceCreateDeviceRGB()
             let options = [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 1.0 as CGFloat]
-            guard let heifData =  ciMetalContext.heifRepresentation(of: ciOutput, format: .RGBA8, colorSpace: rgbSpace, options: options)
+            guard let heifData =  ciMetalContext.heifRepresentation(of: croppedOutput, format: .RGBA8, colorSpace: rgbSpace, options: options)
             else {
                 throw savePhotoError.nilReturn
             }

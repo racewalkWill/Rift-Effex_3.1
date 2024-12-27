@@ -174,6 +174,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func notifyStackStartSave() {
+        // tells stackController to open the save stack header to enter name/albuum
         NotificationCenter.default.post(name:PGLStackStartSave, object: nil)
     }
 
