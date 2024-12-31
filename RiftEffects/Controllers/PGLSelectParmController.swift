@@ -260,7 +260,7 @@ class PGLSelectParmController: PGLCommonController,
 //        }
         let myCenter =  NotificationCenter.default
 
-        cancellable = myCenter.publisher(for: PGLCurrentFilterChange)
+        cancellable = myCenter.publisher(for: PGLHideParmControlsOnFilterChange)
             .sink() {[weak self]
                     myUpdate in
                     guard let self = self else { return } // a released object sometimes receives the notification
@@ -460,7 +460,7 @@ class PGLSelectParmController: PGLCommonController,
 
     // MARK: ImageController actions
     fileprivate func postCurrentFilterChange() {
-        let updateFilterNotification = Notification(name: PGLCurrentFilterChange)
+        let updateFilterNotification = Notification(name: PGLHideParmControlsOnFilterChange)
 //        NotificationCenter.default.post(updateFilterNotification)
         NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
 

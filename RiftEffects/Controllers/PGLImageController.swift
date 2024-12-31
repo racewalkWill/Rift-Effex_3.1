@@ -31,7 +31,7 @@ enum SliderColor: Int {
     case Red = 3
 }
 
-let  PGLCurrentFilterChange = NSNotification.Name(rawValue: "PGLCurrentFilterChangeNotification")
+let  PGLHideParmControlsOnFilterChange = NSNotification.Name(rawValue: "PGLHideParmControlsOnFilterChange")
 //let  PGLOutputImageChange = NSNotification.Name(rawValue: "PGLOutputImageChange")
 let  PGLUserAlertNotice = NSNotification.Name(rawValue: "PGLUserAlertNotice")
 let  PGLUpdateLibraryMenu = NSNotification.Name(rawValue: "PGLUpdateLibraryMenu")
@@ -457,7 +457,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     
 
      func postCurrentFilterChange() {
-        let updateFilterNotification = Notification(name:PGLCurrentFilterChange)
+        let updateFilterNotification = Notification(name:PGLHideParmControlsOnFilterChange)
         NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
     }
 
@@ -752,7 +752,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         }
         publishers.append(cancellable!)
 
-        cancellable = myCenter.publisher(for: PGLCurrentFilterChange)
+        cancellable = myCenter.publisher(for: PGLHideParmControlsOnFilterChange)
             .sink() { [weak self]
             myUpdate in
             Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "notificationBlock PGLCurrentFilterChange") " )

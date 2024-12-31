@@ -349,12 +349,16 @@ class PGLMainFilterController:  UIViewController,
 
 // MARK: Notification
  func postImageChange() {
-//    let updateFilterNotification = Notification(name:PGLOutputImageChange)
-//    NotificationCenter.default.post(updateFilterNotification)
+     // PGLImageViewWillAppear triggers the Renderer to draw three frames even  is paused
+     
+     Logger(subsystem: LogSubsystem, category: LogCategory).notice("PGLMainFilterController notify PGLImageViewWillAppear")
+    let updateFilterNotification = Notification(name: PGLImageViewWillAppear)
+    NotificationCenter.default.post(updateFilterNotification)
+
 }
 
  func postCurrentFilterChange() {
-    let updateFilterNotification = Notification(name:PGLCurrentFilterChange)
+    let updateFilterNotification = Notification(name:PGLHideParmControlsOnFilterChange)
 
      NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
 }

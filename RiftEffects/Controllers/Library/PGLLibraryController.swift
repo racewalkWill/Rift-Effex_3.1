@@ -368,7 +368,7 @@ extension PGLLibraryController: UICollectionViewDelegate {
 
         let stackNotification = Notification(name:PGLLoadedDataStack)
         NotificationCenter.default.post(stackNotification)
-        let filterNotification = Notification(name: PGLCurrentFilterChange) // turns on the filter cell detailDisclosure button even on cancels
+        let filterNotification = Notification(name: PGLHideParmControlsOnFilterChange) // turns on the filter cell detailDisclosure button even on cancels
 //            NotificationCenter.default.post(filterNotification)
         NotificationCenter.default.post(name: filterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
 

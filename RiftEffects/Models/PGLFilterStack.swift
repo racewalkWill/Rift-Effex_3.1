@@ -772,7 +772,7 @@ class PGLFilterStack: Equatable, Hashable  {
 
     func postCurrentFilterChange() {
         // triggers DoNotDraw to false
-        let updateFilterNotification = Notification(name: PGLCurrentFilterChange)
+        let updateFilterNotification = Notification(name: PGLHideParmControlsOnFilterChange)
         NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
     }
 

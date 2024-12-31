@@ -75,7 +75,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
 
         let myCenter =  NotificationCenter.default
-        cancellable = myCenter.publisher(for:  PGLCurrentFilterChange)
+        cancellable = myCenter.publisher(for:  PGLHideParmControlsOnFilterChange)
             .sink() { [weak self]
                 myUpdate in
                 guard let self = self else { return } // a released object sometimes receives the
@@ -180,7 +180,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         super .viewDidDisappear(animated)
         NSLog("PGLStackController #viewDidDisappear removing notification observor")
 
-        NotificationCenter.default.removeObserver(self, name: PGLCurrentFilterChange, object: self)
+        NotificationCenter.default.removeObserver(self, name: PGLHideParmControlsOnFilterChange, object: self)
         NotificationCenter.default.removeObserver(self, name: PGLStackChange, object: self)
         NotificationCenter.default.removeObserver(self, name: PGLSelectActiveStackRow, object: self)
     }
@@ -850,7 +850,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     }
 
     func postCurrentFilterChange() {
-        let updateFilterNotification = Notification(name: PGLCurrentFilterChange)
+        let updateFilterNotification = Notification(name: PGLHideParmControlsOnFilterChange)
 
         NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
     }

@@ -272,7 +272,7 @@ class PGLDemo {
             startingDemoFilter.setInputImageParmState(newState: ImageParm.inputPriorFilter)
         }
 
-        let updateFilterNotification = Notification(name:PGLCurrentFilterChange)
+        let updateFilterNotification = Notification(name:PGLHideParmControlsOnFilterChange)
         NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
             // triggers PGLImageController to set view.isHidden to false
             // show the new results !

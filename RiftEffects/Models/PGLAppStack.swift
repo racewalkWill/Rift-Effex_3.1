@@ -316,7 +316,7 @@ class PGLAppStack {
     func postFilterChangeRedraw() {
         // triggers a single frame redraw
         // it is reset to false by the Renderer after the frame is drawn
-        let updateNotification = Notification(name: PGLCurrentFilterChange)
+        let updateNotification = Notification(name: PGLHideParmControlsOnFilterChange)
                                                 // was PGLRedrawFilterChange)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
 

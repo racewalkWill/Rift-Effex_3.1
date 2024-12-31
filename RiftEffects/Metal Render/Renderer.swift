@@ -227,7 +227,10 @@ class Renderer: NSObject, MTKViewDelegate {
             return
         }
         if needsRedraw.shouldPauseAnimation() {
-            return
+            if !needsRedraw.filterChanged {
+                return  // skip drawing again
+            }  // else go ahead to the drawBasic
+
         }
 
         drawBasicCentered(in: view)
