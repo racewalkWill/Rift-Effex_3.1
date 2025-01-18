@@ -131,11 +131,16 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable  {
              }
     }
 
+    static let ImageLogger = OSLog(subsystem: "com.apple.Photos", category: "PGLAsset")
     // MARK: Image
     /// return the CIImage
     /// moved from the PGLImageList
     @MainActor
     func imageFrom() -> CIImage? {
+        os_signpost(.begin, log: PGLAsset.ImageLogger, name: "imageFrom")
+        defer {
+            os_signpost(.end, log: PGLAsset.ImageLogger, name: "imageFrom")
+        }
         if isVideo() {
             if assetVideo != nil {
 

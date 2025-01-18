@@ -15,7 +15,7 @@ extension CDFilterStack {
 //    }
 
     func asFilterStackStruct() -> FilterStack {
-        return FilterStack(
+        let myReturnStruct  =  FilterStack(
             created: created,
             exportAlbumIdentifier: exportAlbumIdentifier,
             exportAlbumName: exportAlbumName,
@@ -25,6 +25,10 @@ extension CDFilterStack {
             type: type,
             objectID: objectID
             )
+//        if myReturnStruct.thumbnail == nil {
+//            NSLog("CDFilterStack: Warning: thumbnail is nil \(String(describing: myReturnStruct))")
+//        }
+        return myReturnStruct
     }
 
 

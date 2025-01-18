@@ -480,8 +480,10 @@ extension PGLOpenStackController {
                 cell.detailTextLabel?.text = self.detailTextString(ofObject: cdFilterStack)
 
                          if let cellThumbnail = cdFilterStack.thumbnail
-                         {  cell.imageView?.image = UIImage(data: cellThumbnail) }
-                           else { return cell}
+                            {  cell.imageView?.image = UIImage(data: cellThumbnail) }
+
+                        else { cell.imageView?.image = UIImage(systemName: "airplane.circle.fill")!
+}
                        // Configure the cell with data from the managed object.
                   return cell
             } else {

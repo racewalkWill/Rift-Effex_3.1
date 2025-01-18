@@ -72,7 +72,7 @@ class PGLLibraryCell: UICollectionViewCell {
 
         if asset.thumbnail == nil {
             imageView.image = UIImage(systemName: "airplane.circle.fill")!
-            return
+
         } else {
             imageView.image = UIImage(data: asset.thumbnail!)!
         }
