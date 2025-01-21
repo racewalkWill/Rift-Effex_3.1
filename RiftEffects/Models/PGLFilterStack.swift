@@ -340,7 +340,7 @@ class PGLFilterStack: Equatable, Hashable  {
                     if let firstInput = newFilter.attribute(nameKey: kCIInputImageKey) {
                         guard let firstList = firstInput.inputCollection
                             else { return }
-                        newFilter.setImageListClone(cycleStack: firstList, sourceKey: kCIInputImageKey)
+                        newFilter.setImageListClone(imageList: firstList, sourceKey: kCIInputImageKey)
                         // setImageListClone guards against overwriting an existing list
                     }
                 }

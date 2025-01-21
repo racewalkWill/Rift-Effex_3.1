@@ -294,6 +294,9 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         newList.userSelection = oddUserSelection
         return newList
     }
+    func isSameImages(_ other: PGLImageList) -> Bool {
+        return self.assetIDs == other.assetIDs
+    }
 
     func clone(toParm: PGLFilterAttribute) -> PGLImageList {
         // answer copy of self

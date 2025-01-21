@@ -37,11 +37,11 @@ class PGLFeatureTransitionFilter: PGLTransitionFilter {
        detectorFilter?.setCIContext(detectorContext: detectorContext)
     }
     
-    override func setImageListClone(cycleStack: PGLImageList, sourceKey: String) {
+    override func setImageListClone(imageList: PGLImageList, sourceKey: String) {
         // calls requestImage for the asset
         // add images for each feature of an image in the cycleStack..
         // then clone with super to setImageListClone
-        if cycleStack.nextType == NextElement.odd {
+        if imageList.nextType == NextElement.odd {
             // detected array of images is copied.. It may be bigger than the imageAsset array
 
             return }
@@ -49,9 +49,9 @@ class PGLFeatureTransitionFilter: PGLTransitionFilter {
         
         var theImages = [CIImage]()
         var thisSet = [CIImage]()
-        for index in 0..<cycleStack.maxAssetsOrImagesCount()  {
+        for index in 0..<imageList.maxAssetsOrImagesCount()  {
 
-            if let theImage = cycleStack.image(atIndex: index) {
+            if let theImage = imageList.image(atIndex: index) {
              // image(atIndex: int) calls requestImage for the asset
             detectorFilter?.setInput(image: theImage, source: "blank")
             thisSet = detectorFilter?.outputFeatureImages() ?? [theImage] // should always be at least one image
@@ -64,11 +64,11 @@ class PGLFeatureTransitionFilter: PGLTransitionFilter {
         }
 
             // these images are scaled already
-               cycleStack.setImages(ciImageArray: theImages)
+               imageList.setImages(ciImageArray: theImages)
 
             // sets all of the images from the  getImage call
 
-        super.setImageListClone(cycleStack: cycleStack, sourceKey: sourceKey)
+        super.setImageListClone(imageList: imageList, sourceKey: sourceKey)
             // now do the same for the clone of the odd numbered images
 
     }

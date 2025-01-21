@@ -25,6 +25,10 @@ class PGLTransitionFilter: PGLRectangleFilter {
 
     var transitionFilterStepTime = 0.0
 
+    /// can pause or go if there are multiple inputs for transition
+    ///  several parms can have one input or at least one parm has multiple inputs
+//    var hasMultipleTransitionInputs =  false
+
     required init?(filter: String, position: PGLFilterCategoryIndex) {
         super.init(filter: filter, position: position)
         hasAnimation = true }
@@ -101,7 +105,7 @@ class PGLTransitionFilter: PGLRectangleFilter {
 
     }
 
-    override func setImageListClone(cycleStack: PGLImageList, sourceKey: String) {
+    override func setImageListClone(imageList: PGLImageList, sourceKey: String) {
         // PGLTransitionFilter subclass will  clone cycleStack to other parms
         // set source and clone to odd/even increments.. one increments on odd elements, the other even
         // assumes a transition filter has at least two image input parms
@@ -110,7 +114,7 @@ class PGLTransitionFilter: PGLRectangleFilter {
         let myImageKeys = imageInputAttributeKeys
         if myImageKeys.first != sourceKey { return}
         
-        if cycleStack.nextType == NextElement.odd { return }
+        if imageList.nextType == NextElement.odd { return }
             // stop.. don't make a further clone. Even stack clones odd stack and stops
         
         if let nextImageParmKey = (imageInputAttributeKeys.first { (aParmKey: String) -> Bool in
@@ -125,28 +129,27 @@ class PGLTransitionFilter: PGLRectangleFilter {
                         if nextImageAttribute.hasImageInput()  ?? false {
                         // change the inputCollection.nextType to each state
                         // don't do a clone
-                            cycleStack.nextType = NextElement.each
+                            imageList.nextType = NextElement.each
                             nextImageAttribute.setToIncrementEach()
 //                            NSLog("PGLTransitionFilter does not clone a rotation - increments each input #setImageListClone(cycleStack: PGLImageList, sourceKey: String) {")
+//                            _ = notifyTransitionsExist()
                             return
                         }
 //                        NSLog("PGLTransitionFilter setImageListClone(cycleStack:  else branch on noImageInput")
                     }
-//                    NSLog("PGLTransitionFilter setImageListClone(cycleStack:  cycleStack.cloneEven")
-                    let evenStack = cycleStack.cloneEven(toParm: nextImageAttribute)
-                        // sets this cycleStack to odd numbered increments.
-                    nextImageAttribute.setImageCollectionInput(cycleStack: evenStack)
-                    nextImageAttribute.setImageParmState(newState: .inputPhoto)
-                    if evenStack.isSingular() {
-                        // added a singular stack to filter with a singular stack
-                        // 1 + 1 = 2 so mark as running transition !
-                        nextImageAttribute.postTransitionFilterAdd()
-                    }
+
+                NSLog("PGLTransitionFilter setImageListClone(cycleStack:  cycleStack.cloneEven")
+                let nextParmList = imageList.cloneEven(toParm: nextImageAttribute)
+                    // sets this cycleStack to odd numbered increments.
+                nextImageAttribute.setImageCollectionInput(cycleStack: nextParmList)
+                nextImageAttribute.setImageParmState(newState: .inputPhoto)
+
 //                     NSLog("PGLTransitionFilter setImageListClone(cycleStack: evenStack set to nextImageAttribute input")
                 }
         }
-        
+
     }
+
 
     func removeTransitionCounts() {
         // when transition filter is removed from a stack

@@ -72,9 +72,12 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
         picker.dismiss(animated: true)
 
         loadImageListFromPicker(results: results, theController: controller)
+        // calls myTargetParm.postListSizeChange( newList: pickingImageList) to postTransitionFilterAdd() or remove()
         if pickingImageList.isEmpty() { return }
         if let parmController = controller as? PGLSelectParmController {
             parmController.pickerCompletion(pickerController:picker, pickedImageList: pickingImageList)
+            // controller drills down to a filter level notifyTransistionExists
+            // and ALSO calls to postTransitionFilterAdd() or remove()
         }
 
     }
@@ -138,7 +141,7 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
         if let myTargetParm = parmAttribute {
             // when setting inputs to the parm controller
             // not used for the PGLSplitViewController case
-            myTargetParm.postListSizeChange( newList: pickingImageList)
+//            myTargetParm.postListSizeChange( newList: pickingImageList)
             myTargetParm.inputCollection = pickingImageList
         } else {
             if let mySplitController = controller as? PGLSplitViewController {

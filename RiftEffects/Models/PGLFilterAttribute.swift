@@ -354,7 +354,9 @@ class PGLFilterAttribute {
     
     func postListSizeChange( newList: PGLImageList) {
         guard let myCurrentList = inputCollection
-        else { return }
+        else { if newList.isMultiple()  {
+                    postTransitionFilterAdd()   }
+                return }
         if myCurrentList.isMultiple() && newList.isMultiple() {
             return // no change
         }
@@ -364,6 +366,10 @@ class PGLFilterAttribute {
             return
         }
         if myCurrentList.isMultiple() && !newList.isMultiple() {
+            postTransitionFilterRemove()
+            return
+        }
+        if !myCurrentList.isMultiple() && !newList.isMultiple() {
             postTransitionFilterRemove()
             return
         }
@@ -418,7 +424,11 @@ class PGLFilterAttribute {
             setImageParmState(newState: ImageParm.missingInput)
         } else {
             setImageParmState(newState: ImageParm.inputPhoto) }
+// also state of
+//        ImageParm.inputChildStack
+//        ImageParm.inputPriorFilter
 
+        _ = aSourceFilter.notifyTransitionsExist()
         aSourceFilter.postImageChange()
     }
 
@@ -1126,6 +1136,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
 
 
     var imageParmState = ImageParm.missingInput
+    var isPostedTransitionImageAvailable: Bool = false
 
     var isDepthListAssigned = false
     // indicates that myFilter was assigned by a special constructor method
@@ -1163,17 +1174,24 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
             }
     }
 
-  override func hasImageInput() -> Bool? {
+  override func hasImageInput() -> Bool {
     
     // answer true if there is an inputCollection and it is not empty
+      // or if image input is from another filter or child stack
+      if !imageInputIsEmpty( ) {
+          return true
+      }
+      if hasFilterStackInput( ) {
+          return true
+      }
 
-    switch imageParmState {
-        case ImageParm.inputPhoto :
-            return !imageInputIsEmpty()
-        default:
-            return false
-    }
-}
+      if imageParmState == .inputPriorFilter {
+          return true
+      }
+
+      return false
+
+  }
     override func setImageParmState(newState: ImageParm) {
 
         // see PGLFilterAttributeImage
@@ -1355,6 +1373,22 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     //           let outputImageUpdate = Notification(name:PGLOutputImageChange)
     //           NotificationCenter.default.post(outputImageUpdate)
            }
+
+    override func postTransitionFilterAdd() {
+        if !isPostedTransitionImageAvailable {
+            isPostedTransitionImageAvailable = true
+            Logger(subsystem: LogSubsystem, category: LogCategory).info ("\( String(describing: self) + "-" + #function) ")
+            super.postTransitionFilterAdd()
+        }
+    }
+
+    override func postTransitionFilterRemove() {
+        if isPostedTransitionImageAvailable {
+            Logger(subsystem: LogSubsystem, category: LogCategory).info ("\( String(describing: self) + "-" + #function) ")
+            isPostedTransitionImageAvailable = false
+            super.postTransitionFilterRemove()
+        }
+    }
 
 
 

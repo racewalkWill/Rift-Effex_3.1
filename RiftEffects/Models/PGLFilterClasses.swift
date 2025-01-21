@@ -202,7 +202,9 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         // answer true if there are two parms with at least
         // one image
         // or one parm with 2 or more images
+        // input from stack is an image input to the parm
         // post transitionFilterAdd if true
+        Logger(subsystem: LogSubsystem, category: LogCategory).info ("\( String(describing: self) + "-" + #function) ")
         if !isTransitionCategoryFilter() {
             return false
         }
@@ -211,28 +213,32 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         if transitionAttributes.isEmpty {
             return false
         }
-        let attributesWithTransitions = transitionAttributes.filter( {!$0.imageInputIsEmpty()})
-        if attributesWithTransitions.isEmpty {
+        let attributesWithInput = transitionAttributes.filter(
+            { $0.hasImageInput() } )
+        if attributesWithInput.isEmpty {
             return false
         }
-        if attributesWithTransitions.count > 1 {
-            for anImageAtt in attributesWithTransitions {
+        if attributesWithInput.count > 1 {
+            // there are at least two attributes with at least one input image
+            // all qualify to post
+            for anImageAtt in attributesWithInput {
                 anImageAtt.postTransitionFilterAdd()
             }
             return true
         } else {
             // exactly one element in attributesWithTransitions
             // does it have more than one image
-            guard let singleImageAttribute = attributesWithTransitions.first
-            else { return false}
+            guard let singleImageAttribute = attributesWithInput.first
+                else { return false}
             guard let singleList = singleImageAttribute.inputCollection
-            else { return false }
+                else { return false }
             if singleList.isMultiple() {
-                singleImageAttribute.postTransitionFilterAdd()
-                return true
-            } else {
-                return false
-            }
+                    singleImageAttribute.postTransitionFilterAdd()
+                    return true
+                } else {
+                    // one attribute with one input can not transition
+                    return false
+                }
             }
 
     }
@@ -499,7 +505,8 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         // PGLDisparityFilter implements
 
         setImageValue(newValue: (inputList.first()!), keyName: attributeName)
-        setImageListClone(cycleStack: inputList, sourceKey: attributeName)
+        setImageListClone(imageList: inputList, sourceKey: attributeName)
+       
     }
 
     func setUserPick(attribute: PGLFilterAttribute, imageList: PGLImageList) {
@@ -911,7 +918,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         // min/max issues?
     }
 
-    func setImageListClone(cycleStack: PGLImageList, sourceKey: String) {
+    func setImageListClone(imageList: PGLImageList, sourceKey: String) {
         // empty implementation
         // PGLTransitionFilter subclass will  clone cycleStack to other parms
 

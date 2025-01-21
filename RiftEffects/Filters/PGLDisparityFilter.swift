@@ -170,7 +170,7 @@ class PGLDisparityFilter: PGLRectangleFilter {
                         let newList = userPickList.clone(toParm: affectedDisparityAttribute)
 //                        affectedDisparityAttribute.setImageCollectionInput(cycleStack: newList)
                         self.setImageValue(newValue: (newList.first()!), keyName: self.inputDisparityKey)
-                        self.setImageListClone(cycleStack: newList, sourceKey: self.inputDisparityKey)
+                        self.setImageListClone(imageList: newList, sourceKey: self.inputDisparityKey)
                         if newList.isEmpty() {
                             affectedDisparityAttribute.setImageParmState(newState: ImageParm.missingInput)
                         } else {
