@@ -79,6 +79,11 @@
 		A3ABF28E2B194DD3006286B2 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = A3ABF28D2B194DD3006286B2 /* Documentation.docc */; };
 		A3AD94762B7CF96E00125E74 /* PGLTwoColumnSplitController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AD94752B7CF96E00125E74 /* PGLTwoColumnSplitController.swift */; };
 		A3AF392C25B61D850035A5FF /* PGLSaliencyBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AF392B25B61D850035A5FF /* PGLSaliencyBlur.swift */; };
+		A3AF92D92D4007BB001E4785 /* PGLFilterAttributeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AF92D82D4007BB001E4785 /* PGLFilterAttributeImage.swift */; };
+		A3AF92DB2D400921001E4785 /* PGLFilterAttributeAngle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AF92DA2D400921001E4785 /* PGLFilterAttributeAngle.swift */; };
+		A3AF92DD2D40093A001E4785 /* PGLFilterAttributeAffine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AF92DC2D40093A001E4785 /* PGLFilterAttributeAffine.swift */; };
+		A3AF92DF2D400952001E4785 /* PGLFilterAttributeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AF92DE2D400952001E4785 /* PGLFilterAttributeColor.swift */; };
+		A3AF92E12D4009BF001E4785 /* PGLAttributeRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AF92E02D4009BF001E4785 /* PGLAttributeRectangle.swift */; };
 		A3B5A1412922753B003DBE92 /* AAPLShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = A3B5A1402922753B003DBE92 /* AAPLShaders.metal */; };
 		A3B5BCB02BAFA373007606D0 /* PGLGradientChildFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B5BCAF2BAFA373007606D0 /* PGLGradientChildFilter.swift */; };
 		A3B785162B224E6F00F3DA68 /* PGLCameraViewFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B785152B224E6F00F3DA68 /* PGLCameraViewFilter.swift */; };
@@ -266,6 +271,11 @@
 		A3ABF28D2B194DD3006286B2 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		A3AD94752B7CF96E00125E74 /* PGLTwoColumnSplitController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLTwoColumnSplitController.swift; sourceTree = "<group>"; };
 		A3AF392B25B61D850035A5FF /* PGLSaliencyBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSaliencyBlur.swift; sourceTree = "<group>"; };
+		A3AF92D82D4007BB001E4785 /* PGLFilterAttributeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeImage.swift; sourceTree = "<group>"; };
+		A3AF92DA2D400921001E4785 /* PGLFilterAttributeAngle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeAngle.swift; sourceTree = "<group>"; };
+		A3AF92DC2D40093A001E4785 /* PGLFilterAttributeAffine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeAffine.swift; sourceTree = "<group>"; };
+		A3AF92DE2D400952001E4785 /* PGLFilterAttributeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeColor.swift; sourceTree = "<group>"; };
+		A3AF92E02D4009BF001E4785 /* PGLAttributeRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAttributeRectangle.swift; sourceTree = "<group>"; };
 		A3B5A13F2922753B003DBE92 /* AAPLShaderTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLShaderTypes.h; sourceTree = "<group>"; };
 		A3B5A1402922753B003DBE92 /* AAPLShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = AAPLShaders.metal; sourceTree = "<group>"; };
 		A3B5BCAF2BAFA373007606D0 /* PGLGradientChildFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLGradientChildFilter.swift; sourceTree = "<group>"; };
@@ -603,6 +613,11 @@
 				A3BF507C24D32A3400CD5114 /* PGLFilterClasses.swift */,
 				A392D5ED26C3EBDA00688952 /* PGLRandomFilterMaker.swift */,
 				A3BF50A724D32A3400CD5114 /* PGLFilterAttribute.swift */,
+				A3AF92E02D4009BF001E4785 /* PGLAttributeRectangle.swift */,
+				A3AF92DE2D400952001E4785 /* PGLFilterAttributeColor.swift */,
+				A3AF92DC2D40093A001E4785 /* PGLFilterAttributeAffine.swift */,
+				A3AF92DA2D400921001E4785 /* PGLFilterAttributeAngle.swift */,
+				A3AF92D82D4007BB001E4785 /* PGLFilterAttributeImage.swift */,
 				A30BF4322CEA503A0062C84C /* PGLRandomParms.swift */,
 				A3DDDEE629D85EF1003B8545 /* PGLFilterAttrChildStack.swift */,
 				A3BF505424D32A3400CD5114 /* PGLFilterAttributeNumber.swift */,
@@ -901,6 +916,7 @@
 				A3BF510E24D32A3400CD5114 /* PGLImageCIFilter.swift in Sources */,
 				A3D68B312D1DC895007FD92E /* PGLMaskFilter.swift in Sources */,
 				A3BF512124D32A3400CD5114 /* AppDelegate.swift in Sources */,
+				A3AF92E12D4009BF001E4785 /* PGLAttributeRectangle.swift in Sources */,
 				A326F7A52B1FDEB30070D759 /* PGLFilterAttributeVectorUI.swift in Sources */,
 				A39F88042A4C7E6F000AE342 /* PGLLibraryCell.swift in Sources */,
 				A35311012C33571300FB29EA /* PGLStackSection.swift in Sources */,
@@ -919,6 +935,7 @@
 				A33C441D28E8D4E50096E7EE /* PGLSequencedFilters.swift in Sources */,
 				A3BF510524D32A3400CD5114 /* PGLDynamicDragBehavior.swift in Sources */,
 				A36BBAFF2B87CFC40080F149 /* PGLVideoMgr.swift in Sources */,
+				A3AF92D92D4007BB001E4785 /* PGLFilterAttributeImage.swift in Sources */,
 				A3BB9E092B73ED4D0041F914 /* AVAssetExtension.swift in Sources */,
 				A320F6262669550E008F6090 /* PGLInfoPrivacyController.swift in Sources */,
 				A3BF50EB24D32A3400CD5114 /* PGLVisionDetection.swift in Sources */,
@@ -967,6 +984,7 @@
 				A3E17A1B29F5DBB2006A39A6 /* PGLFilterStackDemo.swift in Sources */,
 				A313B1E22AE3298B007AE850 /* PGLVideo.swift in Sources */,
 				A39F88082A4C7FF2000AE342 /* PGLAppearance.swift in Sources */,
+				A3AF92DF2D400952001E4785 /* PGLFilterAttributeColor.swift in Sources */,
 				A3B5A1412922753B003DBE92 /* AAPLShaders.metal in Sources */,
 				A38F9D76250442B800B58F6B /* CVPixelBufferExtension.swift in Sources */,
 				A3BF513924D32A3400CD5114 /* PGLUserAssetSelection.swift in Sources */,
@@ -1024,6 +1042,7 @@
 				A3D9FF09292A9EFE00BAE158 /* VertexDescriptor.swift in Sources */,
 				A3BF50FF24D32A3400CD5114 /* PGLAttributeUI.swift in Sources */,
 				A3552BEE2946AA7D002FBC72 /* PGLAttributeVectorNumeric.swift in Sources */,
+				A3AF92DB2D400921001E4785 /* PGLFilterAttributeAngle.swift in Sources */,
 				A3BF50F224D32A3400CD5114 /* ListCell.swift in Sources */,
 				A3CB99C42BBAE5980015E03F /* PGLVectorScaling.swift in Sources */,
 				A3BF50F724D32A3400CD5114 /* TitleSupplementaryView.swift in Sources */,
@@ -1036,6 +1055,7 @@
 				A3719FA628233D5B009A9DBE /* PGLCommonParmController.swift in Sources */,
 				A3BF50E424D32A3400CD5114 /* PGLFilterAttributeNumber.swift in Sources */,
 				A3DBD2D12BEC1D66009A6317 /* PGLVideoFrameQueue.swift in Sources */,
+				A3AF92DD2D40093A001E4785 /* PGLFilterAttributeAffine.swift in Sources */,
 				A39B220E2B558E7C0026C7FE /* PGLImageListPicker.swift in Sources */,
 				A3BF50EC24D32A3400CD5114 /* PGLVisionProtocol.swift in Sources */,
 			);
