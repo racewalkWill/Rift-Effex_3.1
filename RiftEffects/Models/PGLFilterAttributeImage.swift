@@ -58,9 +58,11 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     }
 
   override func hasImageInput() -> Bool {
-    
+
     // answer true if there is an inputCollection and it is not empty
       // or if image input is from another filter or child stack
+      // first filter of stack and first image attribute cannot have a image input from prior filter
+      
       if !imageInputIsEmpty( ) {
           return true
       }
@@ -68,9 +70,10 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
           return true
       }
 
-      if imageParmState == .inputPriorFilter {
-          return true
-      }
+//      if imageParmState == .inputPriorFilter {
+      // this state is not set until later in the processing
+//          return true
+//      }
 
       return false
 

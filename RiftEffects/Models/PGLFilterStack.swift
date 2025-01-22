@@ -133,6 +133,7 @@ class PGLFilterStack: Equatable, Hashable  {
         {
             Logger(subsystem: LogSubsystem, category: LogCategory).error("PGLFilterStack FAILED setDefault")
         }
+        setFiltersStackPosition()
 
     }
 
@@ -229,6 +230,7 @@ class PGLFilterStack: Equatable, Hashable  {
         // private - assumes inputs are set
         activeFilters.append(newFilter)
         activeFilterIndex = activeFilters.count - 1 // zero based index
+        newFilter.stackPosition = activeFilterIndex
         postFilterChangeRedraw()
     }
 
@@ -422,9 +424,11 @@ class PGLFilterStack: Equatable, Hashable  {
 
 
             removedFilters.append(oldFilter)
+            oldFilter.stackPosition = -1
                 // filter relationship change will be updated at save time
 
             activeFilters[at] = newFilter
+            newFilter.stackPosition = at
 
             if oldFilter.hasAnimation {
                 oldFilter.stopAllAnimation()
@@ -445,6 +449,7 @@ class PGLFilterStack: Equatable, Hashable  {
                 removedFilter = activeFilters.removeLast()
                 if removedFilter != nil {
                     removedFilters.append(removedFilter!)
+                    removedFilter?.stackPosition = -1
                 }
                 if let thisTransitionFilter = removedFilter as? PGLTransitionFilter {
                     thisTransitionFilter.removeTransitionCounts()
@@ -463,6 +468,8 @@ class PGLFilterStack: Equatable, Hashable  {
             if !activeFilters.isEmpty {
                     removedFilter = activeFilters.removeLast()
                     removedFilters.append(removedFilter!)
+                    removedFilter!.stackPosition = -1
+
                     activeFilterIndex = activeFilters.count - 1 // zero based index
             }
                 return removedFilter //may be nil
@@ -543,8 +550,10 @@ class PGLFilterStack: Equatable, Hashable  {
                 // now outputs of prior filter go to the new activeOne inputs
                 let newFilter = activeFilters[activeFilterIndex]
                 moveInputsFrom(oldFilter, newFilter)
+                newFilter.stackPosition = position
 
                 removedFilters.append(oldFilter)
+                oldFilter.stackPosition = -1
 
                 if oldFilter.isTransitionCategoryFilter() {
                     if !oldFilter.allImageParmsMissingInput() {
@@ -558,6 +567,7 @@ class PGLFilterStack: Equatable, Hashable  {
                 }
                 returnValue = oldFilter
         }
+        setFiltersStackPosition()
         postFilterChangeRedraw()
         returnValue?.releaseVars()
         return returnValue
@@ -857,10 +867,13 @@ class PGLFilterStack: Equatable, Hashable  {
         return  activeFilterIndex + 1
     }
 
-//    func currentFilterPosition() -> PGLFilterCategoryIndex {
-//        let theCurrentFilter = filterAt(tabIndex: activeFilterIndex)
-//        return theCurrentFilter.uiPosition
-//    }
+    func setFiltersStackPosition() {
+        // assign stackPostion value to each filter in the stack
+        for index in 0..<activeFilters.count {
+            activeFilters[index].stackPosition = index
+        }
+    }
+
 
     func filterName() -> String {
         if isEmptyStack() { return "" }

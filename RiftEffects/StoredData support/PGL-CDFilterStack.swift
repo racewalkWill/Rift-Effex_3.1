@@ -75,6 +75,7 @@ extension PGLFilterStack {
 
                 }
             }
+            self.setFiltersStackPosition()
         }
 
 

@@ -70,6 +70,10 @@ static let LogParmValues = true
     var attributes = [PGLFilterAttribute]() // may have subclasses
     var filterCategories = [String]()
     var uiPosition: PGLFilterCategoryIndex
+
+    var stackPosition: Int = 0
+        // stackPostion is UI attribute does not need to be stored
+
     var isImageInputType = false
     weak var oldImageInput: CIImage?
     var storedFilter: CDStoredFilter? // managedObject - write/read to Core Data
@@ -209,12 +213,26 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
             return false
         }
 
-        let transitionAttributes = imageAttributes()
+        var transitionAttributes = imageAttributes()
         if transitionAttributes.isEmpty {
             return false
         }
-        let attributesWithInput = transitionAttributes.filter(
+        var attributesWithInput = transitionAttributes.filter(
             { $0.hasImageInput() } )
+        // also check for .inputPriorFilter
+        if stackPosition != 0 {
+            // this filter is not the first in the stack
+            //  and then first image attributes should have .inputPriorFilter
+            if !transitionAttributes.isEmpty {
+                let priorInputAttribute = transitionAttributes[0]
+                // first image attribute should be the one getting input from prior filter output
+                if !priorInputAttribute.hasImageInput() {
+                    // it failed the hasImageInput test, but will have .inputPriorFilter
+                    attributesWithInput.append(priorInputAttribute)
+                }
+            }
+        }
+
         if attributesWithInput.isEmpty {
             return false
         }

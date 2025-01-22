@@ -541,7 +541,10 @@ class PGLAppStack {
             aFilter.setInputImageParmState(newState: ImageParm.inputPriorFilter)
             }
 
-
+        targetStack.setFiltersStackPosition()
+        if targetStack !== sourceStack {
+            sourceStack.setFiltersStackPosition()
+        }
     }
 
     func activeFilterCellRow() -> Int? {
