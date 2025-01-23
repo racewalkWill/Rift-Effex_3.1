@@ -518,7 +518,14 @@ class PGLAppStack {
 //            }
 //        }
 
+        // is the sourceFilter a transition that may change transition state with the move?
+        // i.e. dissolve with priorFilterInput will lose an input if moved to first
+        // capture initial state
+        let oldSourceStackPosition = sourceIndentCell.filter.stackPosition
+        let oldImageInput = sourceIndentCell.filter.getInputImageAttribute() // may be nil depending on filter type
+        let isPriorFilterInput = (oldImageInput?.imageParmState == ImageParm.inputPriorFilter) // nil answers false
 
+        // so movw
         let sourceFilter = sourceStack.activeFilters.remove(at: sourceIndentCell.filterPosition)
         targetStack.activeFilters.insert(sourceFilter, at: targetIndentCell.filterPosition)
 
@@ -544,6 +551,22 @@ class PGLAppStack {
         targetStack.setFiltersStackPosition()
         if targetStack !== sourceStack {
             sourceStack.setFiltersStackPosition()
+        }
+        if (sourceFilter.stackPosition == 0) && (oldSourceStackPosition != 0) {
+            // moved and may have lost an input as the first in the stack
+            if sourceFilter.isTransitionCategoryFilter() {
+                if isPriorFilterInput {
+                   
+                    oldImageInput?.postTransitionFilterRemove() // this attribute is removed
+                    // check if other attributes have multiple
+//                    if !notifyTransitionsExist() {
+//                        postTransitionFilterRemove()
+//                    }
+                    }
+
+
+            }
+
         }
     }
 
