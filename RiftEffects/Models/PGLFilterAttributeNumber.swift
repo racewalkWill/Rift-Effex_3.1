@@ -216,6 +216,27 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         endPoint = nil
     }
 
+    func setRandomVectorEndPoint() {
+        if startPoint == nil  {
+            return
+        }
+
+        // at least 20% change from startPoint
+        let newXPointChange =  CGFloat.random(in: 0...1)
+        let newYPointChange = CGFloat.random(in: 0...1)
+
+        if endPoint == nil {
+            endPoint = startPoint
+        }
+        let endPointX = endPoint!.x * newXPointChange // + startPoint!.x * (1 - newXPointChange)
+        let endPointY = endPoint!.y * newYPointChange // + startPoint!.y * (1 - newYPointChange)
+        NSLog("setRandomVectorEndPoint old value \(endPoint)")
+        endPoint = CIVector(x: endPointX, y: endPointY)
+        // this also changes the vectorLength
+        // see the didSet block of the var endPoint
+        NSLog("setRandomVectorEndPoint new value \(endPoint)")
+    }
+
  // MARK: set
     override func set(_ value: Any) {
         if attributeName != nil {
@@ -287,6 +308,8 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
 
             // if random new point when the endPoint is set.. this the place to implement
             incrementDirection = incrementDirection * -1
+            setRandomVectorEndPoint()
+
             if attributeValueDelta != nil
                 { attributeValueDelta = attributeValueDelta! * -1 }
             }
@@ -351,26 +374,23 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             case .Initial:
                 if varyTimerAttribute() != nil {
                     if !hasAnimation() { // add Point 1
-
-//                        let facesAction = PGLTableCellAction(action: "Faces", newAttribute: newVaryAttribute, canPerformAction: true, targetAttribute: self)
-//                        facesAction.performDissolveWrapper = true
-//                        allActions.append(facesAction)
-                    let varyAction = PGLTableCellAction(action: "From", newAttribute: nil , canPerformAction: true, targetAttribute: self)
-                   allActions.append(varyAction)
+                        let varyAction = PGLTableCellAction(action: "From", newAttribute: nil , canPerformAction: true, targetAttribute: self)
+                       allActions.append(varyAction)
                     }
             }
             case .VaryPt1:
-                if  (endPoint == nil) {
-
-                    // endPoint is nil
-                    if let newVaryAttribute = varyTimerAttribute(){
-                    let point2Action = PGLTableCellAction(action: "To", newAttribute: newVaryAttribute, canPerformAction: true, targetAttribute: self)
-                    allActions.append(point2Action)
-                    }
-                }
+//                if  (endPoint == nil) {
+//                    setRandomVectorEndPoint()
+////                    // endPoint is nil
+//                    if let newVaryAttribute = varyTimerAttribute(){
+//                        let point2Action = PGLTableCellAction(action: "To", newAttribute: newVaryAttribute, canPerformAction: true, targetAttribute: self)
+//                        allActions.append(point2Action)
+//                    }
+//                }
                 addCancelAction(&allActions)
 
             case .VaryPt1Pt2:
+//                setRandomVectorEndPoint()
 
                  addCancelAction(&allActions)
             case .DissolveWrapper:
@@ -387,13 +407,17 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         switch varyState {
             case .Initial:
                     setVectorStartPoint()
-                    varyState = .VaryPt1
-
-            case .VaryPt1:
-                setVectorEndPoint()
-                aSourceFilter.startAnimation(attributeTarget: self)
-
+                    setRandomVectorEndPoint()
+//                    varyState = .VaryPt1
                 varyState = .VaryPt1Pt2 // move to next state for both from and to points set
+                aSourceFilter.startAnimation(attributeTarget: self)
+                
+            case .VaryPt1:
+                NSLog("PGLFilterAttributeVector varyState .VaryPt1")
+//                setVectorEndPoint()
+//                aSourceFilter.startAnimation(attributeTarget: self)
+//
+//                varyState = .VaryPt1Pt2 // move to next state for both from and to points set
             case .VaryPt1Pt2:
                 aSourceFilter.stopAnimation(attributeTarget: self)
                  varyState = .Initial
