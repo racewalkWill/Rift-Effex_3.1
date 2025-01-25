@@ -106,19 +106,20 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         }
 
         // at least 20% change from startPoint
-        let newXPointChange =  CGFloat.random(in: 0...1)
-        let newYPointChange = CGFloat.random(in: 0...1)
+
+        let newXPointChange:CGFloat = CGFloat.random(in: 20...(TargetSize.width - 50))
+        let newYPointChange:CGFloat = CGFloat.random(in: 20...(TargetSize.height - 50) )
+
 
         if endPoint == nil {
             endPoint = startPoint
         }
-        let endPointX = endPoint!.x * newXPointChange // + startPoint!.x * (1 - newXPointChange)
-        let endPointY = endPoint!.y * newYPointChange // + startPoint!.y * (1 - newYPointChange)
-        NSLog("setRandomVectorEndPoint old value \(endPoint)")
-        endPoint = CIVector(x: endPointX, y: endPointY)
+
+        NSLog("setRandomVectorEndPoint old value \(String(describing: endPoint))")
+        endPoint = CIVector(x: newXPointChange, y: newYPointChange)
         // this also changes the vectorLength
         // see the didSet block of the var endPoint
-        NSLog("setRandomVectorEndPoint new value \(endPoint)")
+        NSLog("setRandomVectorEndPoint new value \(String(describing: endPoint))")
     }
 
  // MARK: set
@@ -187,23 +188,21 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         if !hasAnimation() { return }  // animationTime is Float
 
         if (varyStepCounter > varyTotalFrames) || (varyStepCounter < 0) {
-//          NSLog("PGLFilterAttribute addStepTime resetting from varyStepCounter = \(varyStepCounter)")
+
             // attributeValueDelta is not used for the vector increment
-
-            // if random new point when the endPoint is set.. this the place to implement
             incrementDirection = incrementDirection * -1
-            setRandomVectorEndPoint()
-
+            if incrementDirection >= 0 {
+                // on the start point switch
+                NSLog("PGLFilterAttributeVector switch endPoint")
+                setRandomVectorEndPoint()
+            }
             if attributeValueDelta != nil
                 { attributeValueDelta = attributeValueDelta! * -1 }
-            }
+        }
         // now add the step
-
         varyStepCounter += incrementDirection
             // variationSteo not nil see hasAnimation() guard above
         incrementValueDelta()
-
-
     }
 
     override func incrementValueDelta() {
@@ -245,45 +244,8 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
    
 
     override func cellAction() -> [PGLTableCellAction] {
-        // Vary needs start point and end point set
-        // state1 - Initial - actions are 'From' point 1 or run DissolveWrapper on 'Faces' points
-        // state2 - point1 is set - actions are 'To' point 2 & 'Cancel' back to state1
-        // state3 - point1 & point2 set - animation is running. action is 'Cancel' back to state1
-        //          rateUI subcell appears and sets initial rate
-        // state4 - DissolveWrapper is running - 'Cancel' back to state 1
-        var allActions = [PGLTableCellAction]()
-        switch varyState {
-            // calling method trailingSwipeAction... will change the varyState - user may not complete the swipe
-            // varyState updated in the completion blocks in trailingSwipeAction of PGLSelectParmController
-            case .Initial:
-                if varyTimerAttribute() != nil {
-                    if !hasAnimation() { // add Point 1
-                        let varyAction = PGLTableCellAction(action: "From", newAttribute: nil , canPerformAction: true, targetAttribute: self)
-                       allActions.append(varyAction)
-                    }
-            }
-            case .VaryPt1:
-//                if  (endPoint == nil) {
-//                    setRandomVectorEndPoint()
-////                    // endPoint is nil
-//                    if let newVaryAttribute = varyTimerAttribute(){
-//                        let point2Action = PGLTableCellAction(action: "To", newAttribute: newVaryAttribute, canPerformAction: true, targetAttribute: self)
-//                        allActions.append(point2Action)
-//                    }
-//                }
-                addCancelAction(&allActions)
 
-            case .VaryPt1Pt2:
-//                setRandomVectorEndPoint()
-
-                 addCancelAction(&allActions)
-            case .DissolveWrapper:
-
-                addCancelAction(&allActions)
-
-        }
-
-        return allActions
+        return super.cellAction()
     }
 
     override  func performAction(_ controller: PGLSelectParmController?) {
@@ -292,17 +254,16 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             case .Initial:
                     setVectorStartPoint()
                     setRandomVectorEndPoint()
-//                    varyState = .VaryPt1
                 varyState = .VaryPt1Pt2 // move to next state for both from and to points set
                 aSourceFilter.startAnimation(attributeTarget: self)
-                
+//                NSLog("PGLFilterAttributeVector varyState .Initial")
+
             case .VaryPt1:
-                NSLog("PGLFilterAttributeVector varyState .VaryPt1")
-//                setVectorEndPoint()
-//                aSourceFilter.startAnimation(attributeTarget: self)
-//
-//                varyState = .VaryPt1Pt2 // move to next state for both from and to points set
+                // not used with the setRandomEndPoint
+//                NSLog("PGLFilterAttributeVector varyState .VaryPt1")
+                varyState = .Initial
             case .VaryPt1Pt2:
+//                NSLog("PGLFilterAttributeVector varyState .VaryPt1Pt2")
                 aSourceFilter.stopAnimation(attributeTarget: self)
                  varyState = .Initial
 

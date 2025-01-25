@@ -745,21 +745,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
             }
     }
 
-//    func getSourceFilterLocation(attributeKey: String) -> (source: PGLFilterStack, at: Int)? {
-//        if let sourceAttribute = attribute(nameKey: attributeKey)
-//            { return sourceAttribute.inputSource  }
-//        else {return nil }
-//    }
-//
-//    func getSourceFilter(attributeKey: String) -> PGLSourceFilter? {
-//        if let sourceLocator = getSourceFilterLocation(attributeKey: attributeKey) {
-//            let theIndex = sourceLocator.at
-//            return (sourceLocator.source).filterAt(tabIndex: theIndex)
-//
-//        }
-//        else { return nil}
-//
-//    }
+
     
     func sourceDescription(attributeKey:String) -> String  {
         if attribute(nameKey: attributeKey) != nil
