@@ -919,19 +919,7 @@ class PGLFilterAttribute {
     }
 
     func performAction(_ controller: PGLSelectParmController?) {
-        //override
-        // could also use a closure to invoke various appropriate actions
-        // this example from StackOverFlow
-        // https://stackoverflow.com/questions/24158427/alternative-to-performselector-in-swift
-//        class A {
-//            var selectorClosure: (() -> Void)?
-//            func invoke() {
-//                self.selectorClosure?()
-//            }
-//        }
-//        var a = A()
-//        a.selectorClosure = { println("Selector called") }
-//        a.invoke()
+       
         // user has selected swipe cell action 'Vary'
         aSourceFilter.animate(attributeTarget: self)
 

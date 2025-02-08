@@ -249,6 +249,7 @@ class PGLDissolveWrapperFilter: PGLFeatureTransitionFilter {
                 if let newInput = detectorFilter?.nextImage() {
                      self.setImageValue(newValue: newInput, keyName: kCIInputTargetImageKey )
                 }
+                    // is not calling nextAttribute?.setRandomTimerDt()
             }
             // go back and forth between 0 and 1.0
             // toggle dt either neg or positive

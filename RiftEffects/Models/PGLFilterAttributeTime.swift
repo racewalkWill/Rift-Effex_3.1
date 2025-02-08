@@ -16,14 +16,16 @@ class PGLFilterAttributeTime: PGLFilterAttribute {
 
     let timeDivisor: Float = 25.0
     var uiSliderValue: Float = 0
+
         // a holder of the ui input for db store
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
         sliderMaxValue = 10 // seconds per image
-        sliderMinValue = 0.001 // seconds per image - this is 100 images/second
-        defaultValue = 0.5
-
+//        sliderMinValue = 0.001 // seconds per image - this is 100 images/second
+//        defaultValue = 0.5
+        sliderMinValue = 0.1  // seconds per image - this is 10 images/second
+        defaultValue = 2.0
     }
 
     override func set(_ value: Any) {
@@ -48,9 +50,39 @@ class PGLFilterAttributeTime: PGLFilterAttribute {
         return String(format: "%.03f", parmNumber)
     }
 
-    override func cellAction() -> [PGLTableCellAction ] {
-        return [PGLTableCellAction ]()  // no action on time
+    override func cellAction() -> [PGLTableCellAction] {
+        //[(action:String,newCell:PGLFilterAttribute?) ]
+        // subclasses override
+        var allActions = [PGLTableCellAction]()
+            // [(action:String,newCell:PGLFilterAttribute?) ]()
+        guard let myTransitionFilter = aSourceFilter as? PGLTransitionFilter  else
+        { return allActions }
+        if !myTransitionFilter.isRandomTime { // add Vary
+
+                let varyAction = PGLTableCellAction(action: "Random", newAttribute: nil, canPerformAction: true, targetAttribute: self)
+                allActions.append(varyAction)
+            }
+        else { // add Cancel
+                let cancelVaryAction = PGLTableCellAction(action: "Cancel", newAttribute: nil, canPerformAction: true, targetAttribute: self)
+                allActions.append(cancelVaryAction) }
+
+        return allActions
     }
+
+    override func performAction(_ controller: PGLSelectParmController?) {
+        guard let myTransitionFilter = aSourceFilter as? PGLTransitionFilter  else {
+            return
+        }
+        myTransitionFilter.isRandomTime = true
+    }
+
+    override func performActionOff() {
+        guard let myTransitionFilter = aSourceFilter as? PGLTransitionFilter  else {
+            return
+        }
+        myTransitionFilter.isRandomTime = false
+    }
+
 
     override func uiCellIdentifier() -> String {
         // change back to superclass answer if vary is needed

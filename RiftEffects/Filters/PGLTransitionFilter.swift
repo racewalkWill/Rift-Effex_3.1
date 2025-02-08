@@ -24,6 +24,7 @@ class PGLTransitionFilter: PGLRectangleFilter {
     // PGLFilterCategory static func getFilterDescriptor
 
     var transitionFilterStepTime = 0.0
+    var isRandomTime: Bool = false
 
     /// can pause or go if there are multiple inputs for transition
     ///  several parms can have one input or at least one parm has multiple inputs
@@ -58,16 +59,21 @@ class PGLTransitionFilter: PGLRectangleFilter {
             // this has animation
             // get the input collection
            nextAttribute = getInputImageAttribute() //kCIInputTargetImageKey
-
-
         }
         else if (transitionFilterStepTime <= 0.0) {
             transitionFilterStepTime = 0.0 // bring it back in range
             doIncrement = true
             dt = dt * -1 // past end so toggle
+            if  isRandomTime {
+                // new dt has to be positive
+//                NSLog("PGLTransitionFilter #addFilterStepTime calling setRandomTimerDt")
+                   setRandomTimerDt()
+               }
+
             nextAttribute = attribute(nameKey: kCIInputTargetImageKey  ) //kCIInputImageKey
         }
         if doIncrement {
+
             nextAttribute?.increment()
                 // advances to the next image in the input imageList
         }
@@ -84,6 +90,13 @@ class PGLTransitionFilter: PGLRectangleFilter {
         
 
     }
+    func setRandomTimerDt() {
+        // allowed range is 0.2 to 10 sec Positive number
+        let newRandomeRate: Float = Float.random(in: 0.1...7)
+//        NSLog("PGLTransitionFilter #setRandomTimerDt new lengthSeconds = \(newRandomeRate)")
+        setTimerDt(lengthSeconds: newRandomeRate )
+    }
+
         /// set the dt (deltaTime) for use by addStepTime() on each frame
     override func setTimerDt(lengthSeconds: Float) {
         // Super class does not use this
@@ -98,7 +111,9 @@ class PGLTransitionFilter: PGLRectangleFilter {
         let attributeValueRange = 1.0 // transition range is 0..1
         if varyTotalFrames > 0.0 {
             // division by zero is nan
+//            NSLog("setTimerDt old \(dt)")
             dt = attributeValueRange / Double(varyTotalFrames)
+//            NSLog("setTimerDt NEW        \(dt)")
         }
 
         logParm(#function, lengthSeconds.debugDescription, self.localizedName())
