@@ -1373,9 +1373,9 @@ class PGLFilterConstructor: NSObject,  CIFilterConstructor {
 //            case kPWarpItMetal :
 //                return WarpItMetalFilter()
 
-            case kCompositeTextPositionFilter:
+            case kBlendTextFilter:
 //                return PGLTextImageGenerator.internalCIFilter()
-                return CompositeTextPositionFilter()
+                return CIBlendText()
 
             case kSaliencyBlurFilter:
                 return PGLSaliencyBlurFilter()

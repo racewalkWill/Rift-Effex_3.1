@@ -92,7 +92,7 @@ class PGLTextImageGenerator: PGLTextFilter {
 
 }
 
-class CompositeTextPositionFilter: CIFilter {
+class CIBlendText: CIFilter {
 
     class override var supportsSecureCoding: Bool { get {
         // subclasses must  implement this
@@ -102,17 +102,22 @@ class CompositeTextPositionFilter: CIFilter {
 
     let blendFilter: CIFilter
     let textImageFilter: CIFilter
+    let rotateFilter: CIFilter
 
     @objc var inputImage : CIImage?
     @objc var inputScaleFactor: NSNumber = 2
     @objc var inputFontName: NSString = "HelveticaNeue"
     @objc var inputFontSize: NSNumber = 24
     @objc var inputText: NSString = "Text"
-    @objc var inputTextPosition: CIVector = CIVector(x: 100.0, y: 100.0)
+    @objc var inputTextPosition: CIVector = CIVector(x: 200.0, y: 200.0)
+    @objc var inputYaw: NSNumber = 0
+    @objc var inputRoll: NSNumber = 0
+    @objc var inputPitch: NSNumber = 0
 
     override init() {
         blendFilter = CIFilter(name: "CIDivideBlendMode")!
         textImageFilter = CIFilter(name: "CITextImageGenerator", parameters: ["inputFontSize" : 30, "inputScaleFactor" : 2])!
+        rotateFilter = CIFilter(name: "CIPerspectiveRotate")!
         super.init()
     }
 
@@ -120,6 +125,7 @@ class CompositeTextPositionFilter: CIFilter {
     {
         blendFilter = CIFilter(name: "CIDivideBlendMode")!
         textImageFilter = CIFilter(name: "CITextImageGenerator", parameters: ["inputFontSize" : 30, "inputScaleFactor" : 2])!
+        rotateFilter = CIFilter(name: "CIPerspectiveRotate")!
         super.init(coder: aDecoder)
 //        fatalError("init(coder:) has not been implemented")
     }
@@ -134,12 +140,11 @@ class CompositeTextPositionFilter: CIFilter {
 
         return textCIImage.transformed(by: translate)
     }
+
+
     override var outputImage: CIImage!
     {
-//        guard let inputImage = inputImage else
-//        {
-//            return nil
-//        }
+
         textImageFilter.setValuesForKeys(
             ["inputScaleFactor":  inputScaleFactor,
              "inputFontName" : inputFontName,
@@ -147,20 +152,27 @@ class CompositeTextPositionFilter: CIFilter {
              "inputText" : inputText
 
             ]
-        )  //
+        )  
         guard let textOutput = textImageFilter.outputImage else {
             return inputImage
         }
         // scale & position textOutput to the inputTextPosition
         let scaledText = positionText(textCIImage: textOutput)
-        blendFilter.setValue(scaledText, forKey: kCIInputBackgroundImageKey)
+        rotateFilter.setValuesForKeys(
+            ["inputImage" : scaledText,
+            "inputYaw" : inputYaw,
+             "inputRoll" : inputRoll,
+             "inputPitch": inputPitch])
+
+        let rotatedText = rotateFilter.outputImage!
+        blendFilter.setValue(rotatedText, forKey: kCIInputBackgroundImageKey)
         blendFilter.setValue(inputImage, forKey: kCIInputImageKey)
 
         return blendFilter.outputImage
     }
 
-    override var attributes: [String : Any]
-    {
+//    override var attributes: [String : Any]
+    @objc    class func customAttributes() -> [String: Any] {
         let textAttributes: [String:Any] = [
             kCIAttributeFilterCategories :
                                   [kCICategoryGenerator ,
@@ -208,9 +220,40 @@ class CompositeTextPositionFilter: CIFilter {
                                         kCIAttributeDefault: CIVector(x: 50.0, y: 50.0),
                                         kCIAttributeDisplayName: "Text Position",
                                         kCIAttributeDescription: "Position Text"
-                                  ] as [String : Any]
-            ]
+                                  ] as [String : Any] ,
 
+
+        "inputPitch" : [ kCIAttributeClass: "NSNumber",
+                                    kCIAttributeType: "CIAttributeTypeAngle",
+                                    kCIAttributeDefault: 0,
+                                    kCIAttributeDisplayName: "Pitch",
+                                    kCIAttributeDescription: "Pitch angle in radians.",
+                                    kCIAttributeSliderMin:  -0.5235987755982988,
+                                    kCIAttributeSliderMax: 0.5235987755982988,
+                              ] as [String : Any] ,
+
+        "inputYaw" : [ kCIAttributeClass: "NSNumber",
+                                    kCIAttributeType: "CIAttributeTypeAngle",
+                                    kCIAttributeDefault: 0,
+                                    kCIAttributeDisplayName: "Yaw",
+                                    kCIAttributeDescription: "Yaw angle in radians.",
+                                    kCIAttributeMin: 0,
+                                    kCIAttributeSliderMin: -0.5235987755982988,
+                                    kCIAttributeSliderMax: 0.5235987755982988,
+                              ] as [String : Any] ,
+
+
+        "inputRoll" : [ kCIAttributeClass: "NSNumber",
+                                    kCIAttributeType: "CIAttributeTypeAngle",
+                                    kCIAttributeDefault: 0,
+                                    kCIAttributeDisplayName: "Roll",
+                                    kCIAttributeDescription: "Roll",
+
+                                    kCIAttributeSliderMin: -0.7853981633974483,
+                                    kCIAttributeSliderMax: 0.7853981633974483,
+                              ] as [String : Any ]
+
+            ]
         return textAttributes
     }
 
@@ -222,7 +265,7 @@ class CompositeTextPositionFilter: CIFilter {
 //        NSLog("CompositeTextPositionFilter #register()")
 
             Logger().info("CompositeTextPositionFilter #register()")
-        CIFilter.registerName(kCompositeTextPositionFilter, constructor: PGLFilterConstructor(), classAttributes: [
+        CIFilter.registerName(kBlendTextFilter, constructor: PGLFilterConstructor(), classAttributes: [
             kCIAttributeFilterCategories :    [kCICategoryGenerator ,
                                                kCICategoryStillImage,
                                                kCICategoryVideo],

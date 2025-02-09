@@ -26,7 +26,7 @@ let kPTiltShift = "TiltShift"
 let kPWarpItMetal  = "WarpItMetal"
 let kPCopyOut = "VideoCam"
 
-let kCompositeTextPositionFilter = "CompositeTextPositionFilter"
+let kBlendTextFilter = "BlendText"
 let kSaliencyBlurFilter = "Saliency Blur"
 let kTriangleGradient = "Triangle Gradient"
 let k4SidedGradient = "4 Sided Gradient"

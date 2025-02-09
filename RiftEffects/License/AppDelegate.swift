@@ -103,7 +103,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PGLFilterCIAbstract.register()
 //        WarpItMetalFilter.register()
 
-        CompositeTextPositionFilter.register()
+        CIBlendText.register()
         PGLSaliencyBlurFilter.register()
         PGLImageCIFilter.register()
         PGLRandomFilterAction.register()

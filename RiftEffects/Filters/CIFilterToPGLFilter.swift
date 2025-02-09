@@ -50,7 +50,7 @@ class CIFilterToPGLFilter {
             "CIQRCodeGenerator": [PGLQRCodeGenerator.self ],
             "CIAztecCodeGenerator" : [PGLCIAztecCodeGenerator.self],
             "CIDepthBlurEffect" : [PGLDisparityFilter.self],
-            kCompositeTextPositionFilter: [PGLTextImageGenerator.self],
+            kBlendTextFilter: [PGLTextImageGenerator.self],
             "CIColorMatrix": [PGLColorVectorNumeric.self],
             "CIColorPolynomial": [PGLColorVectorNumeric.self],
             "CIColorCrossPolynomial": [PGLColorVectorNumeric.self],
