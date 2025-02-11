@@ -100,9 +100,10 @@ class CIBlendText: CIFilter {
         return true
     }}
 
-    let blendFilter: CIFilter
+    let colorBlendFilter: CIFilter
     let textImageFilter: CIFilter
     let rotateFilter: CIFilter
+    let colorGenerator: CIFilter
 
     @objc var inputImage : CIImage?
     @objc var inputScaleFactor: NSNumber = 2
@@ -113,19 +114,23 @@ class CIBlendText: CIFilter {
     @objc var inputYaw: NSNumber = 0
     @objc var inputRoll: NSNumber = 0
     @objc var inputPitch: NSNumber = 0
+    @objc var inputTextColor: CIColor = CIColor(color: UIColor.red)
 
     override init() {
-        blendFilter = CIFilter(name: "CIDivideBlendMode")!
-        textImageFilter = CIFilter(name: "CITextImageGenerator", parameters: ["inputFontSize" : 30, "inputScaleFactor" : 2])!
+        colorBlendFilter = CIFilter(name: "CIBlendWithAlphaMask")!
+        textImageFilter = CIFilter(name: "CITextImageGenerator")!
         rotateFilter = CIFilter(name: "CIPerspectiveRotate")!
+        colorGenerator = CIFilter(name: "CIConstantColorGenerator")!
         super.init()
     }
 
     required init?(coder aDecoder: NSCoder)
     {
-        blendFilter = CIFilter(name: "CIDivideBlendMode")!
-        textImageFilter = CIFilter(name: "CITextImageGenerator", parameters: ["inputFontSize" : 30, "inputScaleFactor" : 2])!
+        colorBlendFilter = CIFilter(name: "CIBlendWithAlphaMask")!
+        textImageFilter = CIFilter(name: "CITextImageGenerator")!
         rotateFilter = CIFilter(name: "CIPerspectiveRotate")!
+        colorGenerator = CIFilter(name: "CIConstantColorGenerator")!
+
         super.init(coder: aDecoder)
 //        fatalError("init(coder:) has not been implemented")
     }
@@ -156,6 +161,8 @@ class CIBlendText: CIFilter {
         guard let textOutput = textImageFilter.outputImage else {
             return inputImage
         }
+        colorGenerator.setValue(inputTextColor, forKey: "inputColor")
+
         // scale & position textOutput to the inputTextPosition
         let scaledText = positionText(textCIImage: textOutput)
         rotateFilter.setValuesForKeys(
@@ -165,13 +172,15 @@ class CIBlendText: CIFilter {
              "inputPitch": inputPitch])
 
         let rotatedText = rotateFilter.outputImage!
-        blendFilter.setValue(rotatedText, forKey: kCIInputBackgroundImageKey)
-        blendFilter.setValue(inputImage, forKey: kCIInputImageKey)
+        colorBlendFilter.setValuesForKeys(["inputImage": colorGenerator.outputImage!,
+                                           "inputMaskImage": rotatedText,
+                                          "inputBackgroundImage": inputImage]
+                                            )
 
-        return blendFilter.outputImage
+        return colorBlendFilter.outputImage
     }
 
-//    override var attributes: [String : Any]
+
     @objc    class func customAttributes() -> [String: Any] {
         let textAttributes: [String:Any] = [
             kCIAttributeFilterCategories :
@@ -199,7 +208,7 @@ class CIBlendText: CIFilter {
 
             "inputScaleFactor": [kCIAttributeIdentity: 1,
                 kCIAttributeClass: "NSNumber",
-                kCIAttributeDefault: 24,
+                kCIAttributeDefault: 2,
                 kCIAttributeDisplayName: "Scale Factor",
                 kCIAttributeMin: 0,
                 kCIAttributeSliderMin: 1,
@@ -251,7 +260,13 @@ class CIBlendText: CIFilter {
 
                                     kCIAttributeSliderMin: -0.7853981633974483,
                                     kCIAttributeSliderMax: 0.7853981633974483,
-                              ] as [String : Any ]
+                              ] as [String : Any ],
+            "inputColor" :[ kCIAttributeClass: "CIColor",
+                             kCIAttributeType: "CIAttributeTypeColor",
+                             kCIAttributeDefault: CIColor(red: 1, green: 0, blue: 0),
+                             kCIAttributeDisplayName: "Color",
+                             kCIAttributeDescription: "Color"
+                        ] as [String : Any ]
 
             ]
         return textAttributes
