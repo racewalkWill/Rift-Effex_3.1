@@ -16,6 +16,8 @@ class PGLMaskFilter: PGLRectangleFilter {
 
     override func scaleOutput(ciOutput: CIImage, stackCropRect: CGRect) -> CIImage {
             // does NOT scale to extent of the stackCropRect
+//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+//        NSLog("     no op change stackCropRect = \(stackCropRect)")
         return ciOutput
     }
 

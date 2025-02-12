@@ -43,8 +43,8 @@ class Renderer: NSObject, MTKViewDelegate {
         /// RenderDestinationMetalView drawBasic vars
 
     let inFlightSemaphore = DispatchSemaphore(value: maxBuffersInFlight)
-    let opaqueBackground: CIImage = CIImage.clear
-      
+    let opaqueBackground: CIImage = CIImage.black
+
 
     /// mtkViewSize is in native pixels..  much bigger that the view.frame size
     var mtkViewSize: CGSize!

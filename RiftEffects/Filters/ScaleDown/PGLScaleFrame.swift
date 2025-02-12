@@ -24,7 +24,7 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
     // position only if the centerPoint is changed by the user
 
     var shouldMoveCenter = false
-    let opaqueBackground: CIImage = CIImage.clear
+    let opaqueBackground: CIImage = CIImage.black // CIImage.clear
     var centerPoint: CGPoint = CGPoint(x: TargetSize.width/2, y: TargetSize.height/2) {
         didSet {
             shouldMoveCenter = true

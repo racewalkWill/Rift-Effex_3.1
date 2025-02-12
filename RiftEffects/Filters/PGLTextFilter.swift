@@ -114,7 +114,7 @@ class CIBlendText: CIFilter {
     @objc var inputYaw: NSNumber = 0
     @objc var inputRoll: NSNumber = 0
     @objc var inputPitch: NSNumber = 0
-    @objc var inputTextColor: CIColor = CIColor(color: UIColor.red)
+    @objc var inputTextColor: CIColor = CIColor(color: UIColor.black)
 
     override init() {
         colorBlendFilter = CIFilter(name: "CIBlendWithAlphaMask")!
@@ -263,7 +263,7 @@ class CIBlendText: CIFilter {
                               ] as [String : Any ],
             "inputColor" :[ kCIAttributeClass: "CIColor",
                              kCIAttributeType: "CIAttributeTypeColor",
-                             kCIAttributeDefault: CIColor(red: 1, green: 0, blue: 0),
+                          kCIAttributeDefault: CIColor(color: UIColor.black),
                              kCIAttributeDisplayName: "Color",
                              kCIAttributeDescription: "Color"
                         ] as [String : Any ]
