@@ -1,10 +1,10 @@
 //
-//  PGLFilterClasses.swift
-//  PictureGlance
+//  PGLSourceFilter.swift
+//  
 //
 //  Created by Will on 3/9/17.
 //  Copyright © 2017 Will Loew-Blosser. All rights reserved.
-//  Modifies from Apple CIFunHouse sample app file FilterStack.h
+//  Modified from Apple CIFunHouse sample app file FilterStack.h
 //
 
 import Foundation
