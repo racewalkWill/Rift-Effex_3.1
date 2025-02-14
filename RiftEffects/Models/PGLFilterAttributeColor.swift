@@ -56,19 +56,26 @@ class PGLFilterAttributeColor: PGLFilterAttribute {
     }
     
     func setColor(color: SliderColor, newValue: CGFloat) {
-        let changedColor: CIColor
+        let changedColor: CIColor?
+        guard let rgbSpace = CGColorSpace(name: CGColorSpace.sRGB)
+            else {
+            return
+        }
         if let oldColor = getColorValue() {
             switch color {
             case SliderColor.Red:
-                changedColor = CIColor(red: newValue, green: oldColor.green, blue: oldColor.blue, alpha: oldColor.alpha, colorSpace: oldColor.colorSpace)!
+                    changedColor = CIColor(red: newValue, green: oldColor.green, blue: oldColor.blue, alpha: oldColor.alpha, colorSpace: rgbSpace)
             case SliderColor.Green:
-                changedColor = CIColor(red: oldColor.red, green: newValue, blue: oldColor.blue, alpha: oldColor.alpha, colorSpace: oldColor.colorSpace)!
+                changedColor = CIColor(red: oldColor.red, green: newValue, blue: oldColor.blue, alpha: oldColor.alpha, colorSpace: rgbSpace)
             case SliderColor.Blue:
-                changedColor = CIColor(red: oldColor.red, green: oldColor.green, blue: newValue, alpha: oldColor.alpha, colorSpace: oldColor.colorSpace)!
+                changedColor = CIColor(red: oldColor.red, green: oldColor.green, blue: newValue, alpha: oldColor.alpha, colorSpace: rgbSpace)
             case SliderColor.Alpha:
-                changedColor = CIColor(red: oldColor.red, green: oldColor.green, blue: oldColor.blue, alpha: newValue, colorSpace: oldColor.colorSpace)!
+                changedColor = CIColor(red: oldColor.red, green: oldColor.green, blue: oldColor.blue, alpha: newValue, colorSpace: rgbSpace)
             }
-            aSourceFilter.setColorValue(newValue: changedColor, keyName: attributeName!)
+            if changedColor != nil {
+                aSourceFilter.setColorValue(newValue: changedColor!, keyName: attributeName!)
+            }
+
 //            NSLog("PGLFilterAttribute setColor to \(changedColor)")
         }
     }
