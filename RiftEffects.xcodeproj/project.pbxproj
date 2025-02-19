@@ -446,6 +446,7 @@
 				A31FAF9E28F5E619002DCFEA /* PGLSequenceDissolve.swift */,
 				A33C441C28E8D4E50096E7EE /* PGLSequencedFilters.swift */,
 				A353131028E37613001F2C87 /* PGLSequenceStack.swift */,
+				A3DDDEE629D85EF1003B8545 /* PGLFilterAttrChildStack.swift */,
 			);
 			path = SequenceFilter;
 			sourceTree = "<group>";
@@ -661,7 +662,6 @@
 				A3AF92DA2D400921001E4785 /* PGLFilterAttributeAngle.swift */,
 				A3AF92D82D4007BB001E4785 /* PGLFilterAttributeImage.swift */,
 				A30BF4322CEA503A0062C84C /* PGLRandomParms.swift */,
-				A3DDDEE629D85EF1003B8545 /* PGLFilterAttrChildStack.swift */,
 				A3BF505424D32A3400CD5114 /* PGLFilterAttributeNumber.swift */,
 				A369A7FF2D44625B00C55438 /* PGLFilterAttributeVector3.swift */,
 				A369A7FD2D44624800C55438 /* PGLFilterAttributeTime.swift */,

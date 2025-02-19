@@ -32,11 +32,20 @@ class PGLFilterAttrSequenceStack: PGLFilterAttributeImage {
             // just provides the contextAction
             // nil filterInputActionCell will trigger a segue
             var allActions = [PGLTableCellAction]()
-        
-            /// Always has childSequenceStack. Only Add to the sequence
-            let newAction = PGLTableCellAction(action: "Add", newAttribute: filterInputActionCell(), canPerformAction: false, targetAttribute: self)
-            // this will segue to filterBranch.. opens the filterController
-            allActions.append(newAction)
+
+        /// pick a stack to add from the Library
+        let newPickAction = PGLTableCellAction(action: "Library", newAttribute: filterInputActionCell(), canPerformAction: true, targetAttribute: self)
+        newPickAction.performAction2 = true
+        // performAction2 will execute if true and it will not execute performAction
+        allActions.append(newPickAction)
+
+        /// Pick a Filter for the Sequence
+        let newAction = PGLTableCellAction(action: "Add", newAttribute: filterInputActionCell(), canPerformAction: false, targetAttribute: self)
+        // this will segue to filterBranch.. opens the filterController
+        allActions.append(newAction)
+
+
+
 
             return allActions
     }
@@ -56,10 +65,22 @@ class PGLFilterAttrSequenceStack: PGLFilterAttributeImage {
             localInputStack.stackMode = FilterChangeMode.add
         }
     }
-//    override func uiCellIdentifier() -> String {
-//        return  "Filters"
-//    }
 
-    
+    override func loadChildStackToSequenceStack(inAppStack: PGLAppStack, userPickLibraryStack: PGLFilterStack) -> Bool {
+        if sequenceChild == nil { return false }
+
+        guard let imageFilter = sequenceChild!.demoCreateFilter(ciFilterString: defaultFilterName)
+            else { return false }
+        // add to the sequenceStack of the SequencedFilter
+        sequenceChild!.append(imageFilter)
+        guard let imageAttribute = imageFilter.getInputImageAttribute()
+            else { return false}
+        inAppStack.addChildStackBasic(userPickLibraryStack, imageAttribute)
+        return true
+    }
+
 
 }
+
+
+

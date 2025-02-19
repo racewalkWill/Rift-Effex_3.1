@@ -240,7 +240,13 @@ class PGLAppStack {
         let userPickedStack = PGLFilterStack.init()
         userPickedStack.on(cdStack: newCDStack)
         NSLog("PGLAppStack loadChildStack onParm \(onParm)")
-        addChildStackBasic(userPickedStack, onParm)
+
+        let isSequenceStackload = onParm.loadChildStackToSequenceStack(inAppStack: self, userPickLibraryStack: userPickedStack)
+        if !isSequenceStackload {
+            // not a sequenceStack context just load the basicChild
+            addChildStackBasic(userPickedStack, onParm)
+        }
+
     }
 
     func releaseTopStack() {
@@ -338,7 +344,7 @@ class PGLAppStack {
         return aSequence
     }
     
-    fileprivate func addChildStackBasic(_ newStack: PGLFilterStack, _ parm: PGLFilterAttribute) {
+    func addChildStackBasic(_ newStack: PGLFilterStack, _ parm: PGLFilterAttribute) {
             //        newStack.setStartupDefault() // Images null filter is starting filter
 //        newStack.stackName = viewerStack.nextStackName()
         newStack.stackName = viewerStack.parentParmName(aParm: parm)

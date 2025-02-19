@@ -99,7 +99,11 @@ class PGLSequencedFilters: PGLSourceFilter {
         // needs to reimplement the childStack navigation
         // to actually point to the sequenceStack in the sequenceFilter.
 
+        // first add a ImageParm
         if let theChildParm = attribute(nameKey: "inputSequence") {
+            if let theSequenceStackParm = theChildParm as? PGLFilterAttrSequenceStack {
+                theSequenceStackParm.sequenceChild = self.sequenceStack
+            }
             _ =  appStack.addChildSequenceStackTo(aSequence: sequenceStack, parm: theChildParm)
         }
     }

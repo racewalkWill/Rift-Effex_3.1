@@ -215,6 +215,12 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
         controller?.pickLibraryChildStack()
     }
 
+    func loadChildStackToSequenceStack(inAppStack: PGLAppStack, userPickLibraryStack: PGLFilterStack) -> Bool {
+            // empty implementation
+            // see subclass PGLFilterAttrSequenceStack
+            return false  // not a sequenceStackLoad
+        }
+
     override func segueName() -> String? {
         // answer the  segue action
         // a new subUI cell was not added by the actionCells method
