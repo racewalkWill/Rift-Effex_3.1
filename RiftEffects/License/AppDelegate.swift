@@ -102,7 +102,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Logger(subsystem: LogSubsystem, category: LogNavigation).notice( "start didFinishLaunchingWithOptions")
         PGLFilterCIAbstract.register()
 //        WarpItMetalFilter.register()
-
+//        CompositeTextPositionFilter.register()
         CIBlendText.register()
         PGLSaliencyBlurFilter.register()
         PGLImageCIFilter.register()

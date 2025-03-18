@@ -25,7 +25,7 @@ let kPCarnivalMirror = "CarnivalMirror"
 let kPTiltShift = "TiltShift"
 let kPWarpItMetal  = "WarpItMetal"
 let kPCopyOut = "VideoCam"
-
+let kCompositeTextPositionFilter = "CompositeTextPositionFilter"
 let kBlendTextFilter = "BlendText"
 let kSaliencyBlurFilter = "Saliency Blur"
 let kTriangleGradient = "Triangle Gradient"

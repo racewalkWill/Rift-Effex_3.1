@@ -85,6 +85,8 @@ class PGLTextImageGenerator: PGLTextFilter {
     // uses CompositeTextPositionFilter and positions origin of the text 
 
     override class func displayName() -> String? {
+        // for the older subclass override this displayname
+        // currently there are two 'Blend Text in the Generator category..
         return "Blend Text"
     }
 
@@ -286,6 +288,32 @@ class CIBlendText: CIFilter {
                                                kCICategoryVideo],
             kCIAttributeFilterDisplayName : "Blend Text"
             ])
+
+        CIFilter.registerName(kCompositeTextPositionFilter, constructor: PGLFilterConstructor(), classAttributes: [
+            kCIAttributeFilterCategories :    [kCICategoryGenerator ,
+                                               kCICategoryStillImage,
+                                               kCICategoryVideo],
+            kCIAttributeFilterDisplayName : "Composite Text"
+            ])
+
     }
 
+
+}
+
+class CompositeTextPositionFilter: CIBlendText {
+    override class func register()   {
+ //       let attr: [String: AnyObject] = [:]
+        NSLog("CompositeTextPositionFilter #register()")
+
+            Logger().info("CompositeTextPositionFilter #register()")
+
+        CIFilter.registerName(kCompositeTextPositionFilter, constructor: PGLFilterConstructor(), classAttributes: [
+            kCIAttributeFilterCategories :    [kCICategoryGenerator ,
+                                               kCICategoryStillImage,
+                                               kCICategoryVideo],
+            kCIAttributeFilterDisplayName : "Composite Text"
+            ])
+
+    }
 }
