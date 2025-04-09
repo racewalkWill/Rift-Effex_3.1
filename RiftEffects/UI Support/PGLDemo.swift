@@ -18,6 +18,7 @@ class PGLDemo {
         // supports PGLStackController Random button
         // supports Test classes
 
+    static var DemoMode: Bool = false
     static let NoRandomChildStackPercentage = 70  // integer 0 to 100
                                                   // percentage to control how often a child stack is added in the Random function
                                                   // 100 means child stack is never added
@@ -108,7 +109,7 @@ class PGLDemo {
         }
         else {
                 // use images from the global PGLDemo.RandomImageList
-            if imageParm.inputParmType() == ImageParm.missingInput {
+            if imageParm.inputParmType() == ParmInputState.missingImageInput {
                 guard let newbieList = PGLDemo.RandomImageList?.clone(toParm: imageParm)
                 else {return }
                     // now prune down  the newbie list if needed
@@ -199,7 +200,7 @@ class PGLDemo {
 
         for anImageAttributeName in imageAttributesNames {
             guard let thisAttribute = targetFilter.attribute(nameKey: anImageAttributeName) else { continue }
-            if thisAttribute.inputParmType() == ImageParm.missingInput {
+            if thisAttribute.inputParmType() == ParmInputState.missingImageInput {
 
                 let newChildAdded = mightAddChildStack(attribute: thisAttribute)
                 if !newChildAdded {
@@ -266,10 +267,10 @@ class PGLDemo {
     }
 
     func templateDemoCompletion( startingDemoFilter: PGLSourceFilter ) {
-
+        PGLDemo.DemoMode = true
         appStack.viewerStack.activeFilterIndex = 0
         if setInputToPrior {
-            startingDemoFilter.setInputImageParmState(newState: ImageParm.inputPriorFilter)
+            startingDemoFilter.setInputImageParmState(newState: ParmInputState.inputPriorFilter)
         }
 
         let updateFilterNotification = Notification(name:PGLHideParmControlsOnFilterChange)
@@ -297,7 +298,7 @@ class PGLDemo {
         for anImageParm in imageKeys {
             let thisImageAttribute = filter0?.attribute(nameKey: anImageParm)
             appStack.targetAttribute = thisImageAttribute
-            if thisImageAttribute?.inputParmType() == ImageParm.missingInput {
+            if thisImageAttribute?.inputParmType() == ParmInputState.missingImageInput {
                 setDemoImageInputs(imageParm: thisImageAttribute!)
             }
         }

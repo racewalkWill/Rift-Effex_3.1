@@ -74,7 +74,7 @@ class PGLFilterAttributeAffine: PGLFilterAttribute {
 
     func setAffine() {
 //      NSLog("setAffine = \(affine)")
-
+        parmInputState = .inputValueSet
         let nsTransform = NSValue(cgAffineTransform: affine)
         aSourceFilter.setNSValue(newValue: nsTransform, keyName: attributeName!)
     }

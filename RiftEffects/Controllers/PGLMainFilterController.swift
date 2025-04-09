@@ -608,8 +608,29 @@ extension PGLMainFilterController {
                     return collectionView.dequeueConfiguredReusableCell(using: headerFilterRegistration, for: indexPath, item: item)
                 } else  {
                             // category header
-                        return collectionView.dequeueConfiguredReusableCell(using: headerRegistration, for: indexPath, item: item)
+                    let theHeaderCell = collectionView.dequeueConfiguredReusableCell(using: headerRegistration, for: indexPath, item: item)
+
+                    if indexPath.section == 1 &&  PGLDemo.DemoMode {
+                            var content = UIListContentConfiguration.extraProminentInsetGroupedHeader()
+
+                            content.text = item.title!
+                                // Configure content.
+
+                                // Customize appearance.
+                            content.image = UIImage(systemName: "arrowshape.forward.fill")
+                            if #available(iOS 18.0, *) {
+                                content.imageProperties.strokeColor = .systemRed
+                            } else {
+                                    // Fallback on earlier versions
+                            }
+                                //                        content.textProperties.color = .systemRed
+
+                            theHeaderCell.contentConfiguration = content
+                        }
+
+                    return theHeaderCell
                     }
+
             } else {
                 // ordinary filter cell
                 return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)

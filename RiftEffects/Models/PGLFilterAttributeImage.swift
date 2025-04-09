@@ -18,7 +18,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     // || (attributeType == kCIAttributeTypeImage)?
 
 
-    var imageParmState = ImageParm.missingInput
+
     var isPostedTransitionImageAvailable: Bool = false
 
     var isDepthListAssigned = false
@@ -35,9 +35,10 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
 //    var publishers = [Cancellable]()
 //    var cancellable: Cancellable?
 
-//    required init?(pglFilter: PGLSourceFilter, attributeDict: [String : Any], inputKey: String) {
-//        super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
-//    }
+    required init?(pglFilter: PGLSourceFilter, attributeDict: [String : Any], inputKey: String) {
+        super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
+        parmInputState = ParmInputState.missingImageInput
+    }
     
     override func releaseVars() {
         storedParmImage = nil
@@ -78,16 +79,16 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
       return false
 
   }
-    override func setImageParmState(newState: ImageParm) {
+    override func setImageParmState(newState: ParmInputState) {
 
         // see PGLFilterAttributeImage
-        imageParmState = newState
+        parmInputState = newState
 
     }
 
-    override func inputParmType() -> ImageParm {
+    override func inputParmType() -> ParmInputState {
 
-        return imageParmState
+        return parmInputState
     }
     
   override  func setUICellDescription(_ uiCell: UITableViewCell) {
@@ -100,7 +101,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
         newDescriptionString = newDescriptionString + " -> " + (inputStack?.outputFilterName() ?? "")
     } else {
         if sourceString.isEmpty {
-            if inputParmType() == .missingInput {
+            if inputParmType() == .missingImageInput {
                 newDescriptionString = newDescriptionString + " ----> "
             }
             else {
@@ -119,21 +120,22 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
 
     let parmInputType = inputParmType()
     switch parmInputType {
-        case ImageParm.inputChildStack:
+        case ParmInputState.inputChildStack:
             content.image = PGLFilterAttribute.FlowChartSymbol
-        case ImageParm.inputPhoto:
+        case ParmInputState.inputPhoto:
             if self.hasOnePhoto() {
                 content.image = PGLFilterAttribute.PhotoSymbolSingle }
              else {
                 content.image = PGLFilterAttribute.PhotoSymbol }
-        case ImageParm.inputPriorFilter :
+        case ParmInputState.inputPriorFilter :
             content.image = PGLFilterAttribute.PriorFilterSymbol
-        case ImageParm.missingInput :
+        case ParmInputState.missingImageInput , .inputValueSet :
             content.image = PGLFilterAttribute.MissingPhotoInput
-        case ImageParm.notAnImageParm :
+        case ParmInputState.valueParmNotSet :
             content.image = nil // other symbols are set???
-        case ImageParm.rectangleInput :
+        case ParmInputState.rectangleInput :
             content.image = PGLFilterAttribute.CropSymbool
+      
     }
 
     uiCell.contentConfiguration = content
@@ -168,7 +170,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
         // delete if this is duplicate #pushChildStack
         guard let localInputStack = inputStack
         else { return }
-        if inputParmType() == ImageParm.inputChildStack {
+        if inputParmType() == ParmInputState.inputChildStack {
             // should stackMode be set to Replace
             // the normal setting?
             inAppStack.pushChildStack(localInputStack)
@@ -180,7 +182,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
         // just provides the contextAction
         // nil filterInputActionCell will trigger a segue
         var allActions = [PGLTableCellAction]()
-        if imageParmState == ImageParm.inputPriorFilter {
+        if parmInputState == ParmInputState.inputPriorFilter {
             return allActions
             // empty no actions
             //can't change input from prior filter so no cell action swipe cells

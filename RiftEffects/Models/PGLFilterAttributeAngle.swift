@@ -42,6 +42,7 @@ class PGLFilterAttributeAngle: PGLFilterAttribute {
     
     override func set(_ value: Any) {
         if attributeName != nil { if let newNumber = value as? NSNumber {
+            parmInputState = .inputValueSet
             aSourceFilter.setNumberValue(newValue: newNumber, keyName: attributeName!) }
 
         }

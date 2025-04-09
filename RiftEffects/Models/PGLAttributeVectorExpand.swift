@@ -28,7 +28,9 @@ class PGLAttributeVectorExpand: PGLFilterAttributeVector {
 
                 let scaledVectorValue = scaleVector(inputVector: newVectorValue, scaleBy: upScaler, invertScale: true)
 
-                aSourceFilter.setVectorValue(newValue: scaledVectorValue, keyName: attributeName!) }
+                aSourceFilter.setVectorValue(newValue: scaledVectorValue, keyName: attributeName!)
+                parmInputState = .inputValueSet
+            }
         }
     }
 

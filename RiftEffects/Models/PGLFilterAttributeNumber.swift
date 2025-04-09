@@ -25,6 +25,7 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
     override func set(_ value: Any) {
          if attributeName != nil {
             if let myNumber = value as? NSNumber {
+                parmInputState = .inputValueSet
                 aSourceFilter.setNumberValue(newValue: myNumber, keyName: attributeName!) }
         }
     }

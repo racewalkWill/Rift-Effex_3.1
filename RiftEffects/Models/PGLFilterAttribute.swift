@@ -203,6 +203,7 @@ class PGLFilterAttribute {
         // PGLUserAssetSelection sets to false when images are selected
         // PGLFilterStack sets to true when filter input is set
 
+    var parmInputState = ParmInputState.valueParmNotSet
 
   required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         initDict = attributeDict // save for creating valueParms such as PGLRotateAffineUI
@@ -410,7 +411,7 @@ class PGLFilterAttribute {
         inputCollection?.inputStack = inputStack // keep these aligned
         inputSourceDescription = cycleStack.collectionTitle
         guard let myAttributeName = attributeName else
-        { setImageParmState(newState: ImageParm.missingInput)
+        { setImageParmState(newState: ParmInputState.missingImageInput)
             return
         }
 
@@ -421,9 +422,9 @@ class PGLFilterAttribute {
         aSourceFilter.setImageValuesAndClone(inputList: cycleStack, attributeName: myAttributeName )
 
         if cycleStack.isEmpty() {
-            setImageParmState(newState: ImageParm.missingInput)
+            setImageParmState(newState: ParmInputState.missingImageInput)
         } else {
-            setImageParmState(newState: ImageParm.inputPhoto) }
+            setImageParmState(newState: ParmInputState.inputPhoto) }
 // also state of
 //        ImageParm.inputChildStack
 //        ImageParm.inputPriorFilter
@@ -445,7 +446,7 @@ class PGLFilterAttribute {
         }
     }
 
-    func setImageParmState(newState: ImageParm) {
+    func setImageParmState(newState: ParmInputState) {
         // empty implementation in the superclass
         // see PGLFilterAttributeImage
 
@@ -484,7 +485,7 @@ class PGLFilterAttribute {
         return  "parmNoDetailCell"
     }
 
-    func getSourceDescription(imageType: ImageParm) -> String {
+    func getSourceDescription(imageType: ParmInputState) -> String {
         return inputSourceDescription ?? ""
 
     }
@@ -501,11 +502,19 @@ class PGLFilterAttribute {
         return false
     }
 
-    func inputParmType() -> ImageParm {
+    func inputParmType() -> ParmInputState {
         // superclass default
-        // see PGLFilterAttributeImage for real implementation
+        // see PGLFilterAttributeImage
+        return parmInputState
+    }
 
-        return ImageParm.notAnImageParm
+    func isMissingInput() -> Bool {
+        switch parmInputState {
+            case .valueParmNotSet , .missingImageInput:
+                return true
+            default:
+                return false
+        }
 
     }
 
@@ -541,6 +550,7 @@ class PGLFilterAttribute {
     func set(_ value: Any ) {
         // use a system of double dispatch to address typing
         //
+        parmInputState = .inputValueSet
         if attributeName != nil, attributeClass != nil {
 
             switch attributeClass! {

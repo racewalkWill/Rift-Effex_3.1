@@ -126,7 +126,7 @@ class PGLSequencedFilters: PGLSourceFilter {
 
         if let inputAttribute = attribute(nameKey: kCIInputImageKey )
         {
-            if  inputAttribute.inputParmType() == ImageParm.missingInput
+            if  inputAttribute.inputParmType() == ParmInputState.missingImageInput
                     {
                 return true }
         }

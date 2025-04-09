@@ -378,7 +378,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             // with no splitController then the startupImage stuff does not run
             // this is with filterController open to select a filter.. it goes  blank
             // and you are stil selecting a filter... not too bad of result.
-            myParentSplit.requestStartupImage()
+
+//            myParentSplit.requestStartupImage()
+            /// don't request a new starting image - just go to blank empty stack
+
             self.showStackControllerAction()
         }
 

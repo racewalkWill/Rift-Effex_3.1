@@ -472,7 +472,7 @@ class PGLUserAssetSelection {
         }
         else {
             // empty images list
-            self.myTargetFilterAttribute?.setImageParmState(newState: ImageParm.missingInput)
+            self.myTargetFilterAttribute?.setImageParmState(newState: ParmInputState.missingImageInput)
         }
     }
 

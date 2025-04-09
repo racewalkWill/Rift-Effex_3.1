@@ -50,6 +50,7 @@ class PGLFilterAttributeColor: PGLFilterAttribute {
             if let aColor = SliderColor(rawValue: uiIndexTag) {
                  let floatColor = CGFloat((value as? Float ?? 0.0))       //value as? CGFloat {
                 setColor(color: aColor , newValue: floatColor )
+                parmInputState = .inputValueSet
 
             }
 

@@ -82,7 +82,7 @@ class PGLDisparityFilter: PGLRectangleFilter {
             // not included the inputDisparityKey
             if let inputAttribute = attribute(nameKey: imageAttributeKey )
             {
-                if  inputAttribute.inputParmType() == ImageParm.missingInput
+                if  inputAttribute.inputParmType() == ParmInputState.missingImageInput
                         {
                     return true }
             }
@@ -172,9 +172,9 @@ class PGLDisparityFilter: PGLRectangleFilter {
                         self.setImageValue(newValue: (newList.first()!), keyName: self.inputDisparityKey)
                         self.setImageListClone(imageList: newList, sourceKey: self.inputDisparityKey)
                         if newList.isEmpty() {
-                            affectedDisparityAttribute.setImageParmState(newState: ImageParm.missingInput)
+                            affectedDisparityAttribute.setImageParmState(newState: ParmInputState.missingImageInput)
                         } else {
-                            affectedDisparityAttribute.setImageParmState(newState: ImageParm.inputPhoto) }
+                            affectedDisparityAttribute.setImageParmState(newState: ParmInputState.inputPhoto) }
                             // setImageCollectionInput invokes setImageValue.
                             // now set it directly with the actual depth image
 //                        super.setImageValue(newValue: self.scaledDepthImage!, keyName: self.inputDisparityKey)

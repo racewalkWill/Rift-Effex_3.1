@@ -131,12 +131,12 @@ class PGLSequenceStack: PGLFilterStack {
         if let updateImageParm = updateFilter.attribute(nameKey: imageKeyName ) as? PGLFilterAttributeImage
 
         {
-            if updateImageParm.inputParmType() == ImageParm.missingInput {
+            if updateImageParm.inputParmType() == ParmInputState.missingImageInput {
                 // if user has assigned other inputs to this .. don't overwrite
 
                 if let sourceImages = sequenceAttribute.inputCollection {
                     updateImageParm.inputCollection = sourceImages
-                    updateImageParm.setImageParmState(newState: imageAttribute.imageParmState)
+                    updateImageParm.setImageParmState(newState: imageAttribute.parmInputState)
                         // put the first image into the filter
                     updateFilter.setImageValue(newValue: (sourceImages.first()!), keyName: imageKeyName)
                 }

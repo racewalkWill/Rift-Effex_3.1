@@ -594,7 +594,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
                 myButtonHeader.addFilterBtn.addTarget(self, action: #selector(addFilterToStack ), for: .touchUpInside)
                 myButtonHeader.editFiltersBtn.addTarget(self, action: #selector(toggleEditing ), for: .touchUpInside)
-
+                if PGLDemo.DemoMode {
+                    myButtonHeader.arrowBtn.isHidden = false
+                }
                 return myButtonHeader
             }
         }

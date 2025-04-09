@@ -34,7 +34,7 @@ class PGLFilterAttributeTime: PGLFilterAttribute {
                 //simd_smoothstep is not called here
                 // see addStepTime on the Transition filter
             uiSliderValue = newRate
-
+            parmInputState = .inputValueSet
             aSourceFilter.setTimerDt(lengthSeconds: newRate )
         }
 

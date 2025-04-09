@@ -356,7 +356,7 @@ class PGLAppStack {
 
 
         parm.inputStack = newStack
-        parm.setImageParmState(newState: ImageParm.inputChildStack)
+        parm.setImageParmState(newState: ParmInputState.inputChildStack)
             // Notice the didSet in inputStack: it hooks output of stack to input of the attribute
             //        resetCellFilters() // the flattened filter list needs update for the new stack
         postStackChange() // causes imageController view.isHidden = true
@@ -529,7 +529,7 @@ class PGLAppStack {
         // capture initial state
         let oldSourceStackPosition = sourceIndentCell.filter.stackPosition
         let oldImageInput = sourceIndentCell.filter.getInputImageAttribute() // may be nil depending on filter type
-        let isPriorFilterInput = (oldImageInput?.imageParmState == ImageParm.inputPriorFilter) // nil answers false
+        let isPriorFilterInput = (oldImageInput?.parmInputState == ParmInputState.inputPriorFilter) // nil answers false
 
         // so movw
         let sourceFilter = sourceStack.activeFilters.remove(at: sourceIndentCell.filterPosition)
@@ -540,8 +540,8 @@ class PGLAppStack {
         // could have inputCollection or a childStack as working input
         if targetIndentCell.filterPosition == 0 {
             if let inputImageAttribute = targetStack.activeFilters[0].getInputImageAttribute(){
-                    if inputImageAttribute.imageParmState == ImageParm.inputPriorFilter {
-                        inputImageAttribute.setImageParmState(newState: ImageParm.missingInput)
+                    if inputImageAttribute.parmInputState == ParmInputState.inputPriorFilter {
+                        inputImageAttribute.setImageParmState(newState: ParmInputState.missingImageInput)
                     }
                 }
         }
@@ -551,7 +551,7 @@ class PGLAppStack {
             let aFilter = targetStack.activeFilters[index]
             aFilter.setInput(image: priorFilter.outputImage(),source: targetStack.stackFilterName(priorFilter, index: index))
 
-            aFilter.setInputImageParmState(newState: ImageParm.inputPriorFilter)
+            aFilter.setInputImageParmState(newState: ParmInputState.inputPriorFilter)
             }
 
         targetStack.setFiltersStackPosition()

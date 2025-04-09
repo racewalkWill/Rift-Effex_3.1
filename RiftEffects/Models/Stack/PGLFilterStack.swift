@@ -246,17 +246,17 @@ class PGLFilterStack: Equatable, Hashable  {
             if !currentFilter.hasImageParmMissingInput() {
                 // issue - when current filter input is fixed then newFilter state should change too
                 // see check in #imageUpdate empty to inputPriorFilter state
-                newFilter.setInputImageParmState(newState: ImageParm.inputPriorFilter) }
+                newFilter.setInputImageParmState(newState: ParmInputState.inputPriorFilter) }
 
         } else {
             // first filter in the stack
             if let inputImageAttribute = newFilter.getInputImageAttribute() {
                 if inputImageAttribute.inputStack == nil {
                     if inputImageAttribute.imageInputIsEmpty() {
-                        newFilter.setInputImageParmState(newState: ImageParm.missingInput)
+                        newFilter.setInputImageParmState(newState: ParmInputState.missingImageInput)
                     }
                 } else {
-                    newFilter.setInputImageParmState(newState: ImageParm.inputChildStack)
+                    newFilter.setInputImageParmState(newState: ParmInputState.inputChildStack)
                 }
             }
 
@@ -305,7 +305,7 @@ class PGLFilterStack: Equatable, Hashable  {
          else
                  { newFilter.setImageValue(newValue: CIImage.empty(), keyName: anImageKey)
                     let newAttribute = newFilter.attribute(nameKey: anImageKey)
-                    newAttribute?.setImageParmState(newState: ImageParm.missingInput)
+                    newAttribute?.setImageParmState(newState: ParmInputState.missingImageInput)
                     // a dissolve clones a list to the second input parm
                     }
             }
@@ -376,11 +376,11 @@ class PGLFilterStack: Equatable, Hashable  {
                     imageAttribute.removeTransitionCounts() // call this before the images are removed
                     collectImagesList.moveContentsFrom(thisAttributeImageCollection)
                 }
-                if imageAttribute.imageParmState == .inputPhoto {
+                if imageAttribute.parmInputState == .inputPhoto {
                     // other states .inputChildStack or .inputPriorFilter or .missingInput
                     // do not need to be changed
                     imageAttribute.set(CIImage.empty() )
-                    imageAttribute.setImageParmState(newState: .missingInput)
+                    imageAttribute.setImageParmState(newState: .missingImageInput)
 
                 }
 
@@ -509,7 +509,7 @@ class PGLFilterStack: Equatable, Hashable  {
         if isChildStack() {
             // update the parent state too
             if let parentImageAttribute = parentAttribute as? PGLFilterAttributeImage {
-                parentImageAttribute.setImageParmState(newState: ImageParm.missingInput)
+                parentImageAttribute.setImageParmState(newState: ParmInputState.missingImageInput)
                 parentImageAttribute.inputStack = nil
                 if let cdImage = parentImageAttribute.storedParmImage {
                     cdImage.inputStack = nil
@@ -673,7 +673,7 @@ class PGLFilterStack: Equatable, Hashable  {
                 filter.setInput(image: thisImage, source: nil)
                 if filter.hasImageParmMissingInput() {
                     if let changedAttribute = filter.getInputImageAttribute() {
-                        changedAttribute.setImageParmState(newState: ImageParm.inputPriorFilter)
+                        changedAttribute.setImageParmState(newState: ParmInputState.inputPriorFilter)
                     }
                 }
             }

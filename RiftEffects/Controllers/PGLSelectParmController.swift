@@ -13,13 +13,14 @@ import os
 import Combine
 
 
-enum ImageParm: Int {
-    case notAnImageParm = -1 // superclass of PGLFilterAttributeImage will use this...
+enum ParmInputState: Int {
+    case valueParmNotSet = -1 // superclass of PGLFilterAttributeImage will use this...
     case inputPhoto = 0  // input from imageList of one or more images
     case inputChildStack = 1 // input from a child stack
     case inputPriorFilter = 2  // previous filter in the stack is input
-    case missingInput = 3
+    case missingImageInput = 3
     case rectangleInput = 4
+    case inputValueSet = 5 // value set in non image parms
 }
 
 
@@ -237,6 +238,9 @@ class PGLSelectParmController: PGLCommonController,
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         reloadImageCellIcons()
+        if let rowToHighlight = firstEmptyParmRow() {
+            activateEmptyRow(parmRow: rowToHighlight)
+        }
         // PGLRedrawParmControllerOpenNotification
         let updateNotification = Notification(name:PGLRedrawParmControllerOpenNotification)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["parmControllerIsOpen" : true as AnyObject])
@@ -483,10 +487,37 @@ class PGLSelectParmController: PGLCommonController,
         appStack.setParms(newFilterParms: filterParms[sectionParms])
        imageController?.addParmControls()
             // MARK: appStackParmRefactor
-           
 
+        // demo test
+        if PGLDemo.DemoMode {
+            NSLog(#function + " DemoMode")
+        }
+        if let rowToHighlight = firstEmptyParmRow() {
+            activateEmptyRow(parmRow: rowToHighlight)
+        }
 
     }
+    func firstEmptyParmRow() -> IndexPath? {
+        for section in 0..<filterParms.count {
+            for row in 0..<filterParms[section].count {
+                if filterParms[section][row].isMissingInput() {
+                    return IndexPath(row: row, section: section)
+                }
+            }
+        }
+        return nil
+    }
+
+    func activateEmptyRow(parmRow: IndexPath) {
+        parmsTableView.selectRow(
+            at: parmRow,
+            animated: true,
+            scrollPosition: .top
+        )
+        tableView(parmsTableView, didSelectRowAt: parmRow)
+    }
+
+    
 
     func imageViewParmControls() -> [String : UIView] {
         // answers dictionary indexed index by attributeName
@@ -589,7 +620,12 @@ class PGLSelectParmController: PGLCommonController,
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case sectionImages:
-                return "Images"
+                if PGLDemo.DemoMode {
+                    return "Images TAP or SWIPE"
+                } else {
+                    return "Images"
+                }
+
         case sectionParms:
                 return "Settings"
 
@@ -672,12 +708,12 @@ class PGLSelectParmController: PGLCommonController,
         thisCellAttribute?.uiIndexPath = indexPath
         if let myInputType = thisCellAttribute?.inputParmType() {
             switch myInputType {
-                case .inputPriorFilter, .notAnImageParm, .inputChildStack :
+                case .inputPriorFilter, .valueParmNotSet, .inputChildStack :
                     cell.accessoryType  = .none
                         // input from prior cell always overrides any other image input
                         // can't change or choose image.. remove the disclosure indicator of the cell
 
-                case .missingInput:
+                case .missingImageInput:
                     cell.accessoryType = .detailDisclosureButton
                     cell.backgroundConfiguration?.backgroundColor = .secondarySystemBackground
                 case .rectangleInput:
@@ -910,7 +946,7 @@ class PGLSelectParmController: PGLCommonController,
                     Logger(subsystem: LogSubsystem, category: LogCategory).notice("PGLSelectParmController trailingSwipeActionsConfigurationForRowAt tappedAttribute = \(String(describing: self.tappedAttribute))")
                     self.imageController?.hideSliders()
 
-                    if self.tappedAttribute?.inputParmType() == ImageParm.inputChildStack {
+                    if self.tappedAttribute?.inputParmType() == ParmInputState.inputChildStack {
                         self.tappedAttribute?.setChildStackMode(inAppStack: self.appStack)
                     }
 

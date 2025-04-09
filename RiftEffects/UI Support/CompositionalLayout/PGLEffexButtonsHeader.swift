@@ -22,5 +22,7 @@ class PGLEffexButtonsHeader: UITableViewHeaderFooterView {
     @IBAction func editFiltersBtn(_ sender: UIButton) {
         sender.isSelected.toggle()
     }
+    /// arrow hint for PGLDemo.DemoMode  - usually hidden
+    @IBOutlet weak var arrowBtn: UIButton!
     
 }

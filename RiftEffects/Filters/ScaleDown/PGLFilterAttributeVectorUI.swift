@@ -29,6 +29,7 @@ class PGLFilterAttributeVectorUI: PGLFilterAttributeVector {
     override func set(_ value: Any) {
         if attributeName != nil {
             if let newVectorValue = value as? CIVector {
+                parmInputState = .inputValueSet
                 aSourceFilter.setVectorValue(newValue: newVectorValue, keyName: attributeName!) }
         }
     }

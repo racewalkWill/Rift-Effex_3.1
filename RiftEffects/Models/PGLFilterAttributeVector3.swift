@@ -38,6 +38,7 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
 
         if attributeName != nil {
             if let newVector = value as? CIVector {
+
                 set3ValueVector(newVector, newZValue: zValue) }
 
             }
@@ -45,7 +46,7 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
 
     func set3ValueVector(_ newXYvector: CIVector, newZValue: CGFloat) {
         // the XYvector is dragged to a new point.
-
+            parmInputState = .inputValueSet
             let newVector = CIVector(x: newXYvector.x, y: newXYvector.y, z: newZValue)
             aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
     }
@@ -54,6 +55,7 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
         // when the zValue is the only change
         if let oldVector = getVectorValue() {
             let newVector = CIVector(x: oldVector.x, y: oldVector.y, z: newZValue)
+            parmInputState = .inputValueSet
              aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
         }
 

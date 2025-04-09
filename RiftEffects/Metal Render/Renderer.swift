@@ -335,7 +335,7 @@ class Renderer: NSObject, MTKViewDelegate {
                     let cropSize = TargetSize
                     ciOutputImage = ciOutputImage.cropForInfiniteExtent(cropSize: cropSize)
                     outputZoomPanFilter?.setInput(image: ciOutputImage, source: nil)
-                    outputZoomPanFilter?.setInputImageParmState(newState: ImageParm.inputPhoto)
+                    outputZoomPanFilter?.setInputImageParmState(newState: ParmInputState.inputPhoto)
 
                     ciOutputImage = outputZoomPanFilter?.outputImage() ?? CIImage.empty()
 

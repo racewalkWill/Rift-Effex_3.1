@@ -404,7 +404,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         for imageAttributeKey in imageInputAttributeKeys {
             if let inputAttribute = attribute(nameKey: imageAttributeKey )
             {
-                if  inputAttribute.inputParmType() == ImageParm.missingInput
+                if  inputAttribute.inputParmType() == ParmInputState.missingImageInput
                         {
                     return true }
             }
@@ -420,7 +420,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         for imageAttributeKey in imageInputAttributeKeys {
             if let inputAttribute = attribute(nameKey: imageAttributeKey )
             {
-                if  inputAttribute.inputParmType() != ImageParm.missingInput
+                if  inputAttribute.inputParmType() != ParmInputState.missingImageInput
                 {   // found a parm with an image input
                     return false }
             }
@@ -430,7 +430,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         return true // all of the imageParms are missing input
     }
 
-    func setInputImageParmState(newState: ImageParm) {
+    func setInputImageParmState(newState: ParmInputState) {
         if let inputImageAttribute = getInputImageAttribute() {
             inputImageAttribute.setImageParmState(newState: newState)
         }
@@ -572,9 +572,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
     func setImageValue(newValue: CIImage, keyName: String) {
 //        NSLog("PGLFilterClasses #setImageValue key = \(keyName)")
-//        newValue.clampedToExtent()
-        // test changing all inputs to the same extent
-
+//        newValue.clampedToExtent()        // test changing all inputs to the same extent
 
         localFilter.setValue( newValue, forKey: keyName)
 //        logParm(#function, newValue.debugDescription, keyName)
@@ -591,8 +589,6 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         }
          */
 
-        // postImageChange is duplicative call.. too many updates to image triggered
-//        postImageChange()
     }
 
     func removeImageValue(keyName: String) {

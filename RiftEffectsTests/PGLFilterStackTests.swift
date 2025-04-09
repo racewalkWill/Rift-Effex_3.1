@@ -59,7 +59,7 @@ class PGLFilterStackTests: XCTestCase {
            guard let firstImageParm = bumpFilter.imageParms()?.first
             else { fatalError("Need an image parm to test ")}
             firstImageParm.inputCollection = favoriteImageList
-            firstImageParm.imageParmState = ImageParm.inputPhoto
+            firstImageParm.parmInputState = ParmInputState.inputPhoto
             filterStack.appendFilter(bumpFilter) }
 
         // 2018-12-14  most of the tile filters seem to error.. skip CIPerspectiveTile for now..

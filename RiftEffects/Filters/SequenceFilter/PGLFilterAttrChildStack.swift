@@ -22,7 +22,7 @@ class PGLFilterAttrSequenceStack: PGLFilterAttributeImage {
     override func set(_ value: Any ) {
         if let newStack = value as? PGLSequenceStack {
             sequenceChild = newStack
-            imageParmState = ImageParm.inputChildStack
+            parmInputState = ParmInputState.inputChildStack
         }
     }
 
@@ -55,7 +55,7 @@ class PGLFilterAttrSequenceStack: PGLFilterAttributeImage {
     override func setChildStackMode(inAppStack: PGLAppStack) {
         guard let localInputStack = inputStack
         else { return }
-        if inputParmType() == ImageParm.inputChildStack {
+        if inputParmType() == ParmInputState.inputChildStack {
             
             // set childMode to Add
             // the inputStack does not need to be  pushed

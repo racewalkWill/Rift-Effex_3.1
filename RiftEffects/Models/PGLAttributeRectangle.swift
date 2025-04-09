@@ -30,7 +30,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
    
     var oldVector: CIVector?
     var isCropped = false
-    var imageParmState = ImageParm.rectangleInput
+    var imageParmState = ParmInputState.rectangleInput
 
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
@@ -62,7 +62,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
                 return ""}
     }
 
-    override func inputParmType() -> ImageParm {
+    override func inputParmType() -> ParmInputState {
 
         return imageParmState
     }
@@ -163,7 +163,8 @@ class PGLAttributeRectangle: PGLFilterAttribute {
         // generate the vector
         // save the old vector
         // apply to the filter
-
+        parmInputState = .inputValueSet
+        
         let newVector = CIVector(x: mappedCropRect.origin.x, y: mappedCropRect.origin.y, z: mappedCropRect.size.width, w: mappedCropRect.size.height)
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         NSLog("     newVector \(newVector) from \(mappedCropRect)")
