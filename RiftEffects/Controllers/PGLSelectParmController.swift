@@ -489,12 +489,12 @@ class PGLSelectParmController: PGLCommonController,
             // MARK: appStackParmRefactor
 
         // demo test
-        if PGLDemo.DemoMode {
+        if PGLDemo.GuideMode {
             NSLog(#function + " DemoMode")
         }
-        if let rowToHighlight = firstEmptyParmRow() {
-            activateEmptyRow(parmRow: rowToHighlight)
-        }
+//        if let rowToHighlight = firstEmptyParmRow() {
+//            activateEmptyRow(parmRow: rowToHighlight)
+//        }
 
     }
     func firstEmptyParmRow() -> IndexPath? {
@@ -620,7 +620,7 @@ class PGLSelectParmController: PGLCommonController,
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case sectionImages:
-                if PGLDemo.DemoMode {
+                if PGLDemo.GuideMode {
                     return "Images TAP or SWIPE"
                 } else {
                     return "Images"
@@ -715,12 +715,14 @@ class PGLSelectParmController: PGLCommonController,
 
                 case .missingImageInput:
                     cell.accessoryType = .detailDisclosureButton
-                    cell.backgroundConfiguration?.backgroundColor = .secondarySystemBackground
+                    /// don't change from the system defaults.. may make background and text colors blend/ instead contrast
+//                    cell.backgroundConfiguration?.backgroundColor = .secondarySystemBackground
+//                    cell.backgroundConfiguration?.backgroundColor = .systemBackground
                 case .rectangleInput:
                     cell.accessoryType = .disclosureIndicator
                 default:
                     cell.accessoryType = .detailDisclosureButton
-                    cell.backgroundConfiguration?.backgroundColor = .systemBackground
+//                    cell.backgroundConfiguration?.backgroundColor = .systemBackground
             }
         }
         return cell
@@ -784,7 +786,7 @@ class PGLSelectParmController: PGLCommonController,
         }
     }
     func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
-//        NSLog("PGLSelectParmController tableView didHighlightRowAt: \(indexPath)")
+        NSLog("PGLSelectParmController tableView didHighlightRowAt: \(indexPath)")
         selectedCellIndexPath = indexPath
       
             // pass to the model object refactoring
@@ -806,7 +808,7 @@ class PGLSelectParmController: PGLCommonController,
         imageController?.panner?.isEnabled = false
             // only enable pan gesture on certain cases
 
-//        NSLog("PGLSelectParmController # tableView(..didSelectRowAt tappedAttribute = \(String(describing: tappedAttribute!.attributeDisplayName))")
+        NSLog("PGLSelectParmController # tableView(..didSelectRowAt tappedAttribute = \(String(describing: tappedAttribute!.attributeDisplayName))")
         if tappedAttribute == nil { return }
 //        if tappedAttribute!.inputParmType() == ImageParm.filter  {
 //            // confirm that user wants to break the connection to an input

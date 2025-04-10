@@ -610,7 +610,7 @@ extension PGLMainFilterController {
                             // category header
                     let theHeaderCell = collectionView.dequeueConfiguredReusableCell(using: headerRegistration, for: indexPath, item: item)
 
-                    if indexPath.section == 1 &&  PGLDemo.DemoMode {
+                    if indexPath.section == 1 &&  PGLDemo.GuideMode {
                             var content = UIListContentConfiguration.extraProminentInsetGroupedHeader()
 
                             content.text = item.title!
@@ -633,7 +633,14 @@ extension PGLMainFilterController {
 
             } else {
                 // ordinary filter cell
-                return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
+                let theFilterCell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
+                if PGLDemo.GuideMode && indexPath.row == 3 && indexPath.section == 1  {
+                    var content = theFilterCell.defaultContentConfiguration()
+                    content.image = UIImage(systemName: "arrowshape.forward.fill")
+                    content.text = item.title!
+                    theFilterCell.contentConfiguration = content
+                }
+                return theFilterCell
             }
 
         }

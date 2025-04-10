@@ -24,5 +24,6 @@ class PGLEffexButtonsHeader: UITableViewHeaderFooterView {
     }
     /// arrow hint for PGLDemo.DemoMode  - usually hidden
     @IBOutlet weak var arrowBtn: UIButton!
-    
+
+
 }

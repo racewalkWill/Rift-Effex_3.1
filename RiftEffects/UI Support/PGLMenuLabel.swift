@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum MenuLabel: String {
+enum PGLMenuLabel: String {
     case random = "Random"
     case Blend = "Blend Demo"
     case Sequence = "Sequence Demo"
@@ -20,5 +20,6 @@ enum MenuLabel: String {
     case Library = "Library..."
     case Save = "Save..."
     case Record = "Record"
+    case Guide = "Guide"
 
 }

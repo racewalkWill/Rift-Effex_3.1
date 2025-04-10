@@ -50,13 +50,13 @@ let kBtnVideoPlay = "VideoPlayBtn"
 class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavigationBarDelegate,  RPScreenRecorderDelegate, @preconcurrency RPPreviewViewControllerDelegate {
 
 
-    // controller in detail view - shows the image as filtered - knows the current filter
+        // controller in detail view - shows the image as filtered - knows the current filter
 
-// MARK: Property vars
+        // MARK: Property vars
 
     static var LibraryMenuIdentifier = UIAction.Identifier("Library")
     static var TemplateMenuIdentifier = UIAction.Identifier("Template")
-//
+        //
 
 
     var myScale: CGFloat = 1.0
@@ -70,18 +70,18 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     var parmController: PGLSelectParmController?
     var metalController: PGLMetalController?
 
-   let debugLogDrawing = false
+    let debugLogDrawing = false
     let crossPoint = UIImage(systemName: "plus.circle.fill")
-//    let reverseCrossPoint = UIImage(systemName: "plus.circle")
+        //    let reverseCrossPoint = UIImage(systemName: "plus.circle")
 
-    // MARK: video vars
-   static  var isActive = false
+        // MARK: video vars
+    static  var isActive = false
     weak var previewControllerDelegate: (any RPPreviewViewControllerDelegate)?
-     var controlsWindow: UIWindow?
-//    var cameraView: UIView?
-   
+    var controlsWindow: UIWindow?
+        //    var cameraView: UIView?
 
-    // MARK: control Vars
+
+        // MARK: control Vars
 
     var keepParmSlidersVisible = false
         // when navigating in .phone vertical compact from parms keep
@@ -93,11 +93,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     @IBAction func sliderValueEvent(_ sender: UISlider) {
 
         sliderValueDidChange(sender)
-        // should be self sliderValueDidChange...
-        // hook up the event triggers !
+            // should be self sliderValueDidChange...
+            // hook up the event triggers !
     }
 
-    // MARK: Gesture vars
+        // MARK: Gesture vars
     var startPoint = CGPoint.zero
     var endPoint = CGPoint.zero
     var panner: UIPanGestureRecognizer?
@@ -106,7 +106,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     var selectedParmControlView: UIView?
     var tappedControl: UIView?
 
-    
+
         // MARK: Navigation Buttons
 
     @IBOutlet var sliders: [UISlider]! { didSet {
@@ -117,15 +117,15 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     var taggedSliders = [Int:UISlider]()
 
-//    deinit {
-//        releaseVars()
-//        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
-//
-//    }
+        //    deinit {
+        //        releaseVars()
+        //        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
+        //
+        //    }
 
     @IBOutlet weak var templateBtn: UIBarButtonItem!
     @IBOutlet weak var helpBtn: UIBarButtonItem!
-    
+
     @IBOutlet weak var moreBtn: UIBarButtonItem!
 
 
@@ -140,17 +140,17 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     @IBOutlet weak var recordBtn: UIBarButtonItem!
 
-    
+
     @IBAction func recordBtnAction(_ sender: UIBarButtonItem) {
         recordButtonTapped(controllerRecordBtn: sender)
 
     }
-    
+
     @IBAction func templateBtnAction(_ sender: UIBarButtonItem) {
         NSLog("PGLImageController addRandom button click")
 
         let demoGenerator = PGLDemo()
-//        appStack.removeDefaultEmptyFilter()
+            //        appStack.removeDefaultEmptyFilter()
 
         demoGenerator.generateRandomStack( thisAppStack: appStack )
 
@@ -160,47 +160,47 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
 
 
-    // MARK: save btn Actions
+        // MARK: save btn Actions
 
     func saveStackActionBtn(_ sender: UIBarButtonItem) {
         notifyStackStartSave()
     }
 
     func basicSaveStackAction () {
-        // stack controller save button sends notification
+            // stack controller save button sends notification
         self.updateStackNameToNavigationBar()
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-       saveStack()
+        saveStack()
     }
 
     func notifyStackStartSave() {
-        // tells stackController to open the save stack header to enter name/albuum
+            // tells stackController to open the save stack header to enter name/albuum
         NotificationCenter.default.post(name:PGLStackStartSave, object: nil)
     }
 
-   func openStackActionBtn(_ sender: UIBarButtonItem) {
+    func openStackActionBtn(_ sender: UIBarButtonItem) {
 
-//            let pickStoredStackViewController = storyboard!.instantiateViewController( withIdentifier: "OpenStackController")
-       let pickStoredStackViewController = PGLLibraryController()
+            //            let pickStoredStackViewController = storyboard!.instantiateViewController( withIdentifier: "OpenStackController")
+        let pickStoredStackViewController = PGLLibraryController()
 
-       pickStoredStackViewController.modalPresentationStyle = .popover
+        pickStoredStackViewController.modalPresentationStyle = .popover
 
-       guard let popOverPresenter = pickStoredStackViewController.popoverPresentationController
-       else { return }
-       popOverPresenter.canOverlapSourceViewRect = true // or barButtonItem
-       popOverPresenter.delegate = self
+        guard let popOverPresenter = pickStoredStackViewController.popoverPresentationController
+        else { return }
+        popOverPresenter.canOverlapSourceViewRect = true // or barButtonItem
+        popOverPresenter.delegate = self
 
-       popOverPresenter.barButtonItem = sender
+        popOverPresenter.barButtonItem = sender
 
-       let sheet = popOverPresenter.adaptiveSheetPresentationController //adaptiveSheetPresentationController
-       sheet.detents = [.medium(), .large()]
-//        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-       sheet.prefersEdgeAttachedInCompactHeight = true
-       sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+        let sheet = popOverPresenter.adaptiveSheetPresentationController //adaptiveSheetPresentationController
+        sheet.detents = [.medium(), .large()]
+            //        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        sheet.prefersEdgeAttachedInCompactHeight = true
+        sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
 
-       present(pickStoredStackViewController, animated: true )
+        present(pickStoredStackViewController, animated: true )
 
-        }
+    }
 
 
     @IBAction func helpBtnAction(_ sender: UIBarButtonItem) {
@@ -209,18 +209,18 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             return
         }
         helpController.modalPresentationStyle = .popover
-        // specify anchor point?
+            // specify anchor point?
         guard let popOverPresenter = helpController.popoverPresentationController
         else { return }
         popOverPresenter.canOverlapSourceViewRect = true // or barButtonItem
-        // popOverPresenter.popoverLayoutMargins // default is 10 points inset from device edges
-//      popOverPresenter.sourceView = view
-//        popOverPresenter.sourceRect = view.frame.insetBy(dx: 300.0, dy: 20.0)
+                                                         // popOverPresenter.popoverLayoutMargins // default is 10 points inset from device edges
+                                                         //      popOverPresenter.sourceView = view
+                                                         //        popOverPresenter.sourceRect = view.frame.insetBy(dx: 300.0, dy: 20.0)
         popOverPresenter.barButtonItem = sender //helpBtn
 
         let sheet = popOverPresenter.adaptiveSheetPresentationController //adaptiveSheetPresentationController
         sheet.detents = [.medium(), .large()]
-//        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            //        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
         sheet.prefersEdgeAttachedInCompactHeight = true
         sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
 
@@ -236,23 +236,23 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         switch authorizationStatus {
             case .limited :
-            return true
-        default:
-            // all other authorizationStatus values
-           return false
+                return true
+            default:
+                    // all other authorizationStatus values
+                return false
         }
     }
 
     func saveStack() {
         saveToPhotoLibrary()
-        
+
         if isLimitedPhotoLibAccess() {
             self.appStack.viewerStackOrPushedFirstStack()?.exportAlbumName = nil
         }
 
         splitViewController?.preferredDisplayMode = .secondaryOnly
-        // go to full screen to render the save image
-        // preferredStatusBarStyle left to user action
+            // go to full screen to render the save image
+            // preferredStatusBarStyle left to user action
 
 
         self.appStack.saveStack(metalRender: self.metalController!.metalRender)
@@ -263,7 +263,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func saveToPhotoLibrary() {
         guard let myMetalController = self.metalController
-            else { return }
+        else { return }
         self.appStack.saveToPhotoLibrary(metalRender: myMetalController.metalRender)
     }
 
@@ -277,42 +277,42 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
 
     @IBAction func newStackActionBtn(_ sender: UIBarButtonItem) {
-        // confirm user action if current stack is not saved
-        // from the trash action button -
-        // new means the old one is discarded
+            // confirm user action if current stack is not saved
+            // from the trash action button -
+            // new means the old one is discarded
 
         confirmTrashDisplayStack(sender)
 
-        }
+    }
 
         //MARK: App Review save count
-        func incrementSaveCountForAppReview() {
+    func incrementSaveCountForAppReview() {
             // based on Apple sample StoreKitReviewRequest example code
 
-            var saveCount = UserDefaults.standard.integer(forKey: PGLUserDefaultKeys.processCompletedCountKey)
-            saveCount += 1
-            UserDefaults.standard.set(saveCount, forKey: PGLUserDefaultKeys.processCompletedCountKey)
+        var saveCount = UserDefaults.standard.integer(forKey: PGLUserDefaultKeys.processCompletedCountKey)
+        saveCount += 1
+        UserDefaults.standard.set(saveCount, forKey: PGLUserDefaultKeys.processCompletedCountKey)
 
             // Get the current bundle version for the app
-            let infoDictionaryKey = kCFBundleVersionKey as String
-            guard let currentVersion = Bundle.main.object(forInfoDictionaryKey: infoDictionaryKey) as? String
-                else { fatalError("Expected to find a bundle version in the info dictionary") }
+        let infoDictionaryKey = kCFBundleVersionKey as String
+        guard let currentVersion = Bundle.main.object(forInfoDictionaryKey: infoDictionaryKey) as? String
+        else { fatalError("Expected to find a bundle version in the info dictionary") }
 
-            let lastVersionPromptedForReview = UserDefaults.standard.string(forKey: PGLUserDefaultKeys.lastVersionPromptedForReviewKey)
+        let lastVersionPromptedForReview = UserDefaults.standard.string(forKey: PGLUserDefaultKeys.lastVersionPromptedForReviewKey)
 
-            if saveCount >= 2 && currentVersion != lastVersionPromptedForReview {
-                let twoSecondsFromNow = DispatchTime.now() + 2.0
-                DispatchQueue.main.asyncAfter(deadline: twoSecondsFromNow) {
+        if saveCount >= 2 && currentVersion != lastVersionPromptedForReview {
+            let twoSecondsFromNow = DispatchTime.now() + 2.0
+            DispatchQueue.main.asyncAfter(deadline: twoSecondsFromNow) {
 
-                    if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-                        SKStoreReviewController.requestReview(in: scene)
-                    }
-
-                    UserDefaults.standard.set(currentVersion, forKey: PGLUserDefaultKeys.lastVersionPromptedForReviewKey)
-
+                if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                    SKStoreReviewController.requestReview(in: scene)
                 }
+
+                UserDefaults.standard.set(currentVersion, forKey: PGLUserDefaultKeys.lastVersionPromptedForReviewKey)
+
             }
         }
+    }
 
     func displayPrivacyPolicy(_ sender: UIBarButtonItem) {
         let infoPrivacyController = storyboard!.instantiateViewController(
@@ -320,29 +320,29 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         if ( parent is PGLStackImageContainerController ) {
             infoPrivacyController.modalPresentationStyle = .popover
-            // specify anchor point?
+                // specify anchor point?
             guard let popOverPresenter = infoPrivacyController.popoverPresentationController
             else { return }
             popOverPresenter.canOverlapSourceViewRect = true // or barButtonItem
-            // popOverPresenter.popoverLayoutMargins // default is 10 points inset from device edges
-    //        popOverPresenter.sourceView = view
+                                                             // popOverPresenter.popoverLayoutMargins // default is 10 points inset from device edges
+                                                             //        popOverPresenter.sourceView = view
 
             let sheet = popOverPresenter.adaptiveSheetPresentationController //adaptiveSheetPresentationController
             sheet.detents = [.medium(), .large()]
-    //        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                //        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             sheet.prefersEdgeAttachedInCompactHeight = true
             sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
 
             popOverPresenter.barButtonItem = moreBtn
             present(infoPrivacyController, animated: true )
         } else {
-            // on the iPad.. just present full size
+                // on the iPad.. just present full size
             let navController = UINavigationController(rootViewController: infoPrivacyController)
-                                 present(navController, animated: true)
+            present(navController, animated: true)
         }
     }
 
-    // MARK: trash button action
+        // MARK: trash button action
     fileprivate func hideViewReleaseStack() {
             // Respond to user selection of the action
         hideParmControls()
@@ -356,14 +356,14 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let newStack = PGLFilterStack()
 
         self.appStack.resetOutputAppStack(newStack)
-       
+
     }
 
     fileprivate func trashOldStartNewStack() {
         self.hideViewReleaseStack()
         self.updateStackNameToNavigationBar()
             // next back out of the parm controller since the filter is removed
-        
+
         if ( self.parmController?.isViewLoaded ?? false ) {  // or .isBeingPresented?
             Logger(subsystem: LogSubsystem, category: LogNavigation).info( "\("#popViewController " + String(describing: self))")
             self.parmController?.navigationController?.popViewController(animated: true)
@@ -372,37 +372,37 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         }
 
         if let myParentSplit = splitViewController as? PGLSplitViewController {
-            // navigate back any open controllers
-            // myParentSplit is not found on navigation back from parm to select filter
-            // myParentSplit is found on forward navigation from stack to filter controller..
-            // with no splitController then the startupImage stuff does not run
-            // this is with filterController open to select a filter.. it goes  blank
-            // and you are stil selecting a filter... not too bad of result.
+                // navigate back any open controllers
+                // myParentSplit is not found on navigation back from parm to select filter
+                // myParentSplit is found on forward navigation from stack to filter controller..
+                // with no splitController then the startupImage stuff does not run
+                // this is with filterController open to select a filter.. it goes  blank
+                // and you are stil selecting a filter... not too bad of result.
 
-//            myParentSplit.requestStartupImage()
-            /// don't request a new starting image - just go to blank empty stack
+                //            myParentSplit.requestStartupImage()
+                /// don't request a new starting image - just go to blank empty stack
 
             self.showStackControllerAction()
         }
 
     }
-    
+
     func confirmTrashDisplayStack(_ sender: UIBarButtonItem)  {
 
         let discardAction = UIAlertAction(title: "Start Over",
-                  style: .destructive) { (action) in
-        self.trashOldStartNewStack()
-//            self.hideViewReleaseStack()
+                                          style: .destructive) { (action) in
+            self.trashOldStartNewStack()
+                //            self.hideViewReleaseStack()
 
-           // videoMgr gets resetVars
+                // videoMgr gets resetVars
         }
 
-//        let discardSaveAction = UIAlertAction(title: "Save and Start Over",
-//                                              style: .destructive) { (action) in
-//            self.saveStack()
-//            self.trashOldStartNewStack()
-//
-//        }
+            //        let discardSaveAction = UIAlertAction(title: "Save and Start Over",
+            //                                              style: .destructive) { (action) in
+            //            self.saveStack()
+            //            self.trashOldStartNewStack()
+            //
+            //        }
 
         let removeFilters = UIAlertAction(title: "Remove Filters",
                                           style: .default) { (action) in
@@ -412,60 +412,60 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         let removeImages = UIAlertAction(title: "Remove Images",
                                          style: .default) { (action) in
-            // remove all image parm inputs
+                // remove all image parm inputs
             self.removeImagesFromStack()
         }
 
         let cancelAction = UIAlertAction(title: "Cancel",
-                  style: .cancel) { (action) in
-                   // do nothing
+                                         style: .cancel) { (action) in
+                // do nothing
         }
 
 
         let alert = UIAlertController(title: "Trash"   ,
-                    message: "This cannot be undone",
-                    preferredStyle: .alert)
+                                      message: "This cannot be undone",
+                                      preferredStyle: .alert)
         alert.addAction(discardAction)
         alert.addAction(removeFilters)
         alert.addAction(removeImages)
 
         alert.addAction(cancelAction)
 
-        // On iPad, action sheets must be presented from a popover.
+            // On iPad, action sheets must be presented from a popover.
         alert.popoverPresentationController?.barButtonItem = sender
         self.present(alert, animated: true) {
-           // The alert was presented
+                // The alert was presented
         }
 
     }
 
     func displayUser(alert: UIAlertController) {
-        // presents an alert on top of the open viewController
-        // informs user to try again with 'Save As'
+            // presents an alert on top of the open viewController
+            // informs user to try again with 'Save As'
 
-            present(alert, animated: true )
+        present(alert, animated: true )
 
 
 
     }
 
-// MARK:  Navigation
+        // MARK:  Navigation
     func showStackControllerAction() {
-        // other part of split should navigate back to the stack controller
-        // after the Random button is clicked
+            // other part of split should navigate back to the stack controller
+            // after the Random button is clicked
         let goToStack = Notification(name: PGLLoadedDataStack)
         NotificationCenter.default.post(goToStack)
 
     }
-    
 
-     func postCurrentFilterChange() {
+
+    func postCurrentFilterChange() {
         let updateFilterNotification = Notification(name:PGLHideParmControlsOnFilterChange)
         NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
     }
 
-     func postImageViewWillAppear() {
-//        NSLog("\(String(describing: self) + "-" + #function)")
+    func postImageViewWillAppear() {
+            //        NSLog("\(String(describing: self) + "-" + #function)")
         let imageViewWillAppearNotification = Notification(name:PGLImageViewWillAppear)
         NotificationCenter.default.post(imageViewWillAppearNotification)
     }
@@ -478,11 +478,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         if appStack.isImageControllerOpen {
 
-        performSegue(withIdentifier: "showCollection", sender: assetInfo)
+            performSegue(withIdentifier: "showCollection", sender: assetInfo)
                 // does not use should performSegue..
-                  // alternate path to the assetGrid
+                // alternate path to the assetGrid
         } else {
-            // notify that the
+                // notify that the
         }
 
 
@@ -492,27 +492,27 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let segueId = segue.identifier
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function) + \(String(describing: segueId))")
-//            if segueId == "showCollection" {
-//                if let info = sender as? PGLAlbumSource {
-//                    if let pictureGrid = segue.destination as? PGLImagesSelectContainer {
-//                        if let aUserAssetSelection = info.filterParm?.getUserAssetSelection() {
-//                            // there is an existing userSelection in progress.. use it
-//                            Logger(subsystem: LogSubsystem, category: LogCategory).notice("PGLImageController prepare destination but OPEN..")
-//                            // use navController and cancel the segue???
-//
-//                            pictureGrid.userAssetSelection = aUserAssetSelection
-//                        }
-//                        else {
-//                            let userSelectionInfo = PGLUserAssetSelection(assetSources: info)
-//                            // create a new userSelection
-//                            pictureGrid.userAssetSelection = userSelectionInfo
-//                            pictureGrid.title = info.sectionSource?.localizedTitle
-//
-//                            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLImageController #prepare for segue showCollection")
-//                        }
-//                            }
-//                    }
-//                }
+            //            if segueId == "showCollection" {
+            //                if let info = sender as? PGLAlbumSource {
+            //                    if let pictureGrid = segue.destination as? PGLImagesSelectContainer {
+            //                        if let aUserAssetSelection = info.filterParm?.getUserAssetSelection() {
+            //                            // there is an existing userSelection in progress.. use it
+            //                            Logger(subsystem: LogSubsystem, category: LogCategory).notice("PGLImageController prepare destination but OPEN..")
+            //                            // use navController and cancel the segue???
+            //
+            //                            pictureGrid.userAssetSelection = aUserAssetSelection
+            //                        }
+            //                        else {
+            //                            let userSelectionInfo = PGLUserAssetSelection(assetSources: info)
+            //                            // create a new userSelection
+            //                            pictureGrid.userAssetSelection = userSelectionInfo
+            //                            pictureGrid.title = info.sectionSource?.localizedTitle
+            //
+            //                            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLImageController #prepare for segue showCollection")
+            //                        }
+            //                            }
+            //                    }
+            //                }
     }
 
     func updateStackNameToNavigationBar() {
@@ -526,30 +526,30 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
 
-    // MARK: viewController lifecycle
-    
-//    override func viewLayoutMarginsDidChange() {
-//        NSLog("PGLImageController # viewLayoutMarginsDidChange")
-//        if  (splitViewController?.isCollapsed)! {
-//            splitViewController?.preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
-//        }
+        // MARK: viewController lifecycle
 
-//        hideParmControls()
-//    }
+        //    override func viewLayoutMarginsDidChange() {
+        //        NSLog("PGLImageController # viewLayoutMarginsDidChange")
+        //        if  (splitViewController?.isCollapsed)! {
+        //            splitViewController?.preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
+        //        }
+
+        //        hideParmControls()
+        //    }
     override func viewWillLayoutSubviews() {
 
-//     navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-        // turns on the full screen toggle button on the left nav bar
-        // Do not change the configuration of the returned button.
-        // The split view controller updates the button’s configuration and appearance automatically based on the current display mode
-        // and the information provided by the delegate object.
-        // mode is controlled by targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode
+            //     navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            // turns on the full screen toggle button on the left nav bar
+            // Do not change the configuration of the returned button.
+            // The split view controller updates the button’s configuration and appearance automatically based on the current display mode
+            // and the information provided by the delegate object.
+            // mode is controlled by targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode
 
-       navigationItem.leftItemsSupplementBackButton = true
+        navigationItem.leftItemsSupplementBackButton = true
     }
 
-     func setAnimation(_ animationState: PGLAnimationState, _ barButtonItem: UIBarButtonItem) {
-//         NSLog(#function + " \(animationState) ")
+    func setAnimation(_ animationState: PGLAnimationState, _ barButtonItem: UIBarButtonItem) {
+            //         NSLog(#function + " \(animationState) ")
         switch animationState {
             case .none:
                 barButtonItem.isHidden = true
@@ -565,33 +565,33 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 else { return  }
                 barButtonItem.setSymbolImage(playPause, contentTransition: .replace)
         }
-//         NSLog(#function + " on \(barButtonItem)")
-//         NSLog(#function + " now isHidden:\(barButtonItem.isHidden)")
+            //         NSLog(#function + " on \(barButtonItem)")
+            //         NSLog(#function + " now isHidden:\(barButtonItem.isHidden)")
     }
-    
+
     func setAnimationToggleBtn(barButtonItem: UIBarButtonItem) {
         let animationState = appStack.animationState()
         setAnimation(animationState, barButtonItem)
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if metalController === nil {
-           loadMetalController()
+            loadMetalController()
         }
         setGestureRecogniziers()
-//        toggleViewControls(hide: false ) // restore removed position & text controls
+            //        toggleViewControls(hide: false ) // restore removed position & text controls
         if appStack.videoMgr.videoState != .None {
             appStack.videoMgr.addStartStopButton(imageController: self)
-            // if controller already has video button, then nothing added
+                // if controller already has video button, then nothing added
         }
         if traitCollection.userInterfaceIdiom == .phone {
             metalController?.updateDrawableSize()
             NSLog(String(describing:self) + "viewWillAppear \(String(describing: view))")
         }
-        
-        /// this animationToggle is not needed..
- //       setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtyn)
+
+            /// this animationToggle is not needed..
+            //       setAnimationToggleBtn(barButtonItem: toggleAnimationPauseBtyn)
 
 
         postImageViewWillAppear()
@@ -599,56 +599,66 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func setTemplateBtnMenu() {
-        let randomAction = UIAction.init(title: MenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
-            [weak self ]
-            action in
-            guard let self else { return }
-            self.templateBtnAction(self.templateBtn)
 
-        }
         let contextMenu = UIMenu(title: "",
-                                 children: [ randomAction ,
-                                             UIAction(title: MenuLabel.Blend.rawValue, image:UIImage(systemName: "pencil")) {
-               action in
-                let demoGenerator = PGLDemo()
-                demoGenerator.iPhoneCompact = false  // now on the iPad
-                demoGenerator.blendTemplate(appStack: self.appStack)
-            },
-             UIAction(title: MenuLabel.Sequence.rawValue, image:UIImage(systemName: "pencil.circle")) {
-            [weak self ]
-            action in
-            guard let self else { return }
-             self.loadDemoStack(self.templateBtn)
-            },
-         UIAction(title: MenuLabel.Edge.rawValue, image:UIImage(systemName: "pencil.circle")) {
-            [weak self ]
-            action in
-            guard let self else { return }
-            let demoGenerator = PGLDemo()
-            demoGenerator.edgeTemplate(appStack: self.appStack)
-            },
-                                             
-        // place holder - change to demo methods
-         UIAction(title: MenuLabel.Tone.rawValue, image:UIImage(systemName: "pencil.circle")) {
-            [weak self ]
-            action in
-            guard let self else { return }
-            let demoGenerator = PGLDemo()
-            demoGenerator.toneTemplate(appStack: self.appStack)
-            },
-    // place holder - change to demo methods
-         UIAction(title: MenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: "pencil.circle")) {
-            [weak self ]
-            action in
-            guard let self else { return }
-            let demoGenerator = PGLDemo()
-            demoGenerator.iPhoneCompact = false  // now on the iPad
-            demoGenerator.kaleidoscopeTemplate(appStack: self.appStack)
+                                 children: [
+                                    UIDeferredMenuElement.uncached { [weak self] completion in
+                                        let actions = [
+                                            UIAction.init(title: PGLMenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                self.templateBtnAction(self.templateBtn)
+                                            } ,
+                                            UIAction(title: PGLMenuLabel.Guide.rawValue , image: UIImage(systemName: "hourglass"), state: PGLDemo.GuideMode == true ? .on : .off, handler: { (action) in
+                                                PGLDemo.toggleGuideMode()
+                                                let stackNotification = Notification(name:PGLStackChange)
+                                                NotificationCenter.default.post(stackNotification)
+                                                        }),
+                                            UIAction(title: PGLMenuLabel.Blend.rawValue, image:UIImage(systemName: "pencil")) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                let demoGenerator = PGLDemo()
+                                                demoGenerator.iPhoneCompact = false  // now on the iPad
+                                                demoGenerator.blendTemplate(appStack: self.appStack)
+                                            },
+                                            UIAction(title: PGLMenuLabel.Sequence.rawValue, image:UIImage(systemName: "pencil.circle")) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                self.loadDemoStack(self.templateBtn)
+                                            },
+                                            UIAction(title: PGLMenuLabel.Edge.rawValue, image:UIImage(systemName: "pencil.circle")) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                let demoGenerator = PGLDemo()
+                                                demoGenerator.edgeTemplate(appStack: self.appStack)
+                                            },
 
-            },
+                                            // place holder - change to demo methods
+                                            UIAction(title: PGLMenuLabel.Tone.rawValue, image:UIImage(systemName: "pencil.circle")) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                let demoGenerator = PGLDemo()
+                                                demoGenerator.toneTemplate(appStack: self.appStack)
+                                            },
+                                            // place holder - change to demo methods
+                                            UIAction(title: PGLMenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: "pencil.circle")) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                let demoGenerator = PGLDemo()
+                                                demoGenerator.iPhoneCompact = false  // now on the iPad
+                                                demoGenerator.kaleidoscopeTemplate(appStack: self.appStack)
 
-
-        ])
+                                            },
+                                        ]// actions closing bracket
+                                        completion(actions)
+                                    } // closing uncached bracket
+        ]) // ] is for childern and ) is for UIManu
 
      templateBtn.menu = contextMenu
 
@@ -656,7 +666,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func setMoreBtnMenu() {
 
-        let libraryMenu = UIAction.init(title: MenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
+        let libraryMenu = UIAction.init(title: PGLMenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
             action in
             self.openStackActionBtn(self.moreBtn)
         }
@@ -676,11 +686,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let contextMenu = UIMenu(title: "",
          children: [ libraryMenu ,
 
-         UIAction(title: MenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) {
+         UIAction(title: PGLMenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) {
            action in
            self.saveStackActionBtn(self.moreBtn)
        },
-         UIAction(title: MenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
+         UIAction(title: PGLMenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
             action in
             self.recordButtonTapped(controllerRecordBtn: self.recordBtn)
         }
@@ -690,7 +700,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func setHelpBtnMenu() {
 
-        let helpMenu = UIAction.init(title: MenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
+        let helpMenu = UIAction.init(title: PGLMenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
             action in
                 self.helpBtnAction(self.helpBtn)
 
@@ -700,7 +710,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let contextMenu = UIMenu(title: "",
                                  children: [ helpMenu ,
 
-          UIAction(title: MenuLabel.Privacy.rawValue , image:UIImage(systemName: "info.circle")) {
+          UIAction(title: PGLMenuLabel.Privacy.rawValue , image:UIImage(systemName: "info.circle")) {
             action in
             self.displayPrivacyPolicy(self.helpBtn)
         }

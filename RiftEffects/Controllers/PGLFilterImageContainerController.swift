@@ -124,7 +124,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         guard let imageViewerController = imageController()
             else { return }
 
-        let helpMenu = UIAction.init(title: MenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
+        let helpMenu = UIAction.init(title: PGLMenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
             action in
             imageViewerController.helpBtnAction(self.helpBtn)
 
@@ -133,7 +133,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
         let contextMenu = UIMenu(title: "",
                                  children: [ helpMenu ,
-                                             UIAction(title: MenuLabel.Privacy.rawValue, image:UIImage(systemName: "info.circle")) {
+                                             UIAction(title: PGLMenuLabel.Privacy.rawValue, image:UIImage(systemName: "info.circle")) {
             action in
             imageViewerController.displayPrivacyPolicy(self.helpBtn)
         }

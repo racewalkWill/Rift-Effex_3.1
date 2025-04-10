@@ -18,7 +18,7 @@ class PGLDemo {
         // supports PGLStackController Random button
         // supports Test classes
 
-    static var DemoMode: Bool = false
+    static var GuideMode: Bool = false
     static let NoRandomChildStackPercentage = 70  // integer 0 to 100
                                                   // percentage to control how often a child stack is added in the Random function
                                                   // 100 means child stack is never added
@@ -57,6 +57,9 @@ class PGLDemo {
     var setInputToPrior = false
     var iPhoneCompact = true
 
+    static func toggleGuideMode() {
+        PGLDemo.GuideMode = !PGLDemo.GuideMode
+    }
 
         // MARK: Demo
     func fetchFavoritesList(onImageParm: PGLFilterAttribute) ->  PGLAlbumSource? {
@@ -267,7 +270,7 @@ class PGLDemo {
     }
 
     func templateDemoCompletion( startingDemoFilter: PGLSourceFilter ) {
-        PGLDemo.DemoMode = true
+
         appStack.viewerStack.activeFilterIndex = 0
         if setInputToPrior {
             startingDemoFilter.setInputImageParmState(newState: ParmInputState.inputPriorFilter)

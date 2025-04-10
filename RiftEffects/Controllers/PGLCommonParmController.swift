@@ -144,7 +144,7 @@ class PGLCommonController: UIViewController, UIAdaptivePresentationControllerDel
 
         // a switch statement might be cleaner
         // both UIImageView and UIControls need to be hidden or shown
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("highlight viewNamed \(viewNamed)")
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("highlight viewNamed \(String(viewNamed))")
         for aParmControlTuple in appStack.parmControls {
             if aParmControlTuple.key == viewNamed {
                 // show this view
