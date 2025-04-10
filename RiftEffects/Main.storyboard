@@ -198,8 +198,8 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="xsN-wc-6kV">
                         <leftBarButtonItems>
-                            <barButtonItem title="More" image="folder.badge.gearshape" catalog="system" id="EUH-a9-le3"/>
-                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="q7I-R2-kMZ" userLabel="TemplateBtn"/>
+                            <barButtonItem title="More" image="paperclip.badge.ellipsis" catalog="system" id="EUH-a9-le3"/>
+                            <barButtonItem title="Random" image="plus.viewfinder" catalog="system" id="q7I-R2-kMZ" userLabel="TemplateBtn"/>
                         </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem title="toggleAnimationPause" hidden="YES" id="Jl0-kr-4aK">
@@ -635,7 +635,7 @@
                         <viewControllerLayoutGuide type="bottom" id="LCb-0n-p2P"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ufz-uZ-e8H">
-                        <rect key="frame" x="0.0" y="0.0" width="242" height="760"/>
+                        <rect key="frame" x="0.0" y="0.0" width="580" height="640"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
@@ -664,11 +664,11 @@
                         <viewControllerLayoutGuide type="bottom" id="j3d-oc-3aS"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vua-Lu-kpo">
-                        <rect key="frame" x="0.0" y="0.0" width="242" height="760"/>
+                        <rect key="frame" x="0.0" y="0.0" width="580" height="640"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iTi-AT-siZ">
-                                <rect key="frame" x="-7" y="712" width="238" height="47"/>
+                                <rect key="frame" x="-7" y="592" width="576" height="47"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="rij-Pi-lzb"/>
@@ -930,8 +930,8 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="Mxb-eC-ZvV">
                         <leftBarButtonItems>
-                            <barButtonItem title="More Btn" image="folder.badge.gearshape" catalog="system" id="X6h-Dm-yVE"/>
-                            <barButtonItem title="Random" image="chart.dots.scatter" catalog="system" id="0Zt-QC-w2E"/>
+                            <barButtonItem title="More Btn" image="paperclip.badge.ellipsis" catalog="system" id="X6h-Dm-yVE"/>
+                            <barButtonItem title="Random" image="plus.viewfinder" catalog="system" id="0Zt-QC-w2E"/>
                         </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem title="toggleAnimationPause" hidden="YES" id="qG0-1L-lmY">
@@ -975,16 +975,16 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="cxI-vr-Pxp"/>
-        <segue reference="Zrd-6b-Z8z"/>
+        <segue reference="kpj-DB-ZL1"/>
+        <segue reference="Stf-Ip-3lm"/>
         <segue reference="q90-Vk-s0q"/>
     </inferredMetricsTieBreakers>
     <resources>
-        <image name="chart.dots.scatter" catalog="system" width="128" height="102"/>
         <image name="chevron.down" catalog="system" width="128" height="70"/>
         <image name="chevron.up" catalog="system" width="128" height="70"/>
-        <image name="folder.badge.gearshape" catalog="system" width="128" height="93"/>
+        <image name="paperclip.badge.ellipsis" catalog="system" width="128" height="118"/>
         <image name="playpause" catalog="system" width="128" height="75"/>
+        <image name="plus.viewfinder" catalog="system" width="128" height="115"/>
         <image name="questionmark.square.dashed" catalog="system" width="128" height="114"/>
         <image name="recordingtape" catalog="system" width="128" height="60"/>
         <image name="trash" catalog="system" width="117" height="128"/>

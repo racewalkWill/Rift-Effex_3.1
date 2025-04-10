@@ -599,23 +599,23 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func setTemplateBtnMenu() {
-
+        let imageName = "photo.stack"
         let contextMenu = UIMenu(title: "",
                                  children: [
                                     UIDeferredMenuElement.uncached { [weak self] completion in
                                         let actions = [
-                                            UIAction.init(title: PGLMenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+                                            UIAction.init(title: PGLMenuLabel.random.rawValue, image: UIImage(systemName: "plus.diamond"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
                                                 self.templateBtnAction(self.templateBtn)
                                             } ,
-                                            UIAction(title: PGLMenuLabel.Guide.rawValue , image: UIImage(systemName: "hourglass"), state: PGLDemo.GuideMode == true ? .on : .off, handler: { (action) in
+                                            UIAction(title: PGLMenuLabel.Guide.rawValue , image: UIImage(systemName: "flag.circle"), state: PGLDemo.GuideMode == true ? .on : .off, handler: { (action) in
                                                 PGLDemo.toggleGuideMode()
                                                 let stackNotification = Notification(name:PGLStackChange)
                                                 NotificationCenter.default.post(stackNotification)
                                                         }),
-                                            UIAction(title: PGLMenuLabel.Blend.rawValue, image:UIImage(systemName: "pencil")) {
+                                            UIAction(title: PGLMenuLabel.Blend.rawValue, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
@@ -623,13 +623,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                                                 demoGenerator.iPhoneCompact = false  // now on the iPad
                                                 demoGenerator.blendTemplate(appStack: self.appStack)
                                             },
-                                            UIAction(title: PGLMenuLabel.Sequence.rawValue, image:UIImage(systemName: "pencil.circle")) {
+                                            UIAction(title: PGLMenuLabel.Sequence.rawValue, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
                                                 self.loadDemoStack(self.templateBtn)
                                             },
-                                            UIAction(title: PGLMenuLabel.Edge.rawValue, image:UIImage(systemName: "pencil.circle")) {
+                                            UIAction(title: PGLMenuLabel.Edge.rawValue, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
@@ -638,7 +638,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                                             },
 
                                             // place holder - change to demo methods
-                                            UIAction(title: PGLMenuLabel.Tone.rawValue, image:UIImage(systemName: "pencil.circle")) {
+                                            UIAction(title: PGLMenuLabel.Tone.rawValue, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
@@ -646,7 +646,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                                                 demoGenerator.toneTemplate(appStack: self.appStack)
                                             },
                                             // place holder - change to demo methods
-                                            UIAction(title: PGLMenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: "pencil.circle")) {
+                                            UIAction(title: PGLMenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }

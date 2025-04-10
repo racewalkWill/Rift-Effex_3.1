@@ -223,43 +223,66 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     func setTemplateBtnMenu() {
         guard let imageViewerController = imageController()
             else { return }
-
-        let randomAction =
-        UIAction.init(title: PGLMenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
-            [weak self]
-            action in
-            guard let self else { return }
-            imageViewerController.templateBtnAction(self.templateBtn)
-
-        }
+        let imageName = "photo.stack"
         let contextMenu = UIMenu(title: "",
-                                 children: [ randomAction ,
-         UIAction(title: PGLMenuLabel.Blend.rawValue, image:UIImage(systemName: "pencil")) {
-               action in
-                let demoGenerator = PGLDemo()
+                                 children: [
+                                    UIDeferredMenuElement.uncached { [weak self] completion in
+                                        let actions = [
+                                            UIAction.init(title: PGLMenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                imageViewerController.templateBtnAction(imageViewerController.templateBtn)
+                                            } ,
+                                            UIAction(title: PGLMenuLabel.Guide.rawValue , image: UIImage(systemName: "hourglass"), state: PGLDemo.GuideMode == true ? .on : .off, handler: { (action) in
+                                                PGLDemo.toggleGuideMode()
+                                                let stackNotification = Notification(name:PGLStackChange)
+                                                NotificationCenter.default.post(stackNotification)
+                                                        }),
+                                            UIAction(title: PGLMenuLabel.Blend.rawValue, image:UIImage(systemName: imageName)) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                let demoGenerator = PGLDemo()
+                                                demoGenerator.iPhoneCompact = false  // now on the iPad
+                                                demoGenerator.blendTemplate(appStack: imageViewerController.appStack)
+                                            },
+                                            UIAction(title: PGLMenuLabel.Sequence.rawValue, image:UIImage(systemName: imageName)) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                imageViewerController.loadDemoStack(imageViewerController.templateBtn)
+                                            },
+                                            UIAction(title: PGLMenuLabel.Edge.rawValue, image:UIImage(systemName: imageName)) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                let demoGenerator = PGLDemo()
+                                                demoGenerator.edgeTemplate(appStack: imageViewerController.appStack)
+                                            },
 
-                demoGenerator.blendTemplate(appStack: imageViewerController.appStack)
-            },
-         UIAction(title: PGLMenuLabel.Sequence.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
-            imageViewerController.loadDemoStack(self.templateBtn)
-            },
-         UIAction(title: PGLMenuLabel.Edge.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
-            let demoGenerator = PGLDemo()
-            demoGenerator.edgeTemplate(appStack: imageViewerController.appStack)
-            },
-         UIAction(title: PGLMenuLabel.Tone.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
-            let demoGenerator = PGLDemo()
-            demoGenerator.toneTemplate(appStack: imageViewerController.appStack)
-            },
-         UIAction(title: PGLMenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: "pencil.circle")) {
-             action in
-            let demoGenerator = PGLDemo()
-            demoGenerator.kaleidoscopeTemplate(appStack: imageViewerController.appStack)
-            },
-        ])
+                                            // place holder - change to demo methods
+                                            UIAction(title: PGLMenuLabel.Tone.rawValue, image:UIImage(systemName: imageName)) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                let demoGenerator = PGLDemo()
+                                                demoGenerator.toneTemplate(appStack: imageViewerController.appStack)
+                                            },
+                                            // place holder - change to demo methods
+                                            UIAction(title: PGLMenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: imageName)) {
+                                                [weak self ]
+                                                action in
+                                                guard let self else { return }
+                                                let demoGenerator = PGLDemo()
+                                                demoGenerator.iPhoneCompact = false  // now on the iPad
+                                                demoGenerator.kaleidoscopeTemplate(appStack: imageViewerController.appStack)
+
+                                            },
+                                        ]// actions closing bracket
+                                        completion(actions)
+                                    } // closing uncached bracket
+        ]) // ] is for childern and ) is for UIManu
 
      templateBtn.menu = contextMenu
 
