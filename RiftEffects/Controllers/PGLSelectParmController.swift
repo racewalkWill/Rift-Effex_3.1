@@ -237,7 +237,10 @@ class PGLSelectParmController: PGLCommonController,
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        reloadImageCellIcons()
+        Logger(subsystem: LogSubsystem, category: LogCategory).debug( "\( String(describing: self) + " - " + #function)" )
+        /// comment out - reloadImageCellIcons  turns off the Guide symbols in the reloadImageCellIcons
+//        reloadImageCellIcons()
+
         if let rowToHighlight = firstEmptyParmRow() {
             activateEmptyRow(parmRow: rowToHighlight)
         }
@@ -725,6 +728,15 @@ class PGLSelectParmController: PGLCommonController,
 //                    cell.backgroundConfiguration?.backgroundColor = .systemBackground
             }
         }
+        if  PGLDemo.GuideMode {
+            let thisStep = PGLGuideStep(controller: "PGLSelectParmController", filter: thisCellAttribute?.aSourceFilter.filterName, parmName: thisCellAttribute?.attributeName)
+            if let guide = PGLGuide.Steps.contains(thisStep) {
+                let theArrow = UIImage(systemName: guide.label )
+                var theConfig = cell.contentConfiguration as? UIListContentConfiguration
+                theConfig?.image = theArrow
+                cell.contentConfiguration = theConfig
+            }
+        }
         return cell
 
     }
@@ -808,7 +820,8 @@ class PGLSelectParmController: PGLCommonController,
         imageController?.panner?.isEnabled = false
             // only enable pan gesture on certain cases
 
-        NSLog("PGLSelectParmController # tableView(..didSelectRowAt tappedAttribute = \(String(describing: tappedAttribute!.attributeDisplayName))")
+        NSLog("PGLSelectParmController # tableView(..didSelectRowAt tappedAttribute = \(String(describing: tappedAttribute!.attributeName))")
+        // or use attributeDisplayName
         if tappedAttribute == nil { return }
 //        if tappedAttribute!.inputParmType() == ImageParm.filter  {
 //            // confirm that user wants to break the connection to an input
@@ -1320,14 +1333,17 @@ class PGLSelectParmController: PGLCommonController,
 
     }
 
-        func reloadImageCellIcons() {
-            var imageParmCellPaths = [IndexPath]()
-            for index in 0..<filterParms[sectionImages].count {
-                imageParmCellPaths.append(IndexPath(row: index,section: sectionImages))
-            }
-            self.parmsTableView.reloadRows(at: imageParmCellPaths, with: .automatic)
-
-        }
+//        func reloadImageCellIcons() {
+//            // to correct all cell image icons after images are picked
+//            // icons are loaded without this in version 3.5
+//
+//            var imageParmCellPaths = [IndexPath]()
+//            for index in 0..<filterParms[sectionImages].count {
+//                imageParmCellPaths.append(IndexPath(row: index,section: sectionImages))
+//            }
+//            self.parmsTableView.reloadRows(at: imageParmCellPaths, with: .automatic)
+//
+//        }
 
 
   

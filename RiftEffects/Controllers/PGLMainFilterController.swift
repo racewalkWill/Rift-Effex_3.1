@@ -610,35 +610,35 @@ extension PGLMainFilterController {
                             // category header
                     let theHeaderCell = collectionView.dequeueConfiguredReusableCell(using: headerRegistration, for: indexPath, item: item)
 
-                    if indexPath.section == 1 &&  PGLDemo.GuideMode {
+                    if  PGLDemo.GuideMode {
+                         let thisStep = PGLGuideStep(controller: "PGLMainFilterController", filter: item.title!, parmName: nil)
+                        if let guide = PGLGuide.Steps.contains(thisStep) {
                             var content = UIListContentConfiguration.extraProminentInsetGroupedHeader()
-
                             content.text = item.title!
                                 // Configure content.
 
                                 // Customize appearance.
-                            content.image = UIImage(systemName: "arrowshape.forward.fill")
+                            content.image = UIImage(systemName: guide.label )
                             if #available(iOS 18.0, *) {
                                 content.imageProperties.strokeColor = .systemRed
-                            } else {
-                                    // Fallback on earlier versions
                             }
-                                //                        content.textProperties.color = .systemRed
-
                             theHeaderCell.contentConfiguration = content
                         }
-
+                        }
                     return theHeaderCell
                     }
 
             } else {
                 // ordinary filter cell
                 let theFilterCell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
-                if PGLDemo.GuideMode && indexPath.row == 3 && indexPath.section == 1  {
-                    var content = theFilterCell.defaultContentConfiguration()
-                    content.image = UIImage(systemName: "arrowshape.forward.fill")
-                    content.text = item.title!
-                    theFilterCell.contentConfiguration = content
+                if PGLDemo.GuideMode  {
+                    let thisStep = PGLGuideStep(controller: "PGLMainFilterController", filter: item.descriptor?.filterName, parmName: nil)
+                    if let guide = PGLGuide.Steps.contains(thisStep) {
+                        var content = theFilterCell.defaultContentConfiguration()
+                        content.image = UIImage(systemName: guide.label)
+                        content.text = item.title!
+                        theFilterCell.contentConfiguration = content
+                    }
                 }
                 return theFilterCell
             }

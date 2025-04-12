@@ -180,6 +180,7 @@
 		A3E6243D2691261A0017372F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A3E6243C2691261A0017372F /* Settings.bundle */; };
 		A3EAEFD12C29BF9700174793 /* CDFilterStack_Struct.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EAEFD02C29BF9700174793 /* CDFilterStack_Struct.swift */; };
 		A3EBFB0C29EF2336005E4852 /* CIFilterToPGLFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EBFB0B29EF2336005E4852 /* CIFilterToPGLFilter.swift */; };
+		A3EC31C82DA96EBE00EBDF08 /* PGLGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EC31C72DA96EAE00EBDF08 /* PGLGuide.swift */; };
 		A3EF3EF4294AA3A900AD0B10 /* PGLAttributeVectorExpand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EF3EF3294AA3A900AD0B10 /* PGLAttributeVectorExpand.swift */; };
 		A3EFC14B2B2372CE00D30A18 /* PGLCameraInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EFC14A2B2372CE00D30A18 /* PGLCameraInterface.swift */; };
 		A3F64FCE24E85ACB00BB38BD /* PGLOffScreenRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F64FCD24E85ACB00BB38BD /* PGLOffScreenRender.swift */; };
@@ -389,6 +390,7 @@
 		A3E6243C2691261A0017372F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		A3EAEFD02C29BF9700174793 /* CDFilterStack_Struct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CDFilterStack_Struct.swift; sourceTree = "<group>"; };
 		A3EBFB0B29EF2336005E4852 /* CIFilterToPGLFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIFilterToPGLFilter.swift; sourceTree = "<group>"; };
+		A3EC31C72DA96EAE00EBDF08 /* PGLGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLGuide.swift; sourceTree = "<group>"; };
 		A3EF3EF3294AA3A900AD0B10 /* PGLAttributeVectorExpand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAttributeVectorExpand.swift; sourceTree = "<group>"; };
 		A3EFC14A2B2372CE00D30A18 /* PGLCameraInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCameraInterface.swift; sourceTree = "<group>"; };
 		A3F64FCD24E85ACB00BB38BD /* PGLOffScreenRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLOffScreenRender.swift; sourceTree = "<group>"; };
@@ -769,6 +771,7 @@
 				A3BF508924D32A3400CD5114 /* PGLFilterAttributeAttributedString.swift */,
 				A3BF507924D32A3400CD5114 /* PGLDynamicDragBehavior.swift */,
 				A3249AAF25BC728D00F7FAC2 /* PGLDemo.swift */,
+				A3EC31C72DA96EAE00EBDF08 /* PGLGuide.swift */,
 				A3A5119A2CE39371006C010E /* PGLMenuLabel.swift */,
 				A3BF50B424D32A3400CD5114 /* PGLDiffableDataSource.swift */,
 				A3BF50B824D32A3400CD5114 /* GridViewCell.swift */,
@@ -1001,6 +1004,7 @@
 				A3BF513724D32A3400CD5114 /* PGLDiffableDataSource.swift in Sources */,
 				A3BF510124D32A3400CD5114 /* PGLFaceTiltShift.swift in Sources */,
 				A3BF50E724D32A3400CD5114 /* PGLMetalController.swift in Sources */,
+				A3EC31C82DA96EBE00EBDF08 /* PGLGuide.swift in Sources */,
 				A32E1F082C4FE58E0069F27C /* CIVector.swift in Sources */,
 				A3BF50FD24D32A3400CD5114 /* PGLFilterCategory.swift in Sources */,
 				A3BF514724D32A3400CD5114 /* PGLFilterCIAbstract.swift in Sources */,
