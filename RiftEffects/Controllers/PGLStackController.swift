@@ -594,8 +594,13 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
                 myButtonHeader.addFilterBtn.addTarget(self, action: #selector(addFilterToStack ), for: .touchUpInside)
                 myButtonHeader.editFiltersBtn.addTarget(self, action: #selector(toggleEditing ), for: .touchUpInside)
+
                 if PGLDemo.GuideMode {
-                    myButtonHeader.arrowBtn.isHidden = false
+                    let thisStep = PGLGuideStep(controller: "PGLStackController", filter: nil, parmName: nil)
+                    if let guide = PGLGuide.Steps.contains(thisStep) {
+                        myButtonHeader.arrowBtn.isHidden = false } else {
+                            myButtonHeader.arrowBtn.isHidden = true
+                        }
                 } else {
                     myButtonHeader.arrowBtn.isHidden = true
                 }

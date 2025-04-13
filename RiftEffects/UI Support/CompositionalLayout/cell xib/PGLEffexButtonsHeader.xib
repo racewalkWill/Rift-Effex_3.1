@@ -39,12 +39,12 @@
                             <action selector="editFiltersBtn:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="1LL-u9-bGC"/>
                         </connections>
                     </button>
-                    <button hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yya-cM-mWi">
+                    <button hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" highlighted="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yya-cM-mWi">
                         <rect key="frame" x="78" y="4" width="48" height="35"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <state key="normal" title="Button"/>
                         <buttonConfiguration key="configuration" style="plain">
-                            <imageReference key="image" image="arrowshape.forward.fill" catalog="system" symbolScale="large"/>
+                            <imageReference key="image" image="hand.point.right" catalog="system" symbolScale="large"/>
                         </buttonConfiguration>
                     </button>
                 </subviews>
@@ -60,7 +60,7 @@
     </objects>
     <resources>
         <image name="arrow.up.and.down.text.horizontal" catalog="system" width="128" height="87"/>
-        <image name="arrowshape.forward.fill" catalog="system" width="128" height="104"/>
+        <image name="hand.point.right" catalog="system" width="128" height="98"/>
         <image name="plus.square.on.square" catalog="system" width="128" height="116"/>
     </resources>
 </document>

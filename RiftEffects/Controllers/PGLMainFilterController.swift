@@ -602,6 +602,7 @@ extension PGLMainFilterController {
 
         dataSource = UICollectionViewDiffableDataSource<Int, Item>(collectionView: filterCollectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, item: Item) -> UICollectionViewCell? in
+            var guideStepSelected = false
             if indexPath.row == 0 {
                 if indexPath.section == Header.AllFilter.rawValue {
                     // filters header
@@ -610,9 +611,10 @@ extension PGLMainFilterController {
                             // category header
                     let theHeaderCell = collectionView.dequeueConfiguredReusableCell(using: headerRegistration, for: indexPath, item: item)
 
-                    if  PGLDemo.GuideMode {
+                    if  PGLDemo.GuideMode && !guideStepSelected {
                          let thisStep = PGLGuideStep(controller: "PGLMainFilterController", filter: item.title!, parmName: nil)
                         if let guide = PGLGuide.Steps.contains(thisStep) {
+                            guideStepSelected = true
                             var content = UIListContentConfiguration.extraProminentInsetGroupedHeader()
                             content.text = item.title!
                                 // Configure content.
@@ -631,9 +633,10 @@ extension PGLMainFilterController {
             } else {
                 // ordinary filter cell
                 let theFilterCell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
-                if PGLDemo.GuideMode  {
+                if PGLDemo.GuideMode  && !guideStepSelected {
                     let thisStep = PGLGuideStep(controller: "PGLMainFilterController", filter: item.descriptor?.filterName, parmName: nil)
                     if let guide = PGLGuide.Steps.contains(thisStep) {
+                        guideStepSelected = true
                         var content = theFilterCell.defaultContentConfiguration()
                         content.image = UIImage(systemName: guide.label)
                         content.text = item.title!
