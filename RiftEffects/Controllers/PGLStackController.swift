@@ -34,6 +34,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     var existingStackTypes: [String]!
     var albumUserTextCell: UITextField?
     var saveStackBtn: UIButton?
+    var myButtonHeader: PGLEffexButtonsHeader?
 
     var publishers = [any Cancellable]()
     var cancellable: (any Cancellable)?
@@ -166,10 +167,21 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         super.viewDidAppear(animated)
 //        appStack.resetViewStack()
         segueStarted = false  // reset flag
+        if PGLDemo.GuideMode {
+            // NOT checking for place in the guide script
 
-
-
+            // go to default cell in the stackController
+            selectStackBottomRowFilter()
+//            let thisStep = PGLGuideStep(controller: "PGLStackController", filter: nil, parmName: nil)
+//            if let guide = PGLGuide.Steps.contains(thisStep) {
+//                myButtonHeader?.arrowBtn.isHidden = false } else {
+//                    myButtonHeader?.arrowBtn.isHidden = true
+//                }
+//        } else {
+//            myButtonHeader?.arrowBtn.isHidden = true
+            }
     }
+    
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         if traitCollection.verticalSizeClass == .compact {
             return .none }
@@ -188,17 +200,25 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
      func updateDisplay() {
         // called by the action buttons
-
-//        updateFilterLabel()
-        // select category & filter buttons for the next page
-//        updateSelectedButtons()
-        // refresh view
-//        postCurrentFilterChange()
+         Logger(subsystem: LogSubsystem, category: LogCategory).info ("\( String(describing: self) + "-" + #function) ")
         appStack.resetCellFilters() // updates the flattened cell filter array
-        tableView.reloadData()
-        setShiftBtnState()
-        updateNavigationBar()
-//         highlightViewerStackCells()
+
+         tableView.reloadData()
+         setShiftBtnState()
+         updateNavigationBar()
+                 //         highlightViewerStackCells()
+
+
+    }
+
+    func selectStackBottomRowFilter()
+    {   let sectionCount = tableView.numberOfSections
+
+        let bottomRow  = tableView.numberOfRows(inSection: sectionCount - 1)
+
+        let bottomIndexPath = IndexPath(row: bottomRow - 1, section: sectionCount - 1)
+        tableView.selectRow(at: bottomIndexPath, animated: true, scrollPosition: .bottom)
+        tableView(tableView, didSelectRowAt: bottomIndexPath)
 
     }
 
@@ -596,11 +616,12 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                 myButtonHeader.editFiltersBtn.addTarget(self, action: #selector(toggleEditing ), for: .touchUpInside)
 
                 if PGLDemo.GuideMode {
-                    let thisStep = PGLGuideStep(controller: "PGLStackController", filter: nil, parmName: nil)
-                    if let guide = PGLGuide.Steps.contains(thisStep) {
-                        myButtonHeader.arrowBtn.isHidden = false } else {
-                            myButtonHeader.arrowBtn.isHidden = true
-                        }
+                    myButtonHeader.arrowBtn.isHidden = false // always on during GuideMode
+//                    let thisStep = PGLGuideStep(controller: "PGLStackController", filter: nil, parmName: nil)
+//                    if let guide = PGLGuide.Steps.contains(thisStep) {
+//                        myButtonHeader.arrowBtn.isHidden = false } else {
+//                            myButtonHeader.arrowBtn.isHidden = true
+//                        }
                 } else {
                     myButtonHeader.arrowBtn.isHidden = true
                 }

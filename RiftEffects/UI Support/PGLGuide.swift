@@ -14,7 +14,9 @@ import os
 enum StepViewState {
     case pending
     case completed
+    case ready
     case active
+
 }
 
     /// singleton instance for User Guided input
@@ -23,18 +25,19 @@ enum StepViewState {
 public final class PGLGuide {
     static let Steps = PGLGuide()
     var userArrowSymbol = "hand.point.right"
-    var userSwipeArrow = "appwindow.swipe.rectangle" //arrowshape.left.fill"
+    var userSwipeArrow =  "arrowshape.left.fill" //"appwindow.swipe.rectangle"
     var userTouchSymbol = "hand.tap.fill"
     var guideSteps: [PGLGuideGroup]
     var currentGroup: PGLGuideGroup = PGLGuideGroup(steps: [PGLGuideStep]() )
     var currentGroupIndex: Int = 0
 
     init() {
-        guideSteps = [ PGLGuideGroup(
-                        steps: [
-                            PGLGuideStep(controller: "PGLStackController",filter: nil, parmName: nil, label: userArrowSymbol ),
-                         // the button symbol in file PGLEffexButtonsHader.xib not set from the label parm
-                       ]) ,
+        guideSteps = [
+//                    PGLGuideGroup(
+//                        steps: [
+//                            PGLGuideStep(controller: "PGLStackController",filter: nil, parmName: nil, label: userArrowSymbol ),
+//                         // the button symbol in file PGLEffexButtonsHader.xib not set from the label parm
+//                       ]) ,
                        PGLGuideGroup( steps: [
                             PGLGuideStep(controller: "PGLMainFilterController",filter: "Stylize", parmName: nil,
                                          label: userArrowSymbol),
@@ -54,9 +57,19 @@ public final class PGLGuide {
                             PGLGuideStep(controller: "PGLSelectParmController",filter: "Triangle Gradient", parmName: "inputCenter",
                                                   label: userArrowSymbol),
                        ] ),
+                       PGLGuideGroup( steps: [
+                        PGLGuideStep(controller: "PGLStackController",filter: nil, parmName: nil, label: userArrowSymbol ),
+                        PGLGuideStep(controller: "PGLMainFilterController",filter: "Color Adjustment", parmName: nil,
+                                              label: userArrowSymbol),
+                        PGLGuideStep(controller: "PGLMainFilterController",filter: "CIToneCurve", parmName: nil,
+                                              label: userArrowSymbol),
+                        PGLGuideStep(controller: "PGLSelectParmController",filter: "CIToneCurve", parmName: "inputPoint1",
+                                              label: userArrowSymbol),
+
+                        ],)
         ]
         currentGroup = guideSteps[0]
-        currentGroup.state = .active
+        currentGroup.state = .ready
     }
 
     static func resetAll() {
@@ -68,7 +81,7 @@ public final class PGLGuide {
         currentGroupIndex = 0
         currentGroup = guideSteps[currentGroupIndex]
         if PGLDemo.GuideMode {
-            currentGroup.state = .active
+            currentGroup.state = .ready
         }
 
     }
@@ -76,16 +89,18 @@ public final class PGLGuide {
     func contains(_ step: PGLGuideStep) -> PGLGuideStep? {
         if let index = currentGroup.steps.firstIndex(of: step)
         {   let matchStep = currentGroup.steps[index ]
+            currentGroup.state = .active
            matchStep.state = .active
-           // done prevents a second use of this step
+           // active prevents a second use of this step
            // the caller will always be looking for state = pending
             if index == currentGroup.steps.count - 1 {
                 // at end of this groups steps
                 currentGroup.state = .completed
+
                 currentGroupIndex = currentGroupIndex + 1
                 if currentGroupIndex < guideSteps.count {
                     currentGroup = guideSteps[currentGroupIndex]
-                    currentGroup.state = .active
+                    currentGroup.state = .ready
                 } else {
                     // at the end  reset and turn off DemoMode
                     PGLDemo.GuideMode = false
