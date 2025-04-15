@@ -731,10 +731,20 @@ class PGLSelectParmController: PGLCommonController,
         if  PGLDemo.GuideMode {
             let thisStep = PGLGuideStep(controller: "PGLSelectParmController", filter: thisCellAttribute?.aSourceFilter.filterName, parmName: thisCellAttribute?.attributeName)
             if let guide = PGLGuide.Steps.contains(thisStep) {
-                let theArrow = UIImage(systemName: guide.label )
-                var theConfig = cell.contentConfiguration as? UIListContentConfiguration
-                theConfig?.image = theArrow
-                cell.contentConfiguration = theConfig
+                if let theArrow = UIImage(systemName: guide.label ) {
+
+                    var arrowSymbolConfig = theArrow.symbolConfiguration
+                    let otherConfig = UIImage.SymbolConfiguration(hierarchicalColor: .systemFill)
+                        // .secondarySystemFill
+                    arrowSymbolConfig?.applying(otherConfig)
+                    let newArrow = theArrow.withConfiguration(arrowSymbolConfig!)
+
+                    var theConfig = cell.contentConfiguration as? UIListContentConfiguration
+                    theConfig?.image = newArrow
+
+                    cell.contentConfiguration = theConfig
+                }
+
             }
         }
         return cell
@@ -977,6 +987,14 @@ class PGLSelectParmController: PGLCommonController,
 
 
                     completion(true)
+                }
+                if PGLDemo.GuideMode {
+                    let thisStep = PGLGuideStep(controller: "PGLSelectParmController", filter: cellDataAttribute.aSourceFilter.filterName, parmName: anActionCell.swipeLabel)
+                    if let guide = PGLGuide.Steps.contains(thisStep) {
+                            //                            let theArrow = UIImage(systemName: guide.label )
+                            //                            myAction.image = theArrow
+                        myAction.backgroundColor = .secondarySystemFill
+                    }
                 }
                 contextActions.append(myAction)
             case .command:

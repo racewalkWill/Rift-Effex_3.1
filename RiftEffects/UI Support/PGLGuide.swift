@@ -24,8 +24,8 @@ enum StepViewState {
 @MainActor
 public final class PGLGuide {
     static let Steps = PGLGuide()
-    var userArrowSymbol = "hand.point.right"
-    var userSwipeArrow =  "arrowshape.left.fill" //"appwindow.swipe.rectangle"
+    var userArrowSymbol = "hand.point.right.fill"
+    var userSwipeArrow =  "hand.point.left.fill" //"appwindow.swipe.rectangle"
     var userTouchSymbol = "hand.tap.fill"
     var guideSteps: [PGLGuideGroup]
     var currentGroup: PGLGuideGroup = PGLGuideGroup(steps: [PGLGuideStep]() )
@@ -47,6 +47,8 @@ public final class PGLGuide {
                             PGLGuideStep(controller: "PGLSelectParmController",filter: "CIBlendWithMask", parmName: "inputBackgroundImage",
                                                   label: userTouchSymbol),
                             PGLGuideStep(controller: "PGLSelectParmController",filter: "CIBlendWithMask", parmName: "inputMaskImage",
+                                                  label: userSwipeArrow),
+                            PGLGuideStep(controller: "PGLSelectParmController",filter: "CIBlendWithMask", parmName: "+Effex",
                                                   label: userSwipeArrow),
                         ] ),
                        PGLGuideGroup( steps: [

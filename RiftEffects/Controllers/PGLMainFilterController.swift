@@ -622,7 +622,8 @@ extension PGLMainFilterController {
                                 // Customize appearance.
                             content.image = UIImage(systemName: guide.label )
                             if #available(iOS 18.0, *) {
-                                content.imageProperties.strokeColor = .systemRed
+//                                content.imageProperties.tintColor = .systemYellow
+                                
                             }
                             theHeaderCell.contentConfiguration = content
                         }

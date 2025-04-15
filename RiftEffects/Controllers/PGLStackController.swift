@@ -617,6 +617,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
                 if PGLDemo.GuideMode {
                     myButtonHeader.arrowBtn.isHidden = false // always on during GuideMode
+                    myButtonHeader.backgroundColor = .systemYellow
 //                    let thisStep = PGLGuideStep(controller: "PGLStackController", filter: nil, parmName: nil)
 //                    if let guide = PGLGuide.Steps.contains(thisStep) {
 //                        myButtonHeader.arrowBtn.isHidden = false } else {
