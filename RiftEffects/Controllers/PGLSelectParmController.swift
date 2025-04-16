@@ -1004,11 +1004,14 @@ class PGLSelectParmController: PGLCommonController,
                     completion(true)
                 }
                 if PGLDemo.GuideMode {
-                    let thisStep = PGLGuideStep(controller: "PGLSelectParmController", filter: cellDataAttribute.aSourceFilter.filterName, parmName: anActionCell.swipeLabel)
+                    let thisStep = PGLGuideStep(controller: "PGLSelectParmController", filter: cellDataAttribute.aSourceFilter.filterName, parmName: tappedAttribute?.attributeName)
+                    thisStep.cell = anActionCell.swipeLabel
                     if let guide = PGLGuide.Steps.contains(thisStep) {
                             //                            let theArrow = UIImage(systemName: guide.label )
                             //                            myAction.image = theArrow
-                        myAction.backgroundColor = .secondarySystemFill
+                        myAction.backgroundColor = .systemBlue
+                            // .systemFill
+                            // .secondarySystemFill
                     }
                 }
                 contextActions.append(myAction)

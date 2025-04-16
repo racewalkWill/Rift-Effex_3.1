@@ -48,8 +48,8 @@ public final class PGLGuide {
                                                   label: userTouchSymbol),
                             PGLGuideStep(controller: "PGLSelectParmController",filter: "CIBlendWithMask", parmName: "inputMaskImage",
                                                   label: userSwipeArrow),
-                            PGLGuideStep(controller: "PGLSelectParmController",filter: "CIBlendWithMask", parmName: "+Effex",
-                                                  label: userSwipeArrow),
+                            PGLGuideStep(controller: "PGLSelectParmController",filter: "CIBlendWithMask", parmName: "inputMaskImage",
+                                         label: userSwipeArrow, cell: "+Effex"),
                         ] ),
                        PGLGuideGroup( steps: [
                             // this is still forward. But a new group so that the Gradient does not show arrow until after
@@ -168,6 +168,7 @@ class PGLGuideStep: Equatable {
     var controller: String = ""
     var filter: String?
     var parmName: String?
+    var cell: String?
     var label: String = "hand.point.right"
     var state: StepViewState = .pending {
         didSet{
@@ -184,7 +185,9 @@ class PGLGuideStep: Equatable {
     return lhs.controller == rhs.controller &&
      lhs.filter == rhs.filter &&
      lhs.parmName == rhs.parmName &&
-     lhs.state == rhs.state
+     lhs.state == rhs.state &&
+     lhs.cell == rhs.cell
+
      // label will be the action for the context
      //lhs.label == rhs.label
 
@@ -195,7 +198,10 @@ class PGLGuideStep: Equatable {
         self.filter = filter
         self.parmName = parmName
         self.label = label
-
+    }
+    convenience init (controller: String, filter: String? = nil, parmName: String? = nil, label: String = "hand.point.right" , cell: String? = nil ) {
+        self.init(controller: controller, filter: filter, parmName: parmName, label: label)
+        self.cell = cell
 
     }
 }
