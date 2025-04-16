@@ -78,6 +78,8 @@ class PGLSelectParmController: PGLCommonController,
     let sectionParms = 1
     let sectionOther = 2
 
+    @IBOutlet weak var GuideArrowBtn: UIBarButtonItem!
+
     var imageController: PGLImageController?
     
     var imagePicker: PGLImageListPicker?
@@ -198,9 +200,13 @@ class PGLSelectParmController: PGLCommonController,
         super.viewDidLoad()
 
         splitViewController?.delegate = self
+        if showGuideArrowBack( ) {
+            parmsTableView.reloadData()
+        }
 
 
-        navigationItem.title = "Effex" //viewerStack.stackName
+//        navigationItem.title = "Effex" //viewerStack.stackName
+        // commented the title out so the GuidArrowBtn in the navigation bar shows better
 
 
 //        NSLog ("PGLSelectParmController #viewDidLoad completed")
@@ -215,6 +221,22 @@ class PGLSelectParmController: PGLCommonController,
 
     }
 
+    func showGuideArrowBack() -> Bool {
+        var showGuideBackArrow: Bool = false
+        if PGLDemo.GuideMode {
+            if PGLGuide.Steps.shouldNavigateBack()  {
+                GuideArrowBtn?.isHidden = false
+                showGuideBackArrow = true
+            } else {
+                GuideArrowBtn?.isHidden = true
+            }
+        } else {
+            GuideArrowBtn?.isHidden = true
+
+        }
+        setNeedsStatusBarAppearanceUpdate()
+        return showGuideBackArrow
+    }
 
     fileprivate func updateDisplay() {
         // does not do much... remove  ?
@@ -230,6 +252,7 @@ class PGLSelectParmController: PGLCommonController,
 
 
         setShiftLabelState()
+        showGuideArrowBack()
             // if only one filter then shift to this filter does not change anything
 //         NSLog ("PGLSelectParmController #updateDisplay end ")
 
@@ -255,16 +278,8 @@ class PGLSelectParmController: PGLCommonController,
         if imageController == nil {
             setImageController()
         }
-//        imageController?.setGestureRecogniziers()
-//        if let myView = imageController?.view
-//            { // could be navigation issue
-//
-//            setGestureRecogniziers(targetView: myView) // matches viewDidDisappear removeGesture
-//        } else {
-//            // need to abort this loading... navigation issue -
-//            // how to abort or recover?
-//            Logger(subsystem: LogSubsystem, category: LogCategory).fault("PGLSelectParmController viewWillAppear imageController.view not set")
-//        }
+
+
         let myCenter =  NotificationCenter.default
 
         cancellable = myCenter.publisher(for: PGLHideParmControlsOnFilterChange)

@@ -52,14 +52,18 @@ public final class PGLGuide {
                                                   label: userSwipeArrow),
                         ] ),
                        PGLGuideGroup( steps: [
+                            // this is still forward. But a new group so that the Gradient does not show arrow until after
+                        // blendwithMask is done.
                             PGLGuideStep(controller: "PGLMainFilterController",filter: "Gradient", parmName: nil,
                                                   label: userArrowSymbol),
                             PGLGuideStep(controller: "PGLMainFilterController",filter: "Triangle Gradient", parmName: nil,
                                                   label: userArrowSymbol),
                             PGLGuideStep(controller: "PGLSelectParmController",filter: "Triangle Gradient", parmName: "inputCenter",
                                                   label: userArrowSymbol),
+
                        ] ),
                        PGLGuideGroup( steps: [
+                        PGLGuideStep.GuideArrowBack(),
                         PGLGuideStep(controller: "PGLStackController",filter: nil, parmName: nil, label: userArrowSymbol ),
                         PGLGuideStep(controller: "PGLMainFilterController",filter: "Color Adjustment", parmName: nil,
                                               label: userArrowSymbol),
@@ -103,6 +107,11 @@ public final class PGLGuide {
                 if currentGroupIndex < guideSteps.count {
                     currentGroup = guideSteps[currentGroupIndex]
                     currentGroup.state = .ready
+                    // now see if a notification should published
+                    if shouldNavigateBack() {
+                        let updateNotification = Notification(name: PGLHideParmControlsOnFilterChange)
+                            NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["showGuideArrow" : true as AnyObject])
+                    }
                 } else {
                     // at the end  reset and turn off DemoMode
                     PGLDemo.GuideMode = false
@@ -113,7 +122,25 @@ public final class PGLGuide {
         else { return nil }
     }
 
+    func shouldNavigateBack() -> Bool {
+        var allCurrentStepsPending = false
+
+            // initial state is last group is completed and this group steps are .pending
+        if currentGroupIndex > 0 {
+                // if on the first group then navigate back is meaningless
+                allCurrentStepsPending = currentGroup.steps.allSatisfy({ $0.state == .pending})
+                // true if the sequence contains only elements that satisfy predicate; otherwise, false.
+                // last group is completed so navigate back
+            }
+        if allCurrentStepsPending && currentGroup.hasGuideBackArrow() {
+                return true
+        } else {
+            return false
+        }
+    }
+
 }
+
 class PGLGuideGroup: Equatable {
     var steps: [PGLGuideStep] = []
     var state: StepViewState = .pending
@@ -125,6 +152,10 @@ class PGLGuideGroup: Equatable {
     init(steps: [PGLGuideStep]) {
         self.steps = steps
 
+    }
+
+    func hasGuideBackArrow() -> Bool {
+        return steps.contains(where: { $0.label == "GuideBackArrow" })
     }
 
     func resetSteps() {
@@ -143,6 +174,10 @@ class PGLGuideStep: Equatable {
             NSLog("\(#function ) \(String(describing: filter)) \(String(describing: parmName)) \(state)" )
 
         }
+    }
+
+    static func GuideArrowBack() -> PGLGuideStep {
+       return PGLGuideStep(controller: "",filter: "", parmName: nil, label: "GuideBackArrow" )
     }
 
  static func == (lhs: PGLGuideStep, rhs: PGLGuideStep) -> Bool {

@@ -62,6 +62,14 @@ class PGLMainFilterController:  UIViewController,
     var publishers = [any Cancellable]()
     var cancellable: (any Cancellable)?
 
+
+    @IBOutlet weak var guideArrowBtn: UIBarButtonItem! {
+        didSet {
+            guideArrowBtn.isHidden = true
+        }
+    }
+
+    
     deinit {
 //        releaseVars()
         Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
@@ -179,7 +187,7 @@ class PGLMainFilterController:  UIViewController,
         appStack = myAppDelegate.appStack
         stackData = { self.appStack.viewerStack }
         // closure is evaluated when referenced
-        navigationItem.title = "Effex" //thisStack.stackName
+//        navigationItem.title = "Effex" //thisStack.stackName
 
         let myCenter =  NotificationCenter.default
 
@@ -218,11 +226,36 @@ class PGLMainFilterController:  UIViewController,
         removeGestureRecogniziers(targetView: filterCollectionView)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super .viewWillAppear(animated)
+        if showGuideArrowBack() {
+            filterCollectionView.reloadData()
+            // force off any guide symbols because back navigation is running
+        }
+
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         super .viewDidDisappear(animated)
         Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLMainFilterController #viewDidDisappear releaseNotifications")
 
        releaseNotifications()
+    }
+
+    func showGuideArrowBack() -> Bool {
+        var showGuideBackArrow: Bool = false
+        if PGLDemo.GuideMode {
+            if PGLGuide.Steps.shouldNavigateBack()  {
+                guideArrowBtn?.isHidden = false
+                showGuideBackArrow = true
+            } else {
+                guideArrowBtn?.isHidden = true
+            }
+        } else {
+            guideArrowBtn?.isHidden = true
+        }
+        setNeedsStatusBarAppearanceUpdate()
+        return showGuideBackArrow
     }
 
         // MARK: SplitView
@@ -358,9 +391,14 @@ class PGLMainFilterController:  UIViewController,
 }
 
  func postCurrentFilterChange() {
+
     let updateFilterNotification = Notification(name:PGLHideParmControlsOnFilterChange)
 
      NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
+     if showGuideArrowBack() {
+         filterCollectionView.reloadData()
+         // force off any guide symbols because back navigation is running
+     }
 }
 
     // MARK: unwind segue code. Triggered from PGLSelectParm
