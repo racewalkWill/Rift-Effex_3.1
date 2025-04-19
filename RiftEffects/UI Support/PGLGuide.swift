@@ -63,7 +63,7 @@ public final class PGLGuide {
 
                        ] ),
                        PGLGuideGroup( steps: [
-//                        PGLGuideStep.GuideArrowBack(),
+                        PGLGuideStep.GuideArrowBack(),
                         PGLGuideStep(controller: "PGLStackController",filter: nil, parmName: nil, label: userArrowSymbol ),
                         PGLGuideStep(controller: "PGLMainFilterController",filter: "Color Adjustment", parmName: nil,
                                               label: userArrowSymbol),

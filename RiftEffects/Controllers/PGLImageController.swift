@@ -257,8 +257,6 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         self.appStack.saveStack(metalRender: self.metalController!.metalRender)
 
-
-        incrementSaveCountForAppReview()
     }
 
     func saveToPhotoLibrary() {
@@ -286,9 +284,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
         //MARK: App Review save count
-    func incrementSaveCountForAppReview() {
+    func incrementCountForAppReview() {
             // based on Apple sample StoreKitReviewRequest example code
-
+            // ver 3.5 change to user open of the app. not saves
+        
         var saveCount = UserDefaults.standard.integer(forKey: PGLUserDefaultKeys.processCompletedCountKey)
         saveCount += 1
         UserDefaults.standard.set(saveCount, forKey: PGLUserDefaultKeys.processCompletedCountKey)
@@ -738,6 +737,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             if !(self?.keepParmSlidersVisible ?? false) {
                 self?.hideParmControls()
             }
+
+            self?.incrementCountForAppReview()
+                // requests user app review on the app store
+                // after two increments on a new version
         }
         publishers.append(cancellable!)
 
