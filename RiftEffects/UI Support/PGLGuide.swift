@@ -63,7 +63,7 @@ public final class PGLGuide {
 
                        ] ),
                        PGLGuideGroup( steps: [
-                        PGLGuideStep.GuideArrowBack(),
+//                        PGLGuideStep.GuideArrowBack(),
                         PGLGuideStep(controller: "PGLStackController",filter: nil, parmName: nil, label: userArrowSymbol ),
                         PGLGuideStep(controller: "PGLMainFilterController",filter: "Color Adjustment", parmName: nil,
                                               label: userArrowSymbol),
@@ -128,7 +128,12 @@ public final class PGLGuide {
             // initial state is last group is completed and this group steps are .pending
         if currentGroupIndex > 0 {
                 // if on the first group then navigate back is meaningless
-                allCurrentStepsPending = currentGroup.steps.allSatisfy({ $0.state == .pending})
+                allCurrentStepsPending = currentGroup.steps.allSatisfy(
+                    {
+                        $0.state == .pending
+                    }
+                )
+
                 // true if the sequence contains only elements that satisfy predicate; otherwise, false.
                 // last group is completed so navigate back
             }

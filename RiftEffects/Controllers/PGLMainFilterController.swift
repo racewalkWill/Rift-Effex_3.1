@@ -55,6 +55,11 @@ class PGLMainFilterController:  UIViewController,
     var longPressGesture: UILongPressGestureRecognizer!
     var longPressStart: IndexPath?
 
+    var guideStepIndex: IndexPath?
+        // only set in PGLDemo.GuideMode
+        // index of a cell with guideArrow -
+        // scroll to the spot so user can see it
+
     // MARK: - Constants
     static let tableViewCellIdentifier = "cellID"
     private static let nibName = "TableCell"
@@ -217,6 +222,15 @@ class PGLMainFilterController:  UIViewController,
             if restoredState.wasFirstResponder {
                 searchController.searchBar.becomeFirstResponder()
                 restoredState.wasFirstResponder = false
+            }
+        }
+        if PGLDemo.GuideMode {
+            if guideStepIndex != nil {
+                filterCollectionView.scrollToItem(
+                    at: guideStepIndex!,
+                    at: .centeredVertically,
+                    animated: true)
+                guideStepIndex = nil // reset after use
             }
         }
 
@@ -653,6 +667,7 @@ extension PGLMainFilterController {
                          let thisStep = PGLGuideStep(controller: "PGLMainFilterController", filter: item.title!, parmName: nil)
                         if let guide = PGLGuide.Steps.contains(thisStep) {
                             guideStepSelected = true
+                            self.guideStepIndex = indexPath
                             var content = UIListContentConfiguration.extraProminentInsetGroupedHeader()
                             content.text = item.title!
                                 // Configure content.
@@ -676,6 +691,7 @@ extension PGLMainFilterController {
                     let thisStep = PGLGuideStep(controller: "PGLMainFilterController", filter: item.descriptor?.filterName, parmName: nil)
                     if let guide = PGLGuide.Steps.contains(thisStep) {
                         guideStepSelected = true
+                        self.guideStepIndex = indexPath
                         var content = theFilterCell.defaultContentConfiguration()
                         content.image = UIImage(systemName: guide.label)
                         content.text = item.title!
