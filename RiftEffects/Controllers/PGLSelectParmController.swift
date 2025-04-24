@@ -252,7 +252,7 @@ class PGLSelectParmController: PGLCommonController,
 
 
         setShiftLabelState()
-        showGuideArrowBack()
+        _ = showGuideArrowBack()
             // if only one filter then shift to this filter does not change anything
 //         NSLog ("PGLSelectParmController #updateDisplay end ")
 
@@ -748,7 +748,7 @@ class PGLSelectParmController: PGLCommonController,
             if let guide = PGLGuide.Steps.contains(thisStep) {
                 if let theArrow = UIImage(systemName: guide.label ) {
 
-                    var arrowSymbolConfig = theArrow.symbolConfiguration
+                    let arrowSymbolConfig = theArrow.symbolConfiguration
                     let otherConfig = UIImage.SymbolConfiguration(hierarchicalColor: .systemFill)
                         // .secondarySystemFill
                     arrowSymbolConfig?.applying(otherConfig)
@@ -1006,7 +1006,7 @@ class PGLSelectParmController: PGLCommonController,
                 if PGLDemo.GuideMode {
                     let thisStep = PGLGuideStep(controller: "PGLSelectParmController", filter: cellDataAttribute.aSourceFilter.filterName, parmName: tappedAttribute?.attributeName)
                     thisStep.cell = anActionCell.swipeLabel
-                    if let guide = PGLGuide.Steps.contains(thisStep) {
+                    if PGLGuide.Steps.contains(thisStep) != nil {
                             //                            let theArrow = UIImage(systemName: guide.label )
                             //                            myAction.image = theArrow
                         myAction.backgroundColor = .systemBlue

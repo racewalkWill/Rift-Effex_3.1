@@ -231,7 +231,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
                                             UIAction.init(title: PGLMenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
                                                 [weak self ]
                                                 action in
-                                                guard let self else { return }
+                                                guard self != nil else { return }
                                                 imageViewerController.templateBtnAction(imageViewerController.templateBtn)
                                             } ,
                                             UIAction(title: PGLMenuLabel.Guide.rawValue , image: UIImage(systemName: "hourglass"), state: PGLDemo.GuideMode == true ? .on : .off, handler: { (action) in
@@ -242,7 +242,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
                                             UIAction(title: PGLMenuLabel.Blend.rawValue, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
-                                                guard let self else { return }
+                                                guard self != nil else { return }
                                                 let demoGenerator = PGLDemo()
                                                 demoGenerator.iPhoneCompact = false  // now on the iPad
                                                 demoGenerator.blendTemplate(appStack: imageViewerController.appStack)
@@ -250,13 +250,13 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
                                             UIAction(title: PGLMenuLabel.Sequence.rawValue, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
-                                                guard let self else { return }
+                                                guard self != nil else { return }
                                                 imageViewerController.loadDemoStack(imageViewerController.templateBtn)
                                             },
                                             UIAction(title: PGLMenuLabel.Edge.rawValue, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
-                                                guard let self else { return }
+                                                guard self != nil else { return }
                                                 let demoGenerator = PGLDemo()
                                                 demoGenerator.edgeTemplate(appStack: imageViewerController.appStack)
                                             },
@@ -265,7 +265,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
                                             UIAction(title: PGLMenuLabel.Tone.rawValue, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
-                                                guard let self else { return }
+                                                guard self != nil else { return }
                                                 let demoGenerator = PGLDemo()
                                                 demoGenerator.toneTemplate(appStack: imageViewerController.appStack)
                                             },
@@ -273,7 +273,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
                                             UIAction(title: PGLMenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
-                                                guard let self else { return }
+                                                guard self != nil else { return }
                                                 let demoGenerator = PGLDemo()
                                                 demoGenerator.iPhoneCompact = false  // now on the iPad
                                                 demoGenerator.kaleidoscopeTemplate(appStack: imageViewerController.appStack)

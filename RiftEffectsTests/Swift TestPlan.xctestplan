@@ -1,0 +1,54 @@
+{
+  "configurations" : [
+    {
+      "id" : "728D0A52-F624-48DE-9F02-3979411E4AFA",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "GlanceTests",
+        "GlanceTests\/testFilterExtensions()",
+        "GlanceTests\/testImageInputKeys()",
+        "GlanceTests\/testSourceFilterAttributes()",
+        "PGLCategorySurvey",
+        "PGLCategorySurvey\/testCompositeChildStack()",
+        "PGLCategorySurvey\/testMultipleInputTransitionFilters()",
+        "PGLCategorySurvey\/testSelectedFilters()",
+        "PGLCategorySurvey\/testSelectedMultipleFilters()",
+        "PGLCategorySurvey\/testSingleInputFilters()",
+        "PGLCategorySurvey\/testTransitionChildStacks()",
+        "PGLCategorySurvey\/testiOS13Filters()",
+        "PGLFilterDescriptorTests",
+        "PGLFilterDescriptorTests\/testAllFilterCategories()",
+        "PGLFilterDescriptorTests\/testAllFilterCreation()",
+        "PGLFilterDescriptorTests\/testCategoryDescription()",
+        "PGLFilterDescriptorTests\/testDescriptionFilterDescriptor()",
+        "PGLFilterDescriptorTests\/testDescriptorSort()",
+        "PGLFilterDescriptorTests\/testFilterAttributeCounter()",
+        "PGLFilterDescriptorTests\/testFilterCategory()",
+        "PGLFilterDescriptorTests\/testFilterDescriptionCapture()",
+        "PGLFilterDescriptorTests\/testFilterNameDescriptionCapture()",
+        "PGLFilterDescriptorTests\/testUnknownFilterAttributesList()",
+        "PGLFilterStackTests",
+        "PGLFilterStackTests\/testAddDeleteFilters()",
+        "PGLFilterStackTests\/testCycleSave()",
+        "PGLFilterStackTests\/testInputFilterSave()",
+        "PGLFilterStackTests\/testStackSetup()"
+      ],
+      "target" : {
+        "containerPath" : "container:RiftEffects.xcodeproj",
+        "identifier" : "A3BF502124D3299100CD5114",
+        "name" : "RiftEffectsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

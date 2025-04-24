@@ -370,7 +370,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 // from the PGLImageController
         }
 
-        if let myParentSplit = splitViewController as? PGLSplitViewController {
+        if splitViewController is PGLSplitViewController {
                 // navigate back any open controllers
                 // myParentSplit is not found on navigation back from parm to select filter
                 // myParentSplit is found on forward navigation from stack to filter controller..

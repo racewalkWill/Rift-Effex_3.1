@@ -176,7 +176,7 @@ class CIBlendText: CIFilter {
         let rotatedText = rotateFilter.outputImage!
         colorBlendFilter.setValuesForKeys(["inputImage": colorGenerator.outputImage!,
                                            "inputMaskImage": rotatedText,
-                                          "inputBackgroundImage": inputImage]
+                                           "inputBackgroundImage": inputImage as Any]
                                             )
 
         return colorBlendFilter.outputImage

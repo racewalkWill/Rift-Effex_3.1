@@ -551,7 +551,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         }
         if !appStack.flatCellFilters.isEmpty {
             let cellIndent = appStack.flatCellFilters[indexPath.row]
-            let didMoveToFilter = appStack.moveTo(filterIndent: cellIndent)
+            _ = appStack.moveTo(filterIndent: cellIndent)
 
                 /// make the imageController show the new output either single filter or stack output
             appStack.showFilterImage = !appStack.showFilterImage

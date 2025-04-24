@@ -3,4 +3,34 @@
    uuid = "DD0C0316-C0BC-49AF-9C7C-FF800F34D0BB"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FBCDE546-5412-4A7A-8CD1-14D180EF8D8E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../var/folders/96/xt_mm9v08xj9s6001s6yc8rr0000gp/T/swift-generated-sources/@__swiftmacro_16RiftEffectsTests0031PGLSourceFilterTestsswift_yFFIifMX184_12_7requirefMf_.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1"
+            endingLineNumber = "1">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "973AAFE6-0AE0-4CA9-90E5-A73B4668F184"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../var/folders/96/xt_mm9v08xj9s6001s6yc8rr0000gp/T/swift-generated-sources/@__swiftmacro_16RiftEffectsTests0031PGLSourceFilterTestsswift_yFFIifMX220_12_33_90E46EAB7196CBE5A1320E82195C340BLl7requirefMf_.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1"
+            endingLineNumber = "1">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

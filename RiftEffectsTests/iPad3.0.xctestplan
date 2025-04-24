@@ -37,28 +37,6 @@
   "testTargets" : [
     {
       "parallelizable" : true,
-      "skippedTests" : [
-        "GlanceTests",
-        "PGLCategorySurvey",
-        "PGLCategorySurvey\/testCompositeChildStack()",
-        "PGLCategorySurvey\/testMultipleInputTransitionFilters()",
-        "PGLCategorySurvey\/testSelectedFilters()",
-        "PGLCategorySurvey\/testSelectedMultipleFilters()",
-        "PGLCategorySurvey\/testSingleInputFilters()",
-        "PGLCategorySurvey\/testTransitionChildStacks()",
-        "PGLCategorySurvey\/testiOS13Filters()",
-        "PGLFilterDescriptorTests\/testAllFilterCategories()",
-        "PGLFilterDescriptorTests\/testAllFilterCreation()",
-        "PGLFilterDescriptorTests\/testCategoryDescription()",
-        
-        "PGLFilterDescriptorTests\/testDescriptorSort()",
-        "PGLFilterDescriptorTests\/testFilterAttributeCounter()",
-        "PGLFilterDescriptorTests\/testFilterCategory()",
-        "PGLFilterDescriptorTests\/testFilterDescriptionCapture()",
-        "PGLFilterDescriptorTests\/testUnknownFilterAttributesList()",
-        "PGLFilterStackTests",
-        "PGLSourceFilterTests"
-      ],
       "target" : {
         "containerPath" : "container:RiftEffects.xcodeproj",
         "identifier" : "A3BF502124D3299100CD5114",

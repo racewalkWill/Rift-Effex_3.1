@@ -213,7 +213,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
             return false
         }
 
-        var transitionAttributes = imageAttributes()
+        let transitionAttributes = imageAttributes()
         if transitionAttributes.isEmpty {
             return false
         }
@@ -942,7 +942,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
            // set appStack and stack indexes to the selected filter
            let cellObject = stackController.appStack.flatCellFilters[indexPath.row]
 
-            stackController.appStack.moveTo(filterIndent: cellObject) // this is also setting the activeFilterIndes..
+           _ = stackController.appStack.moveTo(filterIndent: cellObject) // this is also setting the activeFilterIndes..
 
            Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLStackController trailingSwipeActionsConfigurationForRowAt Open")
                 stackController.segueToParmController()
@@ -961,7 +961,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
            // set appStack and stack indexes to the selected filter
            let cellObject = stackController.appStack.flatCellFilters[indexPath.row]
 
-            stackController.appStack.moveTo(filterIndent: cellObject) // this is also setting the activeFilterIndes..
+           _ = stackController.appStack.moveTo(filterIndent: cellObject) // this is also setting the activeFilterIndes..
             stackController.appStack.setFilterChangeModeToReplace()
                // this is passed to the filterController
                // in the segue
