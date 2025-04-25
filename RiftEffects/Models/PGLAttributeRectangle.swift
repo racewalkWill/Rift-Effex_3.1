@@ -36,7 +36,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
         if let myVector = self.getVectorValue(){
-            NSLog("PGLFilterAttributeRectangle init vectorValue = x:\(myVector.x) y:\(myVector.y)  width: \( myVector.z) height: \(myVector.w)")
+//            NSLog("PGLFilterAttributeRectangle init vectorValue = x:\(myVector.x) y:\(myVector.y)  width: \( myVector.z) height: \(myVector.w)")
             if (myVector.x < 1.0 && myVector.y < 1.0 && myVector.z < 1.0 && myVector.w < 1.0) {
                 filterRect = CGRect(x: myVector.x, y: myVector.y, width: myVector.z, height: myVector.w)
             }  // else keep the default rect of 300
@@ -166,8 +166,8 @@ class PGLAttributeRectangle: PGLFilterAttribute {
         parmInputState = .inputValueSet
         
         let newVector = CIVector(x: mappedCropRect.origin.x, y: mappedCropRect.origin.y, z: mappedCropRect.size.width, w: mappedCropRect.size.height)
-        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
-        NSLog("     newVector \(newVector) from \(mappedCropRect)")
+//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+//        NSLog("     newVector \(newVector) from \(mappedCropRect)")
         oldVector = self.getVectorValue()  // save old value for cancel action
         aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
         // let the parent filter do the work in CIImage.methods  see PGLRectangleFilter outputImage()

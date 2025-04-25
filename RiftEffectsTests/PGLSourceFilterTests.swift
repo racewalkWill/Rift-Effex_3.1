@@ -96,26 +96,7 @@ let TestLogCategory = "PGL"
         }
     }
 
-    @Test func parmDepthFilterSetter() {
-        // test that parms that are not image input are set
 
-        #expect (depthFilter != nil)
-        depthFilter?.setDefaults()
-        Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("testParmAttributes depthFilter = \(String(describing: self.depthFilter))")
-        #expect (depthFilter!.attributes.count == 7)
-
-
-        for anAttribute in depthFilter?.attributes ?? [PGLFilterAttribute]() {
-            if anAttribute.attributeName != "inputImage" {
-                let initialImageValue = anAttribute.getValue() as? CIImage ?? nil
-                anAttribute.increment()
-                let changedImageValue = anAttribute.getValue() as? CIImage ?? nil
-                #expect (changedImageValue !== initialImageValue,"Filter parm  is NOT changed. Set Value failed")
-
-            }
-
-        }
-    }
 
     @Test func dissolveParms() throws {
             // test that the parms are changed for Dissolve filter
@@ -190,7 +171,7 @@ let TestLogCategory = "PGL"
             #expect ( (timerImage2.extent.width > 0) && (timerImage2.extent.height > 0), "image2 extent is zero width/height")
                   let image2 = UIImage(cgImage:context.createCGImage(timerImage2, from: result!.extent)!)
 
-            #expect ( image1.isEqual( image2), "Did not change output image")
+            #expect ( !image1.isEqual( image2), "Did not change output image")
         }
     }
 

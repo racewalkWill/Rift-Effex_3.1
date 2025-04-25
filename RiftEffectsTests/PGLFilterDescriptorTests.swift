@@ -6,72 +6,74 @@
 //  Copyright © 2017 Will. All rights reserved.
 //
 
-import XCTest
+// import XCTest
+import Testing
 import os
+import UIKit
 
 @testable import RiftEffects
 
 @MainActor
-class PGLFilterDescriptorTests: XCTestCase {
+@Suite(.serialized) struct  PGLFilterDescriptorTests {
      let standardFilterName = "CIDiscBlur"
     let standardClass = PGLSourceFilter.self
     var appStack: PGLAppStack!
 
-    override func setUp() {
+    init() async throws {
         let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
         appStack = myAppDelegate.appStack
-        super.setUp()
+
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        self.appStack.releaseTopStack()
-//        let newStack = PGLFilterStack()
-//        newStack.setStartupDefault() // not sent in the init.. need a starting point
-//        self.appStack.resetToTopStack(newStackId: newStack)
-        super.tearDown()
-    }
-    func testCategoryDescription() {
+    // deinit
+//    override func tearDown() {
+//        // Put teardown code here. This method is called after the invocation of each test method in the class.
+//        self.appStack.releaseTopStack()
+//
+//        super.tearDown()
+//    }
+
+    @Test func categoryDescription() {
         let classCategories = [kCICategoryDistortionEffect,
                                kCICategoryGeometryAdjustment]
         for aCategory in classCategories {
             let allFilters = CIFilter.filterNames(inCategory: aCategory)
 //            Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("all filters by category \(aCategory) = \(allFilters)")
-            XCTAssertNotNil(allFilters)
+            #expect (allFilters.count > 0)
 
         }
 
 
     }
-    func testDescriptionFilterDescriptor() {
+    @Test func descriptionFilterDescriptor() {
         // check that the print description is working
         let newDescriptor = PGLFilterDescriptor(standardFilterName, standardClass)
-        XCTAssert(newDescriptor?.filterName == standardFilterName )  // should be a localized description
+        #expect (newDescriptor?.filterName == standardFilterName )  // should be a localized description
 
-        XCTAssert(newDescriptor?.displayName != standardFilterName)
+        #expect (newDescriptor?.displayName != standardFilterName)
 
 
 
     }
 
-    func testFilterCategory() {
+    @Test func filterCategory() {
         if let aCategory = PGLFilterCategory("CICategoryDistortionEffect") {
-            XCTAssert(aCategory.filterDescriptors.count > 2) }
-        else { XCTFail("did not create the filter category CICategoryDistortionEffect") }
+            #expect (aCategory.filterDescriptors.count > 2) }
 
     }
 
-    func testAllFilterCategories() {
+    @Test func allFilterCategories() {
         let allCategories = PGLFilterCategory.allFilterCategories()
 
        let categoryGeometryAdjustment = allCategories[2]
 //        Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice( "categoryGeometryAdjustment = \(categoryGeometryAdjustment)")
 
-     XCTAssert(categoryGeometryAdjustment.filterDescriptors.count > 5 )
+        #expect (categoryGeometryAdjustment.filterDescriptors.count > 5 )
     }
+
 /// list all filters for test runs
-    func testAllFilterCreation() {
+    @Test func allFilterCreation() throws {
         let allCategories = PGLFilterCategory.allFilterCategories()
         for aCategory in allCategories {
             let categoryFilterNames = CIFilter.filterNames(inCategory: aCategory.categoryConstant)
@@ -86,14 +88,14 @@ class PGLFilterDescriptorTests: XCTestCase {
                     for aMapClass in mappedClasses {
 
 
-                        guard let thisFilterDescriptor = PGLFilterDescriptor(aFilterName, aMapClass)
-                        else { XCTFail("Filter Descriptor creation failed for \(aFilterName) \(aMapClass))")
-                            continue
-                                       }
+                        let  thisFilterDescriptor = PGLFilterDescriptor(aFilterName, aMapClass)
+                       try  #require (thisFilterDescriptor != nil )
 
-                        XCTAssertNotNil(thisFilterDescriptor.filter, "CIFilter did not create filter \(aFilterName) from category \(aCategory.categoryConstant)")
-                        let pglFilter = thisFilterDescriptor.pglSourceFilter()
-                        XCTAssertNotNil(pglFilter, "CIFilter did not create pglSourceFilter \(aFilterName) from category \(aCategory.categoryConstant)")
+
+                        #expect (thisFilterDescriptor?.filter != nil , "CIFilter did not create filter \(aFilterName) from category \(aCategory.categoryConstant)")
+
+                        let pglFilter = thisFilterDescriptor!.pglSourceFilter()
+                        #expect (pglFilter != nil, "CIFilter did not create pglSourceFilter \(aFilterName) from category \(aCategory.categoryConstant)")
 
                         Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("Filter -\(aCategory.categoryConstant) -\(aFilterName) -\(aMapClass) -\(pglFilter!.localizedName()) ")
                     }
@@ -103,7 +105,7 @@ class PGLFilterDescriptorTests: XCTestCase {
     }
 
     /// generate to the log the filter category, filtername, localized name and description
-    @MainActor func testFilterNameDescriptionCapture() {
+    @Test func filterNameDescriptionCapture() throws {
 
         let allCategories = PGLFilterCategory.allFilterCategories()
         for aCategory in allCategories {
@@ -118,14 +120,12 @@ class PGLFilterDescriptorTests: XCTestCase {
                 }
                     for aMapClass in mappedClasses {
 
-                        guard let thisFilterDescriptor = PGLFilterDescriptor(aFilterName, aMapClass)
-                        else { XCTFail("Filter Descriptor creation failed for \(aFilterName) \(aMapClass))")
-                            continue
-                                       }
+                        let thisFilterDescriptor =  PGLFilterDescriptor(aFilterName, aMapClass)
+                        try #require(thisFilterDescriptor != nil )
 
-                        XCTAssertNotNil(thisFilterDescriptor.filter, "CIFilter did not create filter \(aFilterName) from category \(aCategory.categoryConstant)")
-                        let pglFilter = thisFilterDescriptor.pglSourceFilter()
-                        XCTAssertNotNil(pglFilter, "CIFilter did not create pglSourceFilter \(aFilterName) from category \(aCategory.categoryConstant)")
+                        #expect (thisFilterDescriptor?.filter != nil , "CIFilter did not create filter \(aFilterName) from category \(aCategory.categoryConstant)")
+                        let pglFilter = thisFilterDescriptor?.pglSourceFilter()
+                        #expect (pglFilter != nil , "CIFilter did not create pglSourceFilter \(aFilterName) from category \(aCategory.categoryConstant)")
 
                         let filterDescription = CIFilter.localizedDescription(forFilterName: aFilterName)!
                         Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("Filter:\(aCategory.categoryConstant):\(aFilterName):\(pglFilter!.localizedName()):\(filterDescription)")
@@ -135,7 +135,7 @@ class PGLFilterDescriptorTests: XCTestCase {
 
     }
 
-    func testFilterDescriptionCapture() {
+    @Test func filterDescriptionCapture() {
         // capture to the log all of the filter info for analysis
         var filterAttributes = [String:Any]()
 
@@ -163,7 +163,7 @@ class PGLFilterDescriptorTests: XCTestCase {
         }
     }
 
-    func testUnknownFilterAttributesList() {
+    @Test func unknownFilterAttributesList() {
         // capture to the log filter attributes that are not implemented for UI
 
         var nonUIParmCount = 0
@@ -193,7 +193,7 @@ class PGLFilterDescriptorTests: XCTestCase {
         Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("Count of nonUI Parms = \(nonUIParmCount)")
     }
 
-    func testFilterAttributeCounter() {
+    @Test func filterAttributeCounter() {
         // capture to the log counts of filter classes, types
         var filterAttributes = [String:Any]()
         var filters = [String:CIFilter]()
@@ -219,7 +219,7 @@ class PGLFilterDescriptorTests: XCTestCase {
                     filterAttributes = (thisFilter.attributes)
                     let inputKeysCount = thisFilter.inputKeys.count
                         if inputKeysCount > 5 {
-//                            Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice(" large parm count for \(aFilterName) count = \(inputKeysCount)")
+                            Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice(" large parm count for \(aFilterName) count = \(inputKeysCount)")
                         }
                     oldCount = attributeCounts[inputKeysCount] ?? 0 // needs to count only the input parms
                     attributeCounts[inputKeysCount] = oldCount + 1
@@ -243,7 +243,7 @@ class PGLFilterDescriptorTests: XCTestCase {
 
 
                 }
-                //            Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("all filters by category \(aCategory) = \(allFilters)")
+//        Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("all filters by category \(aCategory) = \(allFilters)")
 
 
             }
@@ -257,7 +257,7 @@ class PGLFilterDescriptorTests: XCTestCase {
 
     }
 
-    func testDescriptorSort() {
+    @Test func  descriptorSort() {
         // test duplicate filters in the
         // PGLFilterCategory.filterDescriptors var
         // descriptors are built by category and some filters are in multiple categories
@@ -271,15 +271,9 @@ class PGLFilterDescriptorTests: XCTestCase {
 
         let filterDescriptors = PGLFilterCategory.filterDescriptors
         let filterCount = filterDescriptors.count
-        XCTAssert(filterCount <= categoryCount, "filterCount = \(filterCount)")
+        #expect (filterCount <= categoryCount, "filterCount = \(filterCount)")
 
     }
 
-//    func testPerformanceExample() {
-//        // This is an example of a performance test case.
-//        self.measure {
-//            // Put the code you want to measure the time of here.
-//        }
-//    }
 
 }

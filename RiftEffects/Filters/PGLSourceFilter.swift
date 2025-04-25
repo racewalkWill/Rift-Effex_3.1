@@ -37,7 +37,7 @@ class PGLSourceFilter :  PGLAnimation  {
         //
 
         /// in the debugger execute expression PGLSourceFilter.LogParmValues = true
-static let LogParmValues = true
+static let LogParmValues = false
         // set to true to capture parm  set value messages & values
         // enter in the debug
         //      po PGLSourceFilter.LogParmValues = true

@@ -32,5 +32,33 @@
             endingLineNumber = "1">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7F848231-A3C3-48CA-9967-C41443CAB2AA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../var/folders/96/xt_mm9v08xj9s6001s6yc8rr0000gp/T/swift-generated-sources/@__swiftmacro_16RiftEffectsTests0035PGLFilterDescriptorTestsswift_IgGGkfMX123_24_7requirefMf_.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1"
+            endingLineNumber = "1">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "19B3B985-A2CF-4A0C-A456-2CE7880541EE"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../var/folders/96/xt_mm9v08xj9s6001s6yc8rr0000gp/T/swift-generated-sources/@__swiftmacro_16RiftEffectsTests0035PGLFilterDescriptorTestsswift_IgGGkfMX91_24_7requirefMf_.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1"
+            endingLineNumber = "1">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
