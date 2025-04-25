@@ -6,16 +6,18 @@
 //  Copyright © 2020 Will Loew-Blosser. All rights reserved.
 //
 
-import XCTest
+// import XCTest
+import Testing
 import Photos
 import os
 import CoreData
+import UIKit
 
 @testable import RiftEffects
 import Accelerate
 
 @MainActor
-class PGLCategorySurvey: XCTestCase {
+@Suite(.serialized) struct PGLCategorySurvey {
     let context = CIContext()
     var favoritesAlbumList: PGLAlbumSource?
     var appStack: PGLAppStack!
@@ -29,7 +31,8 @@ class PGLCategorySurvey: XCTestCase {
     var deleteStackIds = [NSManagedObjectID]()
 
     
-    override func setUpWithError() throws {
+//    override func setUpWithError() throws {
+    init() async throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         favoritesAlbumList = fetchFavoritesList()
         // ensure the PGLImageController is open and can do the saveToPhotosLibrary
@@ -40,32 +43,15 @@ class PGLCategorySurvey: XCTestCase {
 
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-//        let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
-//               myAppDelegate.saveContext() // checks if context has changes
+    mutating func releaseStackIds()  {
+        // call this to clean up each test
         self.appStack.releaseTopStack()
-//        let newStack = PGLFilterStack()
-//        newStack.setStartupDefault() // not sent in the init.. need a starting point
-//        self.appStack.resetToTopStack(newStackId: newStack)
+
         if deleteStackIds.isEmpty { return } else {
             dataProvider.batchDelete(deleteIds: deleteStackIds) }
-        
 
-        super.tearDown()
     }
 
-//    func testExample() throws {
-//        // This is an example of a functional test case.
-//        // Use XCTAssert and related functions to verify your tests produce the correct results.
-//    }
-
-//    func testPerformanceExample() throws {
-//        // This is an example of a performance test case.
-//        self.measure {
-//            // Put the code you want to measure the time of here.
-//        }
-//    }
 
     // MARK: common support func
 
@@ -90,7 +76,7 @@ class PGLCategorySurvey: XCTestCase {
 
         }
 
-    func add9FiltersTo(stack: PGLFilterStack) {
+     func add9FiltersTo(stack: PGLFilterStack) throws {
         // put 9 random filters on the stack
         //MARK: Move to PGLDemo
 
@@ -110,7 +96,7 @@ class PGLCategorySurvey: XCTestCase {
 //            stack.append(thisFilter!) this just adds without an input
             stack.appendFilter(thisFilter!) // this sets the input
             let outputImage = stack.outputImage()
-            XCTAssertNotNil(outputImage)
+          try  #require (outputImage != nil)
             if outputImage != nil {
                 let imageExtent = outputImage!.extent
                 if (imageExtent.isInfinite || imageExtent.isOutofRange()) {
@@ -118,7 +104,7 @@ class PGLCategorySurvey: XCTestCase {
                     }
                 else {
 
-                    XCTAssertTrue( (imageExtent.width > 0) && (imageExtent.height > 0), " \(stack) outputImage extent is zero width/height")
+                    #expect ( (imageExtent.width > 0) && (imageExtent.height > 0), " \(stack) outputImage extent is zero width/height")
                 }
             }
 
@@ -195,7 +181,7 @@ class PGLCategorySurvey: XCTestCase {
 
 // MARK: tests
 
-    func testSingleInputFilters() {
+    @Test mutating func  singleInputFilters()throws {
         var category1Index = 0
         var category2Index = -1
         var category1Filter: PGLSourceFilter
@@ -214,8 +200,9 @@ class PGLCategorySurvey: XCTestCase {
 
 
             let firstFilter = testFilterStack.currentFilter()
-            guard let firstFilterInput = firstFilter.attribute(nameKey: "inputImage") else { return XCTFail() }
-             setInputTo(imageParm: firstFilterInput) // sets 6 images from favorites album
+            let firstFilterInput = firstFilter.attribute(nameKey: "inputImage")
+           try  #require (firstFilterInput != nil)
+            setInputTo(imageParm: firstFilterInput!) // sets 6 images from favorites album
 
             category1Filter = group1[category1Index].pglSourceFilter()!
 
@@ -245,9 +232,9 @@ class PGLCategorySurvey: XCTestCase {
             testFilterStack.append(category2Filter)
 
             let stackResultImage = testFilterStack.stackOutputImage(false)
-            XCTAssertNotNil(stackResultImage)
-            XCTAssertTrue( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "oldImage extent is zero width/height")
-            XCTAssert(testFilterStack.activeFilters.count == 3, "stack does not have three filters as expected" )
+
+            #expect ( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "oldImage extent is zero width/height")
+            #expect (testFilterStack.activeFilters.count == 3, "stack does not have three filters as expected" )
             testFilterStack.stackName = category1Filter.filterName + "+" + category2Filter.filterName
             testFilterStack.stackType = "testSingleInputFilters"
             if saveOutputToPhotoLib {
@@ -264,11 +251,12 @@ class PGLCategorySurvey: XCTestCase {
 
 
 
+            }
         }
-        }
+        releaseStackIds()
     }
 
-    func testMultipleInputTransitionFilters() {
+    @Test mutating func multipleInputTransitionFilters() throws {
         //MARK: Move to PGLDemo
         var category1Index = 0
 
@@ -304,11 +292,11 @@ class PGLCategorySurvey: XCTestCase {
 
                 testFilterStack.append(category1Filter)
 
-                add9FiltersTo(stack: testFilterStack)
+                try add9FiltersTo(stack: testFilterStack)
 
                 let stackResultImage = testFilterStack.stackOutputImage(false)
-                XCTAssertNotNil(stackResultImage)
-                XCTAssertTrue( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "oldImage extent is zero width/height")
+
+                #expect ( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "oldImage extent is zero width/height")
 
                 testFilterStack.stackName = category1Filter.filterName + "+ various filters"
                 testFilterStack.stackType = "testMultipleInputTransitionFilters"
@@ -322,16 +310,14 @@ class PGLCategorySurvey: XCTestCase {
                 if let stackID = testFilterStack.storedStack?.objectID {
                     deleteStackIds.append(stackID) }
                // confirm that output is saved and the coreData has saved
-
                 category1Index += 1
-
-
 
             }
         }
+        releaseStackIds()
     }
 
-    func testSelectedMultipleFilters() {
+    @Test mutating func selectedMultipleFilters() throws {
         // paste in a filter list from a failed test run
         // this will build the list and test for zero extent in each filter output
         
@@ -362,7 +348,7 @@ class PGLCategorySurvey: XCTestCase {
         _ = testFilterStack.removeLastFilter() // only one at start
 
         let category1Filter = descriptors.first?.pglSourceFilter()
-        XCTAssertNotNil(category1Filter, "Failed to load filter \(testGroupFilters[0])")
+       try #require (category1Filter != nil , "Failed to load filter \(testGroupFilters[0])")
         category1Filter!.setDefaults()
 
         Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("testSelectedMultipleInputTransitionFilters group1 filter \(category1Filter!.fullFilterName())")
@@ -376,7 +362,7 @@ class PGLCategorySurvey: XCTestCase {
 
         for filterNameIndex in 1 ..< (testGroupFilters.count - 1){
             let newFilter = descriptors[filterNameIndex].pglSourceFilter()
-            XCTAssertNotNil(newFilter)
+            #expect (newFilter != nil)
             newFilter!.setDefaults()
 
             let imageAttributesNames = newFilter!.imageInputAttributeKeys
@@ -388,9 +374,8 @@ class PGLCategorySurvey: XCTestCase {
             testFilterStack.append(newFilter!)
             // check each filter added
             let stackResultImage = testFilterStack.stackOutputImage(false)
-            XCTAssertNotNil(stackResultImage)
-            XCTAssertTrue( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "oldImage extent is zero width/height")
 
+            #expect ( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "oldImage extent is zero width/height")
         }
 
 
@@ -405,11 +390,11 @@ class PGLCategorySurvey: XCTestCase {
         if let stackID = testFilterStack.storedStack?.objectID {
             deleteStackIds.append(stackID) }
        // confirm that output is saved and the coreData has saved
-
+        releaseStackIds()
 
     }
 
-    func testiOS13Filters() {
+    @Test mutating func iOS13Filters() {
           /*   CIDocumentEnhancer
                CIGaborGradients
                CIKeystoneCorrectionCombined
@@ -443,7 +428,7 @@ class PGLCategorySurvey: XCTestCase {
 
         for ios13FilterDescriptor in descriptors {
             self.appStack.releaseTopStack()
-            let newStack = PGLFilterStack()
+            _ = PGLFilterStack()
 //              newStack.setStartupDefault() // not sent in the init.. need a starting point
 //              self.appStack.resetToTopStack(newStackId: newStack)
               let testFilterStack = appStack.viewerStack
@@ -453,7 +438,6 @@ class PGLCategorySurvey: XCTestCase {
             newFilter = ios13FilterDescriptor.pglSourceFilter()!
             newFilter.setDefaults()
 
-            XCTAssertNotNil(newFilter)
             let imageAttributesNames = newFilter.imageInputAttributeKeys
             for anImageAttributeName in imageAttributesNames {
                 guard let thisAttribute = newFilter.attribute(nameKey: anImageAttributeName) else { continue }
@@ -462,8 +446,8 @@ class PGLCategorySurvey: XCTestCase {
             testFilterStack.append(newFilter)
 
             let stackResultImage = testFilterStack.stackOutputImage(false)
-               XCTAssertNotNil(stackResultImage)
-            XCTAssertTrue( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "\(String(describing: newFilter.filterName)) extent is zero width/height")
+
+            #expect ( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "\(String(describing: newFilter.filterName)) extent is zero width/height")
                testFilterStack.stackName = newFilter.filterName
                testFilterStack.stackType = "testiOS13Filters"
 
@@ -477,10 +461,10 @@ class PGLCategorySurvey: XCTestCase {
                 deleteStackIds.append(stackID) }
                // confirm that output is saved and the coreData has saved
         }
+        releaseStackIds()
+    }
 
-       }
-
-    func testCompositeChildStack() {
+    @Test mutating func compositeChildStack() {
         // static var CompositeGroups = [CompositeFilters, TransistionFilters]
 
 
@@ -488,16 +472,11 @@ class PGLCategorySurvey: XCTestCase {
         var child1Filter: PGLSourceFilter
         var childFilterName: String!
 
-
-
         let group1 = PGLCategorySurvey.CompositeFilters
          let testSize =  group1.count // 2
 
         for filterIndex in (0..<testSize) {
                     self.appStack.releaseTopStack()
-//                   let newStack = PGLFilterStack()
-//                   newStack.setStartupDefault() // not sent in the init.. need a starting point
-//                   self.appStack.resetToTopStack(newStackId: newStack)
 
                    let testFilterStack = appStack.viewerStack
                        // should use the appStack to supply the filterStack
@@ -540,8 +519,8 @@ class PGLCategorySurvey: XCTestCase {
                 }
 
                 let stackResultImage = testFilterStack.stackOutputImage(false)
-               XCTAssertNotNil(stackResultImage)
-            XCTAssertTrue( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "oldImage extent is zero width/height")
+
+            #expect ( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "oldImage extent is zero width/height")
 
                testFilterStack.stackName = category1Filter.filterName + " " + childFilterName
                testFilterStack.stackType = "testCompositeChildStack"
@@ -555,10 +534,8 @@ class PGLCategorySurvey: XCTestCase {
               testFilterStack.saveTestStackImage(stackProvider: dataProvider )
             if let stackID = testFilterStack.storedStack?.objectID {
                 deleteStackIds.append(stackID) }
-
-
             }
-
+        releaseStackIds()
     }
 
     fileprivate func resetToNewTopStack() {
@@ -568,7 +545,7 @@ class PGLCategorySurvey: XCTestCase {
         appStack.resetOutputAppStack(newStack)
     }
 
-    func testTransitionChildStacks() {
+    @Test mutating func transitionChildStacks() {
         // put a transition on a child stack
         // static var CompositeGroups = [CompositeFilters, TransistionFilters]
 
@@ -632,8 +609,8 @@ class PGLCategorySurvey: XCTestCase {
                 }
 
                 let stackResultImage = testFilterStack.stackOutputImage(false)
-               XCTAssertNotNil(stackResultImage)
-            XCTAssertTrue( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "oldImage extent is zero width/height")
+
+            #expect ( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "oldImage extent is zero width/height")
 
                testFilterStack.stackName = category1Filter.filterName + " " + childFilterName
                testFilterStack.stackType = "testTransitionChildStacks"
@@ -647,11 +624,11 @@ class PGLCategorySurvey: XCTestCase {
               testFilterStack.saveTestStackImage(stackProvider: dataProvider )
             if let stackID = testFilterStack.storedStack?.objectID {
                 deleteStackIds.append(stackID) }
-
             }
-
+        releaseStackIds()
     }
-    func testSelectedFilters() {
+
+    @Test mutating func selectedFilters() {
 
             var newFilter: PGLSourceFilter
             // from a failing testMultipleInput run
@@ -733,7 +710,6 @@ class PGLCategorySurvey: XCTestCase {
                 newFilter = aFilterDescriptor.pglSourceFilter()!
                 newFilter.setDefaults()
 
-                XCTAssertNotNil(newFilter)
                 let imageAttributesNames = newFilter.imageInputAttributeKeys
                 for anImageAttributeName in imageAttributesNames {
                     guard let thisAttribute = newFilter.attribute(nameKey: anImageAttributeName) else { continue }
@@ -742,8 +718,8 @@ class PGLCategorySurvey: XCTestCase {
                 testFilterStack.append(newFilter)
                 Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("PGLCategorySurvey #testSelectedFilters newFilter = \(newFilter.fullFilterName())")
                 let stackResultImage = testFilterStack.stackOutputImage(false)
-                   XCTAssertNotNil(stackResultImage)
-                XCTAssertTrue( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "ciImage extent is zero width/height")
+
+                #expect ( (stackResultImage.extent.width > 0) && (stackResultImage.extent.height > 0), "ciImage extent is zero width/height")
 
                    testFilterStack.stackName = newFilter.fullFilterName()
                    testFilterStack.stackType = "testSelectedFilters"
@@ -757,9 +733,7 @@ class PGLCategorySurvey: XCTestCase {
                 if let stackID = testFilterStack.storedStack?.objectID {
                     deleteStackIds.append(stackID) }
             }
-
-           }
-
-
+        releaseStackIds()
+    }
 
 }
