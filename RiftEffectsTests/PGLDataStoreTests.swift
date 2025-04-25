@@ -6,7 +6,8 @@
 //  Copyright © 2018 Will. All rights reserved.
 //
 
-import XCTest
+//import XCTest
+import Testing
 import CoreData
 import CoreImage
 import Photos

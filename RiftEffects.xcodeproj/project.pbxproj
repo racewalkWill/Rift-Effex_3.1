@@ -184,6 +184,8 @@
 		A3F64FCE24E85ACB00BB38BD /* PGLOffScreenRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F64FCD24E85ACB00BB38BD /* PGLOffScreenRender.swift */; };
 		A3F8E97D295B55B900A1E014 /* PGLNumericSliderUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F8E97C295B55B900A1E014 /* PGLNumericSliderUI.swift */; };
 		A3FB765C28D7AF6500595461 /* PGLWindowSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FB765B28D7AF6500595461 /* PGLWindowSceneDelegate.swift */; };
+		A3FF819D2DBC39F500CD705C /* PGLDataStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FF819C2DBC39F500CD705C /* PGLDataStoreTests.swift */; };
+		A3FF819F2DBC3A7600CD705C /* PGLFilterStackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FF819E2DBC3A7600CD705C /* PGLFilterStackTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -392,6 +394,8 @@
 		A3F64FCD24E85ACB00BB38BD /* PGLOffScreenRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLOffScreenRender.swift; sourceTree = "<group>"; };
 		A3F8E97C295B55B900A1E014 /* PGLNumericSliderUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLNumericSliderUI.swift; sourceTree = "<group>"; };
 		A3FB765B28D7AF6500595461 /* PGLWindowSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLWindowSceneDelegate.swift; sourceTree = "<group>"; };
+		A3FF819C2DBC39F500CD705C /* PGLDataStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLDataStoreTests.swift; sourceTree = "<group>"; };
+		A3FF819E2DBC3A7600CD705C /* PGLFilterStackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterStackTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -581,7 +585,9 @@
 				A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */,
 				A3BF514A24D32D3400CD5114 /* PGLSourceFilterTests.swift */,
 				A3DC6E582DBBF23A00E32FAA /* PGLFilterDescriptorTests.swift */,
+				A3FF819C2DBC39F500CD705C /* PGLDataStoreTests.swift */,
 				A3DC6E5A2DBC02AF00E32FAA /* PGLCategorySurvey.swift */,
+				A3FF819E2DBC3A7600CD705C /* PGLFilterStackTests.swift */,
 				A3BF502824D3299100CD5114 /* Info.plist */,
 			);
 			path = RiftEffectsTests;
@@ -1106,7 +1112,9 @@
 			files = (
 				A3DC6E592DBBF23A00E32FAA /* PGLFilterDescriptorTests.swift in Sources */,
 				A3DC6E5B2DBC02AF00E32FAA /* PGLCategorySurvey.swift in Sources */,
+				A3FF819F2DBC3A7600CD705C /* PGLFilterStackTests.swift in Sources */,
 				A3BF515024D32D3400CD5114 /* PGLSourceFilterTests.swift in Sources */,
+				A3FF819D2DBC39F500CD705C /* PGLDataStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

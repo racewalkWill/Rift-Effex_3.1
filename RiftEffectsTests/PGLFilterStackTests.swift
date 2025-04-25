@@ -6,7 +6,9 @@
 //  Copyright © 2017 Will. All rights reserved.
 //
 
-import XCTest
+// import XCTest
+import Testing
+import UIKit
 import Photos
 import os
 import CoreData
@@ -16,7 +18,7 @@ import CoreData
 
 
 @MainActor
-class PGLFilterStackTests: XCTestCase {
+@Suite(.serialized) struct PGLFilterStackTests {
 
     var filterStack: PGLFilterStack!  
     var testAppStack = PGLAppStack() // creates an empty filterStack
@@ -30,20 +32,17 @@ class PGLFilterStackTests: XCTestCase {
        return provider
    }()
 
-           static func imageListTestObject() -> PGLImageList {
-                let assetIDs = [PhotoId.burst1.rawValue, PhotoId.burst2.rawValue , PhotoId.timeLapse1.rawValue, PhotoId.timeLapse2.rawValue, PhotoId.timeLapse3.rawValue, PhotoId.timeLapse4.rawValue]
-                // create a Cycle stack
+       static func imageListTestObject() -> PGLImageList {
+            let assetIDs = [PhotoId.burst1.rawValue, PhotoId.burst2.rawValue , PhotoId.timeLapse1.rawValue, PhotoId.timeLapse2.rawValue, PhotoId.timeLapse3.rawValue, PhotoId.timeLapse4.rawValue]
+            // create a Cycle stack
             let albumIDs = [PhotoId.burstAlbum.rawValue, PhotoId.burstAlbum.rawValue,PhotoId.burstAlbum.rawValue,PhotoId.timeLapseAlbum.rawValue,PhotoId.timeLapseAlbum.rawValue,PhotoId.timeLapseAlbum.rawValue,]
-        // matching assetId and albumId arrays
-                return PGLImageList(localAssetIDs: assetIDs, albumIds: albumIDs)
-            }
+    // matching assetId and albumId arrays
+            return PGLImageList(localAssetIDs: assetIDs, albumIds: albumIDs)
+        }
 
 
-    override func setUp() {
-       // Put setup code here. This method is called before the invocation of each test method in the class.
-        super.setUp()
-        // change activeFilterCount if more filters are included in setup
-
+   //  override func setUp() {
+    init()  async throws {
 
        filterStack = testAppStack.viewerStack
         // filterStack gets one default filter
@@ -69,21 +68,21 @@ class PGLFilterStackTests: XCTestCase {
             filterStack.appendFilter(tileFilter)
         }
         activeFilterCount = filterStack.activeFilters.count
-        Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("PGLFilterStackTests setup activeFilterCount = \(self.activeFilterCount)")
+  
 
         filterStack.stackType = "testCase PGLFilterStackTests"
 
     }
 
-    override  func tearDown() {
+//    override  func tearDown() {
 //        let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
 //        myAppDelegate.saveContext()
 //        self.appStack.releaseTopStack()
 //        let newStack = PGLFilterStack()
 //        newStack.setStartupDefault() // not sent in the init.. need a starting point
 //        testAppStack.resetToTopStack(newStackId: newStack)
-        super.tearDown()
-    }
+//        super.tearDown()
+//    }
 
     func fetchFavoritesList() -> PGLImageList? {
             // prune to 6 images
@@ -106,20 +105,18 @@ class PGLFilterStackTests: XCTestCase {
             return theFavorites
 
         }
-
-
         return PGLImageList()
     }
 
 
-    func testStackSetup() {
+    mutating func testStackSetup() {
         // shows that the suite setup has an output image
         // and save the output image
         let moContext = dataProvider.persistentContainer.viewContext
         filterStack.stackName = "testStackSetup" + " \(Date())"
         _ = filterStack.writeCDStack(moContext: moContext)
-        XCTAssertNotNil(filterStack.storedStack)
-        
+        #expect (filterStack.storedStack != nil)
+
 
     }
 //    func testThreeFilterStack() {
@@ -132,7 +129,7 @@ class PGLFilterStackTests: XCTestCase {
 
    
 
-    func testAddDeleteFilters() {
+    @Test mutating func addDeleteFilters() {
         // show removing a filter from a stored stack
         // show adding a filter to a stored stack.
         let defaultTitle = "testAddDeleteFilters" +  " \(Date())"
@@ -145,18 +142,18 @@ class PGLFilterStackTests: XCTestCase {
 
 
         _ = filterStack.removeLastFilter()
-        XCTAssert(filterStack.activeFilters.count == activeFilterCount - 1)
+        #expect (filterStack.activeFilters.count == activeFilterCount - 1)
 
 
         let savedStack = filterStack.writeCDStack(moContext: moContext) // should update with delete
         let newStack2 = PGLFilterStack()
         newStack2.on(cdStack: savedStack)
-        XCTAssert(filterStack.activeFilters.count == newStack2.activeFilters.count)
-        XCTAssert(filterStack.activeFilters.count == activeFilterCount - 1)
+        #expect (filterStack.activeFilters.count == newStack2.activeFilters.count)
+        #expect (filterStack.activeFilters.count == activeFilterCount - 1)
 
         // the managed object is the same on all three stacks
-        XCTAssert(filterStack.storedStack === newStack2.storedStack)
-        
+        #expect (filterStack.storedStack === newStack2.storedStack)
+
 
         for aFilter in filterStack.activeFilters {
             Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("filterStack filter = \(String(describing: aFilter.filterName))")
@@ -170,7 +167,7 @@ class PGLFilterStackTests: XCTestCase {
 
     }
 
-    func testCycleSave() {
+    @Test mutating func cycleSave() {
         //confirm that the multiple inputs to a filter are saved
         let stackName = "testCycleSave" +  " \(Date())"
         let moContext = dataProvider.persistentContainer.viewContext
@@ -193,19 +190,19 @@ class PGLFilterStackTests: XCTestCase {
         aNewStack.on(cdStack: savedStack)
         aNewStack.activeFilterIndex = currentFilterIndex // put back to saved position
 
-        XCTAssert( aNewStack.currentFilter().filterName == currentFilterName)
+        #expect ( aNewStack.currentFilter().filterName == currentFilterName)
         let storedImageParm = aNewStack.currentFilter().imageParms()?.first
         let storedImageList = storedImageParm!.inputCollection!
         let storedIDs =  (storedImageList.assetIDs).sorted()
         let listIDs = (aImageList.assetIDs).sorted()
-        XCTAssert( storedIDs == listIDs )
+        #expect ( storedIDs == listIDs )
         // fails due to different order of the elements
 
 
         // confirm that the stored data CDFi
     }
 
-    func testInputFilterSave() {
+    @Test func inputFilterSave() {
         // one of the parms uses a filter stack as input..
         // save and read back
         let stackName = "testInputFilterSave" + " \(Date())"
@@ -230,23 +227,23 @@ class PGLFilterStackTests: XCTestCase {
 
                 newMasterStack.replace(updatedFilter: blendFilter)
 
-                XCTAssert(newMasterStack.currentFilter().filterName == "CIBlendWithMask")
-                XCTAssert((testAppStack.hasParentStack()))
-                XCTAssert(testAppStack.viewerStack === newMasterStack)
-                XCTAssert(testAppStack.outputOrViewFilterStack() === filterStack)
+                #expect (newMasterStack.currentFilter().filterName == "CIBlendWithMask")
+                #expect ((testAppStack.hasParentStack()))
+                #expect (testAppStack.viewerStack === newMasterStack)
+                #expect (testAppStack.outputOrViewFilterStack() === filterStack)
 
 
 
                 testAppStack.showFilterImage = true // change output to the current stack
-                XCTAssert(testAppStack.outputOrViewFilterStack() === newMasterStack)
+                #expect (testAppStack.outputOrViewFilterStack() === newMasterStack)
                 testAppStack.showFilterImage = false // change back
 
                 let outputAttributes = testAppStack.outputOrViewFilterStack().currentFilter().attributes
                 let inputStackAttribute = outputAttributes.filter( {$0.inputStack != nil} ).first
                 let inputFilterPosition = testAppStack.outputOrViewFilterStack().activeFilterIndex
                 let testInputStack = inputStackAttribute!.inputStack
-                XCTAssertNotNil(outputAttributes)
-                XCTAssertNotNil(testInputStack)
+
+                #expect (testInputStack != nil )
 //                Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("Filter with child inputStack = \(testAppStack.outputFilterStack().currentFilter())")
                 Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("Filter position = \(inputFilterPosition)")
                 Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("attribute \(String(describing: inputStackAttribute)) has inputStack \(String(describing: testInputStack))")
@@ -261,26 +258,13 @@ class PGLFilterStackTests: XCTestCase {
                 newStack.activeFilterIndex = inputFilterPosition
                 let topAttributes = newStack.currentFilter().attributes
                 let newInputStackAttribute = (topAttributes.filter( {$0.inputStack != nil} )).first
-                XCTAssertNotNil(newInputStackAttribute)
-                XCTAssert(newInputStackAttribute?.attributeName == inputStackAttribute?.attributeName)
-                XCTAssertNotNil(newInputStackAttribute?.inputStack)
-                XCTAssert(testInputStack!.stackName == newInputStackAttribute?.inputStack?.stackName)
-
-                // compare all components of the stacks
-//                let runFilters = testAppStack.outputFilterStack().activeFilters
-//                let savedFilters = newStack.activeFilters
-//                for (i, runFilter) in runFilters.enumerated() {
-//                    let savedFilter = savedFilters[i]
-//                    XCTAssert(runFilter.filterName == savedFilter.filterName)
-//                    // continue the compare at the attributes level .. some typeCasting is needed for the
-//                    // various subclasses of PGLFilterAttribute
-//                }
+                #expect (newInputStackAttribute != nil )
+                #expect (newInputStackAttribute?.attributeName == inputStackAttribute?.attributeName)
+                #expect (newInputStackAttribute?.inputStack != nil )
+                #expect (testInputStack!.stackName == newInputStackAttribute?.inputStack?.stackName)
 
             }
-
         }
-
-
     }
 
 
