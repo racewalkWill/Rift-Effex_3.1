@@ -17,9 +17,10 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
-        if let defaultVector = getVectorValue() {
-            zValue = defaultVector.z
-        }
+
+        zValue = TargetSize.height / 7.0
+            // using TargetSize to make some adaption for different devices, iPad, iPHone etc..
+        set3ValueVector( zValue)
 
     }
     override func valueInterface() -> [PGLFilterAttribute] {
