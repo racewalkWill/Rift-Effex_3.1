@@ -16,6 +16,10 @@ class PGLAttributeVectorExpand: PGLFilterAttributeVector {
 
     var upScaler = CGAffineTransform(scaleX: 1000.0, y: 1000.0)
 
+    override func shouldSetDefaultVectorValue() -> Bool {
+        return false
+    }
+
     override func moveOnDrawableSizeChange() -> Bool {
         // only some PGLFilterAttributeVectors should move
         return false

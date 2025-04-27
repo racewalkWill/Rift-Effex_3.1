@@ -128,8 +128,9 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
             // some attributes... CIAbstractFilter could be filtered out here ie. the feature select..
             for anAttributeKey in thisFilter.inputKeys {
                 let inputParmDict = (thisFilter.attributes[anAttributeKey]) as! [String : Any]
-
+                
                 let parmAttributeClass = parmClass(parmDict: inputParmDict)
+//                parmAttributeClass.updateDefaultValues(parmDict: inputParmDict)
                 if let thisParmAttribute = parmAttributeClass.init(pglFilter: self, attributeDict: inputParmDict, inputKey: anAttributeKey  )
                     {
                     attributes.append(contentsOf: thisParmAttribute.valueInterface())
@@ -159,6 +160,9 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 //    deinit {
 //        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
 //    }
+    func updateDefaultValues(parmDict: [String:Any]) {
+        // superclass empty implementation
+    }
 
     func releaseVars() {
         for anAttribute in attributes {

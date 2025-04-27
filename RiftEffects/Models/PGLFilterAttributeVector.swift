@@ -71,19 +71,37 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
                     cornerPoint = CGPoint(x: insetRect.maxX, y: insetRect.origin.y) //LLO 
 
                 default:
-                    break
+                    if !shouldSetDefaultVectorValue() {
+                        // do not set cornerPoint default for PGLAttributeVectorExpand
+                        // used by Tone Curve 
+                        break
+                    }
+                    // set the cornerPoint to
+                    // the midPoint offset of the insetRect
+
+                    cornerPoint = CGPoint(x: insetRect.midX, y: insetRect.midY)
+                        /// don't let multiple points land on top of each other
+                    let adjustConstant = insetRect.height / 5.0
+                    let offSet = adjustConstant * CGFloat(pglFilter.attributes.count)
+                        // this assumes that this attibute has not been added yet
+                        // so the count of the existing number of attributes can be the
+                        // offset multiple
+                    // adjust down and left from the center of the insetRect
+                    cornerPoint?.x -= offSet
+                    cornerPoint?.y -= offSet
+
             }
             if cornerPoint != nil {
-
                 aSourceFilter.setVectorValue(newValue: CIVector(cgPoint: cornerPoint!), keyName: attributeName!)
-                
             }
         }
 
 
     }
 
-
+    func shouldSetDefaultVectorValue() -> Bool {
+        return true
+    }
 
 //MARK: Vary vector start end
     func setVectorEndPoint() {
@@ -115,11 +133,11 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             endPoint = startPoint
         }
 
-        NSLog("setRandomVectorEndPoint old value \(String(describing: endPoint))")
+//        NSLog("setRandomVectorEndPoint old value \(String(describing: endPoint))")
         endPoint = CIVector(x: newXPointChange, y: newYPointChange)
         // this also changes the vectorLength
         // see the didSet block of the var endPoint
-        NSLog("setRandomVectorEndPoint new value \(String(describing: endPoint))")
+//        NSLog("setRandomVectorEndPoint new value \(String(describing: endPoint))")
     }
 
  // MARK: set
@@ -194,7 +212,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             incrementDirection = incrementDirection * -1
             if incrementDirection >= 0 {
                 // on the start point switch
-                NSLog("PGLFilterAttributeVector switch endPoint")
+//                NSLog("PGLFilterAttributeVector switch endPoint")
                 setRandomVectorEndPoint()
             }
             if attributeValueDelta != nil
