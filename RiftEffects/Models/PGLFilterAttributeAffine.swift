@@ -26,9 +26,9 @@ class PGLFilterAttributeAffine: PGLFilterAttribute {
     // update.display the underlying  values from the stored filter
 
 
-    var affine = CGAffineTransform.identity
+    var affine = (CGAffineTransform.identity).scaledBy(x: 1.0 , y: 1.0)
     var rotation: Float = 0.0
-    var scale = CIVector(x: 0.0, y: 0.0)
+    var scale: Float = 1.0 // identity scale
     var translate = CIVector(x: 0.0, y: 0.0)
     var valueParms = [PGLFilterAttribute]()
     var childUIAttributeName = "empty"
@@ -46,7 +46,8 @@ class PGLFilterAttributeAffine: PGLFilterAttribute {
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
-        setAffine()
+//        setRotation(radians: 0.01)
+//        setRotation(radians: -0.01)
 
     }
 
@@ -68,22 +69,32 @@ class PGLFilterAttributeAffine: PGLFilterAttribute {
         {   scaleParm.affine(parent: self)
             valueParms.append(scaleParm) // add translate & scale here
         }
-
         return valueParms
     }
 
     func setAffine() {
-//      NSLog("setAffine = \(affine)")
+      NSLog("setAffine = \(affine)")
         parmInputState = .inputValueSet
         let nsTransform = NSValue(cgAffineTransform: affine)
         aSourceFilter.setNSValue(newValue: nsTransform, keyName: attributeName!)
     }
 
-    func setScale(vector: CIVector) {
+//    func setScale(vector: CIVector) {
 //        NSLog("PGLFilterAttributeAffine setScale affine = \(affine), vector = \(vector)")
-        affine = affine.scaledBy(x: CGFloat(vector.x), y: CGFloat(vector.y))
-        setAffine()
+//        let xScale = vector.x
+//        let yScale = vector.y
+//
+//        NSLog("PGLFilterAttributeAffine xScale = \(xScale), yScale = \(yScale)")
+//        affine = affine.scaledBy(x: CGFloat(vector.x), y: CGFloat(vector.y))
+//        // this throws away the rotate and translate changes...
+//
+//        setAffine()
 //        NSLog("PGLFilterAttributeAffine setScale NOW affine = \(affine)")
+//    }
+
+    func setScale(xScale: Float, yScale: Float) {
+        affine = affine.scaledBy(x: CGFloat(xScale), y: CGFloat(yScale))
+        setAffine()
     }
 
 

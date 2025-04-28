@@ -57,7 +57,16 @@ class PGLExcludeFilters {
 //"WarpItMetalFilter"
 "FaceFilter",
 "VideoCam",
-"Random Filters"
+"Random Filters",
+
+// 4/28/2025 Ver 3.5 these Affine filters appear to have an Apple bug where a vector is set into the affine value
+// the screen is initally blank with log error
+// CIAffineTransform: inputTransfom is not a valid object. - seems to be a vector
+// after setting a value from the UI.. it then holds an affine
+// can't seem to force the vector out in code before displaying the filter
+"CIAffineClamp",
+"CIAffineTransform",
+"CIAffineTile",
         ]
 
 

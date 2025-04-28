@@ -243,7 +243,8 @@ class PGLTranslateAffineUI: PGLFilterAttributeVector {
 
 }
 
-class PGLScaleAffineUI: PGLFilterAttributeVector {
+class PGLScaleAffineUI: PGLFilterAttributeNumber {
+    // PGLFilterAttributeVector {
     // scale should default to identity
     // range should be for 0.1 to 10 for the x and y changes
     // put the UI position in the center as it can go both larger & smaller
@@ -260,7 +261,15 @@ class PGLScaleAffineUI: PGLFilterAttributeVector {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
         attributeDisplayName = "Scale"
         attributeName = attributeDisplayName! + attributeName!
-        attributeType = AttrType.Position.rawValue
+            // attributeName is index for parm controls mus
+
+        attributeType = AttrType.Scalar.rawValue
+
+        sliderMaxValue = 10
+        sliderMinValue = -10
+        defaultValue = 1
+
+//        attributeType = AttrType.Position.rawValue
         // attributeName is index for parm controls must be unique
 
     }
@@ -279,21 +288,26 @@ class PGLScaleAffineUI: PGLFilterAttributeVector {
 
     }
     override func set(_ value: Any) {
-        if let newVector = value as? CIVector {
-
-        let scaledValue = scaleVector(inputVector: newVector, scaleBy: expandScaler, invertScale: true)
+//        if let newVector = value as? CIVector {
+//
+//        let scaledValue = scaleVector(inputVector: newVector, scaleBy: expandScaler, invertScale: true)
         // divide by 1000 from the UI
 
-        affineParent?.setScale(vector: scaledValue)
-        }
+//        affineParent?.setScale(vector: scaledValue)
+        let newValue = value as! Float
+        affineParent?.setScale(xScale: newValue, yScale: newValue)
+
     }
 
     override  func getValue() -> Any? {
-        let parentVector = affineParent?.scale ?? CIVector(cgPoint: CGPointZero)
-
-        let uiVector = scaleVector(inputVector: parentVector, scaleBy: expandScaler, invertScale: false)
-        // multiply by 1000 for the UI
-        return uiVector
+        return 1.0 //  temp return value
+                // the UI is not holding the setting
+        
+//        let parentVector = affineParent?.scale ?? CIVector(cgPoint: CGPointZero)
+//
+//        let uiVector = scaleVector(inputVector: parentVector, scaleBy: expandScaler, invertScale: false)
+//        // multiply by 1000 for the UI
+//        return uiVector
     }
 
 //    override func getVectorValue() -> CIVector? {
@@ -329,15 +343,15 @@ class PGLScaleAffineUI: PGLFilterAttributeVector {
     }
 
     override   func attributeUIType() -> AttrUIType {
-        return AttrUIType.pointUI
+        return AttrUIType.sliderUI
     }
 
     override    func isSliderUI() -> Bool {
-        return false
+        return true
     }
 
     override  func isPointUI() -> Bool {
-        return true
+        return false
     }
 
     override func isImageUI() -> Bool {

@@ -685,6 +685,11 @@
       </ContextState>
       <ContextState
          contextName = "PGLSourceFilter.init(filter:position:):PGLSourceFilter.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "thisFilter.inputKeys">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "closure #1 in PGLAsset.setUpReadyToPlay():PGLAsset.swift">
@@ -2477,6 +2482,9 @@
       </ContextState>
       <ContextState
          contextName = "PGLImageController.setGestureRecogniziers():PGLImageController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PGLFilterAttributeVector3.init(pglFilter:attributeDict:inputKey:):PGLFilterAttributeVector3.swift">
       </ContextState>
       <ContextState
          contextName = "closure #3 in PGLImageController.viewDidLoad():PGLImageController.swift">
