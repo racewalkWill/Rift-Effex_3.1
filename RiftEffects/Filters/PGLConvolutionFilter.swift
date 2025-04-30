@@ -23,7 +23,7 @@ class Matrix {
         for thisRow in 0..<baseRows {
             for thisColumn in 0..<baseColumns {
                 let rowOffset = thisRow * baseRows
-                vectorMatrix[thisRow , thisColumn ] = vector.value(at: rowOffset + thisColumn)
+                vectorMatrix[thisRow , thisColumn ] = CGFloat(vector.value(at: rowOffset + thisColumn) )
             }
         }
         return vectorMatrix
@@ -34,7 +34,7 @@ class Matrix {
         grid = Array(repeating: 0.0, count: rows * columns)
     }
     func indexIsValid(row: Int, column: Int) -> Bool {
-        return row >= 0 && row < rows && column >= 0 && column < columns
+        return (row >= 0 && row < rows ) && (column >= 0 && column < columns )
     }
     subscript(row: Int, column: Int) -> Double {
         get {
@@ -70,11 +70,10 @@ class PGLConvolutionFilter: PGLSourceFilter {
     var matrixSize = 0
     var isSquareMatrix = true
     // set matrixSize from the filter name
-    var filterMatrix = Matrix(rows: 0, columns: 0)
+    var filterMatrix: Matrix?
     var weightsParmDict: [String : Any ]!
 
     required init?(filter: String, position: PGLFilterCategoryIndex) {
-
             // assumes that the size char is in the name..
         if filter.firstIndex(of: "3") != nil {
             matrixSize = 3
@@ -101,6 +100,8 @@ class PGLConvolutionFilter: PGLSourceFilter {
         }
 
         super.init(filter: filter, position: position)
+
+
         if let normalizeButtonAttribute = PGLButtonCellUI(pglFilter: self, attributeDict: [String : Any]() , inputKey: "")  {
            attributes.append(normalizeButtonAttribute )
             
@@ -112,17 +113,32 @@ class PGLConvolutionFilter: PGLSourceFilter {
             bias.minValue = 0.0 // defn is nil
         }
 
-
-
     }
 
     override func parmClass(parmDict: [String : Any ]) -> PGLFilterAttribute.Type  {
            // override in PGLSourceFilter subclasses..
            // most will do a lookup in the class method
+        var rowsCount: Int = 1  // default for the 1x9 convolution filters
 
         if  (parmDict[kCIAttributeClass] as! String == AttrClass.Vector.rawValue)
         {
             weightsParmDict = parmDict
+            if let defaultVector = weightsParmDict["CIAttributeDefault"] as? CIVector {
+                // assumes that PGLConvolutionFilter init has set up
+                // the matrix size etc..
+                if isSquareMatrix {
+                    rowsCount = matrixSize
+                }
+                filterMatrix = Matrix.FromVector(baseRows: rowsCount, baseColumns: matrixSize, vector: defaultVector)
+                // copy from the defaultMatrix vector
+                // to the filterMatrix var of the PGLConvolutionFilter
+                // the WeightsVector will access the filterMatrix
+                // how will saved values from the db be updated?
+            }
+                // else the filterMatrix was set in the PGLConvolutionFilter init
+            if filterMatrix != nil {
+                setWeights(weightMatrix: filterMatrix!)
+            }
            return PGLAttributeWeightsVector.self }
         else {
                 // not a vector parm... return a normal lookup.. usually the imageParm
@@ -144,8 +160,9 @@ class PGLConvolutionFilter: PGLSourceFilter {
         // per documentation
         /*If you want to preserve the overall brightness of the image, ensure that the sum of all values in the weight matrix is 1.0. You may find it convenient to devise a weight matrix without this constraint and then normalize it by dividing each element by the sum of all elements, as shown in the figure below
          */
-        filterMatrix.normalize()
-        setWeights(weightMatrix: filterMatrix)
+        if filterMatrix == nil { return }
+        filterMatrix!.normalize()
+        setWeights(weightMatrix: filterMatrix!)
             // converts to CIVector and assigns normalized values to filter weights attribute
     }
 

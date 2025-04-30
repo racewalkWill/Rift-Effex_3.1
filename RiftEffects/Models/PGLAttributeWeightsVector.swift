@@ -18,7 +18,20 @@ class PGLAttributeWeightsVector: PGLFilterAttributeVector {
         // cell slider for each element of the vector matrix.
         // Used by PGLConvolutionFilter and PGLNumericSliderUI
 
-    lazy var localMatrix: Matrix = getMatrixValue()
+    var localMatrix: Matrix?
+
+    required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
+        super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
+        if let parentFilterMatrix = (pglFilter as? PGLConvolutionFilter)?.filterMatrix {
+            localMatrix = parentFilterMatrix }
+        else {
+            localMatrix = initMatrix() // but this will be all zeros - empty values
+            }
+    }
+
+    override func shouldSetDefaultVectorValue() -> Bool {
+        return false
+    }
 
     override func moveOnDrawableSizeChange() -> Bool {
         // only some PGLFilterAttributeVectors should move
@@ -26,49 +39,37 @@ class PGLAttributeWeightsVector: PGLFilterAttributeVector {
     }
 
     func setWeight(newValue: Double, row: Int, column: Int) {
-        localMatrix[row, column] = newValue
+        if localMatrix == nil {
+            return
+        }
+        localMatrix![row, column] = newValue
         // update matrix into the filter vector
 //        NSLog("\( String(describing: self) + "-" + #function) localMatrix.grid \(localMatrix.grid)")
        guard let parentConvolutionFilter =  aSourceFilter as? PGLConvolutionFilter
         else { return  }
-        parentConvolutionFilter.setWeights(weightMatrix: localMatrix)
+        parentConvolutionFilter.setWeights(weightMatrix: localMatrix!)
     }
 
-     func getMatrixValue() -> Matrix {
+     func initMatrix() -> Matrix {
+         var newMatrix: Matrix
         guard let convolutionFilter = aSourceFilter as? PGLConvolutionFilter
         else { return  Matrix(rows: 0, columns: 0) }
-        guard  let myVector = convolutionFilter.valueFor(keyName: attributeName!) as? CIVector
-        else { return  Matrix(rows: 0, columns: 0) }
-        var vectorMatrix: Matrix
-        var baseSize = 0
+         
+         guard  let filterSavedValues = convolutionFilter.valueFor(keyName: attributeName!) as? CIVector
+         else { return  Matrix(rows: 0, columns: 0) }
 
-        switch myVector.count {
-            case 9 :
-                    // 3x3 or 9x1
-                baseSize = 3
-            case 25 :
-                    // 5x5
-                baseSize = 5
-            case 49 :
-                    // 7x7
-                baseSize = 7
-
-            default :
-                baseSize = 0
-        }
-        
          if convolutionFilter.isSquareMatrix {
-            vectorMatrix = Matrix.FromVector(baseRows: baseSize, baseColumns: baseSize, vector: myVector)
+             newMatrix = Matrix.FromVector(baseRows: convolutionFilter.matrixSize, baseColumns: convolutionFilter.matrixSize, vector: filterSavedValues)
         }
         else {
-            vectorMatrix = Matrix.FromVector(baseRows: 1, baseColumns: 9, vector: myVector)
+            newMatrix = Matrix.FromVector(baseRows: 1, baseColumns: 9, vector: filterSavedValues)
         }
 
-        return vectorMatrix
+        return newMatrix
     }
 
     func getValue(row: Int, column: Int) -> CGFloat {
-        return localMatrix[row, column]
+        return localMatrix?[row, column] ?? 0.0 as CGFloat
     }
 
     override func valueInterface() -> [PGLFilterAttribute] {
