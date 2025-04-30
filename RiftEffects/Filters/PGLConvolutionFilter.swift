@@ -164,6 +164,15 @@ class PGLConvolutionFilter: PGLSourceFilter {
         filterMatrix!.normalize()
         setWeights(weightMatrix: filterMatrix!)
             // converts to CIVector and assigns normalized values to filter weights attribute
+        // update the screen to show changes in the filter sliders
+        postCellUpdate()
+
+
+    }
+
+    fileprivate func postCellUpdate() {
+        let updateFilterNotification = Notification(name: PGLReloadParmTableView)
+        NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: nil ])
     }
 
 

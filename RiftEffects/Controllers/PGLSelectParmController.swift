@@ -26,6 +26,7 @@ enum ParmInputState: Int {
 
 let  PGLAttributeAnimationChange = NSNotification.Name(rawValue: "PGLAttributeAnimationChange")
 let  PGLReloadParmCell = NSNotification.Name(rawValue: "PGLReloadParmCell")
+let  PGLReloadParmTableView = NSNotification.Name(rawValue: "PGLReloadParmTableView")
 
 class PGLSelectParmController: PGLCommonController,
             UITableViewDelegate, UITableViewDataSource,
@@ -279,8 +280,21 @@ class PGLSelectParmController: PGLCommonController,
             setImageController()
         }
 
+        //  parmsTableView.reloadData()
 
         let myCenter =  NotificationCenter.default
+
+        cancellable = myCenter.publisher(for: PGLReloadParmTableView)
+            .sink() {[weak self]
+                    myUpdate in
+                    guard let self = self else { return }
+                    // a released object sometimes receives the notification
+
+                parmsTableView.reloadData()
+                }
+
+        publishers.append(cancellable!)
+
 
         cancellable = myCenter.publisher(for: PGLHideParmControlsOnFilterChange)
             .sink() {[weak self]
