@@ -172,12 +172,8 @@ class PGLConvolutionFilter: PGLSourceFilter {
 
     fileprivate func postCellUpdate() {
         let updateFilterNotification = Notification(name: PGLReloadParmTableView)
-        NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: nil ])
+        NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: nil )
     }
-
-
-   
-
 }
 
 
