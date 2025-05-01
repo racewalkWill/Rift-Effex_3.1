@@ -64,9 +64,9 @@ class PGLBumpFaceCIFilter: PGLFilterCIAbstract {
 
 
 
-    override func setDefaults() {
-        inputFeatureSelect = 0
-    }
+//    override func setDefaults() {
+//        inputFeatureSelect = 0
+//    }
 
 
 
@@ -87,25 +87,25 @@ class PGLBumpFaceCIFilter: PGLFilterCIAbstract {
                                      ])
 
 
-            if inputFeatureSelect >= 0 {
-                let featureIndex = min( inputFeatureSelect, features.count - 1) // don't go beyond the number of featurs
-                let thisFeature = features[featureIndex]
-                let theFaceCenter = faceCenter( thisFeature)
-                if inputRadius == radiusDefault {
-                    if let theBoundingBox = thisFeature.boundingBox() {
-                    mappedRadius = (min( theBoundingBox.size.width, theBoundingBox.size.height ) / 1.5 )
-                    }
-                }
-                else {mappedRadius = CGFloat(truncating: inputRadius) }
-
-                bumpDistortFilter?.setValue(theFaceCenter, forKey: kCIInputCenterKey)
-
-
-                bumpDistortFilter?.setValue(mappedRadius, forKey: kCIInputRadiusKey)
-                bumpDistortFilter?.setValue(inputScale, forKey: kCIInputScaleKey)
-
-            }
-            else { return inputImage}
+//            if inputFeatureSelect >= 0 {
+//                let featureIndex = min( inputFeatureSelect, features.count - 1) // don't go beyond the number of featurs
+//                let thisFeature = features[featureIndex]
+//                let theFaceCenter = faceCenter( thisFeature)
+//                if inputRadius == radiusDefault {
+//                    if let theBoundingBox = thisFeature.boundingBox() {
+//                    mappedRadius = (min( theBoundingBox.size.width, theBoundingBox.size.height ) / 1.5 )
+//                    }
+//                }
+//                else {mappedRadius = CGFloat(truncating: inputRadius) }
+//
+//                bumpDistortFilter?.setValue(theFaceCenter, forKey: kCIInputCenterKey)
+//
+//
+//                bumpDistortFilter?.setValue(mappedRadius, forKey: kCIInputRadiusKey)
+//                bumpDistortFilter?.setValue(inputScale, forKey: kCIInputScaleKey)
+//
+//            }
+//            else { return inputImage}
 
             return bumpDistortFilter?.outputImage ?? inputImage
 

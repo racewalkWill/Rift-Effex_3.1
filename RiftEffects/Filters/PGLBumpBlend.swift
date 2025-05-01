@@ -36,8 +36,8 @@ class PGLBumpBlendCI: PGLFilterCIAbstract {
                 [
                     kCIAttributeMin       :  0.0,
                     kCIAttributeSliderMin :  0.0,
-                    kCIAttributeSliderMax : 500.0,
-                    kCIAttributeDefault   : 100.0,
+                    kCIAttributeSliderMax : 1000.0,
+                    kCIAttributeDefault   : 300.0,
                     kCIAttributeIdentity  :  0.0,
                     kCIAttributeType      : kCIAttributeTypeScalar
                 ] as [String : Any],
@@ -45,16 +45,16 @@ class PGLBumpBlendCI: PGLFilterCIAbstract {
                 [
                     kCIAttributeMin       :  0.0,
                     kCIAttributeSliderMin :  0.0,
-                    kCIAttributeSliderMax : 500.0,
+                    kCIAttributeSliderMax : 1000.0,
                     kCIAttributeDefault   : 400.0,
                     kCIAttributeIdentity  :  0.0,
                     kCIAttributeType      : kCIAttributeTypeScalar
                 ] as [String : Any],
             "inputScale" : [
 
-                kCIAttributeMin       : -1.0 ,
-                kCIAttributeSliderMin : -1.0,
-                kCIAttributeSliderMax : 1.0 ,
+                kCIAttributeMin       : -5.0 ,
+                kCIAttributeSliderMin : -5.0,
+                kCIAttributeSliderMax : 5.0 ,
                 kCIAttributeDefault   : 0.50 ,
                 kCIAttributeIdentity  : 0,
                 kCIAttributeType      : kCIAttributeTypeScalar
@@ -63,7 +63,7 @@ class PGLBumpBlendCI: PGLFilterCIAbstract {
 
             "inputCenter" : [  //kCIInputCenterKey"
                 kCIAttributeClass : "CIVector" ,
-                kCIAttributeDefault : CIVector(x: 200, y: 200),
+                kCIAttributeDefault : CIVector(x: 300, y: 300),
                 kCIAttributeDescription :"The center of the effect as x and y coordinates",
                 kCIAttributeDisplayName :"Center",
                 kCIAttributeType : kCIAttributeTypePosition

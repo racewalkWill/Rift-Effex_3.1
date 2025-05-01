@@ -1023,7 +1023,7 @@ class PGLDetectorFilter: PGLSourceFilter {
     required init?(filter: String, position: PGLFilterCategoryIndex) {
       super.init(filter: filter, position: position)
      hasAnimation = true
-        detectors.append( DetectorFramework.Active.init(ciFilter: PGLFaceCIFilter()))
+//        detectors.append( DetectorFramework.Active.init(ciFilter: PGLFaceCIFilter()))
 
     }
 
@@ -1049,10 +1049,10 @@ class PGLFilterConstructor: NSObject,  CIFilterConstructor {
             case kPBumpBlend :
                 return PGLBumpBlendCI()
 
-            case kPBumpFace:
-                return PGLBumpFaceCIFilter()
-            case kPFaceFilter:
-                    return PGLFaceCIFilter()
+//            case kPBumpFace:
+//                return PGLBumpFaceCIFilter()
+//            case kPFaceFilter:
+//                    return PGLFaceCIFilter()
             case kPImages :
                     return PGLImageCIFilter()
            
@@ -1061,8 +1061,7 @@ class PGLFilterConstructor: NSObject,  CIFilterConstructor {
 
 //            case kPCarnivalMirror:
 //                return PGLCarnivalMirror()
-            case kPTiltShift :
-                return PGLTiltShift()
+
 
 //            case kPWarpItMetal :
 //                return WarpItMetalFilter()

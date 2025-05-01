@@ -13,12 +13,13 @@ class PGLFilterCIAbstract: CIFilter {
     // all custom CIFilters should be subclasses
 
     // subclasses(of: PGLFilterCIAbstract.self)
-    static let FilterCISubclasses  = [ PGLBumpBlendCI.self,
-        PGLBumpFaceCIFilter.self,
+    static let FilterCISubclasses  = [
+        PGLBumpBlendCI.self,
+//        PGLBumpFaceCIFilter.self,
 //        PGLCarnivalMirror.self,
-        PGLFaceCIFilter.self,
+//        PGLFaceCIFilter.self,
 
-        PGLTiltShift.self,
+//        PGLTiltShift.self,
         
         ]
 
@@ -38,17 +39,18 @@ class PGLFilterCIAbstract: CIFilter {
 
     }
     @objc    class func customAttributes() -> [String: Any] {
-        let customDict:[String: Any] = [
-          
-                        "inputFeatureSelect" : [
-                            kCIAttributeMin       :  -1.0,
-                            kCIAttributeSliderMin :  -1.0,
-                            kCIAttributeSliderMax :    5 ,
-                            kCIAttributeIdentity  :  -1.0,
-                            kCIAttributeType : kCIAttributeTypeInteger
+        let customDict = [String: Any]()
+        // = [
 
-                        ] as [String : Any] as [String : Any]
-        ]
+//                        "inputFeatureSelect" : [
+//                            kCIAttributeMin       :  -1.0,
+//                            kCIAttributeSliderMin :  -1.0,
+//                            kCIAttributeSliderMax :    5 ,
+//                            kCIAttributeIdentity  :  -1.0,
+//                            kCIAttributeType : kCIAttributeTypeInteger
+//
+//                        ] as [String : Any] as [String : Any]
+//        ]
         return customDict
     }
 
@@ -63,7 +65,7 @@ class PGLFilterCIAbstract: CIFilter {
     }
 
     @objc dynamic  var inputImage: CIImage?
-    @objc dynamic var inputFeatureSelect: NSInteger = -1
+//    @objc dynamic var inputFeatureSelect: NSInteger = -1
 
     var  features = [PGLFaceBounds]() {
         didSet {

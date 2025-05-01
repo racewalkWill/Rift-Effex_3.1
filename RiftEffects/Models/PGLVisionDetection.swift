@@ -211,12 +211,12 @@ class PGLVisionDetector: PGLDetection {
                     myFaceFilter.displayFeatures = myDisplayFeatures
                     myFaceFilter.inputImage = inputImage
                         // updateValue(value, forKey: kCIInputImageKey)
-                    for i in myDisplayFeatures {
-                        myFaceFilter.inputFeatureSelect = i
-                        if let thisFeatureImage = myFaceFilter.outputImage {
-                            answerImages.append(thisFeatureImage)
-                        }
-                    }
+//                    for i in myDisplayFeatures {
+//                        myFaceFilter.inputFeatureSelect = i
+//                        if let thisFeatureImage = myFaceFilter.outputImage {
+//                            answerImages.append(thisFeatureImage)
+//                        }
+//                    }
                 } else {
                     // not a PGLFilterCIAbstract..which has features set by the detector
                      // here set the the attribute to the feature point and output an image
