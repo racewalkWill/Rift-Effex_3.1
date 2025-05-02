@@ -68,6 +68,7 @@
 		A37D91622D5CF166006E1426 /* Root.strings in Resources */ = {isa = PBXBuildFile; fileRef = A37D915E2D5CF166006E1426 /* Root.strings */; };
 		A37D91652D5CF166006E1426 /* en.lproj in Resources */ = {isa = PBXBuildFile; fileRef = A37D915D2D5CF166006E1426 /* en.lproj */; };
 		A37D91682D5CF166006E1426 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = A37D915F2D5CF166006E1426 /* Root.plist */; };
+		A3811BFB2DC505D500A1A178 /* CIBlendText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811BFA2DC505D500A1A178 /* CIBlendText.swift */; };
 		A38735A72CDBD98F000EE038 /* PGLEffexButtonsHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */; };
 		A38735AB2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */; };
 		A38D76AB2DBAF42B00318585 /* Swift TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */; };
@@ -264,6 +265,7 @@
 		A37D915D2D5CF166006E1426 /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en.lproj; path = "Settings 2.bundle/en.lproj"; sourceTree = "<group>"; };
 		A37D915E2D5CF166006E1426 /* Root.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Root.strings; path = "Settings 2.bundle/en.lproj/Root.strings"; sourceTree = "<group>"; };
 		A37D915F2D5CF166006E1426 /* Root.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Root.plist; path = "Settings 2.bundle/Root.plist"; sourceTree = "<group>"; };
+		A3811BFA2DC505D500A1A178 /* CIBlendText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIBlendText.swift; sourceTree = "<group>"; };
 		A384CF912B968DA300ACC220 /* iPad3.0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = iPad3.0.xctestplan; sourceTree = "<group>"; };
 		A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PGLEffexButtonsHeader.xib; sourceTree = "<group>"; };
 		A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLEffexButtonsHeader.swift; sourceTree = "<group>"; };
@@ -658,10 +660,7 @@
 				A37D91522D5CF046006E1426 /* Stack */,
 				A37D91532D5CF06F006E1426 /* PhotoList */,
 				A3A123312BF55FAD001A756D /* PGLCenterScaler.swift */,
-				A3BF507024D32A3400CD5114 /* PGLFilterCategory.swift */,
-				A3BF505F24D32A3400CD5114 /* PGLFilterDescriptor.swift */,
 				A3BF505C24D32A3400CD5114 /* PGLVisionDetection.swift */,
-				A3BF505524D32A3400CD5114 /* PGLFilterCategoryIndex.swift */,
 				A3BF505D24D32A3400CD5114 /* PGLVisionProtocol.swift */,
 				A3BF507324D32A3400CD5114 /* PGLAttributeUI.swift */,
 				A3F8E97C295B55B900A1E014 /* PGLNumericSliderUI.swift */,
@@ -714,6 +713,9 @@
 			isa = PBXGroup;
 			children = (
 				A3BF507C24D32A3400CD5114 /* PGLSourceFilter.swift */,
+				A3BF505F24D32A3400CD5114 /* PGLFilterDescriptor.swift */,
+				A3BF505524D32A3400CD5114 /* PGLFilterCategoryIndex.swift */,
+				A3BF507024D32A3400CD5114 /* PGLFilterCategory.swift */,
 				A3EBFB0B29EF2336005E4852 /* CIFilterToPGLFilter.swift */,
 				A37D91542D5CF0FB006E1426 /* PGLDetector.swift */,
 				A37D91502D5CEFC1006E1426 /* PGLRectangleFilter.swift */,
@@ -728,6 +730,7 @@
 				A3B785142B224D2700F3DA68 /* VideoCamFilter */,
 				A3BF504C24D32A3400CD5114 /* PGLBumpBlend.swift */,
 				A3BF507B24D32A3400CD5114 /* PGLTextFilter.swift */,
+				A3811BFA2DC505D500A1A178 /* CIBlendText.swift */,
 				A3BF505B24D32A3400CD5114 /* PGLFilterChange.swift */,
 				A3AF392B25B61D850035A5FF /* PGLSaliencyBlur.swift */,
 				A39632D7250049F000F02CEC /* PGLDisparityFilter.swift */,
@@ -1030,6 +1033,7 @@
 				A3BF50EA24D32A3400CD5114 /* PGLFilterChange.swift in Sources */,
 				A35D412D294B678B00EDEB4E /* PGLVectorBasedFilter.swift in Sources */,
 				A3552BEA29463170002FBC72 /* PGLColorVectorNumeric.swift in Sources */,
+				A3811BFB2DC505D500A1A178 /* CIBlendText.swift in Sources */,
 				A3BF511224D32A3400CD5114 /* PGLFeatureTransitionFilter.swift in Sources */,
 				A37D23AE2825C27D00EE3723 /* PGLParmImageController.swift in Sources */,
 				A3AF392C25B61D850035A5FF /* PGLSaliencyBlur.swift in Sources */,
