@@ -69,6 +69,8 @@
 		A37D91652D5CF166006E1426 /* en.lproj in Resources */ = {isa = PBXBuildFile; fileRef = A37D915D2D5CF166006E1426 /* en.lproj */; };
 		A37D91682D5CF166006E1426 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = A37D915F2D5CF166006E1426 /* Root.plist */; };
 		A3811BFB2DC505D500A1A178 /* CIBlendText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811BFA2DC505D500A1A178 /* CIBlendText.swift */; };
+		A3811BFF2DC56D7100A1A178 /* PGLDetectorFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811BFE2DC56D7100A1A178 /* PGLDetectorFilter.swift */; };
+		A3811C012DC56DA900A1A178 /* PGLFilterConstructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811C002DC56DA900A1A178 /* PGLFilterConstructor.swift */; };
 		A38735A72CDBD98F000EE038 /* PGLEffexButtonsHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */; };
 		A38735AB2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */; };
 		A38D76AB2DBAF42B00318585 /* Swift TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */; };
@@ -266,6 +268,8 @@
 		A37D915E2D5CF166006E1426 /* Root.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Root.strings; path = "Settings 2.bundle/en.lproj/Root.strings"; sourceTree = "<group>"; };
 		A37D915F2D5CF166006E1426 /* Root.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Root.plist; path = "Settings 2.bundle/Root.plist"; sourceTree = "<group>"; };
 		A3811BFA2DC505D500A1A178 /* CIBlendText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIBlendText.swift; sourceTree = "<group>"; };
+		A3811BFE2DC56D7100A1A178 /* PGLDetectorFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLDetectorFilter.swift; sourceTree = "<group>"; };
+		A3811C002DC56DA900A1A178 /* PGLFilterConstructor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterConstructor.swift; sourceTree = "<group>"; };
 		A384CF912B968DA300ACC220 /* iPad3.0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = iPad3.0.xctestplan; sourceTree = "<group>"; };
 		A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PGLEffexButtonsHeader.xib; sourceTree = "<group>"; };
 		A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLEffexButtonsHeader.swift; sourceTree = "<group>"; };
@@ -713,6 +717,7 @@
 			isa = PBXGroup;
 			children = (
 				A3BF507C24D32A3400CD5114 /* PGLSourceFilter.swift */,
+				A3811C002DC56DA900A1A178 /* PGLFilterConstructor.swift */,
 				A3BF505F24D32A3400CD5114 /* PGLFilterDescriptor.swift */,
 				A3BF505524D32A3400CD5114 /* PGLFilterCategoryIndex.swift */,
 				A3BF507024D32A3400CD5114 /* PGLFilterCategory.swift */,
@@ -723,6 +728,7 @@
 				A327122129775C30007DF04A /* MetalFilters.swift */,
 				A3BF50C924D32A3400CD5114 /* PGLFilterCIAbstract.swift */,
 				A3BF508A24D32A3400CD5114 /* CIFilterExtensions.swift */,
+				A3811BFE2DC56D7100A1A178 /* PGLDetectorFilter.swift */,
 				A36324E725B247F7003F4C0F /* PGLExcludeFilters.swift */,
 				A35DB4C52BB1C10E007DA35C /* SequenceFilter */,
 				A35DB4C62BB229E4007DA35C /* GradientPolygonFilters */,
@@ -953,6 +959,7 @@
 				A326F7A52B1FDEB30070D759 /* PGLFilterAttributeVectorUI.swift in Sources */,
 				A39F88042A4C7E6F000AE342 /* PGLLibraryCell.swift in Sources */,
 				A35311012C33571300FB29EA /* PGLStackSection.swift in Sources */,
+				A3811C012DC56DA900A1A178 /* PGLFilterConstructor.swift in Sources */,
 				A37D91552D5CF0FC006E1426 /* PGLDetector.swift in Sources */,
 				A3D9FF0B292A9F1400BAE158 /* Quad.swift in Sources */,
 				A369A7FE2D44624800C55438 /* PGLFilterAttributeTime.swift in Sources */,
@@ -987,6 +994,7 @@
 				A3BF50EF24D32A3400CD5114 /* PGLMainFilterController.swift in Sources */,
 				A3BF50E924D32A3400CD5114 /* PGLTableCellAction.swift in Sources */,
 				A3BF50DB24D32A3400CD5114 /* PGL-CDFilterStack.swift in Sources */,
+				A3811BFF2DC56D7100A1A178 /* PGLDetectorFilter.swift in Sources */,
 				A3D04B142A8444A300E6DB16 /* PGLStackInfoHeader.swift in Sources */,
 				A3BF513724D32A3400CD5114 /* PGLDiffableDataSource.swift in Sources */,
 				A3BF50E724D32A3400CD5114 /* PGLMetalController.swift in Sources */,

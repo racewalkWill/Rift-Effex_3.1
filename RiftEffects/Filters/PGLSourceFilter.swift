@@ -1018,76 +1018,8 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
 
 
-class PGLDetectorFilter: PGLSourceFilter {
-    // move down the detector[] array here?
-    required init?(filter: String, position: PGLFilterCategoryIndex) {
-      super.init(filter: filter, position: position)
-     hasAnimation = true
-//        detectors.append( DetectorFramework.Active.init(ciFilter: PGLFaceCIFilter()))
-
-    }
-
-    override func setCIContext(detectorContext: CIContext?) {
-        for thisDetector in detectors {
-            // pass on the context for the  detectorFilter.detector
-            thisDetector.setCIContext(detectorContext: detectorContext)
-        }
-    }
-
-}
-
-class PGLFilterConstructor: NSObject,  CIFilterConstructor {
-    //MARK: CIFilterConstructor protocol
-    // see also the PGLFilterDescriptor method filter() -> CIFilter
-
-    func filter(withName: String) -> CIFilter? {
-
-        switch withName {
-            case kPSequencedFilter :
-                return PGLCISequenced()
-
-            case kPBumpBlend :
-                return PGLBumpBlendCI()
-
-//            case kPBumpFace:
-//                return PGLBumpFaceCIFilter()
-//            case kPFaceFilter:
-//                    return PGLFaceCIFilter()
-            case kPImages :
-                    return PGLImageCIFilter()
-           
-            case kPRandom :
-                return PGLRandomFilterAction()
-
-//            case kPCarnivalMirror:
-//                return PGLCarnivalMirror()
 
 
-//            case kPWarpItMetal :
-//                return WarpItMetalFilter()
-            case kCompositeTextPositionFilter:
-                /// supports prior version of the filter by answering new version
-                return CompositeTextPositionFilter()
-
-            case kBlendTextFilter:
-//                return PGLTextImageGenerator.internalCIFilter()
-                return CIBlendText()
-
-            case kSaliencyBlurFilter:
-                return PGLSaliencyBlurFilter()
-
-            case kPCopyOut: return PGLCopyToOutputCIFilter()
-
-            case kTriangleGradient: return PGLPolygonGradientCI()
-
-            case k4SidedGradient: return PGLPolygonGradientCI()
-
-            default:
-                return CIFilter(name: withName)!
-        }
-    }
-
-}
 
 
 
