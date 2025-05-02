@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A303930F27AADED800E2A3D4 /* PGLCompactPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */; };
+		A30464D22DC4F60C00809D4A /* PGLMaximumScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30464D12DC4F60C00809D4A /* PGLMaximumScale.swift */; };
 		A308939F251E977400F244D6 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A308939E251E977400F244D6 /* Launch Screen.storyboard */; };
 		A30BF4332CEA503A0062C84C /* PGLRandomParms.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30BF4322CEA503A0062C84C /* PGLRandomParms.swift */; };
 		A313B1E22AE3298B007AE850 /* PGLVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A313B1E12AE3298B007AE850 /* PGLVideo.swift */; };
@@ -203,6 +204,7 @@
 
 /* Begin PBXFileReference section */
 		A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCompactPresentationController.swift; sourceTree = "<group>"; };
+		A30464D12DC4F60C00809D4A /* PGLMaximumScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMaximumScale.swift; sourceTree = "<group>"; };
 		A308939E251E977400F244D6 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		A30BF4322CEA503A0062C84C /* PGLRandomParms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLRandomParms.swift; sourceTree = "<group>"; };
 		A313B1E12AE3298B007AE850 /* PGLVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLVideo.swift; sourceTree = "<group>"; };
@@ -496,6 +498,7 @@
 			isa = PBXGroup;
 			children = (
 				A33E82022B15458D008F79B3 /* PGLScaleFrame.swift */,
+				A30464D12DC4F60C00809D4A /* PGLMaximumScale.swift */,
 				A326F7A42B1FDEB30070D759 /* PGLFilterAttributeVectorUI.swift */,
 			);
 			path = ScaleDown;
@@ -711,11 +714,11 @@
 			isa = PBXGroup;
 			children = (
 				A3BF507C24D32A3400CD5114 /* PGLSourceFilter.swift */,
+				A3EBFB0B29EF2336005E4852 /* CIFilterToPGLFilter.swift */,
 				A37D91542D5CF0FB006E1426 /* PGLDetector.swift */,
 				A37D91502D5CEFC1006E1426 /* PGLRectangleFilter.swift */,
 				A392D5ED26C3EBDA00688952 /* PGLRandomFilterMaker.swift */,
 				A327122129775C30007DF04A /* MetalFilters.swift */,
-				A3EBFB0B29EF2336005E4852 /* CIFilterToPGLFilter.swift */,
 				A3BF50C924D32A3400CD5114 /* PGLFilterCIAbstract.swift */,
 				A3BF508A24D32A3400CD5114 /* CIFilterExtensions.swift */,
 				A36324E725B247F7003F4C0F /* PGLExcludeFilters.swift */,
@@ -1030,6 +1033,7 @@
 				A3BF511224D32A3400CD5114 /* PGLFeatureTransitionFilter.swift in Sources */,
 				A37D23AE2825C27D00EE3723 /* PGLParmImageController.swift in Sources */,
 				A3AF392C25B61D850035A5FF /* PGLSaliencyBlur.swift in Sources */,
+				A30464D22DC4F60C00809D4A /* PGLMaximumScale.swift in Sources */,
 				A3BF50F324D32A3400CD5114 /* BadgeSupplementrayView.swift in Sources */,
 				A3BF510824D32A3400CD5114 /* PGLSourceFilter.swift in Sources */,
 				A3AD94762B7CF96E00125E74 /* PGLTwoColumnSplitController.swift in Sources */,
