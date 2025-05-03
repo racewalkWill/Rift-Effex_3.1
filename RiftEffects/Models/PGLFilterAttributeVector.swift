@@ -239,8 +239,9 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             let newY = Float(startPoint!.y) + (vectorSin * distanceOfIncrement)
             let newVector = CIVector(x: CGFloat(newX), y: CGFloat(newY))
 //            NSLog("PGLFilterAttributeVector #incrementValueDelta currentVector = \(String(describing: getVectorValue()))")
-//            NSLog("PGLFilterAttributeVector #incrementValueDelta newVector = \(newVector)")
-            aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
+//            NSLog("PGLFilterAttributeVector #incrementValueDelta \(attributeName) newVector = \(newVector)")
+            set(newVector)
+
             postUIChange(attribute: self)
         }
 
@@ -318,7 +319,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     func scaleVector(inputVector: CIVector, scaleBy: CGAffineTransform, invertScale: Bool) -> CIVector {
         var vectorFactor: CGAffineTransform!
         let newVectorPoint = inputVector.cgPointValue
-        NSLog(#function + "invertScale: \(invertScale) : newVectorPoint: \(newVectorPoint)")
+//        NSLog(#function + "invertScale: \(invertScale) : newVectorPoint: \(newVectorPoint)")
         if invertScale {
             vectorFactor = scaleBy.inverted()
             // divide to smaller
@@ -327,7 +328,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
                 // multiply to larger
         }
         let scaledPoint = newVectorPoint.applying(vectorFactor)
-        NSLog(#function + "scaledPoint: \(scaledPoint) ")
+//        NSLog(#function + "scaledPoint: \(scaledPoint) ")
         let scaledVectorValue = CIVector.init(cgPoint: scaledPoint)
         return scaledVectorValue
     }
