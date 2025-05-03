@@ -71,6 +71,7 @@
 		A3811BFB2DC505D500A1A178 /* CIBlendText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811BFA2DC505D500A1A178 /* CIBlendText.swift */; };
 		A3811BFF2DC56D7100A1A178 /* PGLDetectorFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811BFE2DC56D7100A1A178 /* PGLDetectorFilter.swift */; };
 		A3811C012DC56DA900A1A178 /* PGLFilterConstructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811C002DC56DA900A1A178 /* PGLFilterConstructor.swift */; };
+		A3811C032DC57CE100A1A178 /* PGLRectangleGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811C022DC57CE100A1A178 /* PGLRectangleGenerator.swift */; };
 		A38735A72CDBD98F000EE038 /* PGLEffexButtonsHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */; };
 		A38735AB2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */; };
 		A38D76AB2DBAF42B00318585 /* Swift TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */; };
@@ -270,6 +271,7 @@
 		A3811BFA2DC505D500A1A178 /* CIBlendText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIBlendText.swift; sourceTree = "<group>"; };
 		A3811BFE2DC56D7100A1A178 /* PGLDetectorFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLDetectorFilter.swift; sourceTree = "<group>"; };
 		A3811C002DC56DA900A1A178 /* PGLFilterConstructor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterConstructor.swift; sourceTree = "<group>"; };
+		A3811C022DC57CE100A1A178 /* PGLRectangleGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLRectangleGenerator.swift; sourceTree = "<group>"; };
 		A384CF912B968DA300ACC220 /* iPad3.0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = iPad3.0.xctestplan; sourceTree = "<group>"; };
 		A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PGLEffexButtonsHeader.xib; sourceTree = "<group>"; };
 		A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLEffexButtonsHeader.swift; sourceTree = "<group>"; };
@@ -735,6 +737,7 @@
 				A389091B2B1E5B3100DAFBA0 /* ScaleDown */,
 				A3B785142B224D2700F3DA68 /* VideoCamFilter */,
 				A3BF504C24D32A3400CD5114 /* PGLBumpBlend.swift */,
+				A3811C022DC57CE100A1A178 /* PGLRectangleGenerator.swift */,
 				A3BF507B24D32A3400CD5114 /* PGLTextFilter.swift */,
 				A3811BFA2DC505D500A1A178 /* CIBlendText.swift */,
 				A3BF505B24D32A3400CD5114 /* PGLFilterChange.swift */,
@@ -1101,6 +1104,7 @@
 				A3BF50E424D32A3400CD5114 /* PGLFilterAttributeNumber.swift in Sources */,
 				A3DBD2D12BEC1D66009A6317 /* PGLVideoFrameQueue.swift in Sources */,
 				A3AF92DD2D40093A001E4785 /* PGLFilterAttributeAffine.swift in Sources */,
+				A3811C032DC57CE100A1A178 /* PGLRectangleGenerator.swift in Sources */,
 				A39B220E2B558E7C0026C7FE /* PGLImageListPicker.swift in Sources */,
 				A3BF50EC24D32A3400CD5114 /* PGLVisionProtocol.swift in Sources */,
 			);

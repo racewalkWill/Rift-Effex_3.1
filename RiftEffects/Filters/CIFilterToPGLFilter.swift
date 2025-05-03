@@ -19,7 +19,8 @@ class CIFilterToPGLFilter {
     //        let wrapperFilter = wrapperDesc.pglSourceFilter() as! PGLDissolveWrapperFilter
     
     static let Map: [String: [PGLSourceFilter.Type]] =   [
-
+            "CIRoundedRectangleStrokeGenerator" : [PGLRectangleGenerator.self],
+            "CIBlurredRectangleGenerator" : [PGLRectangleGenerator.self],
             "CIMaximumScaleTransform" : [ PGLScaleUpFrame.self ],
             "CICrop": [PGLRectangleFilter.self, PGLMaskFilter.self] ,
 

@@ -42,7 +42,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
             }  // else keep the default rect of 300
             else {
                 // default to TargetSize or effectively no crop
-                filterRect = CGRect(origin: CGPoint.zero, size: TargetSize)
+                filterRect = CGRect(origin: CGPoint.zero, size: TargetSize) .insetBy(dx: 100.0, dy: 100.0)
                 applyCropRect(mappedCropRect: filterRect)
             }
         }
