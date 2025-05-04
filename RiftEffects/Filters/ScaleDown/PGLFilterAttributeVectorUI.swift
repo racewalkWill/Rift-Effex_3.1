@@ -15,6 +15,15 @@ import os
 // value not held in the ciFilter attribute
 
 class PGLFilterAttributeVectorUI: PGLFilterAttributeVector {
+    /// supports PGLTriangleGradientFilter & PGLScaleDownFrame
+
+        /// PGLScaleDownFrame used to center and scale in the imageController
+        /// do NOT set defaultVectorValue  - if true then fullscreen shifts image left, down and quarter size
+    override func shouldSetDefaultVectorValue() -> Bool {
+        /// PGLScaleDownFrame used to center and scale in the imageController
+        /// do NOT set defaultVectorValue  - if true then fullscreen shifts image left, down and quarter size
+        return false
+    }
 
     override func getVectorValue() -> CIVector? {
         if let myParent = self.aSourceFilter as? (any PGLCenterPoint) {

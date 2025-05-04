@@ -89,6 +89,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
                     // adjust down and left from the center of the insetRect
                     cornerPoint?.x -= offSet
                     cornerPoint?.y -= offSet
+//                    NSLog ("\( String(describing: self) + "-" + #function)" + " vector default is cornerPoint = \(cornerPoint)")
 
             }
             if cornerPoint != nil {
