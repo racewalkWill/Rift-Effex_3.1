@@ -9,10 +9,14 @@
 
 import MetalKit
 import os
+import AVFoundation
 
 @MainActor var TargetSize = CGSize(width: 1040, height: 768)
 @MainActor var FullScreenTargetTransform = CGAffineTransform.identity
 @MainActor var DoNotDraw = false
+@MainActor var myCaptureSession: PGLCaptureOutput?
+
+
 
 ///RenderDestinationMetalView drawBasic var
 let maxBuffersInFlight = 3
@@ -69,6 +73,16 @@ class Renderer: NSObject, MTKViewDelegate {
     var offScreenRender: PGLOffScreenRender = PGLOffScreenRender()
         //    var numVerticesInt: Int!
     var outputZoomPanFilter: PGLScaleDownFrame?
+
+    var DoCapture = false {
+        didSet{
+            if DoCapture {
+                myCaptureSession = PGLCaptureOutput(context: ciMetalContext)
+            } else {
+                myCaptureSession = nil
+            }
+        }
+    }
 
     override init() {
             /// RenderDestinationMetalView
@@ -147,6 +161,9 @@ class Renderer: NSObject, MTKViewDelegate {
             layer.colorspace = CGColorSpace(name: CGColorSpace.extendedLinearDisplayP3)
             // Ensure the render view supports pixel values in EDR.
             metalView.colorPixelFormat = MTLPixelFormat.rgba16Float
+//             metalView.colorPixelFormat = MTLPixelFormat.rgba32Sint
+                // MTLPixelFormat.rgba16Float
+//            kCVPixelFormatType_32BGRA
         }
 
 
@@ -344,6 +361,8 @@ class Renderer: NSObject, MTKViewDelegate {
                 } else {
                     ciOutputImage = ciOutputImage.composited(over: self.opaqueBackground)
                 }
+
+
                     // Start a task that renders to the texture destination.
                 _ = try? self.ciMetalContext.startTask(toRender: ciOutputImage, from: backBounds,
                     to: destination,
@@ -354,7 +373,25 @@ class Renderer: NSObject, MTKViewDelegate {
 
                     // Commit the command buffer so that the GPU executes the work that the Core Image Render Task issues.
                 commandBuffer.commit()
+                if DoCapture {
+                    if myCaptureSession == nil {
+                        myCaptureSession = PGLCaptureOutput(context: ciMetalContext)
 
+                    }
+                        // add to the output queue to save
+                    let captureTool = PGLMTKViewCapture(mtkView: view)
+                    let image = captureTool.captureStillImage(metalContext: ciMetalContext)
+
+                    NSLog(#function + ": capture image \(String(describing: image))")
+                    if let image = image {
+                        DoCapture =  myCaptureSession?.addFrame(image) ?? false
+                            // add to the output queue to save
+                    } else {
+                        DoCapture = false
+                    }
+                } else {
+                    myCaptureSession = nil
+                }
 
             }
         }
