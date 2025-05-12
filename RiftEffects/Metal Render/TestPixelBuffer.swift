@@ -9,17 +9,18 @@
 import Foundation
 @preconcurrency import AVFoundation
 import UIKit
+import Photos
 
 
 class TestPixelBuffer {
-    var images: [UIImage] = []
-    init() {
-      //      build(outputSize: CGSize(width: 1080, height: 1920))
-        build(outputSize: CGSize(width: 1936.0, height: 1520.0 ))
-        //1936.0, 1520.0
+    var images: [CIImage]
+
+    init(saveImages: [CIImage]) {
+        images = saveImages
     }
 
-    func build(outputSize: CGSize) {
+
+    func build(outputSize: CGSize, inContext: CIContext)  {
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
         guard let documentDirectory = urls.first else {
@@ -62,67 +63,80 @@ class TestPixelBuffer {
             videoWriter.startSession(atSourceTime: CMTime.zero)
             assert(pixelBufferAdaptor.pixelBufferPool != nil)
 
-            let media_queue = DispatchQueue(__label: "mediaInputQueue", attr: nil)
+                //            let media_queue = DispatchQueue(__label: "mediaInputQueue", attr: nil)
 
-            videoWriterInput.requestMediaDataWhenReady(on: media_queue, using: { () -> Void in
-                let fps: Int32 = 2
-                let frameDuration = CMTimeMake(value: 1, timescale: fps)
+                //            videoWriterInput.requestMediaDataWhenReady(on: media_queue, using: { () -> Void in
+            let fps: Int32 = 2
+            let frameDuration = CMTimeMake(value: 1, timescale: fps)
 
-                var frameCount: Int64 = 0
-                var appendSucceeded = true
+            var frameCount: Int64 = 0
+            var appendSucceeded = true
 
-                while (!self.images.isEmpty) {
-                    if (videoWriterInput.isReadyForMoreMediaData) {
-                        let nextPhoto = self.images.remove(at: 0)
-                        let lastFrameTime = CMTimeMake(value: frameCount, timescale: fps)
-                        let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
+            while (!self.images.isEmpty) {
+                if (videoWriterInput.isReadyForMoreMediaData) {
+                    let nextPhoto = self.images.remove(at: 0)
+                    let lastFrameTime = CMTimeMake(value: frameCount, timescale: fps)
+                    let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
 
-                        var pixelBuffer: CVPixelBuffer? = nil
-                        let status: CVReturn = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pixelBufferAdaptor.pixelBufferPool!, &pixelBuffer)
+                    var pixelBuffer: CVPixelBuffer? = nil
+                    let status: CVReturn = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pixelBufferAdaptor.pixelBufferPool!, &pixelBuffer)
 
-                        if let pixelBuffer = pixelBuffer, status == 0 {
-                            let managedPixelBuffer = pixelBuffer
+                    if let pixelBuffer = pixelBuffer, status == 0 {
+                        let managedPixelBuffer = pixelBuffer
 
-                            CVPixelBufferLockBaseAddress(managedPixelBuffer, [])
+                        CVPixelBufferLockBaseAddress(managedPixelBuffer, [])
 
-                            let data = CVPixelBufferGetBaseAddress(managedPixelBuffer)
-                            let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-                            let context = CGContext(data: data, width: Int(outputSize.width), height: Int(outputSize.height), bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(managedPixelBuffer), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
+                        let data = CVPixelBufferGetBaseAddress(managedPixelBuffer)
+                        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+                        let context = CGContext(data: data, width: Int(outputSize.width), height: Int(outputSize.height), bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(managedPixelBuffer), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
 
-                            context?.clear(CGRect(x: 0, y: 0, width: outputSize.width, height: outputSize.height))
+                        context?.clear(CGRect(x: 0, y: 0, width: outputSize.width, height: outputSize.height))
 
-                            let horizontalRatio = CGFloat(outputSize.width) / nextPhoto.size.width
-                            let verticalRatio = CGFloat(outputSize.height) / nextPhoto.size.height
+                        let horizontalRatio = CGFloat(outputSize.width) / nextPhoto.extent.size.width
+                        let verticalRatio = CGFloat(outputSize.height) / nextPhoto.extent.size.height
 
-                            let aspectRatio = min(horizontalRatio, verticalRatio) // ScaleAspectFit
+                        let aspectRatio = min(horizontalRatio, verticalRatio) // ScaleAspectFit
 
-                            let newSize = CGSize(width: nextPhoto.size.width * aspectRatio, height: nextPhoto.size.height * aspectRatio)
+                        let newSize = CGSize(width: nextPhoto.extent.size.width * aspectRatio, height: nextPhoto.extent.size.height * aspectRatio)
 
-                            let x = newSize.width < outputSize.width ? (outputSize.width - newSize.width) / 2 : 0
-                            let y = newSize.height < outputSize.height ? (outputSize.height - newSize.height) / 2 : 0
+                        let x = newSize.width < outputSize.width ? (outputSize.width - newSize.width) / 2 : 0
+                        let y = newSize.height < outputSize.height ? (outputSize.height - newSize.height) / 2 : 0
 
-                            context?.draw(nextPhoto.cgImage!, in: CGRect(x: x, y: y, width: newSize.width, height: newSize.height))
+                            //                            context?.draw(nextPhoto.cgImage!, in: CGRect(x: x, y: y, width: newSize.width, height: newSize.height))
+                        inContext.render(nextPhoto, to: managedPixelBuffer)
 
-                            CVPixelBufferUnlockBaseAddress(managedPixelBuffer, [])
+                        CVPixelBufferUnlockBaseAddress(managedPixelBuffer, [])
 
-                            appendSucceeded = pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: presentationTime)
-                        } else {
-                            print("Failed to allocate pixel buffer")
-                            appendSucceeded = false
-                        }
+                        appendSucceeded = pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: presentationTime)
+                    } else {
+                        print("Failed to allocate pixel buffer")
+                        appendSucceeded = false
                     }
-                    if !appendSucceeded {
-                        break
+                }
+                if !appendSucceeded {
+                    break
+                }
+                frameCount += 1
+            }
+            videoWriterInput.markAsFinished()
+
+            videoWriter.finishWriting { () -> Void in
+                print("FINISHED!!!!!")
+            
+                PHPhotoLibrary.shared().performChanges({
+                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: videoOutputURL)
+                }) { saved, error in
+
+                    if let error = error {
+                        print("Error saving video to librayr: \(error.localizedDescription)")
                     }
-                    frameCount += 1
+                    if saved {
+                        print("Video save to library")
+
+                    }
                 }
-                videoWriterInput.markAsFinished()
-                videoWriter.finishWriting { () -> Void in
-                    print("TESTPixelBuffer build FINISHED!!!!!")
-//                    saveVideoToLibrary(videoURL: videoOutputURL)
-                }
-            })
+            }
         }
-    }
 
+    }
 }

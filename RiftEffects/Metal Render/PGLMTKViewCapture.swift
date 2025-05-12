@@ -49,15 +49,14 @@ class PGLMTKViewCapture {
 
     init(mtkView: MTKView) {
         self.mtkView = mtkView
-//        self.outputDirectory = FileManager.default.temporaryDirectory
+
     }
 
     // Capture a still image from MTKView
     func captureStillImage(metalContext: CIContext) -> CIImage? {
         guard let texture = mtkView.currentDrawable?.texture else { return nil }
         let ciImage = CIImage(mtlTexture: texture, options: nil)
-//        let context = CIContext()
-//        let returnImage =  ciImage.flatMap { metalContext.createCGImage($0, from: $0.extent) }
+
         return ciImage
 
     }

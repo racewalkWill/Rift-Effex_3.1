@@ -15,13 +15,15 @@ class PGLCaptureOutput {
 
     var currentTime = CMTime.zero
     var frameCount: Int = 0
-    var maxFrames = 5
+    var maxFrames = 20
     let videoPath = FileManager.default.temporaryDirectory.appendingPathComponent("video.mov")
     var writerInput: AVAssetWriterInput!
     var writer: AVAssetWriter!
     var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor!
-    let framesPerSecond: Int = 30
+    let framesPerSecond: Int = 60
     var metalContext: CIContext!
+
+    var framesToSave = [CIImage]()
 
     init(context: CIContext, size: CGSize) {
         self.metalContext = context
@@ -83,11 +85,16 @@ class PGLCaptureOutput {
     func addFrame(_ frame: CIImage) -> Bool {
 
         if frameCount < maxFrames {
-            addVideoFrame(frame)
+//            addVideoFrame(frame)
+            framesToSave.append(frame)
             NSLog("Saving still image")
         } else {
                 // save the video to photoLibrary
-            finishVideo()
+          //  finishVideo()
+            NSLog("MaxFrames captured ")
+
+            saveVideoToLibrary(outputSize: CGSize(width: 1936.0, height: 1520.0 ), inContext: metalContext, framesToSave: framesToSave)
+            framesToSave = [CIImage]() // clear the frame capture
             NSLog("Saving video to photo library")
             }
         // add the video frame
@@ -150,32 +157,126 @@ class PGLCaptureOutput {
 
     }
 
-    func addVideoFrame(_ frame: CIImage) -> Void {
 
-            let frameDuration = CMTime(value: 1, timescale: CMTimeScale(framesPerSecond))
 
-            var pixelBuffer: CVPixelBuffer? = nil
-            if pixelBufferAdaptor.pixelBufferPool == nil {
-                print("Failed to create pixel buffer: pixelBufferPool is nil")
-                return
-                    //                pixelBufferAdaptor.pixelBufferPool = createPixelBufferPool()
+    func saveVideoToLibrary(outputSize: CGSize, inContext: CIContext, framesToSave: [CIImage])  {
+        var images = framesToSave
+        let fileManager = FileManager.default
+        let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
+        guard let documentDirectory = urls.first else {
+            fatalError("documentDir Error")
+        }
+
+        let videoOutputURL = documentDirectory.appendingPathComponent("OutputVideo.mp4")
+
+        if FileManager.default.fileExists(atPath: videoOutputURL.path) {
+            do {
+                try FileManager.default.removeItem(atPath: videoOutputURL.path)
+            } catch {
+                fatalError("Unable to delete file: \(error) : \(#function).")
             }
+        }
 
-            let status = CVPixelBufferPoolCreatePixelBuffer(
-                kCFAllocatorDefault,
-                pixelBufferAdaptor.pixelBufferPool!,
-                &pixelBuffer
-            )
+        guard let videoWriter = try? AVAssetWriter(outputURL: videoOutputURL, fileType: AVFileType.mp4) else {
+            fatalError("AVAssetWriter error")
+        }
 
-            if status == kCVReturnSuccess, let pixelBuffer = pixelBuffer {
-                let managedPixelBuffer = pixelBuffer
-                CVPixelBufferLockBaseAddress(managedPixelBuffer, [])
-                metalContext.render(frame, to: pixelBuffer)
-                CVPixelBufferUnlockBaseAddress(managedPixelBuffer, [])
-                pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: currentTime)
-            } else {
-                print("Failed to create pixel buffer: \(status)")
+        let outputSettings = [AVVideoCodecKey : AVVideoCodecType.h264, AVVideoWidthKey : NSNumber(value: Float(outputSize.width)), AVVideoHeightKey : NSNumber(value: Float(outputSize.height))] as [String : Any]
+
+        guard videoWriter.canApply(outputSettings: outputSettings, forMediaType: AVMediaType.video) else {
+            fatalError("Negative : Can't apply the Output settings...")
+        }
+
+        let videoWriterInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: outputSettings)
+        let sourcePixelBufferAttributesDictionary = [
+            kCVPixelBufferPixelFormatTypeKey as String : NSNumber(value: kCVPixelFormatType_32ARGB),
+            kCVPixelBufferWidthKey as String: NSNumber(value: Float(outputSize.width)),
+            kCVPixelBufferHeightKey as String: NSNumber(value: Float(outputSize.height))
+        ]
+        let pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: videoWriterInput, sourcePixelBufferAttributes: sourcePixelBufferAttributesDictionary)
+
+        if videoWriter.canAdd(videoWriterInput) {
+            videoWriter.add(videoWriterInput)
+        }
+
+        if videoWriter.startWriting() {
+            videoWriter.startSession(atSourceTime: CMTime.zero)
+            assert(pixelBufferAdaptor.pixelBufferPool != nil)
+
+                //            let media_queue = DispatchQueue(__label: "mediaInputQueue", attr: nil)
+
+                //            videoWriterInput.requestMediaDataWhenReady(on: media_queue, using: { () -> Void in
+            let fps: Int32 = 2
+            let frameDuration = CMTimeMake(value: 1, timescale: fps)
+
+            var frameCount: Int64 = 0
+            var appendSucceeded = true
+
+            while (!images.isEmpty) {
+                if (videoWriterInput.isReadyForMoreMediaData) {
+                    let nextPhoto = images.remove(at: 0)
+                    let lastFrameTime = CMTimeMake(value: frameCount, timescale: fps)
+                    let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
+
+                    var pixelBuffer: CVPixelBuffer? = nil
+                    let status: CVReturn = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pixelBufferAdaptor.pixelBufferPool!, &pixelBuffer)
+
+                    if let pixelBuffer = pixelBuffer, status == 0 {
+                        let managedPixelBuffer = pixelBuffer
+
+                        CVPixelBufferLockBaseAddress(managedPixelBuffer, [])
+
+                        let data = CVPixelBufferGetBaseAddress(managedPixelBuffer)
+                        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+                        let context = CGContext(data: data, width: Int(outputSize.width), height: Int(outputSize.height), bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(managedPixelBuffer), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
+
+                        context?.clear(CGRect(x: 0, y: 0, width: outputSize.width, height: outputSize.height))
+
+                        let horizontalRatio = CGFloat(outputSize.width) / nextPhoto.extent.size.width
+                        let verticalRatio = CGFloat(outputSize.height) / nextPhoto.extent.size.height
+
+                        let aspectRatio = min(horizontalRatio, verticalRatio) // ScaleAspectFit
+
+                        let newSize = CGSize(width: nextPhoto.extent.size.width * aspectRatio, height: nextPhoto.extent.size.height * aspectRatio)
+
+                        let x = newSize.width < outputSize.width ? (outputSize.width - newSize.width) / 2 : 0
+                        let y = newSize.height < outputSize.height ? (outputSize.height - newSize.height) / 2 : 0
+
+                            //                            context?.draw(nextPhoto.cgImage!, in: CGRect(x: x, y: y, width: newSize.width, height: newSize.height))
+                        inContext.render(nextPhoto, to: managedPixelBuffer)
+
+                        CVPixelBufferUnlockBaseAddress(managedPixelBuffer, [])
+
+                        appendSucceeded = pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: presentationTime)
+                    } else {
+                        print("Failed to allocate pixel buffer")
+                        appendSucceeded = false
+                    }
+                }
+                if !appendSucceeded {
+                    break
+                }
+                frameCount += 1
             }
+            videoWriterInput.markAsFinished()
+
+            videoWriter.finishWriting { () -> Void in
+                print("FINISHED!!!!!")
+
+                PHPhotoLibrary.shared().performChanges({
+                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: videoOutputURL)
+                }) { saved, error in
+
+                    if let error = error {
+                        print("Error saving video to librayr: \(error.localizedDescription)")
+                    }
+                    if saved {
+                        print("Video save to library")
+
+                    }
+                }
+            }
+        }
 
     }
 
@@ -195,48 +296,6 @@ class PGLCaptureOutput {
 //
 //    }
 
-//    func createPixelBufferPool() -> CVPixelBufferPool? {
-//            // Step 1: Define pixel buffer attributes
-//            let pixelBufferAttributes: [String: Any] = [
-//                kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
-//                kCVPixelBufferWidthKey as String: 1920,
-//                kCVPixelBufferHeightKey as String: 1080,
-//                kCVPixelBufferIOSurfacePropertiesKey as String: [:] // Required for Metal compatibility
-//            ]
-//
-//            // Step 2: Create the pixel buffer pool
-//            var pixelBufferPool: CVPixelBufferPool?
-//            let poolAttributes: [String: Any] = [
-//                kCVPixelBufferPoolMinimumBufferCountKey as String: 5 // Minimum number of buffers
-//            ]
-//            let status = CVPixelBufferPoolCreate(
-//                kCFAllocatorDefault,
-//                poolAttributes as CFDictionary,
-//                pixelBufferAttributes as CFDictionary,
-//                &pixelBufferPool
-//            )
-//
-//            guard status == kCVReturnSuccess, let pool = pixelBufferPool else {
-//                fatalError("Failed to create pixel buffer pool: \(status)")
-//            }
-//
-//            // Step 3: Create a pixel buffer from the pool
-//            var pixelBuffer: CVPixelBuffer?
-//            let bufferStatus = CVPixelBufferPoolCreatePixelBuffer(
-//                kCFAllocatorDefault,
-//                pool,
-//                &pixelBuffer
-//            )
-//
-//            if bufferStatus == kCVReturnSuccess, let buffer = pixelBuffer {
-//                // Use the pixel buffer (e.g., render into it or process it)
-//                print("Pixel buffer created successfully")
-//            } else {
-//                print("Failed to create pixel buffer: \(bufferStatus)")
-//            }
-//            return pixelBufferPool
-//
-//    }
 
 
 
