@@ -14,7 +14,7 @@ import AVFoundation
 @MainActor var TargetSize = CGSize(width: 1040, height: 768)
 @MainActor var FullScreenTargetTransform = CGAffineTransform.identity
 @MainActor var DoNotDraw = false
-@MainActor var myCaptureSession: PGLCaptureOutput?
+
 
 
 
@@ -73,16 +73,21 @@ class Renderer: NSObject, MTKViewDelegate {
     var offScreenRender: PGLOffScreenRender = PGLOffScreenRender()
         //    var numVerticesInt: Int!
     var outputZoomPanFilter: PGLScaleDownFrame?
+    var myCaptureSession: PGLCaptureOutput?
+    var DoCapture = false
+        // set to true to capture the image{
+//        didSet{
+//            if DoCapture {
+//                if myCaptureSession == nil {
+//                    myCaptureSession = PGLCaptureOutput(context: ciMetalContext)
+//                }
+//            } else {
+//                myCaptureSession = nil
+//            }
+//        }
+//    }
 
-    var DoCapture = false {
-        didSet{
-            if DoCapture {
-                myCaptureSession = PGLCaptureOutput(context: ciMetalContext)
-            } else {
-                myCaptureSession = nil
-            }
-        }
-    }
+
 
     override init() {
             /// RenderDestinationMetalView
@@ -375,7 +380,8 @@ class Renderer: NSObject, MTKViewDelegate {
                 commandBuffer.commit()
                 if DoCapture {
                     if myCaptureSession == nil {
-                        myCaptureSession = PGLCaptureOutput(context: ciMetalContext)
+                        myCaptureSession = PGLCaptureOutput(context: ciMetalContext, size: TargetSize)
+                            // CGSize(width: 1936.0, height: 1520.0 )
 
                     }
                         // add to the output queue to save

@@ -76,6 +76,7 @@
 		A38735A72CDBD98F000EE038 /* PGLEffexButtonsHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */; };
 		A38735AB2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */; };
 		A38D76AB2DBAF42B00318585 /* Swift TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */; };
+		A38E6FF52DD0EBD300E050DC /* PGLFilterIndent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38E6FF42DD0EBD300E050DC /* PGLFilterIndent.swift */; };
 		A38F9D76250442B800B58F6B /* CVPixelBufferExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */; };
 		A392D5EE26C3EBDA00688952 /* PGLRandomFilterMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A392D5ED26C3EBDA00688952 /* PGLRandomFilterMaker.swift */; };
 		A39466802832DFDD00A67319 /* PGLStackImageContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A394667F2832DFDD00A67319 /* PGLStackImageContainerController.swift */; };
@@ -279,6 +280,7 @@
 		A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PGLEffexButtonsHeader.xib; sourceTree = "<group>"; };
 		A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLEffexButtonsHeader.swift; sourceTree = "<group>"; };
 		A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Swift TestPlan.xctestplan"; sourceTree = "<group>"; };
+		A38E6FF42DD0EBD300E050DC /* PGLFilterIndent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterIndent.swift; sourceTree = "<group>"; };
 		A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVPixelBufferExtension.swift; sourceTree = "<group>"; };
 		A392D5ED26C3EBDA00688952 /* PGLRandomFilterMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLRandomFilterMaker.swift; sourceTree = "<group>"; };
 		A394667F2832DFDD00A67319 /* PGLStackImageContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackImageContainerController.swift; sourceTree = "<group>"; };
@@ -487,6 +489,7 @@
 				A3BF50A024D32A3400CD5114 /* PGLFilterStack.swift */,
 				A3E17A1A29F5DBB2006A39A6 /* PGLFilterStackDemo.swift */,
 				A3BF508624D32A3400CD5114 /* PGLAppStack.swift */,
+				A38E6FF42DD0EBD300E050DC /* PGLFilterIndent.swift */,
 				A35311002C33571300FB29EA /* PGLStackSection.swift */,
 			);
 			path = Stack;
@@ -981,6 +984,7 @@
 				A353130F28E31BD5001F2C87 /* PGLCISequenced.swift in Sources */,
 				A3249AB025BC728D00F7FAC2 /* PGLDemo.swift in Sources */,
 				A3C278972BAF071200BE40C1 /* PGLTriangleGradientFilter.swift in Sources */,
+				A38E6FF52DD0EBD300E050DC /* PGLFilterIndent.swift in Sources */,
 				A3712BFE2908628400993C5E /* CDStoredFilter+CoreDataProperties.swift in Sources */,
 				A392D5EE26C3EBDA00688952 /* PGLRandomFilterMaker.swift in Sources */,
 				A3EF017E2DCA74CB00C4BBDF /* PGLCaptureOutput.swift in Sources */,

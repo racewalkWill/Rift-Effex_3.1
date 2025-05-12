@@ -833,17 +833,21 @@ extension PGLAppStack {
 
     func saveToPhotoLibrary(metalRender: Renderer) {
         let targetStack =  self.viewerStackOrPushedFirstStack()!
-        DoNotDraw = true
-        defer {
-            DoNotDraw = false } // executes at the end of this function
-        switch metalRender.currentPhotoFileFormat {
-            case .JPEG:
-                self.saveJPEGToPhotosLibrary(stack: targetStack, metalRender: metalRender)
-            case .HEIF:
-                self.saveToHEIFPhotosLibrary(stack: targetStack, metalRender: metalRender)
-            default:
-                return // not supported format??
-        }
+        metalRender.DoCapture = true
+        // synchron call -
+
+        // TESTING turn of the normal save to photos library
+//        DoNotDraw = true
+//        defer {
+//            DoNotDraw = false } // executes at the end of this function
+//        switch metalRender.currentPhotoFileFormat {
+//            case .JPEG:
+//                self.saveJPEGToPhotosLibrary(stack: targetStack, metalRender: metalRender)
+//            case .HEIF:
+//                self.saveToHEIFPhotosLibrary(stack: targetStack, metalRender: metalRender)
+//            default:
+//                return // not supported format??
+//        }
     }
 
     fileprivate func fetchExistingAlbum(_ stack: PGLFilterStack, _ assetCollection: inout PHAssetCollection?) {
