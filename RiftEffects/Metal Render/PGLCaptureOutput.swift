@@ -85,7 +85,6 @@ class PGLCaptureOutput {
     func addFrame(_ frame: CIImage) -> Bool {
 
         if frameCount < maxFrames {
-//            addVideoFrame(frame)
             framesToSave.append(frame)
             NSLog("Saving still image")
         } else {
@@ -93,7 +92,8 @@ class PGLCaptureOutput {
           //  finishVideo()
             NSLog("MaxFrames captured ")
 
-            saveVideoToLibrary(outputSize: CGSize(width: 1936.0, height: 1520.0 ), inContext: metalContext, framesToSave: framesToSave)
+            saveVideoToLibrary(outputSize: CGSize(width: 1936.0, height: 1520.0 ),
+                               inContext: metalContext, framesToSave: framesToSave)
             framesToSave = [CIImage]() // clear the frame capture
             NSLog("Saving video to photo library")
             }
@@ -187,6 +187,7 @@ class PGLCaptureOutput {
             fatalError("Negative : Can't apply the Output settings...")
         }
 
+
         let videoWriterInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: outputSettings)
         let sourcePixelBufferAttributesDictionary = [
             kCVPixelBufferPixelFormatTypeKey as String : NSNumber(value: kCVPixelFormatType_32ARGB),
@@ -198,70 +199,67 @@ class PGLCaptureOutput {
         if videoWriter.canAdd(videoWriterInput) {
             videoWriter.add(videoWriterInput)
         }
+        videoWriterInput.expectsMediaDataInRealTime = false
+        let fps: Int32 = 2
+        let frameDuration = CMTimeMake(value: 1, timescale: fps)
+        NSLog("saveVideo frameDuration = \(frameDuration)" )
+
+        var frameCount: Int64 = 0
+        var appendSucceeded = false
 
         if videoWriter.startWriting() {
             videoWriter.startSession(atSourceTime: CMTime.zero)
             assert(pixelBufferAdaptor.pixelBufferPool != nil)
 
-                //            let media_queue = DispatchQueue(__label: "mediaInputQueue", attr: nil)
-
-                //            videoWriterInput.requestMediaDataWhenReady(on: media_queue, using: { () -> Void in
-            let fps: Int32 = 2
-            let frameDuration = CMTimeMake(value: 1, timescale: fps)
-
-            var frameCount: Int64 = 0
-            var appendSucceeded = true
-
-            while (!images.isEmpty) {
-                if (videoWriterInput.isReadyForMoreMediaData) {
-                    let nextPhoto = images.remove(at: 0)
-                    let lastFrameTime = CMTimeMake(value: frameCount, timescale: fps)
-                    let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
-
-                    var pixelBuffer: CVPixelBuffer? = nil
-                    let status: CVReturn = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pixelBufferAdaptor.pixelBufferPool!, &pixelBuffer)
-
-                    if let pixelBuffer = pixelBuffer, status == 0 {
-                        let managedPixelBuffer = pixelBuffer
-
-                        CVPixelBufferLockBaseAddress(managedPixelBuffer, [])
-
-                        let data = CVPixelBufferGetBaseAddress(managedPixelBuffer)
-                        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-                        let context = CGContext(data: data, width: Int(outputSize.width), height: Int(outputSize.height), bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(managedPixelBuffer), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
-
-                        context?.clear(CGRect(x: 0, y: 0, width: outputSize.width, height: outputSize.height))
-
-                        let horizontalRatio = CGFloat(outputSize.width) / nextPhoto.extent.size.width
-                        let verticalRatio = CGFloat(outputSize.height) / nextPhoto.extent.size.height
-
-                        let aspectRatio = min(horizontalRatio, verticalRatio) // ScaleAspectFit
-
-                        let newSize = CGSize(width: nextPhoto.extent.size.width * aspectRatio, height: nextPhoto.extent.size.height * aspectRatio)
-
-                        let x = newSize.width < outputSize.width ? (outputSize.width - newSize.width) / 2 : 0
-                        let y = newSize.height < outputSize.height ? (outputSize.height - newSize.height) / 2 : 0
-
-                            //                            context?.draw(nextPhoto.cgImage!, in: CGRect(x: x, y: y, width: newSize.width, height: newSize.height))
-                        inContext.render(nextPhoto, to: managedPixelBuffer)
-
-                        CVPixelBufferUnlockBaseAddress(managedPixelBuffer, [])
-
-                        appendSucceeded = pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: presentationTime)
-                    } else {
-                        print("Failed to allocate pixel buffer")
-                        appendSucceeded = false
+//            let media_queue = DispatchQueue(__label: "mediaInputQueue", attr: nil)
+//
+//            videoWriterInput.requestMediaDataWhenReady(on: media_queue, using: { () -> Void in
+                
+                while (!images.isEmpty) {
+                    if (videoWriterInput.isReadyForMoreMediaData) {
+                        appendSucceeded = false // gets set to true on success of this loop
+                        let nextPhoto = images.remove(at: 0)
+                        let currentFrameCount = frameCount
+                        let lastFrameTime = CMTimeMake(value: currentFrameCount, timescale: fps)
+                        let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
+                        NSLog("saveVideo imagesCount = \(images.count) ")
+                        NSLog("saveVideo lastFrameTime = \(lastFrameTime) ")
+                        NSLog("saveVideo presentationTime = \(presentationTime)")
+                        
+                        var pixelBuffer: CVPixelBuffer? = nil
+                        let status: CVReturn = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pixelBufferAdaptor.pixelBufferPool!, &pixelBuffer)
+                        
+                        if let pixelBuffer = pixelBuffer, status == 0 {
+                            let managedPixelBuffer = pixelBuffer
+                            
+                            CVPixelBufferLockBaseAddress(managedPixelBuffer, [])
+                            
+                            inContext.render(nextPhoto, to: managedPixelBuffer)
+                            
+                            CVPixelBufferUnlockBaseAddress(managedPixelBuffer, [])
+                            
+                            appendSucceeded = pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: presentationTime)
+                            NSLog("SaveVideo appendSucceeded = \(appendSucceeded), preseantationTime = \(presentationTime)")
+                        } else {
+                            NSLog("Failed to allocate pixel buffer")
+                            appendSucceeded = false
+                        }
                     }
+                    if appendSucceeded {
+                        frameCount += 1
+                        NSLog (" appendSucceeded - incrememt frameCout to \(frameCount)")
+                    } else {
+                        break // try again  MANY repeats on this break - a timing problem
+                    }
+                    
+                    NSLog("SaveVideo repeat loop frameCount = \(frameCount)")
                 }
-                if !appendSucceeded {
-                    break
-                }
-                frameCount += 1
             }
             videoWriterInput.markAsFinished()
 
             videoWriter.finishWriting { () -> Void in
                 print("FINISHED!!!!!")
+
 
                 PHPhotoLibrary.shared().performChanges({
                     PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: videoOutputURL)
