@@ -15,7 +15,7 @@ class PGLCaptureOutput {
 
     var currentTime = CMTime.zero
     var frameCount: Int = 0
-    var maxFrames = 20
+    var maxFrames = 120  // 2 secs at 60 fps
     let videoPath = FileManager.default.temporaryDirectory.appendingPathComponent("video.mov")
     var writerInput: AVAssetWriterInput!
     var writer: AVAssetWriter!
@@ -38,26 +38,26 @@ class PGLCaptureOutput {
 
         writer = try? AVAssetWriter(outputURL: videoPath, fileType: .mov)
         if writer == nil {
-             fatalError("AVAssetWriter error")
+            fatalError("AVAssetWriter error")
         }
 
         let settings = [
             AVVideoCodecKey: AVVideoCodecType.h264,
             AVVideoWidthKey: NSNumber(value: Float(size.width)),
             AVVideoHeightKey: NSNumber(value: Float (size.height ))
-            ] as [String : Any]
+        ] as [String : Any]
         guard writer.canApply(outputSettings: settings, forMediaType: .video) else
         {
-           fatalError("Cannot apply output settings to AVAssetWriter")
-             }
+            fatalError("Cannot apply output settings to AVAssetWriter")
+        }
         writerInput = AVAssetWriterInput(mediaType: .video, outputSettings: settings)
 
         let sourcePixelBufferAttributes =
-            [
-                (kCVPixelBufferPixelFormatTypeKey as String) : kCVPixelFormatType_32RGBA,
-                (kCVPixelBufferWidthKey as String) : NSNumber(value: Float(size.width)),
-                (kCVPixelBufferHeightKey as String) :  NSNumber(value: Float(size.height)),
-            ]   as [String : Any]
+        [
+            (kCVPixelBufferPixelFormatTypeKey as String) : kCVPixelFormatType_32RGBA,
+            (kCVPixelBufferWidthKey as String) : NSNumber(value: Float(size.width)),
+            (kCVPixelBufferHeightKey as String) :  NSNumber(value: Float(size.height)),
+        ]   as [String : Any]
 
         pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: sourcePixelBufferAttributes)
         if writer.canAdd(writerInput) {
@@ -74,7 +74,7 @@ class PGLCaptureOutput {
             assert(writer.status == .writing)
             assert(pixelBufferAdaptor.pixelBufferPool != nil)
         } else {
-//                NSLog ("AVAssetWriter failed status : \(writer.status ?? "Unknown error")")
+                //                NSLog ("AVAssetWriter failed status : \(writer.status ?? "Unknown error")")
             NSLog ("AVAssetWriter failed to start writing: \(writer.error?.localizedDescription ?? "Unknown error")")
 
         }
@@ -89,15 +89,15 @@ class PGLCaptureOutput {
             NSLog("Saving still image")
         } else {
                 // save the video to photoLibrary
-          //  finishVideo()
+                //  finishVideo()
             NSLog("MaxFrames captured ")
 
             saveVideoToLibrary(outputSize: CGSize(width: 1936.0, height: 1520.0 ),
                                inContext: metalContext, framesToSave: framesToSave)
             framesToSave = [CIImage]() // clear the frame capture
             NSLog("Saving video to photo library")
-            }
-        // add the video frame
+        }
+            // add the video frame
         let shouldContinue = addFrameCount()
         return shouldContinue
     }
@@ -131,25 +131,25 @@ class PGLCaptureOutput {
                     let creationRequest = PHAssetCreationRequest.forAsset()
                     let options = PHAssetResourceCreationOptions()
 
-        //            creationRequest.addResource(with: .photo, fileURL: photoURL, options: options)
+                        //            creationRequest.addResource(with: .photo, fileURL: photoURL, options: options)
                     creationRequest.addResource(with: .fullSizeVideo, fileURL: localVideoPath, options: options)
                 }
-//                { success, error in
-//                    if success {
-//                        print("Live Photo saved successfully")
-//                    } else if let error = error {
-//                        print("Error saving Live Photo: \(error.localizedDescription)")
-//                    }
-//
-//                }
+                    //                { success, error in
+                    //                    if success {
+                    //                        print("Live Photo saved successfully")
+                    //                    } else if let error = error {
+                    //                        print("Error saving Live Photo: \(error.localizedDescription)")
+                    //                    }
+                    //
+                    //                }
 
-//                saveToPhotos(videoURL: localVideoPath, completion: { success, error in
-//                    if success {
-//                        print("Live Photo saved successfully")
-//                    } else if let error = error {
-//                        print("Error saving Live Photo: \(error.localizedDescription)")
-//                    }
-//                })
+                    //                saveToPhotos(videoURL: localVideoPath, completion: { success, error in
+                    //                    if success {
+                    //                        print("Live Photo saved successfully")
+                    //                    } else if let error = error {
+                    //                        print("Error saving Live Photo: \(error.localizedDescription)")
+                    //                    }
+                    //                })
 
             }
 
@@ -160,14 +160,14 @@ class PGLCaptureOutput {
 
 
     func saveVideoToLibrary(outputSize: CGSize, inContext: CIContext, framesToSave: [CIImage])  {
-        var images = framesToSave
+        let images = framesToSave
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
         guard let documentDirectory = urls.first else {
             fatalError("documentDir Error")
         }
 
-        let videoOutputURL = documentDirectory.appendingPathComponent("OutputVideo.mp4")
+        let videoOutputURL = documentDirectory.appendingPathComponent("OutputVideo.mov")
 
         if FileManager.default.fileExists(atPath: videoOutputURL.path) {
             do {
@@ -177,7 +177,7 @@ class PGLCaptureOutput {
             }
         }
 
-        guard let videoWriter = try? AVAssetWriter(outputURL: videoOutputURL, fileType: AVFileType.mp4) else {
+        guard let videoWriter = try? AVAssetWriter(outputURL: videoOutputURL, fileType: AVFileType.mov) else {
             fatalError("AVAssetWriter error")
         }
 
@@ -186,6 +186,7 @@ class PGLCaptureOutput {
         guard videoWriter.canApply(outputSettings: outputSettings, forMediaType: AVMediaType.video) else {
             fatalError("Negative : Can't apply the Output settings...")
         }
+
 
 
         let videoWriterInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: outputSettings)
@@ -200,10 +201,11 @@ class PGLCaptureOutput {
             videoWriter.add(videoWriterInput)
         }
         videoWriterInput.expectsMediaDataInRealTime = false
-        let fps: Int32 = 2
-        let frameDuration = CMTimeMake(value: 1, timescale: fps)
+        let fps: Int32 = 60  // fps frames per second
+        /* the timescale specifies the fraction of a second each unit in the numerator occupies. Thus if the timescale is 4, each unit represents a quarter of a second; if the timescale is 10, each unit represents a tenth of a second, and so on. */
+        let frameDuration = CMTimeMake(value: 100, timescale: fps) // 1/60th frame duration or 60 frames/second
         NSLog("saveVideo frameDuration = \(frameDuration)" )
-
+        videoWriter.overallDurationHint = CMTimeMultiply(frameDuration, multiplier: Int32(framesToSave.count))
         var frameCount: Int64 = 0
         var appendSucceeded = false
 
@@ -211,72 +213,64 @@ class PGLCaptureOutput {
             videoWriter.startSession(atSourceTime: CMTime.zero)
             assert(pixelBufferAdaptor.pixelBufferPool != nil)
 
-//            let media_queue = DispatchQueue(__label: "mediaInputQueue", attr: nil)
-//
-//            videoWriterInput.requestMediaDataWhenReady(on: media_queue, using: { () -> Void in
-                
-                while (!images.isEmpty) {
-                    if (videoWriterInput.isReadyForMoreMediaData) {
-                        appendSucceeded = false // gets set to true on success of this loop
-                        let nextPhoto = images.remove(at: 0)
-                        let currentFrameCount = frameCount
-                        let lastFrameTime = CMTimeMake(value: currentFrameCount, timescale: fps)
-                        let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
-                        NSLog("saveVideo imagesCount = \(images.count) ")
-                        NSLog("saveVideo lastFrameTime = \(lastFrameTime) ")
-                        NSLog("saveVideo presentationTime = \(presentationTime)")
-                        
-                        var pixelBuffer: CVPixelBuffer? = nil
-                        let status: CVReturn = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pixelBufferAdaptor.pixelBufferPool!, &pixelBuffer)
-                        
-                        if let pixelBuffer = pixelBuffer, status == 0 {
-                            let managedPixelBuffer = pixelBuffer
-                            
-                            CVPixelBufferLockBaseAddress(managedPixelBuffer, [])
-                            
-                            inContext.render(nextPhoto, to: managedPixelBuffer)
-                            
-                            CVPixelBufferUnlockBaseAddress(managedPixelBuffer, [])
-                            
-                            appendSucceeded = pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: presentationTime)
-                            NSLog("SaveVideo appendSucceeded = \(appendSucceeded), preseantationTime = \(presentationTime)")
-                        } else {
-                            NSLog("Failed to allocate pixel buffer")
-                            appendSucceeded = false
+            while (frameCount < (images.count - 1)) {
+                NSLog (#function, " frameCount loop  \(frameCount)")
+                if (videoWriterInput.isReadyForMoreMediaData) {
+                    appendSucceeded = false // gets set to true on success of this loop
+                    let nextPhoto = images[Int(frameCount)]
+
+                    let lastFrameTime = CMTimeMake(value: frameCount, timescale: fps)
+                    let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
+
+                    NSLog("saveVideo lastFrameTime = \(lastFrameTime) ")
+                    NSLog("saveVideo presentationTime = \(presentationTime)")
+
+                    var pixelBuffer: CVPixelBuffer? = nil
+                    let status: CVReturn = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pixelBufferAdaptor.pixelBufferPool!, &pixelBuffer)
+
+                    if let pixelBuffer = pixelBuffer, status == 0 {
+                        let managedPixelBuffer = pixelBuffer
+
+                        CVPixelBufferLockBaseAddress(managedPixelBuffer, [])
+
+                        inContext.render(nextPhoto, to: managedPixelBuffer)
+
+                        CVPixelBufferUnlockBaseAddress(managedPixelBuffer, [])
+
+                        appendSucceeded = pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: presentationTime)
+                        if appendSucceeded {
+                            frameCount += 1
+                            NSLog (" appendSucceeded - incrememt frameCount to \(frameCount)")
+                            NSLog (" appendSucceeded presentationTime = \(presentationTime)")
                         }
+                        // what if appendSucceeded is never true for some append step?? how to break
                     }
-                    if appendSucceeded {
-                        frameCount += 1
-                        NSLog (" appendSucceeded - incrememt frameCout to \(frameCount)")
-                    } else {
-                        break // try again  MANY repeats on this break - a timing problem
-                    }
-                    
-                    NSLog("SaveVideo repeat loop frameCount = \(frameCount)")
-                }
+                } // else delay??
+                
             }
             videoWriterInput.markAsFinished()
 
             videoWriter.finishWriting { () -> Void in
-                print("FINISHED!!!!!")
-
+                NSLog(#function , "finishWriting ")
 
                 PHPhotoLibrary.shared().performChanges({
                     PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: videoOutputURL)
                 }) { saved, error in
 
                     if let error = error {
-                        print("Error saving video to librayr: \(error.localizedDescription)")
+                        NSLog (#function , "Error saving video to librayr: \(error.localizedDescription)")
                     }
                     if saved {
-                        print("Video save to library")
+                        NSLog (#function , "Video save to library")
 
                     }
                 }
             }
         }
-
     }
+
+
+
 
 //     Combine the still image and video into a LivePhoto
     func createLivePhoto( videoURL: URL, completion: @escaping (PHLivePhoto?) -> Void) {

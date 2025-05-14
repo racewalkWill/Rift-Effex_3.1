@@ -97,7 +97,7 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
         super.viewWillDisappear(animated)
     }
     override func viewWillAppear(_ animated: Bool) {
-        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         super.viewWillAppear(animated)
 
         setUpMetalRender()

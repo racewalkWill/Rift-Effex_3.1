@@ -815,16 +815,6 @@ extension PGLAppStack {
 
     func saveStack(metalRender: Renderer) {
 
-//        NSLog("PGLAppStack #saveStack start")
-//        let serialQueue = DispatchQueue(label: "queue", qos: .utility, attributes: [], autoreleaseFrequency: .workItem, target: nil)
-//        serialQueue.async {
-
-//            NSLog("PGLAppStack #saveStack serialQueue execution start")
-
-        // there is a guard for unsaved changes in
-        // the moContext save
-        // okay if writeCDStacks is called from multiple imageControllers
-
         DoNotDraw = true
         defer {
             DoNotDraw = false }
@@ -833,21 +823,27 @@ extension PGLAppStack {
 
     func saveToPhotoLibrary(metalRender: Renderer) {
         let targetStack =  self.viewerStackOrPushedFirstStack()!
-        metalRender.DoCapture = true
-        // synchron call -
+        if appRenderer.isRunningFrameUpdates() {
+            metalRender.DoCapture = true
+            DoNotDraw = false
+            // triggers save of 2 sec video burst
+            // frame by frame for 20 frames
+        }
 
-        // TESTING turn of the normal save to photos library
-//        DoNotDraw = true
-//        defer {
-//            DoNotDraw = false } // executes at the end of this function
-//        switch metalRender.currentPhotoFileFormat {
-//            case .JPEG:
-//                self.saveJPEGToPhotosLibrary(stack: targetStack, metalRender: metalRender)
-//            case .HEIF:
-//                self.saveToHEIFPhotosLibrary(stack: targetStack, metalRender: metalRender)
-//            default:
-//                return // not supported format??
-//        }
+        else {
+                //  normal save single frame to photos library
+            DoNotDraw = true
+            defer {
+                DoNotDraw = false } // executes at the end of this function
+            switch metalRender.currentPhotoFileFormat {
+                case .JPEG:
+                    self.saveJPEGToPhotosLibrary(stack: targetStack, metalRender: metalRender)
+                case .HEIF:
+                    self.saveToHEIFPhotosLibrary(stack: targetStack, metalRender: metalRender)
+                default:
+                    return // not supported format??
+            }
+        }
     }
 
     fileprivate func fetchExistingAlbum(_ stack: PGLFilterStack, _ assetCollection: inout PHAssetCollection?) {

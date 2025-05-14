@@ -212,7 +212,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         // or one parm with 2 or more images
         // input from stack is an image input to the parm
         // post transitionFilterAdd if true
-        Logger(subsystem: LogSubsystem, category: LogCategory).info ("\( String(describing: self) + "-" + #function) ")
+//        Logger(subsystem: LogSubsystem, category: LogCategory).info ("\( String(describing: self) + "-" + #function) ")
         if !isTransitionCategoryFilter() {
             return false
         }

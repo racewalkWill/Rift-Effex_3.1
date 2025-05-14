@@ -244,8 +244,6 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func saveStack() {
-        saveToPhotoLibrary()
-
         if isLimitedPhotoLibAccess() {
             self.appStack.viewerStackOrPushedFirstStack()?.exportAlbumName = nil
         }
@@ -256,6 +254,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
 
         self.appStack.saveStack(metalRender: self.metalController!.metalRender)
+        saveToPhotoLibrary()
 
     }
 

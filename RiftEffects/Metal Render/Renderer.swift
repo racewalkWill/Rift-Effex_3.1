@@ -109,7 +109,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
         needsRedraw = PGLRedraw()
         super.init()
-        NSLog("\((self .debugDescription) + #function)" )
+//        NSLog("\((self .debugDescription) + #function)" )
 
     }
     func initZoomPanFilter() -> PGLScaleDownFrame {
@@ -117,6 +117,7 @@ class Renderer: NSObject, MTKViewDelegate {
         let zoomFilter = zoomDesc.pglSourceFilter() as! PGLScaleDownFrame
         return zoomFilter
     }
+    // MARK: Save support
     func captureImage() throws -> UIImage? {
             // capture the current image in the context
             // provide a UIImage for save to photoLibrary
@@ -140,6 +141,45 @@ class Renderer: NSObject, MTKViewDelegate {
             throw savePhotoError.jpegError}
 
     }
+
+    func captureHEIFImage() throws -> Data? {
+            // capture the current image in the context
+            // provide a UIImage for save to photoLibrary
+            // uses existing ciContext in a background process..
+        let cropSize = TargetSize
+        if let ciOutput = filterStack()?.stackOutputImage(false)
+
+        {
+            let targetRect = CGRect(origin: CGPoint.zero, size: cropSize)
+
+            let croppedOutput = ciOutput.cropped(to: targetRect)
+            filterStack()?.setThumbnail(image: ciOutput)
+            let rgbSpace = CGColorSpaceCreateDeviceRGB()
+            let options = [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 1.0 as CGFloat]
+            guard let heifData =  ciMetalContext.heifRepresentation(of: croppedOutput, format: .RGBA8, colorSpace: rgbSpace, options: options)
+            else {
+                throw savePhotoError.nilReturn
+            }
+
+            Logger(subsystem: LogSubsystem, category: LogCategory).debug("Renderer #captureHEIFImage ")
+
+            return heifData
+
+
+                // kaliedoscope needs down.. portraits need up.. why.. they both look .up in the imageController
+
+        } else {
+            throw savePhotoError.heifError}
+
+    }
+
+    /// true if any of these conditions
+    /// viewWillAppear || parmControllerIsOpen || transitionFilterExists || varyTimerIsRunning || filterChanged || videoExists() || isFullScreen
+    func isRunningFrameUpdates () -> Bool {
+       return self.needsRedraw.redrawNow()
+    }
+
+    // MARK: init
 
     convenience init(globalAppStack: PGLAppStack) {
         self.init()
@@ -181,36 +221,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
     }
 
-    func captureHEIFImage() throws -> Data? {
-            // capture the current image in the context
-            // provide a UIImage for save to photoLibrary
-            // uses existing ciContext in a background process..
-        let cropSize = TargetSize
-        if let ciOutput = filterStack()?.stackOutputImage(false)
 
-        {
-            let targetRect = CGRect(origin: CGPoint.zero, size: cropSize)
-
-            let croppedOutput = ciOutput.cropped(to: targetRect)
-            filterStack()?.setThumbnail(image: ciOutput)
-            let rgbSpace = CGColorSpaceCreateDeviceRGB()
-            let options = [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 1.0 as CGFloat]
-            guard let heifData =  ciMetalContext.heifRepresentation(of: croppedOutput, format: .RGBA8, colorSpace: rgbSpace, options: options)
-            else {
-                throw savePhotoError.nilReturn
-            }
-
-            Logger(subsystem: LogSubsystem, category: LogCategory).debug("Renderer #captureHEIFImage ")
-
-            return heifData
-
-
-                // kaliedoscope needs down.. portraits need up.. why.. they both look .up in the imageController
-
-        } else {
-            throw savePhotoError.heifError}
-
-    }
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
             //        NSLog("Renderer mtkView drawableSize = \(view.drawableSize) drawableSizeWillChange = \(size)")
@@ -333,6 +344,7 @@ class Renderer: NSObject, MTKViewDelegate {
                 guard let currentStack = filterStack()
                 else { return }
                 var ciOutputImage = currentStack.stackOutputImage((appStack.showFilterImage))
+//                NSLog(#function, "stackOutputImage = \(ciOutputImage)")
                 if view.isHidden {
                         // check if there is now an image to show
                     if ciOutputImage == CIImage.empty() {
@@ -384,7 +396,7 @@ class Renderer: NSObject, MTKViewDelegate {
                     let image = captureTool.captureStillImage(metalContext: ciMetalContext)
 
 
-                    NSLog(#function + ": capture image \(String(describing: image))")
+//                    NSLog(#function + ": capture image \(String(describing: image))")
                     if let image = image {
                         // copy from self so it can be passed
                         if myCaptureSession == nil {
