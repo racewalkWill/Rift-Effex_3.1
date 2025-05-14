@@ -203,7 +203,11 @@ class PGLCaptureOutput {
         videoWriterInput.expectsMediaDataInRealTime = false
         let fps: Int32 = 60  // fps frames per second
         /* the timescale specifies the fraction of a second each unit in the numerator occupies. Thus if the timescale is 4, each unit represents a quarter of a second; if the timescale is 10, each unit represents a tenth of a second, and so on. */
-        let frameDuration = CMTimeMake(value: 100, timescale: fps) // 1/60th frame duration or 60 frames/second
+        let frameDuration = CMTimeMake(value: 2, timescale: fps)
+        // 2/60 = 1/30 sec
+            // now 10/60 = 1/6 sec
+            // was  1/60th frame duration or 60 frames/second
+        // was value: 100
         NSLog("saveVideo frameDuration = \(frameDuration)" )
         videoWriter.overallDurationHint = CMTimeMultiply(frameDuration, multiplier: Int32(framesToSave.count))
         var frameCount: Int64 = 0

@@ -392,28 +392,20 @@ class Renderer: NSObject, MTKViewDelegate {
                 commandBuffer.commit()
                 if DoCapture {
                         // add to the output queue to save
-                    let captureTool = PGLMTKViewCapture(mtkView: view)
-                    let image = captureTool.captureStillImage(metalContext: ciMetalContext)
 
-
-//                    NSLog(#function + ": capture image \(String(describing: image))")
-                    if let image = image {
-                        // copy from self so it can be passed
                         if myCaptureSession == nil {
                             myCaptureSession = PGLCaptureOutput(context: ciMetalContext, size: TargetSize)
                                 // CGSize(width: 1936.0, height: 1520.0 )
                         }
-                        DoCapture =  myCaptureSession?.addFrame(image) ?? false
+                        DoCapture =  myCaptureSession?.addFrame(ciOutputImage) ?? false
                             // add to the output queue to save
                             // if maxFrames captured then stop
                         if !DoCapture {
                             myCaptureSession = nil
                             NSLog("Renderer myCaptureSession set to nil")
                         }
-                    } else {
-                        DoCapture = false
-                        NSLog("Renderer myCaptureSession image not copied")
-                    }
+
+
                 }
 
             }
