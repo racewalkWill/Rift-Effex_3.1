@@ -86,16 +86,16 @@ class PGLCaptureOutput {
 
         if frameCount < maxFrames {
             framesToSave.append(frame)
-            NSLog("Saving still image")
+//            NSLog("Saving still image")
         } else {
                 // save the video to photoLibrary
                 //  finishVideo()
-            NSLog("MaxFrames captured ")
+//            NSLog("MaxFrames captured ")
 
-            saveVideoToLibrary(outputSize: CGSize(width: 1936.0, height: 1520.0 ),
+            saveVideoToLibrary(outputSize: TargetSize,
                                inContext: metalContext, framesToSave: framesToSave)
             framesToSave = [CIImage]() // clear the frame capture
-            NSLog("Saving video to photo library")
+//            NSLog("Saving video to photo library")
         }
             // add the video frame
         let shouldContinue = addFrameCount()
@@ -210,7 +210,8 @@ class PGLCaptureOutput {
         // was value: 100
         NSLog("saveVideo frameDuration = \(frameDuration)" )
         videoWriter.overallDurationHint = CMTimeMultiply(frameDuration, multiplier: Int32(framesToSave.count))
-        var frameCount: Int64 = 0
+        var frameCount: Int64 = 10
+            // skips the first ten frames that have a crop offset..
         var appendSucceeded = false
 
         if videoWriter.startWriting() {
