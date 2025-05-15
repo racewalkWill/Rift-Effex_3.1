@@ -67,6 +67,9 @@ public final class PGLGuide {
                         PGLGuideStep(controller: "PGLStackController",filter: nil, parmName: nil, label: userArrowSymbol ),
                         PGLGuideStep(controller: "PGLMainFilterController",filter: "Color Adjustment", parmName: nil,
                                               label: userArrowSymbol),
+                        PGLGuideStep(controller: "PGLMainFilterController",filter: "Color Adjustment", parmName: nil,
+                                              label: userArrowSymbol),
+                        // added a duplicate "Color Adjustment" step for the iPhone - was disappearing
                         PGLGuideStep(controller: "PGLMainFilterController",filter: "CIToneCurve", parmName: nil,
                                               label: userArrowSymbol),
                         PGLGuideStep(controller: "PGLSelectParmController",filter: "CIToneCurve", parmName: "inputPoint1",
