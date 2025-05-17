@@ -111,41 +111,53 @@ extension PGLFilterStack {
             storedStack = nil // force creation of a new cdStack
         }
     }
-    func writeCDStack(moContext: NSManagedObjectContext) -> CDFilterStack {
-        enum StackSaveState: String  {
-            case newStack
-            case existingStack
-            case saveAsNewName
-            case reNameUnTitledStack
 
-        }
+    enum StackSaveState: String  {
+        case newStack
+        case existingStack
+        case saveAsNewName
+        case reNameUnTitledStack
+    }
 
-        var stackState: StackSaveState = .newStack // init
+    /// return the StackSaveState for the user stack compared to the saved stack
+    func compareSaveState(storedStack: CDFilterStack?) -> StackSaveState {
+        // both stack name and stack title are optional entries
+        // one or both may be empty or changed
 
         if storedStack == nil {
-            stackState = .newStack
-        } else {
-            // user entered title and saved stack has no title
-            let savedStackName = storedStack?.title ?? ""
-            let savedStackType = storedStack?.type ?? ""
-
-            if (savedStackName.isEmpty || savedStackType.isEmpty) {
-                stackState = .reNameUnTitledStack
-            } else {
-                // user is changing the name - saveAs
-                if ((savedStackName != stackName ) || (savedStackType != stackType)) {
-                        // an existing stack name is changed
-                        // save as a new stack
-                    stackState = .saveAsNewName
-                } else {
-                    stackState = .existingStack
-                }
-            }
+            return  StackSaveState.newStack
         }
 
+        let savedStackName = storedStack?.title ?? ""
+        let savedStackType = storedStack?.type ?? ""
 
-        NSLog("PGLFilterStack #writeCDStack name = \(stackName) type = \(stackType)")
-        NSLog("PGLFilterStack #writeCDStack stackState = \(stackState.rawValue)")
+        if (savedStackName.isEmpty || savedStackType.isEmpty) {
+            // compare each one..
+            if (!stackName.isEmpty) && (savedStackName.isEmpty) {
+                // there is an input to replace the empty value either type or name
+                return  StackSaveState.reNameUnTitledStack }
+            else {
+                if (!stackType.isEmpty) && (savedStackType.isEmpty) {
+                return  StackSaveState.reNameUnTitledStack }
+            }
+
+        }
+        if ((savedStackName != stackName ) || (savedStackType != stackType)) {
+                // an existing stack  is changed
+                // save as a new stack
+            return StackSaveState.saveAsNewName
+        }
+        if ((savedStackName == stackName ) && (savedStackType == stackType)) {
+            return StackSaveState.existingStack
+            }
+
+        // default state
+        return StackSaveState.newStack
+    }
+
+    func writeCDStack(moContext: NSManagedObjectContext) -> CDFilterStack {
+
+        let stackState = compareSaveState(storedStack: storedStack)
 
         if stackState == .saveAsNewName {
                 // an existing stack name is changed

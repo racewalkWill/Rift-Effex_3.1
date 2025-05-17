@@ -17,13 +17,13 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZJt-Ua-UL7" userLabel="saveBtn">
+                    <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZJt-Ua-UL7" userLabel="saveBtn">
                         <rect key="frame" x="111" y="9" width="98" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <state key="normal" title="Button"/>
                         <buttonConfiguration key="configuration" style="filled" title="Save">
                             <color key="baseForegroundColor" systemColor="tableCellBlueTextColor"/>
-                            <color key="baseBackgroundColor" systemColor="tableBackgroundColor"/>
+                            <color key="baseBackgroundColor" systemColor="systemGroupedBackgroundColor"/>
                         </buttonConfiguration>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JKt-Ge-i8F" userLabel="cancelBtn">
@@ -32,7 +32,7 @@
                         <state key="normal" title="Button"/>
                         <buttonConfiguration key="configuration" style="filled" title="Cancel">
                             <color key="baseForegroundColor" systemColor="tableCellBlueTextColor"/>
-                            <color key="baseBackgroundColor" systemColor="tableBackgroundColor"/>
+                            <color key="baseBackgroundColor" systemColor="systemGroupedBackgroundColor"/>
                         </buttonConfiguration>
                     </button>
                 </subviews>
@@ -50,8 +50,8 @@
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
-        <systemColor name="tableBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        <systemColor name="systemGroupedBackgroundColor">
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tableCellBlueTextColor">
             <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

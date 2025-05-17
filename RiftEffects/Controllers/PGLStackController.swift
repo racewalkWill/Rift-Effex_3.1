@@ -673,6 +673,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                     cell.cancelBtn.addTarget(self, action: #selector(cancelStackSave), for: .touchUpInside)
                     cell.saveBtn.addTarget(self, action: #selector(saveStack), for: .touchUpInside)
                     saveStackBtn = cell.saveBtn
+                    saveStackBtn?.setTitle("Save", for: .normal)
                     return cell
                 default :
                         // or let cell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
@@ -1071,12 +1072,26 @@ extension PGLStackController {
         guard var newText = textField.text else {return }
 
         newText = newText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-
-        if newText == thisStack.stackName {
-            if newText == thisStack.stackType {
-                saveStackBtn?.setTitle("Save", for: .normal)
-                    // don't change to the Save As button text
-            }  }
+        var isSave = true
+        switch textField.tag {
+            case StackHeaderCell.title.rawValue :
+                if newText != thisStack.stackName {
+                    isSave = false
+                }
+            case StackHeaderCell.album.rawValue :
+                if newText != thisStack.stackType {
+                    isSave = false
+                }
+            default:
+               isSave = true
+        }
+        if isSave {
+                if saveStackBtn?.title(for: .normal) != "Save As" {
+                        // don't overwrite if on the other unchanged field
+                        // "Save As" gets to win..
+                    saveStackBtn?.setTitle("Save", for: .normal)
+                }
+            }
         else {
             saveStackBtn?.setTitle("Save As", for: .normal)
         }
@@ -1084,30 +1099,17 @@ extension PGLStackController {
         switch textField.tag {
             /// also the case of one field is changed then tab into the other. Save As should still  be button text
             case StackHeaderCell.title.rawValue:
-                if newText == thisStack.stackName {
-                    if saveStackBtn?.title(for: .normal) != "Save As" {
-                            // don't overwrite the text change if on the other unchanged field
-                        saveStackBtn?.setTitle("Save", for: .normal)
-                    }
+                if newText != thisStack.stackName {
+                    thisStack.stackName = newText
+                    postStackNameChange()
+                }
 
-                    return }
-                // else stackName is changed
-                saveStackBtn?.setTitle("Save As", for: .normal)
-                thisStack.stackName = newText
-                postStackNameChange()
-                
             case StackHeaderCell.album.rawValue:
-                if newText == thisStack.stackType {
-                    if saveStackBtn?.title(for: .normal) != "Save As" {
-                        // don't overwrite the text change if on the other unchanged field
-                        saveStackBtn?.setTitle("Save", for: .normal)
+                    if newText != thisStack.stackType {
+                        thisStack.stackType = newText
+                        thisStack.exportAlbumName = thisStack.stackType
+                        postStackNameChange()
                     }
-                    return }
-                // else the album title is changed
-                saveStackBtn?.setTitle("Save As", for: .normal)
-                thisStack.stackType = newText
-                thisStack.exportAlbumName = thisStack.stackType
-                postStackNameChange()
             default:
                 return
         }
