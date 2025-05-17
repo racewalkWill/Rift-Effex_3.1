@@ -830,6 +830,9 @@ extension PGLAppStack {
         DoNotDraw = true
         defer {
             DoNotDraw = false }
+
+        let ciOutput = outputStack.stackOutputImage(false)
+        outputStack.setThumbnail(image: ciOutput)
         self.writeCDStacks()
     }
 
@@ -883,7 +886,8 @@ extension PGLAppStack {
         }
     }
 
-    fileprivate func photoLibPerformHEIFChange(_ stack: PGLFilterStack, _ heifData: Data?, _ assetCollection: PHAssetCollection?) {
+    fileprivate func
+    photoLibPerformHEIFChange(_ stack: PGLFilterStack, _ heifData: Data?, _ assetCollection: PHAssetCollection?) {
         do { try PHPhotoLibrary.shared().performChangesAndWait( {
 
             let creationRequest = PHAssetCreationRequest.forAsset()
