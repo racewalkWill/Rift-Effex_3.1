@@ -1057,10 +1057,20 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
 /// UITextFieldDelegate Header cells text editing
 extension PGLStackController {
+//    func textField(
+//        _ textField: UITextField,
+//        shouldChangeCharactersIn range: NSRange,
+//        replacementString string: String
+//    ) -> Bool {
+//
+//        return true
+//    }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // see the StackSaveState logic in #writeCDStack..
-        saveStackBtn?.setTitle("Save", for: .normal)
+        if saveStackBtn?.title(for: .normal) != "Save As" {
+            saveStackBtn?.setTitle("Save", for: .normal)
+        }
     }
         /// make sure that textField is not editing on first display !
         ///  only enter here after the user selects and edits the text
