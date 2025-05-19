@@ -42,7 +42,7 @@ class PGLRectangleFilter : PGLSourceFilter {
 
         let scaleTransform = CGAffineTransform(scaleX: widthScale, y: heightScale)
         let translate = scaleTransform.translatedBy(x: -ciOutput.extent.minX, y: -ciOutput.extent.minY)
-       Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+//      Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
    //    NSLog("     translate \(translate) from \(stackCropRect)")
         let returnImage =  ciOutput.transformed(by: translate)
         return returnImage
