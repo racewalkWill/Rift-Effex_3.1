@@ -40,8 +40,6 @@ let RendererScale:Float32 = 0.98
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     var window: UIWindow?
     var windowSceneDelegate: PGLWindowSceneDelegate?
 
@@ -59,50 +57,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    /// older parts of the protocol
-    func application(_ application: UIApplication,
-            didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-            // Override point for customization after application launch.
-    //******* START ONLY One time to push schema to cloudKit
+    fileprivate func registerCustomFilters() {
 
-        // trigger lightweight migration
-
-//        if (false ) {
-//                // only true when migrating data model change to iCloud
-//            guard dataWrapper.persistentContainer.persistentStoreDescriptions.first != nil
-//            else { fatalError("Could not retrieve a persistent store description.")
-//            }
-//                //        // initialize the CloudKit schema
-//                //
-//                //            //        let options = NSPersistentCloudKitContainerOptions(containerIdentifier: iCloudDataContainerName)
-//                //            //        options.shouldInitializeSchema = true // toggle to false when done
-//                //            //        description.cloudKitContainerOptions = options
-//            NSLog("initializeCloudKitSchema  START " )
-//            let theContainer =  dataWrapper.persistentContainer
-//
-//            if let myCloudContainer = theContainer as? NSPersistentCloudKitContainer {
-//                do {
-//                    try myCloudContainer.initializeCloudKitSchema(options: NSPersistentCloudKitContainerSchemaInitializationOptions.printSchema )
-//                }
-//                catch {
-//                    NSLog("initializeCloudKitSchema \(error.localizedDescription)" )
-//
-//                }
-//
-//            }
-//            NSLog("initializeCloudKitSchema  END " )
-//        }
-//            ******* END ONLY One time to push schema to cloudKit
-
-            //       PGLFaceCIFilter.register()
-            //        PGLFilterCategory.allFilterCategories()
-
-        _ = dataWrapper.persistentContainer  // get lazy vars setup now
-
-        Logger(subsystem: LogSubsystem, category: LogNavigation).notice( "start didFinishLaunchingWithOptions")
+        
+        Logger(subsystem: LogSubsystem, category: LogNavigation).notice( "start registerCustomFilters")
         PGLFilterCIAbstract.register()
-//        WarpItMetalFilter.register()
-//        CompositeTextPositionFilter.register()
+        //        WarpItMetalFilter.register()
+        //        CompositeTextPositionFilter.register()
+        //       PGLFaceCIFilter.register()
+        //        PGLFilterCategory.allFilterCategories()
         CIBlendText.register()
         PGLSaliencyBlurFilter.register()
         PGLImageCIFilter.register()
@@ -110,10 +73,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PGLCISequenced.register()
         PGLCopyToOutputCIFilter.register()
         PGLPolygonGradientCI.register()
+    }
+    
+    /// older parts of the protocol
+    func application(_ application: UIApplication,
+            didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+            // Override point for customization after application launch.
 
+        // pushSchemaToCloudKit()
 
-
-
+        _ = dataWrapper.persistentContainer
+        registerCustomFilters()
 
         Logger(subsystem: LogSubsystem, category: LogCategory).notice( " didFinishLaunchingWithOptions appStack created")
         checkVersion()
@@ -125,6 +95,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    func application(
+      _ application: UIApplication,
+      configurationForConnecting connectingSceneSession: UISceneSession,
+      options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let myConfig =  UISceneConfiguration(
+            name: "MainScene",
+            sessionRole: .windowApplication)
+        myConfig.delegateClass = PGLWindowSceneDelegate.self
+        return myConfig
+    }
+
+    //MARK: standard lifecycle overrides
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
             //        NSLog("AppDelegate applicationDidReceiveMemoryWarning")
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("AppDelegate applicationDidReceiveMemoryWarning")
@@ -163,7 +146,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         //Mark: Error Alert
 
-        // MARK: User info
+// MARK: User info
 
     func displayUser(alert: UIAlertController) {
             // presents an alert on top of the open viewController
@@ -242,16 +225,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 
-    func application(
-      _ application: UIApplication,
-      configurationForConnecting connectingSceneSession: UISceneSession,
-      options: UIScene.ConnectionOptions
-    ) -> UISceneConfiguration {
-        let myConfig =  UISceneConfiguration(
-            name: "Default Configuration",
-            sessionRole: .windowApplication)
-        myConfig.delegateClass = PGLWindowSceneDelegate.self
-        return myConfig
-    }
 
+
+    func pushSchemaToCloudKit() {
+    // was used in application(_ application: UIApplication, didFinishLaunchingWithOptions
+        //******* START ONLY One time to push schema to cloudKit
+
+            // trigger lightweight migration
+
+    //        if (false ) {
+    //                // only true when migrating data model change to iCloud
+    //            guard dataWrapper.persistentContainer.persistentStoreDescriptions.first != nil
+    //            else { fatalError("Could not retrieve a persistent store description.")
+    //            }
+    //                //        // initialize the CloudKit schema
+    //                //
+    //                //            //        let options = NSPersistentCloudKitContainerOptions(containerIdentifier: iCloudDataContainerName)
+    //                //            //        options.shouldInitializeSchema = true // toggle to false when done
+    //                //            //        description.cloudKitContainerOptions = options
+    //            NSLog("initializeCloudKitSchema  START " )
+    //            let theContainer =  dataWrapper.persistentContainer
+    //
+    //            if let myCloudContainer = theContainer as? NSPersistentCloudKitContainer {
+    //                do {
+    //                    try myCloudContainer.initializeCloudKitSchema(options: NSPersistentCloudKitContainerSchemaInitializationOptions.printSchema )
+    //                }
+    //                catch {
+    //                    NSLog("initializeCloudKitSchema \(error.localizedDescription)" )
+    //
+    //                }
+    //
+    //            }
+    //            NSLog("initializeCloudKitSchema  END " )
+    //        }
+    //            ******* END ONLY One time to push schema to cloudKit
+    }
 }

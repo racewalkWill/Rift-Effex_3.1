@@ -147,6 +147,8 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
                     else { return }
                 self.present(pickerViewController, animated: true)
             }
+            // where is the pickerCompletion and the picker dismiss?
+        
         }
 //    }
 

@@ -475,7 +475,6 @@
 		A35FF77A26DC320400D78252 /* License */ = {
 			isa = PBXGroup;
 			children = (
-				A3BF509924D32A3400CD5114 /* AppDelegate.swift */,
 				A35FF77B26DC324E00D78252 /* CoreDataSampleLicense.txt */,
 			);
 			path = License;
@@ -571,11 +570,13 @@
 				A37D915D2D5CF166006E1426 /* en.lproj */,
 				A37D915E2D5CF166006E1426 /* Root.strings */,
 				A37D915F2D5CF166006E1426 /* Root.plist */,
+				A3BF50A624D32A3400CD5114 /* Info.plist */,
+				A3BF509924D32A3400CD5114 /* AppDelegate.swift */,
+				A3FB765B28D7AF6500595461 /* PGLWindowSceneDelegate.swift */,
 				A3D9FF07292A9EE300BAE158 /* Metal Render */,
 				A35FF77A26DC320400D78252 /* License */,
 				A3E6243C2691261A0017372F /* Settings.bundle */,
 				A308939E251E977400F244D6 /* Launch Screen.storyboard */,
-				A3BF50A624D32A3400CD5114 /* Info.plist */,
 				A3C716FF255C3C95005C2CAD /* Models */,
 				A3C71701255C3DCB005C2CAD /* Filters */,
 				A3C71700255C3D1F005C2CAD /* Controllers */,
@@ -781,7 +782,6 @@
 				A3F64FCD24E85ACB00BB38BD /* PGLOffScreenRender.swift */,
 				A320F62926699FA7008F6090 /* PrivacyPolicy.rtf */,
 				A35506EB26BF376A00BAC9BD /* PGLUserDefaultKeys.swift */,
-				A3FB765B28D7AF6500595461 /* PGLWindowSceneDelegate.swift */,
 			);
 			path = "UI Support";
 			sourceTree = "<group>";

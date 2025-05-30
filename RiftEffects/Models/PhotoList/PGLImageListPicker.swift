@@ -53,6 +53,7 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
 
         let myPickerView = PHPickerViewController(configuration: configuration)
         myPickerView.delegate = self
+        NSLog(#function + " \(myPickerView.description) ")
         return myPickerView
     }
 
@@ -68,7 +69,7 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         
 
-
+        NSLog(#function + " \(picker.description) ")
         picker.dismiss(animated: true)
 
         loadImageListFromPicker(results: results, theController: controller)

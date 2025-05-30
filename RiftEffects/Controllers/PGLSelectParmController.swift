@@ -1295,6 +1295,7 @@ class PGLSelectParmController: PGLCommonController,
         imagePicker = PGLImageListPicker(targetList: targetAttribute.inputCollection ,controller: self)
         guard let pickerViewController = imagePicker?.set(targetAttribute: targetAttribute)
             else { return }
+        NSLog("#function pickerViewController.description \(pickerViewController.description)")
 
         if let myParentSplitView = splitViewController {
             /// for getting the cancel/add buttons to work better in the out of process PHPickerView
@@ -1379,6 +1380,7 @@ class PGLSelectParmController: PGLCommonController,
         let updateNotification = Notification(name:PGLRedrawFilterChange)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
         // clean up.. do not keep  ref to the picker
+        pickerController.dismiss(animated: false)
         pickerController.delegate = nil
 
     }

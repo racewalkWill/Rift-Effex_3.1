@@ -17,13 +17,13 @@ final class PGLWindowSceneDelegate: UIResponder, UIWindowSceneDelegate {
 
       let startViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "RootSplitView")
 
-
       window.rootViewController =  startViewController
       self.window = window
 
-      window.makeKeyAndVisible()
-        guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
+      guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
         else { return }
-        myAppDelegate.windowSceneDelegate = self
+        myAppDelegate.windowSceneDelegate = self  // connect the windowSceneDelegate to the appDelegate
+
+    window.makeKeyAndVisible()
     }
 }
