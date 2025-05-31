@@ -71,7 +71,8 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
 
         NSLog(#function + " \(picker.description) ")
         picker.dismiss(animated: true)
-
+        picker.delegate = nil
+        
         loadImageListFromPicker(results: results, theController: controller)
         // calls myTargetParm.postListSizeChange( newList: pickingImageList) to postTransitionFilterAdd() or remove()
         if pickingImageList.isEmpty() { return }

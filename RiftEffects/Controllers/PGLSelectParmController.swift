@@ -1380,8 +1380,10 @@ class PGLSelectParmController: PGLCommonController,
         let updateNotification = Notification(name:PGLRedrawFilterChange)
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
         // clean up.. do not keep  ref to the picker
-        pickerController.dismiss(animated: false)
-        pickerController.delegate = nil
+        // these clean up statements are in the PGLImageListPicker
+        // and are called before this method
+//        pickerController.dismiss(animated: false)
+//        pickerController.delegate = nil
 
     }
 

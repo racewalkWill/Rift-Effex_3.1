@@ -137,6 +137,26 @@ class PGLFilterStack: Equatable, Hashable  {
 
     }
 
+    func loadStartup(userStartupImageList: PGLImageList) {
+        // this is the initial startup
+        // called from the didSet block of PGLSplitViewController.startupImageList
+        // PGLSplitViewController #requestStartupImage creates the imageList
+        if let startingFilter = demoCreateFilter(ciFilterString: defaultFilterName) {
+            append(startingFilter)
+            let imageAttribute = startingFilter.getInputImageAttribute()
+            guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
+                else { Logger(subsystem: LogSubsystem, category: LogCategory).fault("PGLSplitViewController viewDidLoad fatalError(AppDelegate not loaded")
+                fatalError("PGLSplitViewController could not access the AppDelegate")
+            }
+
+            myAppDelegate.appStack.targetAttribute = imageAttribute
+            imageAttribute?.setImageCollectionInput(cycleStack:userStartupImageList)
+//            postStackChange()
+
+            postCurrentFilterChange() // makes DoNotDraw = false..
+        }
+    }
+
 //    deinit {
 //        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
 //    }

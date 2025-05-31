@@ -68,7 +68,8 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
         }
 
         // Do any additional setup after loading the view.
-        requestStartupImage()
+//        requestStartupImage()
+        // moved to the AppStack
 
     }
 
@@ -136,20 +137,20 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
 
     // MARK: startup Pick
 
-    func requestStartupImage() {
-//        if startupImageList == nil {
-            let newList = PGLImageList()
-
-            imageListPicker = PGLImageListPicker(targetList: newList, controller: self)
-            if imageListPicker != nil {
-                    /// with  a nil  target attribute just picks one image from the photoLibary
-                guard let pickerViewController = imageListPicker!.set(targetAttribute: nil)
-                    else { return }
-                self.present(pickerViewController, animated: true)
-            }
-            // where is the pickerCompletion and the picker dismiss?
-        
-        }
+//    func requestStartupImage() {
+////        if startupImageList == nil {
+//            let newList = PGLImageList()
+//
+//            imageListPicker = PGLImageListPicker(targetList: newList, controller: self)
+//            if imageListPicker != nil {
+//                    /// with  a nil  target attribute just picks one image from the photoLibary
+//                guard let pickerViewController = imageListPicker!.set(targetAttribute: nil)
+//                    else { return }
+//                self.present(pickerViewController, animated: true)
+//            }
+//            // where is the pickerCompletion and the picker dismiss?
+//        
+//        }
 //    }
 
 
