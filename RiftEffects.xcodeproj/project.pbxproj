@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		584DC7132DEC990700DDFE38 /* PGLAirPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584DC7122DEC990700DDFE38 /* PGLAirPlaySceneDelegate.swift */; };
 		A303930F27AADED800E2A3D4 /* PGLCompactPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */; };
 		A30464D22DC4F60C00809D4A /* PGLMaximumScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30464D12DC4F60C00809D4A /* PGLMaximumScale.swift */; };
 		A308939F251E977400F244D6 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A308939E251E977400F244D6 /* Launch Screen.storyboard */; };
@@ -209,6 +210,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		584DC7122DEC990700DDFE38 /* PGLAirPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAirPlaySceneDelegate.swift; sourceTree = "<group>"; };
 		A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCompactPresentationController.swift; sourceTree = "<group>"; };
 		A30464D12DC4F60C00809D4A /* PGLMaximumScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMaximumScale.swift; sourceTree = "<group>"; };
 		A308939E251E977400F244D6 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -573,6 +575,7 @@
 				A3BF50A624D32A3400CD5114 /* Info.plist */,
 				A3BF509924D32A3400CD5114 /* AppDelegate.swift */,
 				A3FB765B28D7AF6500595461 /* PGLWindowSceneDelegate.swift */,
+				584DC7122DEC990700DDFE38 /* PGLAirPlaySceneDelegate.swift */,
 				A3D9FF07292A9EE300BAE158 /* Metal Render */,
 				A35FF77A26DC320400D78252 /* License */,
 				A3E6243C2691261A0017372F /* Settings.bundle */,
@@ -1092,6 +1095,7 @@
 				A33BD1B129626597007D3527 /* PGLButtonCellUI.swift in Sources */,
 				A3BF50EE24D32A3400CD5114 /* PGLFilterDescriptor.swift in Sources */,
 				A3BF510924D32A3400CD5114 /* CIImage.swift in Sources */,
+				584DC7132DEC990700DDFE38 /* PGLAirPlaySceneDelegate.swift in Sources */,
 				A3BF50F524D32A3400CD5114 /* OutlineItemCell.swift in Sources */,
 				A39F88062A4C7F5C000AE342 /* PGLLibraryPropertiesView.swift in Sources */,
 				A3BF50E224D32A3400CD5114 /* PGLRectangleController.swift in Sources */,

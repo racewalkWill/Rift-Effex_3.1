@@ -25,5 +25,6 @@ final class PGLWindowSceneDelegate: UIResponder, UIWindowSceneDelegate {
         myAppDelegate.windowSceneDelegate = self  // connect the windowSceneDelegate to the appDelegate
 
     window.makeKeyAndVisible()
+        NSLog("PGLWindowSceneDelegate: scene connected")
     }
 }

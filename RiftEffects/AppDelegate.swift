@@ -100,6 +100,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       configurationForConnecting connectingSceneSession: UISceneSession,
       options: UIScene.ConnectionOptions
     ) -> UISceneConfiguration {
+
+        if connectingSceneSession.role == .windowExternalDisplayNonInteractive {
+            let airPlayConfig = UISceneConfiguration(
+                name: "AirPlayScene",
+                sessionRole: .windowExternalDisplayNonInteractive )
+            airPlayConfig.delegateClass = PGLAirPlaySceneDelegate.self
+            return airPlayConfig
+        }
+        // everything else
         let myConfig =  UISceneConfiguration(
             name: "MainScene",
             sessionRole: .windowApplication)
