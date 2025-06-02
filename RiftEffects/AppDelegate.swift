@@ -42,6 +42,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var windowSceneDelegate: PGLWindowSceneDelegate?
+    var airPlaySceneDelegate: PGLAirPlaySceneDelegate?
+    var airPlayDeviceController: PGLMetalDeviceController?
+    weak var mainMetalController: PGLMetalController?
 
     var appStack = PGLAppStack()
     lazy var dataWrapper: CoreDataWrapper = { return CoreDataWrapper() }()

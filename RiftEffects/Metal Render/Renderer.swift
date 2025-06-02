@@ -75,17 +75,8 @@ class Renderer: NSObject, MTKViewDelegate {
     var outputZoomPanFilter: PGLScaleDownFrame?
     var myCaptureSession: PGLCaptureOutput?
     var DoCapture = false
-        // set to true to capture the image{
-//        didSet{
-//            if DoCapture {
-//                if myCaptureSession == nil {
-//                    myCaptureSession = PGLCaptureOutput(context: ciMetalContext)
-//                }
-//            } else {
-//                myCaptureSession = nil
-//            }
-//        }
-//    }
+    var childDeviceRenderer: PGLRenderAirPlayDevice?
+
 
 
 
@@ -348,6 +339,9 @@ class Renderer: NSObject, MTKViewDelegate {
                 else { return }
                 let backBounds = CGRect(x: 0, y: 0, width: dSize.width, height: dSize.height)
                 var ciOutputImage = currentStack.stackOutputImage((appStack.showFilterImage))
+                // if external device running - show the outputImage
+                childDeviceRenderer?.thisFrame = ciOutputImage
+
 //                NSLog(#function, "stackOutputImage = \(ciOutputImage)")
                 if view.isHidden {
                         // check if there is now an image to show

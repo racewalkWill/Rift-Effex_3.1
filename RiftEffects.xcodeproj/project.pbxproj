@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		58165C1C2DEE4D4300A45425 /* PGLMetalDeviceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58165C1B2DEE4D4300A45425 /* PGLMetalDeviceController.swift */; };
+		58165C1E2DEE55C400A45425 /* PGLRenderAirPlayDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58165C1D2DEE55C400A45425 /* PGLRenderAirPlayDevice.swift */; };
 		584DC7132DEC990700DDFE38 /* PGLAirPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584DC7122DEC990700DDFE38 /* PGLAirPlaySceneDelegate.swift */; };
 		A303930F27AADED800E2A3D4 /* PGLCompactPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */; };
 		A30464D22DC4F60C00809D4A /* PGLMaximumScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30464D12DC4F60C00809D4A /* PGLMaximumScale.swift */; };
@@ -210,6 +212,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		58165C1B2DEE4D4300A45425 /* PGLMetalDeviceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMetalDeviceController.swift; sourceTree = "<group>"; };
+		58165C1D2DEE55C400A45425 /* PGLRenderAirPlayDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLRenderAirPlayDevice.swift; sourceTree = "<group>"; };
 		584DC7122DEC990700DDFE38 /* PGLAirPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAirPlaySceneDelegate.swift; sourceTree = "<group>"; };
 		A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCompactPresentationController.swift; sourceTree = "<group>"; };
 		A30464D12DC4F60C00809D4A /* PGLMaximumScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMaximumScale.swift; sourceTree = "<group>"; };
@@ -702,6 +706,7 @@
 				A3BF505124D32A3400CD5114 /* PGLOpenStackController.swift */,
 				A39F88092A4C8221000AE342 /* Library */,
 				A3BF505724D32A3400CD5114 /* PGLMetalController.swift */,
+				58165C1B2DEE4D4300A45425 /* PGLMetalDeviceController.swift */,
 				A3BF505224D32A3400CD5114 /* PGLRectangleController.swift */,
 				A3DD2BD72919964700295DF1 /* PGLPopUpOpenStack.swift */,
 				A3719FA528233D5B009A9DBE /* PGLCommonParmController.swift */,
@@ -797,6 +802,7 @@
 				A3D9FF08292A9EFE00BAE158 /* VertexDescriptor.swift */,
 				A3B5A1402922753B003DBE92 /* AAPLShaders.metal */,
 				A3BF50A924D32A3400CD5114 /* Renderer.swift */,
+				58165C1D2DEE55C400A45425 /* PGLRenderAirPlayDevice.swift */,
 				A3EF017D2DCA74CB00C4BBDF /* PGLCaptureOutput.swift */,
 			);
 			path = "Metal Render";
@@ -1018,6 +1024,7 @@
 				A3BF514724D32A3400CD5114 /* PGLFilterCIAbstract.swift in Sources */,
 				A39466802832DFDD00A67319 /* PGLStackImageContainerController.swift in Sources */,
 				A35FF77E26DC346200D78252 /* PGLCoreData+Defns.swift in Sources */,
+				58165C1C2DEE4D4300A45425 /* PGLMetalDeviceController.swift in Sources */,
 				A3C11A8B29E9D9F5001D0831 /* PGLPersonSegmentation.swift in Sources */,
 				A39466822832E30A00A67319 /* PGLSupplementNavController.swift in Sources */,
 				A3DD328725CC999C00ABEE61 /* PGLHelpPageController.swift in Sources */,
@@ -1116,6 +1123,7 @@
 				A3BF50E424D32A3400CD5114 /* PGLFilterAttributeNumber.swift in Sources */,
 				A3DBD2D12BEC1D66009A6317 /* PGLVideoFrameQueue.swift in Sources */,
 				A3AF92DD2D40093A001E4785 /* PGLFilterAttributeAffine.swift in Sources */,
+				58165C1E2DEE55C400A45425 /* PGLRenderAirPlayDevice.swift in Sources */,
 				A3811C032DC57CE100A1A178 /* PGLRectangleGenerator.swift in Sources */,
 				A39B220E2B558E7C0026C7FE /* PGLImageListPicker.swift in Sources */,
 				A3BF50EC24D32A3400CD5114 /* PGLVisionProtocol.swift in Sources */,

@@ -58,6 +58,7 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
             else { Logger(subsystem: LogSubsystem, category: LogCategory).fault ( "PGLMetalController viewDidLoad fatalError AppDelegate not loaded")
                 return
         }
+        myAppDelegate.mainMetalController = self
         appStack = myAppDelegate.appStack
 //        filterStack = { self.appStack.outputOrViewFilterStack() }
 
