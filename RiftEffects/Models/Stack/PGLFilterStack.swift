@@ -44,12 +44,6 @@ class PGLFilterStack: Equatable, Hashable  {
     var activeFilters = [PGLSourceFilter]()  // make private?
         // should be unowned? a stack will always have a filter list
    
-    var fullScreenRect: CGRect { get
-    {   return CGRect(x: 0, y: 0, width: TargetSize.width, height: TargetSize.height)
-
-        }
-    }
-
     var activeFilterIndex = 0
     var saveSessionUUID: UUID?
 
@@ -633,7 +627,7 @@ class PGLFilterStack: Equatable, Hashable  {
             return CIImage.empty() }
     }
 
-    func stackOutputImage(_ showCurrentFilterImage: Bool) -> CIImage {
+    func stackOutputImage(_ showCurrentFilterImage: Bool, viewSize: CGSize? = nil) -> CIImage {
         //assumes that inputImage has been set
         if activeFilterIndex < 0 {
             return CIImage.empty() }
@@ -641,19 +635,19 @@ class PGLFilterStack: Equatable, Hashable  {
         if useOldImageFeedback {
             // always false - only changes with inspectable var in the debugger
             if let startImage = activeFilters.first?.inputImage() {
-                return imageUpdate(startImage, showCurrentFilterImage)
+                return imageUpdate(startImage, showCurrentFilterImage, thisWindowSize: viewSize)
                 // passing startImage will trigger a new input for any detectors..
                 // but this runs every frame !
             }
             else {
                 return CIImage.empty() }
         } else {
-            return imageUpdate(nil, showCurrentFilterImage)  // uses current image already set in the filter
+            return imageUpdate(nil, showCurrentFilterImage, thisWindowSize: viewSize)  // uses current image already set in the filter
         }
     }
 
 
-    func imageUpdate(_ inputImage: CIImage?, _ showCurrentFilterImage: Bool) -> CIImage {
+    func imageUpdate(_ inputImage: CIImage?, _ showCurrentFilterImage: Bool, thisWindowSize: CGSize? = nil) -> CIImage {
         // send the inputImage to the activeFilters
 
         var thisImage = inputImage
@@ -680,13 +674,14 @@ class PGLFilterStack: Equatable, Hashable  {
                     continue
                 }
             }
+            let cropTo = thisWindowSize ?? TargetSize
             if thisImage != nil {
                 if thisImage!.extent.isInfinite {
                     // issue CIColorDodgeBlendMode -> CIZoomBlur -> CIToneCurve
                     // -> CIColorInvert -> CIHexagonalPixellate -> CICircleSplashDistortion)
                     // clamp and crop if infinite extent
 //                  NSLog("PGLFilterStack imageUpdate thisImage has input of infinite extent")
-                    let cropTo = TargetSize
+
                     thisImage = thisImage!.cropForInfiniteExtent(cropSize: cropTo)
 //                    if doPrintCropClamp {   NSLog("PGLFilterStack imageUpdate clamped and cropped to  \(String(describing: thisImage?.extent))") }
                 }
@@ -706,7 +701,7 @@ class PGLFilterStack: Equatable, Hashable  {
                 if newOutputImage.extent.isInfinite {
 //                    NSLog("PGLFilterStack imageUpdate newOutputImage has input of infinite extent")
                 }
-                thisImage = filter.scaleOutput(ciOutput: newOutputImage, stackCropRect: fullScreenRect)
+                thisImage = filter.scaleOutput(ciOutput: newOutputImage, stackCropRect: CGRect(origin: CGPoint.zero, size: cropTo))
                     // most filters do not implement scaleOutput
                     // crop in the PGLRectangleFilter scales the crop to fill the extent
 

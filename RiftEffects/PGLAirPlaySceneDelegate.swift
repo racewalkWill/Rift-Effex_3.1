@@ -28,6 +28,11 @@ class PGLAirPlaySceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
     }
 
+    func sceneDidDisconnect(_ scene: UIScene) {
+        // clean up time
+        NSLog("PGLAirPlaySceneDelegate: scene disconnected")
+    }
+
     func sceneWillEnterForeground(_ scene: UIScene) {
         NSLog( #function + " PGLAirPlaySceneDelegate")
     }

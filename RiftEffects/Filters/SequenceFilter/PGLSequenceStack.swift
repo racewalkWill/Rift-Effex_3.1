@@ -261,7 +261,7 @@ class PGLSequenceStack: PGLFilterStack {
     //MARK: outputImage
 
         /// uses the appStack setting for showCurrentFilterImage
-    override func stackOutputImage(_ showCurrentFilterImage: Bool) -> CIImage {
+    override func stackOutputImage(_ showCurrentFilterImage: Bool, viewSize: CGSize? = nil ) -> CIImage {
         // ignore the showCurrentFilterImage that is passed
         // normally a childStack receives a false parm
         // from the PGLFilterAttribute #updateFromInputStack()

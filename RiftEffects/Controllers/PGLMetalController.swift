@@ -69,7 +69,7 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
         metalRender = appStack.appRenderer
         metalRender.set(metalView: metalView)
 
-//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         metalRender.needsRedraw.toggleViewWillAppear()
 
 

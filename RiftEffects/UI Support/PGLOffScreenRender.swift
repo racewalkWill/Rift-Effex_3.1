@@ -42,7 +42,7 @@ class PGLOffScreenRender {
 
     func captureUIImage(filterStack: PGLFilterStack) -> UIImage? {
          let ciOutput = filterStack.stackOutputImage(false)
-          let currentRect = filterStack.fullScreenRect
+          let currentRect = CGRect(x: 0, y: 0, width: TargetSize.width, height: TargetSize.height)
 //          NSLog("PGLOffScreenRender #captureUIImage currentRect = \(currentRect)")
           let croppedOutput = ciOutput.cropped(to: currentRect)
           guard let currentOutputImage = offScreenContext.createCGImage(croppedOutput, from: croppedOutput.extent)

@@ -124,7 +124,7 @@ class Renderer: NSObject, MTKViewDelegate {
             // uses existing ciContext in a background process..
 
         if let ciOutput = filterStack()?.stackOutputImage(false) {
-            let currentRect = filterStack()!.fullScreenRect
+            let currentRect = CGRect(x: 0, y: 0, width: TargetSize.width, height: TargetSize.height)
             Logger(subsystem: LogSubsystem, category: LogCategory).debug ("Renderer #captureImage currentRect ")
             let croppedOutput = ciOutput.cropped(to: currentRect)
             guard let currentOutputImage = ciMetalContext.createCGImage(croppedOutput, from: croppedOutput.extent) else { return nil }
@@ -288,6 +288,9 @@ class Renderer: NSObject, MTKViewDelegate {
             // adapted from sample app RenderMetalDestinationView
         _ = inFlightSemaphore.wait(timeout: DispatchTime.distantFuture)
         let desc = MTLCommandBufferDescriptor()
+        desc.retainedReferences = true // forces strong refs to vars
+        // in ver 3.5 there are memory crashes on the .makeCommandBuffer for bad memory acccess
+
         desc.errorOptions = .encoderExecutionStatus
         if let commandBuffer = commandQueue?.makeCommandBuffer(descriptor: desc)
         {
@@ -311,13 +314,13 @@ class Renderer: NSObject, MTKViewDelegate {
                 let dSize = view.drawableSize
 
                     // Calculate the content scale factor for the view so Core Image can render at Retina resolution.
-                var contentScaleFactor: CGFloat = 1.0
-#if os(macOS)
-                    // Determine the scale factor converting a point size to a pixel size.
-                contentScaleFactor = view.convertToBacking(CGSize(width: 1.0, height: 1.0)).width
-#else
-                contentScaleFactor = view.contentScaleFactor
-#endif
+//                var contentScaleFactor: CGFloat = 1.0
+//#if os(macOS)
+//                    // Determine the scale factor converting a point size to a pixel size.
+//                contentScaleFactor = view.convertToBacking(CGSize(width: 1.0, height: 1.0)).width
+//#else
+//                contentScaleFactor = view.contentScaleFactor
+//#endif
                     // Create a destination the Core Image context uses to render to the drawable's Metal texture.
                 let destination = CIRenderDestination(width: Int(dSize.width),
                                                       height: Int(dSize.height),
@@ -343,6 +346,7 @@ class Renderer: NSObject, MTKViewDelegate {
                     /// get an image to draw
                 guard let currentStack = filterStack()
                 else { return }
+                let backBounds = CGRect(x: 0, y: 0, width: dSize.width, height: dSize.height)
                 var ciOutputImage = currentStack.stackOutputImage((appStack.showFilterImage))
 //                NSLog(#function, "stackOutputImage = \(ciOutputImage)")
                 if view.isHidden {
@@ -356,17 +360,12 @@ class Renderer: NSObject, MTKViewDelegate {
                     }
                 }
 
-                    // Center the image in the view's visible area.
-                //  3/3/3024 disable the centering - makes the point parms wrong
-                //  kaliedscope filter has large negative origins so the shiftX shiftY equations are wrong.
-                
-                let backBounds = CGRect(x: 0, y: 0, width: dSize.width, height: dSize.height)
-
                     // Blend the image over an opaque background image.
                     // This is needed if the image is smaller than the view, or if it has transparent pixels.
                 if isFullScreen { 
                     // perform zoom/pan from gestures
-                    let cropSize = TargetSize
+                    // let cropSize = TargetSize
+                    let cropSize = backBounds.size
                     ciOutputImage = ciOutputImage.cropForInfiniteExtent(cropSize: cropSize)
                     outputZoomPanFilter?.setInput(image: ciOutputImage, source: nil)
                     outputZoomPanFilter?.setInputImageParmState(newState: ParmInputState.inputPhoto)
