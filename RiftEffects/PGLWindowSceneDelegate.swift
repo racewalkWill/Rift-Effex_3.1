@@ -14,7 +14,7 @@ final class PGLWindowSceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
       guard let windowScene = scene as? UIWindowScene else { return }
       let window = UIWindow(windowScene: windowScene)
-
+            // The 'window' property will automatically be loaded with the storyboard's initial view controller.
       let startViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "RootSplitView")
 
       window.rootViewController =  startViewController

@@ -25,7 +25,7 @@ import os
 
 /// Renders frame from the iOS device to attached AirPlay device
 ///  No user interaction - no tap, drag, pinch etc on external device
-class PGLMetalDeviceController: PGLMetalController {
+class PGLAirPlayMetalController: PGLMetalController {
 
      // Metal View setup for Core Image Rendering
         // see listing 1-7 in
@@ -39,7 +39,7 @@ class PGLMetalDeviceController: PGLMetalController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpMetalRender()
+
         updateDrawableSize()
 
 
@@ -58,13 +58,13 @@ class PGLMetalDeviceController: PGLMetalController {
             return
         }
 
-        metalRender = Renderer(globalAppStack: appStack)
+        metalRender = PGLRenderOnAirPlay(globalAppStack: appStack)
         metalRender.set(metalView: metalView)
 
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
 
         metalRender.isFullScreen = true // always fullscreen
-
+        metalRender.needsRedraw.toggleViewWillAppear()
             // toggles to redraw 2 times
         metalRender.drawBasicCentered(in: metalView)
             // draw once so that the view has the current stack output image
@@ -85,17 +85,20 @@ class PGLMetalDeviceController: PGLMetalController {
 
     }
 
-//    override func viewDidAppear(_ animated: Bool) {
-//
-//        updateDrawableSize()
+    override func viewDidAppear(_ animated: Bool) {
+
+        updateDrawableSize()
+
+        // don't change the global shift used by all the filters
+        // in AirPlay just display
 //        if isFullScreen {
 //            // works fine when loading fullscreen
 //            appStack.pointParms(shiftTransform: FullScreenTargetTransform)
 //           NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by \(FullScreenTargetTransform)")
 //        }
-//        DoNotDraw = false
-//        super.viewDidAppear(animated)
-//    }
+        DoNotDraw = false
+        super.viewDidAppear(animated)
+    }
 
     override func viewDidDisappear(_ animated: Bool) {
         resetVars()
@@ -103,14 +106,14 @@ class PGLMetalDeviceController: PGLMetalController {
 
 
         ///  image load and doubleTap to full screen and back need size change
-   override func updateDrawableSize() {
-        guard let metalView = view as? MTKView
-        else { return }
-        NSLog( "\(self.debugDescription)" + #function)
-        if metalRender == nil {
-            setUpMetalRender()
-        }
-        metalRender.mtkView(metalView, drawableSizeWillChange: metalView.drawableSize)
-    }
+//   override func updateDrawableSize() {
+//        guard let metalView = view as? MTKView
+//        else { return }
+//        NSLog( "\(self.debugDescription)" + #function)
+//        if metalRender == nil {
+//            setUpMetalRender()
+//        }
+//        metalRender.mtkView(metalView, drawableSizeWillChange: metalView.drawableSize)
+//    }
 
 }

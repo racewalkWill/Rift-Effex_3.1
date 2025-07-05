@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var windowSceneDelegate: PGLWindowSceneDelegate?
     var airPlaySceneDelegate: PGLAirPlaySceneDelegate?
-    var airPlayDeviceController: PGLMetalDeviceController?
+    var airPlayDeviceController: PGLAirPlayMetalController?
     weak var mainMetalController: PGLMetalController?
 
     var appStack = PGLAppStack()
@@ -109,6 +109,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 name: "AirPlayScene",
                 sessionRole: .windowExternalDisplayNonInteractive )
             airPlayConfig.delegateClass = PGLAirPlaySceneDelegate.self
+            NSLog( #function + " return airPlayConfig")
+
             return airPlayConfig
         }
         // everything else
@@ -116,6 +118,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             name: "MainScene",
             sessionRole: .windowApplication)
         myConfig.delegateClass = PGLWindowSceneDelegate.self
+        NSLog( #function + " return MainScene config")
         return myConfig
     }
 

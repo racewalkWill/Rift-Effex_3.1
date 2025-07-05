@@ -13,8 +13,27 @@ import AVFoundation
 
 /// renders just to an external airPlay device from the same frame as parent
 @MainActor
-class PGLRenderAirPlayDevice: Renderer {
+class PGLRenderOnAirPlay: Renderer {
     var thisFrame: CIImage?
+    var myView: MTKView?
+
+    convenience init(globalAppStack: PGLAppStack) {
+        self.init()
+        appStack = globalAppStack
+        filterStack = { self.appStack.outputOrViewFilterStack() }
+        needsRedraw.appStackVideoMgr = appStack.videoMgr
+    }
+
+    override func set(metalView: MTKView) {
+        super.set(metalView: metalView)
+        myView = metalView
+    }
+
+    func drawInAirPlay()
+    {   guard let realView = myView  else { return }
+
+         drawBasicCentered(in: realView )
+    }
 
     override func drawBasicCentered(in view: MTKView) {
             // adapted from sample app RenderMetalDestinationView
@@ -68,10 +87,11 @@ class PGLRenderAirPlayDevice: Renderer {
 //                let headroom = screen?.maximumExtendedDynamicRangeColorComponentValue ?? 1.0
 //#endif
                     /// get an image to draw
-                guard let currentStack = filterStack()
-                else { return }
+//                guard let currentStack = filterStack()
+//                else { return }
+                
                 let backBounds = CGRect(x: 0, y: 0, width: dSize.width, height: dSize.height)
-                var ciOutputImage = thisFrame ?? CIImage.empty()
+                let ciOutputImage = thisFrame ?? CIImage.empty()
 //                NSLog(#function, "stackOutputImage = \(ciOutputImage)")
                 if view.isHidden {
                         // check if there is now an image to show
@@ -98,5 +118,36 @@ class PGLRenderAirPlayDevice: Renderer {
             }
         }
     }
+
+    override func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+            //        NSLog("Renderer mtkView drawableSize = \(view.drawableSize) drawableSizeWillChange = \(size)")
+        if !((size.width > 0) && (size.height > 0)) {
+            Logger(subsystem: LogSubsystem, category: LogCategory).fault("Renderer #drawableSizeWillChange size.width or height = 0 error")
+                // this will cause Renderer draw fatalError (Render did not get the renderEncoder - draw(in: view
+                // and [CAMetalLayer nextDrawable] returning nil because allocation failed.
+        }
+        if mtkViewSize != nil, mtkViewSize == size {
+                // no change needed
+            return
+        }
+
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " drawableSizeWillChange to \(String(describing: size))") "))
+
+//        let translate = CGAffineTransform.init(translationX:  (size.width - TargetSize.width)/2, y:  (size.height - TargetSize.height)/2)
+            // this uses the old TargetSize compared to the new size
+//        FullScreenTargetTransform = translate
+        mtkViewSize = size
+            // mktViewSize is instance var - with AirPlay there are two instances.
+
+//        TargetSize = size
+            // in AirPlay mode just output let the mainScreen set this value
+
+        outputZoomPanFilter = initZoomPanFilter() // inits with new center
+
+// appStack does not have the new scale for the AirPlay device
+        // CHANGE this
+//        appStack.resetDrawableSize(newScale: FullScreenTargetTransform)
+    }
+
 
 }

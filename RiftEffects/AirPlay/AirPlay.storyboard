@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="UzI-JX-0TM">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Air Play Metal Controller-->
+        <scene sceneID="30j-dl-0jK">
+            <objects>
+                <viewController storyboardIdentifier="MetalDeviceController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UzI-JX-0TM" customClass="PGLAirPlayMetalController" customModule="RiftEffects" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dvt-Q1-GfX"/>
+                        <viewControllerLayoutGuide type="bottom" id="A04-FK-3n9"/>
+                    </layoutGuides>
+                    <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="sgM-cI-Ja2" customClass="MTKView">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="XDZ-ec-uSR"/>
+                        <accessibility key="accessibilityConfiguration" identifier="metalController" label="metalController"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="gBk-WU-6Rv"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cL2-zK-iyz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="905" y="-683"/>
+        </scene>
+    </scenes>
+</document>

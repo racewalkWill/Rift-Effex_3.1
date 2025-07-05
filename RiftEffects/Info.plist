@@ -6,8 +6,6 @@
 	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleDisplayName</key>
-	<string>Rift Effects</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -46,7 +44,7 @@
 					<key>UISceneConfigurationName</key>
 					<string>AirPlayScene</string>
 					<key>UISceneStoryboardFile</key>
-					<string>Main</string>
+					<string>AirPlay</string>
 				</dict>
 			</array>
 			<key>UIWindowSceneSessionRoleApplication</key>

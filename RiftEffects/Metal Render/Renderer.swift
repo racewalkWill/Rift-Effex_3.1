@@ -75,7 +75,7 @@ class Renderer: NSObject, MTKViewDelegate {
     var outputZoomPanFilter: PGLScaleDownFrame?
     var myCaptureSession: PGLCaptureOutput?
     var DoCapture = false
-    var childDeviceRenderer: PGLRenderAirPlayDevice?
+    var childDeviceRenderer: PGLRenderOnAirPlay?
 
 
 
@@ -341,6 +341,7 @@ class Renderer: NSObject, MTKViewDelegate {
                 var ciOutputImage = currentStack.stackOutputImage((appStack.showFilterImage))
                 // if external device running - show the outputImage
                 childDeviceRenderer?.thisFrame = ciOutputImage
+                childDeviceRenderer?.drawInAirPlay()
 
 //                NSLog(#function, "stackOutputImage = \(ciOutputImage)")
                 if view.isHidden {
