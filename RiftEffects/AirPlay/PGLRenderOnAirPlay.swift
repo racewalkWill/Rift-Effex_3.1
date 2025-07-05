@@ -105,7 +105,7 @@ class PGLRenderOnAirPlay: Renderer {
 //                else { return }
                 
                 let backBounds = CGRect(x: 0, y: 0, width: dSize.width, height: dSize.height)
-                let ciOutputImage = thisFrame ?? CIImage.empty()
+                var ciOutputImage = thisFrame ?? CIImage.empty()
 //                NSLog(#function, "stackOutputImage = \(ciOutputImage)")
                 if view.isHidden {
                         // check if there is now an image to show
@@ -117,6 +117,17 @@ class PGLRenderOnAirPlay: Renderer {
                         view.isHidden = false
                     }
                 }
+
+                    // Blend the image over an opaque background image.
+                    // This is needed if the image is smaller than the view, or if it has transparent pixels.
+
+                    let cropSize = backBounds.size
+                    ciOutputImage = ciOutputImage.cropForInfiniteExtent(cropSize: cropSize)
+                    outputZoomPanFilter?.setInput(image: ciOutputImage, source: nil)
+                    outputZoomPanFilter?.setInputImageParmState(newState: ParmInputState.inputPhoto)
+
+                    ciOutputImage = outputZoomPanFilter?.outputImage() ?? CIImage.empty()
+                        // outputZoomPanFilter PGLScaleDownFrame does a composited(over opaqueBackground)
 
                     // Start a task that renders to the texture destination.
                 _ = try? self.ciMetalContext.startTask(toRender: ciOutputImage, from: backBounds,
@@ -157,6 +168,8 @@ class PGLRenderOnAirPlay: Renderer {
             // in AirPlay mode just output let the mainScreen set this value
 
         outputZoomPanFilter = initZoomPanFilter() // inits with new center
+        // change the center point from the global TargetSize (which is the iPad or iPhone size)
+        outputZoomPanFilter?.centerPoint = CGPoint(x: size.width / 2, y: size.height / 2)
 
 // appStack does not have the new scale for the AirPlay device
         // CHANGE this

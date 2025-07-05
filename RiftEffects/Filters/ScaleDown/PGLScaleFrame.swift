@@ -25,6 +25,8 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
 
     var shouldMoveCenter = false
     let opaqueBackground: CIImage = CIImage.black // CIImage.clear
+
+    // TargetSize is global but with airPlay extr
     var centerPoint: CGPoint = CGPoint(x: TargetSize.width/2, y: TargetSize.height/2) {
         didSet {
             shouldMoveCenter = true

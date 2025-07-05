@@ -995,9 +995,6 @@
          contextName = "Renderer.drawBasicCentered(in:):Renderer.swift">
          <PersistentStrings>
             <PersistentString
-               value = "DoCapture = true">
-            </PersistentString>
-            <PersistentString
                value = "DoCapture">
             </PersistentString>
          </PersistentStrings>
