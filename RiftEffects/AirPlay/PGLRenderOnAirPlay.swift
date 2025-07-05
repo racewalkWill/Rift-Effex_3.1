@@ -21,18 +21,32 @@ class PGLRenderOnAirPlay: Renderer {
         self.init()
         appStack = globalAppStack
         filterStack = { self.appStack.outputOrViewFilterStack() }
-        needsRedraw.appStackVideoMgr = appStack.videoMgr
-    }
 
+        let imageViewWillAppearNotification = Notification(name:PGLImageViewWillAppear)
+        NotificationCenter.default.post(imageViewWillAppearNotification)
+
+            //        needsRedraw.appStackVideoMgr = appStack.videoMgr
+    }
+    
     override func set(metalView: MTKView) {
         super.set(metalView: metalView)
         myView = metalView
     }
 
-    func drawInAirPlay()
-    {   guard let realView = myView  else { return }
+    func drawInAirPlay() {
+        guard let realView = myView
+            else { return }
 
-         drawBasicCentered(in: realView )
+        drawBasicCentered(in: realView )
+
+    }
+
+    func airPlayHideOnDoNotDraw() {
+        if  myView?.isHidden == DoNotDraw
+            { return }
+
+        myView?.isHidden = DoNotDraw
+
     }
 
     override func drawBasicCentered(in view: MTKView) {

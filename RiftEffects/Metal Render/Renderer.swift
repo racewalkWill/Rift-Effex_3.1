@@ -237,6 +237,10 @@ class Renderer: NSObject, MTKViewDelegate {
         appStack.resetDrawableSize(newScale: FullScreenTargetTransform)
     }
 
+    func hideAirPlay() {
+        childDeviceRenderer?.airPlayHideOnDoNotDraw()
+    }
+
     func draw(in view: MTKView) {
 
         if DoNotDraw {

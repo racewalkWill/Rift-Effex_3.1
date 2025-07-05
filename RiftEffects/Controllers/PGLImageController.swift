@@ -345,7 +345,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             // Respond to user selection of the action
         hideParmControls()
         DoNotDraw = true
-        self.metalController?.view.isHidden = true
+        metalController?.metalRender.hideAirPlay()
+//        self.metalController?.view.isHidden = true
             // makes the image go blank after the trash button loads a new stack.
             // set visible again when new images are selected in
             //        notification PGLCurrentFilterChange
@@ -354,6 +355,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let newStack = PGLFilterStack()
 
         self.appStack.resetOutputAppStack(newStack)
+
 
     }
 
