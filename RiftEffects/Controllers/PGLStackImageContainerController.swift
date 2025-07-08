@@ -181,18 +181,24 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         let contextMenu = UIMenu(title: "",
                                  children: [ libraryMenu
                                              ,
-                                             UIAction(title: PGLMenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) {
+         UIAction(title: PGLMenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) {
             action in
                 // self.saveStackAlert(self.moreBtn)
             imageViewerController.saveStackActionBtn(self.moreBtn)
         },
 
 
-                                             UIAction(title: PGLMenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
+         UIAction(title: PGLMenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
             action in
-            imageViewerController.recordButtonTapped(controllerRecordBtn: self.recordBtyn)
+            imageViewerController.recordButtonTapped(controllerRecordBtn: self.moreBtn)
 
-        }
+        },
+
+         UIAction(title: PGLMenuLabel.Music.rawValue, image:UIImage(systemName: "music.note.list")) {
+            action in
+            imageViewerController.musicButtonTapped(controllerMusicBtn: self.moreBtn)
+
+        },
         ])
         moreBtn.menu = contextMenu
     }

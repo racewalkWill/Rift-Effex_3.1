@@ -15,6 +15,8 @@ import os
 import StoreKit
 import ReplayKit
 import Combine
+import MusicKit
+import MediaPlayer
 
 enum PGLFilterPick: Int {
     case category = 0, filter
@@ -47,7 +49,7 @@ let ShowHelpPageAtStartupKey = "DisplayStartHelp"
 let kBtnVideoPlay = "VideoPlayBtn"
 
 @MainActor
-class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavigationBarDelegate,  RPScreenRecorderDelegate, @preconcurrency RPPreviewViewControllerDelegate {
+class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavigationBarDelegate,  RPScreenRecorderDelegate, @preconcurrency RPPreviewViewControllerDelegate, MPMediaPickerControllerDelegate {
 
 
         // controller in detail view - shows the image as filtered - knows the current filter
@@ -693,6 +695,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
          UIAction(title: PGLMenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
             action in
             self.recordButtonTapped(controllerRecordBtn: self.recordBtn)
+        },
+         UIAction(title: PGLMenuLabel.Music.rawValue, image:UIImage(systemName: "music.note.list")) {
+            action in
+            self.musicButtonTapped(controllerMusicBtn: self.moreBtn)
         }
             ] )
         moreBtn.menu = contextMenu
