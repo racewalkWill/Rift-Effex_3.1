@@ -210,9 +210,15 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable  {
         return asset.mediaType == .video
     }
 
-    @MainActor  func requestVideo(videoURL: URL) {
+//    @MainActor  func requestVideo(videoURL: URL) {
+//        assetVideo = PGLAssetVideoPlayer(parentAsset: self)
+//        assetVideo?.setUpVideoPlayAssets(videoURL: videoURL)
+//
+//    }
+
+    @MainActor  func requestVideo() {
         assetVideo = PGLAssetVideoPlayer(parentAsset: self)
-        assetVideo?.setUpVideoPlayAssets(videoURL: videoURL)
+        assetVideo?.setUpVideoPlayAssets()
 
     }
 

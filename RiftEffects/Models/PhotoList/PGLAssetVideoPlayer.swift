@@ -160,7 +160,7 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
                   changeHandler: { myPlayerItem, change in
             MainActor.assumeIsolated( {
                 if myPlayerItem.status == .readyToPlay {
-//                        NSLog("PGLAssetVideoPlayer createDisplayLink changeHandler = .readyToPlay")
+                    NSLog("PGLAssetVideoPlayer createDisplayLink changeHandler = .readyToPlay")
                     for aRepeatingItem in self.videoPlayer!.items() {
                         aRepeatingItem.add( self.createPlayerItemVideoOutput() )
                     }
@@ -174,12 +174,96 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
                     }
             })
                  })
-//        NSLog("PGLAssetVideoPlayer createDisplayLink statusObserver created")
+        NSLog("PGLAssetVideoPlayer createDisplayLink statusObserver created")
+    }
+
+    func videoRequestOptions() -> PHVideoRequestOptions {
+        let videoRequestOptions = PHVideoRequestOptions()
+//        videoRequestOptions.version = .original
+//        videoRequestOptions.isNetworkAccessAllowed = true
+//        videoRequestOptions.deliveryMode = .highQualityFormat
+        videoRequestOptions.isNetworkAccessAllowed = true
+
+
+        return videoRequestOptions
+    }
+    fileprivate func avSetUpVideoBasicOnReadSuccess(newAsset: AVAsset?) {
+        if (newAsset == nil) { return }
+
+        self.avPlayerItem = AVPlayerItem(
+            asset: newAsset!,
+            automaticallyLoadedAssetKeys: [.tracks, .duration, .commonMetadata] )
+        if (avPlayerItem != nil)  {
+                // && (progressResult >= 1.0)  {
+                // callback handler will run again..
+
+            self.videoPlayer = AVQueuePlayer.init(items: [avPlayerItem])
+            self.playerLooper = AVPlayerLooper(player: self.videoPlayer! , templateItem: avPlayerItem)
+            self.getVideoPreferredTransform(callBack: { myDevice in
+                self.imageOrientation = myDevice})
+            statusObserver =  avPlayerItem!.observe(\.status,
+//                                                  options: [.new, .old],
+                                                    changeHandler: { myPlayerItem, change in
+                MainActor.assumeIsolated( {
+                    NSLog("PGLAssetVideoPlayer statusObserver changeHandlers new status is: \( myPlayerItem.status)" )
+                    if myPlayerItem.status == .readyToPlay {
+                        NSLog("PGLAssetVideoPlayer createDisplayLink changeHandler = .readyToPlay")
+                        for aRepeatingItem in self.videoPlayer!.items() {
+                            aRepeatingItem.add( self.createPlayerItemVideoOutput() )
+                        }
+                            // move displayLink
+                        self.setUpReadyToPlay()
+                        
+                    }
+                    else { if myPlayerItem.status == .failed {
+                        self.closeWaitingIndicator()
+                    }
+                    }
+                })
+            })
+            NSLog("PGLAssetVideoPlayer createDisplayLink statusObserver created")
+            
+        }
+    }
+    
+    func setUpVideoPlayAssets() {
+            // Create a display link
+            // automaticallyLoadedAssetKeys - array
+            // An NSArray of NSStrings, each representing a property key defined by
+            //   AVAsset. See AVAsset.h for property keys, e.g. duration
+        var progressResult: Double = 0
+        let thePHAsset = parentAsset.asset
+        let options = videoRequestOptions()
+        options.progressHandler  = { progress, error, stop, info in
+            if let error = error {
+                NSLog("Download error: \(error.localizedDescription)")
+            }
+            NSLog("setUpVideoPlayAssets progress = \(progress)")
+            progressResult = progress
+        }
+
+//       PHImageManager.default().requestPlayerItem(forVideo: thePHAsset , options: options) { avAsset, info in
+        PHImageManager.default().requestAVAsset(forVideo: thePHAsset, options: options) { avAsset, mix, info in
+
+           NSLog("PGLAssetVideoPlayer requestPlayerItemForVideo completionHandler")
+            if let info = info {
+                NSLog("PGLAssetVideoPlayer requestPlayerItemForVideo info = \(info)")
+            }
+            if avAsset == nil {
+                return
+            }
+
+           NSLog("PGLAssetVideoPlayer requestPlayerItemForVideo avAsset = \(String(describing: avAsset)) ")
+           self.avSetUpVideoBasicOnReadSuccess(newAsset: avAsset)
+        }
+        NSLog("PGLAssetVideoPlayer AFTER requestPlayerItemForVideo ")
+
+
     }
 
     func displayLinkCopyPixelBuffers()
        {
-//           NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers start")
+           NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers start")
                // really need to get the current item in the videoPlayer
                // ask for it's videoOutput
            guard let currentVideoOutputs = videoPlayer?.currentItem?.outputs
@@ -196,13 +280,13 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
              if let buffer  = theVideoOutput.copyPixelBuffer(forItemTime: currentTime,
                                                      itemTimeForDisplay: nil)
                  {
-//                  NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers videoOutput new buffer ")
+                  NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers videoOutput new buffer ")
                      ///cache the video frame for the next Renderer image request
                 let sourceFrame = CIImage(cvPixelBuffer: buffer)
 
                  let neededTransform = sourceFrame.orientationTransform(for: videoPropertyOrientation)
                  videoCIFrame = sourceFrame.transformed(by: neededTransform)
-//                     NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers videoCIFrame set")
+                     NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers videoCIFrame set")
 
                 }
          }
@@ -254,7 +338,7 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
         if videoPlayer != nil {
              if videoPlayer?.status ==  .readyToPlay  {
                     /// set the videoCIFrame from the pixelBuffer
-                    displayLinkCopyPixelBuffers()
+             displayLinkCopyPixelBuffers()
                 }
         }
         return videoCIFrame
@@ -275,7 +359,7 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
             object: nil,
             queue: mainQueue) {[weak self] notification in
                 MainActor.assumeIsolated( {
-                        //                NSLog("PGLAssetVideoPlayer setUpReadyToPlay notification PGLPlayVideo handler triggered")
+                    NSLog("PGLAssetVideoPlayer setUpReadyToPlay notification PGLPlayVideo handler triggered")
                     if self?.videoPlayer?.status == .readyToPlay {
                             // one player may be starting while a current one is running
 
@@ -285,10 +369,10 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
                     }
 
                     self?.notifyVideoStarted()
-                        //                    NSLog("PGLAssetVideoPlayer setUpReadyToPlay  videoPlayer?.play")
+                    NSLog("PGLAssetVideoPlayer setUpReadyToPlay  videoPlayer?.play")
                 })
             }
-
+        NSLog("PGLAssetVideoPlayer setUpReadyToPlay calls #postVideoLoaded")
         postVideoLoaded()
             // center.removeObserver(observer)
         setupStopVideoListener()
@@ -323,6 +407,7 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
     func postVideoLoaded() {
 
         let loadButtonNotification = Notification(name:PGLVideoLoaded)
+
         NotificationCenter.default.post(name: loadButtonNotification.name, object: self, userInfo: [ : ])
 
     }

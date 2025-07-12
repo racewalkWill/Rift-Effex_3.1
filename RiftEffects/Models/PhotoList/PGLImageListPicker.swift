@@ -126,9 +126,10 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
             if let thisResultProvider = selection[fetchAsset.localIdentifier] {
                 if thisResultProvider.itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
                     let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
-                    myAppDelegate.showWaiting(onController: theController)
+//                    myAppDelegate.showWaiting(onController: theController)
 
-                    loadLocalVideoURL(thisAsset: anNewPGLAsset, pickerResult: selection[fetchAsset.localIdentifier]!)
+//                    loadLocalVideoURL(thisAsset: anNewPGLAsset, pickerResult: selection[fetchAsset.localIdentifier]!)
+                    anNewPGLAsset.requestVideo()
                 }
                 }
             }
@@ -153,51 +154,56 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
 
     }
 
-    func loadLocalVideoURL(thisAsset: PGLAsset, pickerResult: PHPickerResult ) {
-//        let progress: Progress?
+//    func loadLocalVideoURL(thisAsset: PGLAsset, pickerResult: PHPickerResult ) {
+////        let progress: Progress?
+//
+//         pickerResult.itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { [weak self] url, error in
+//            do {
+//                guard let url = url, error == nil else {
+//                    throw error ?? NSError(domain: NSFileProviderErrorDomain, code: -1, userInfo: nil)
+//                }
+//               let localURL = FileManager.default.temporaryDirectory.appendingPathComponent(url.lastPathComponent)
+//
+//                if (FileManager.default.fileExists(atPath: localURL.absoluteString ))
+//                    { try FileManager.default.removeItem(at: localURL)
+//                    }
+//                try FileManager.default.copyItem(at: url, to: localURL)
+//
+//                Task{ // was  await MainActor.run
+//                    await self?.handleVideoCompletion(asset: thisAsset, object: localURL)
+//                }
+//            } catch let caughtError {
+//                Task {  // was  MainActor.run
+//                    await self?.handleVideoCompletion(asset: thisAsset, object: nil, error: caughtError)
+//                }
+//            }
+//    }
+//        if loadProgress.isFinished {
+//            Task{ // was  await MainActor.run
+//                await self?.handleVideoCompletion(asset: thisAsset, object: url)
+//            }
+//        }
+//
+//  }
 
-         pickerResult.itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { [weak self] url, error in
-            do {
-                guard let url = url, error == nil else {
-                    throw error ?? NSError(domain: NSFileProviderErrorDomain, code: -1, userInfo: nil)
-                }
-               let localURL = FileManager.default.temporaryDirectory.appendingPathComponent(url.lastPathComponent)
-
-                if (FileManager.default.fileExists(atPath: localURL.absoluteString ))
-                    { try FileManager.default.removeItem(at: localURL)
-                    }
-                try FileManager.default.copyItem(at: url, to: localURL)
-
-                Task{ // was  await MainActor.run
-                    await self?.handleVideoCompletion(asset: thisAsset, object: localURL)
-                }
-            } catch let caughtError {
-                Task {  // was  MainActor.run
-                    await self?.handleVideoCompletion(asset: thisAsset, object: nil, error: caughtError)
-                }
-            }
-    }
-
-  }
-
-    func handleVideoCompletion(asset: PGLAsset, object: Any?, error: (any Error)? = nil) {
-        //based on sample app PHPickerDemo same  method
-
-//        if let livePhoto = object as? PHLivePhoto {
-//            displayLivePhoto(livePhoto)
-//        } else if let image = object as? UIImage {
-//            displayImage(image)
-//        } else
-
-        if let url = object as? URL {
-            asset.requestVideo(videoURL: url)
-        } else if let error = error {
-            NSLog("Couldn't display \(asset.localIdentifier) with error: \(error)")
-
-//            displayErrorImage()
-//        } else {
-//            displayUnknownImage()
-        }
-    }
-
+//    func handleVideoCompletion(asset: PGLAsset, object: Any?, error: (any Error)? = nil) {
+//        //based on sample app PHPickerDemo same  method
+//
+////        if let livePhoto = object as? PHLivePhoto {
+////            displayLivePhoto(livePhoto)
+////        } else if let image = object as? UIImage {
+////            displayImage(image)
+////        } else
+//
+////        if let url = object as? URL {
+////            asset.requestVideo(videoURL: url)
+////        } else if let error = error {
+////            NSLog("Couldn't display \(asset.localIdentifier) with error: \(error)")
+//
+////            displayErrorImage()
+////        } else {
+////            displayUnknownImage()
+//        }
+//    }
+//
 }
