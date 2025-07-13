@@ -1852,7 +1852,7 @@ extension PGLImageController: UIGestureRecognizerDelegate {
 
     fileprivate func hideVideoPlayBtn() {
             // hide the play button now after clicking to run
-//        appStack.videoMgr.setStartStop(newState: .Running)
+        appStack.videoMgr.setStartStop(newState: .Running)
 
 
     }
