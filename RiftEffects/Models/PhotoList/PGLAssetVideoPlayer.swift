@@ -17,8 +17,8 @@ import Combine
 
 let PGLVideoLoaded = NSNotification.Name(rawValue: "PGLVideoLoaded")
  // let PGLVideoReadyToPlay = NSNotification.Name(rawValue: "PGLVideoReadyToPlay")
-let PGLPlayVideo =  NSNotification.Name(rawValue: "PGLPlayVideo")
-let PGLVideoRunning = NSNotification.Name(rawValue: "PGLVideoRunning")
+ let PGLPlayVideo =  NSNotification.Name(rawValue: "PGLPlayVideo")
+//let PGLVideoRunning = NSNotification.Name(rawValue: "PGLVideoRunning")
 let PGLStopVideo = NSNotification.Name(rawValue: "PGLStopVideo")
 let PGLVideoSourceStateChanged = NSNotification.Name(rawValue: "PGLVideoSourceStateChanged")
 
@@ -396,9 +396,9 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
 
     func notifyVideoStarted() {
 
-        let runningNotification = Notification(name:PGLVideoRunning)
-        NotificationCenter.default.post(name: runningNotification.name, object: self, userInfo: [ : ])
-        Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " Notify PGLVideoRunning") "))
+//        let runningNotification = Notification(name:PGLVideoRunning)
+//        NotificationCenter.default.post(name: runningNotification.name, object: self, userInfo: [ : ])
+//        Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " Notify PGLVideoRunning") "))
 
     }
     

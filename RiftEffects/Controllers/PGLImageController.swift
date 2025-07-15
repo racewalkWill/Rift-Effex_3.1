@@ -857,15 +857,15 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         }
         publishers.append(cancellable!)
 
-        cancellable = myCenter.publisher(for: PGLVideoRunning)
-            .sink() { [weak self]
-            myUpdate in
-                self?.appStack.videoMgr.setStartStop(newState: .Running)
-
-
-            }
-
-        publishers.append(cancellable!)
+//        cancellable = myCenter.publisher(for: PGLVideoRunning)
+//            .sink() { [weak self]
+//            myUpdate in
+//                self?.appStack.videoMgr.setStartStop(newState: .Running)
+//
+//
+//            }
+//
+//        publishers.append(cancellable!)
 
         cancellable = myCenter.publisher(for: PGLAnimationStateChanged)
             .sink() {
