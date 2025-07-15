@@ -16,11 +16,13 @@ import Combine
 
 
 let PGLVideoLoaded = NSNotification.Name(rawValue: "PGLVideoLoaded")
- // let PGLVideoReadyToPlay = NSNotification.Name(rawValue: "PGLVideoReadyToPlay")
- let PGLPlayVideo =  NSNotification.Name(rawValue: "PGLPlayVideo")
-//let PGLVideoRunning = NSNotification.Name(rawValue: "PGLVideoRunning")
-//let PGLStopVideo = NSNotification.Name(rawValue: "PGLStopVideo")
+let PGLPlayVideo =  NSNotification.Name(rawValue: "PGLPlayVideo")
 let PGLVideoSourceStateChanged = NSNotification.Name(rawValue: "PGLVideoSourceStateChanged")
+
+/// Notifications for video - removed
+    // let PGLVideoReadyToPlay = NSNotification.Name(rawValue: "PGLVideoReadyToPlay")
+    //let PGLVideoRunning = NSNotification.Name(rawValue: "PGLVideoRunning")
+    //let PGLStopVideo = NSNotification.Name(rawValue: "PGLStopVideo")
 
 enum VideoSourceState: Int {
     case None

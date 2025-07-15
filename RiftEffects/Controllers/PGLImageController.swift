@@ -1851,12 +1851,12 @@ extension PGLImageController: UIGestureRecognizerDelegate {
         NotificationCenter.default.post(name: notification.name, object: self, userInfo: [ : ])
     }
 
-    fileprivate func hideVideoPlayBtn() {
-            // hide the play button now after clicking to run
-        appStack.videoMgr.setStartStop(newState: .Running)
-
-
-    }
+//    fileprivate func hideVideoPlayBtn() {
+//            // hide the play button now after clicking to run
+//        appStack.videoMgr.setStartStop(newState: .Running)
+//
+//
+//    }
     
     func stopVideoAction() {
         

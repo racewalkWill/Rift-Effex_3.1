@@ -61,7 +61,7 @@ class PGLVideoMgr {
                 thePlayer.isMuted = true
             }
         }
-        setStartStop(newState: .Pause)
+//        setStartStop(newState: .Pause)
 
     }
 
@@ -95,10 +95,10 @@ class PGLVideoMgr {
         setVideoBtnIsHidden(hide: hideBtnState())
     }
 
-    func setStartStop(newState: VideoSourceState) {
-        videoState = newState
-        setVideoBtnIsHidden(hide: hideBtnState())
-    }
+//    func setStartStop(newState: VideoSourceState) {
+//        videoState = newState
+//        setVideoBtnIsHidden(hide: hideBtnState())
+//    }
 
     func hideBtnState() -> Bool {
         var newHideState: Bool!
