@@ -16,7 +16,7 @@ import Combine
 
 
 let PGLVideoLoaded = NSNotification.Name(rawValue: "PGLVideoLoaded")
-let PGLVideoReadyToPlay = NSNotification.Name(rawValue: "PGLVideoReadyToPlay")
+ // let PGLVideoReadyToPlay = NSNotification.Name(rawValue: "PGLVideoReadyToPlay")
 let PGLPlayVideo =  NSNotification.Name(rawValue: "PGLPlayVideo")
 let PGLVideoRunning = NSNotification.Name(rawValue: "PGLVideoRunning")
 let PGLStopVideo = NSNotification.Name(rawValue: "PGLStopVideo")
