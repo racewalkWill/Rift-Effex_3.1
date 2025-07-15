@@ -1860,11 +1860,11 @@ extension PGLImageController: UIGestureRecognizerDelegate {
     
     func stopVideoAction() {
         
-        let notification = Notification(name: PGLStopVideo)
-        NotificationCenter.default.post(name: notification.name, object: self, userInfo: [ : ])
-        appStack.videoMgr.setStartStop(newState: .Pause)
-
-        NSLog("\(String(describing: self.description)) notify stopVideoAction ")
+//        let notification = Notification(name: PGLStopVideo)
+//        NotificationCenter.default.post(name: notification.name, object: self, userInfo: [ : ])
+//        appStack.videoMgr.setStartStop(newState: .Pause)
+//
+//        NSLog("\(String(describing: self.description)) notify stopVideoAction ")
 
 
 

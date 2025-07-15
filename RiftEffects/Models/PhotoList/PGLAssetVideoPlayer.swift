@@ -19,7 +19,7 @@ let PGLVideoLoaded = NSNotification.Name(rawValue: "PGLVideoLoaded")
  // let PGLVideoReadyToPlay = NSNotification.Name(rawValue: "PGLVideoReadyToPlay")
  let PGLPlayVideo =  NSNotification.Name(rawValue: "PGLPlayVideo")
 //let PGLVideoRunning = NSNotification.Name(rawValue: "PGLVideoRunning")
-let PGLStopVideo = NSNotification.Name(rawValue: "PGLStopVideo")
+//let PGLStopVideo = NSNotification.Name(rawValue: "PGLStopVideo")
 let PGLVideoSourceStateChanged = NSNotification.Name(rawValue: "PGLVideoSourceStateChanged")
 
 enum VideoSourceState: Int {
@@ -378,20 +378,20 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
     }
 
     func setupStopVideoListener() {
-        let center = NotificationCenter.default
-        let mainQueue = OperationQueue.main
+//        let center = NotificationCenter.default
+//        let mainQueue = OperationQueue.main
 
-        stopVideoToken = center.addObserver(
-            forName: PGLStopVideo,
-            object: nil,
-            queue: mainQueue) { notification in
-                MainActor.assumeIsolated( {
-                    self.videoPlayer?.pause()
-                    self.videoPlayer?.isMuted = true
-                    NSLog("\(self) PAUSED")
-                })
-
-            }
+//        stopVideoToken = center.addObserver(
+//            forName: PGLStopVideo,
+//            object: nil,
+//            queue: mainQueue) { notification in
+//                MainActor.assumeIsolated( {
+//                    self.videoPlayer?.pause()
+//                    self.videoPlayer?.isMuted = true
+//                    NSLog("\(self) PAUSED")
+//                })
+//
+//            }
     }
 
     func notifyVideoStarted() {
