@@ -131,9 +131,6 @@ class PGLAppStack {
 
         addVideoBtn(toController: theImageController)
 
-
-
-
     }
     func addVideoBtn(toController: PGLImageController?) {
         guard let newImageController = toController

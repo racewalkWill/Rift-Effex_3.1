@@ -39,12 +39,14 @@ class PGLRedraw {
     var oldAnimationState = PGLAnimationState.none
     var appStackVideoMgr: PGLVideoMgr?
     var isFullScreen = false
+    var videoSourceExists = false
 
     var viewWillAppear = false
     private var viewWillAppearCounter = 0
 
     private var transitionFilterCount = 0
     private var varyTimerCount = 0
+    private var videoCount = 0
 
 //    let myCenter =  NotificationCenter.default
 
@@ -86,6 +88,20 @@ class PGLRedraw {
                 if let changeCount = userDataDict["transitionFilterAdd"]   {
                     NSLog("PGLRedraw: transitionExists: \(changeCount) ")
                     self?.changeTransitionFilter(count: changeCount as! Int)
+                }
+            }
+        }
+        publishers.append(cancellable!)
+
+
+        cancellable = NotificationCenter.default.publisher(for: PGLVideoSourceStateChanged)
+            .sink() {
+            [weak self]
+            myUpdate in
+            if let userDataDict = myUpdate.userInfo {
+                if let changeCount = userDataDict["videoSourceStateChange"]   {
+                    NSLog("PGLRedraw: videoSourceStateChange: \(changeCount) ")
+                    self?.changeVideo(count: changeCount as! Int)
                 }
             }
         }
@@ -192,6 +208,10 @@ class PGLRedraw {
         transitionFilterExists = exists
     }
 
+    private func videoCount(exists: Bool) {
+        videoSourceExists = exists
+    }
+
     private func varyTimer(isRunning: Bool) {
         varyTimerIsRunning = isRunning
     }
@@ -220,6 +240,19 @@ class PGLRedraw {
         }
     }
 
+    func changeVideo(count: Int) {
+        // count parm is +1 or -1
+        // pass neg -1 to decrement
+        videoCount += count
+        if videoCount < 0 { videoCount = 0 }
+        NSLog("PGLRedraw: videoCount = \(videoCount) ")
+        videoCount(exists: videoCount > 0 )
+        if oldAnimationState != animationState() {
+            publishAnimationState()
+            oldAnimationState = animationState()
+        }
+    }
+
     func changeVaryTimerCount(count: Int) {
             // count parm is +1 or -1
             // pass neg -1 to decrement
@@ -232,8 +265,8 @@ class PGLRedraw {
     }
 
     func animationState() -> PGLAnimationState {
-        if !transitionFilterExists && !varyTimerIsRunning {
-            // could add videoExists with new way to stop the video..
+        if !transitionFilterExists && !varyTimerIsRunning && !videoSourceExists {
+
             return .none
         }
         if pauseAnimation {

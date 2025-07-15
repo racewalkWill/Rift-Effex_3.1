@@ -20,6 +20,7 @@ let PGLVideoReadyToPlay = NSNotification.Name(rawValue: "PGLVideoReadyToPlay")
 let PGLPlayVideo =  NSNotification.Name(rawValue: "PGLPlayVideo")
 let PGLVideoRunning = NSNotification.Name(rawValue: "PGLVideoRunning")
 let PGLStopVideo = NSNotification.Name(rawValue: "PGLStopVideo")
+let PGLVideoSourceStateChanged = NSNotification.Name(rawValue: "PGLVideoSourceStateChanged")
 
 enum VideoSourceState: Int {
     case None
@@ -67,6 +68,7 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
 
     func releaseVars() {
 
+        postVideoRemove()
         videoMgr?.removeVideoAsset(oldVideo: self)
         
         if playVideoToken != nil {
@@ -216,6 +218,8 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
                                         // move displayLink
 
                                     self.setUpReadyToPlay()
+
+                                    // now trigger the listner in readyToPlay to play
                                     let notification = Notification(name: PGLPlayVideo)
                                     NotificationCenter.default.post(name: notification.name, object: self, userInfo: [ : ])
 //                                }
@@ -305,7 +309,7 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
 
     func displayLinkCopyPixelBuffers()
        {
-           NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers start")
+//           NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers start")
                // really need to get the current item in the videoPlayer
                // ask for it's videoOutput
            guard let currentVideoOutputs = videoPlayer?.currentItem?.outputs
@@ -317,7 +321,7 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
            else {  NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers fails on theVideoOutput")
                return }
 
-           NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers has videoOutput \(String(describing: theVideoOutput))")
+//           NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers has videoOutput \(String(describing: theVideoOutput))")
            let currentTime = theVideoOutput.itemTime(forHostTime: CACurrentMediaTime())
 
            if theVideoOutput.hasNewPixelBuffer(forItemTime: currentTime)
@@ -326,13 +330,13 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
              if let buffer  = theVideoOutput.copyPixelBuffer(forItemTime: currentTime,
                                                      itemTimeForDisplay: nil)
                  {
-                  NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers videoOutput new buffer ")
+//                  NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers videoOutput new buffer ")
                      ///cache the video frame for the next Renderer image request
                 let sourceFrame = CIImage(cvPixelBuffer: buffer)
 
                  let neededTransform = sourceFrame.orientationTransform(for: videoPropertyOrientation)
                  videoCIFrame = sourceFrame.transformed(by: neededTransform)
-                     NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers videoCIFrame set")
+//                     NSLog("PGLAssetVideoPlayer #displayLinkCopyPixelBuffers videoCIFrame set")
 
                 }
          }
@@ -358,14 +362,17 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
                         self?.videoPlayer?.isMuted = false
                         self?.videoPlayer?.play()
                         Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self.debugDescription) + " PLAYING") "))
+                        self?.postVideoAdd()
+                            // notify PGLRedraw videoSourceStateChange +1
                     }
 
                     self?.notifyVideoStarted()
-                    NSLog("PGLAssetVideoPlayer setUpReadyToPlay  videoPlayer?.play")
+//                    NSLog("PGLAssetVideoPlayer setUpReadyToPlay  videoPlayer?.play")
                 })
             }
         NSLog("PGLAssetVideoPlayer setUpReadyToPlay calls #postVideoLoaded")
         postVideoLoaded()
+
             // center.removeObserver(observer)
         setupStopVideoListener()
     }
@@ -402,6 +409,17 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
 
         NotificationCenter.default.post(name: loadButtonNotification.name, object: self, userInfo: [ : ])
 
+
+    }
+
+    func postVideoAdd() {
+        let updateNotification = Notification(name:PGLVideoSourceStateChanged)
+        NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["videoSourceStateChange" : +1 ])
+    }
+
+    func postVideoRemove() {
+        let updateNotification = Notification(name:PGLVideoSourceStateChanged)
+        NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["videoSourceStateChange" : -1 ])
     }
 
     fileprivate func closeWaitingIndicator() {

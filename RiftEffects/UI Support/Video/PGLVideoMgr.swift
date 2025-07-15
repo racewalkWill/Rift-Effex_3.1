@@ -87,10 +87,10 @@ class PGLVideoMgr {
 
     func addStartStopButton(imageController: PGLImageController) {
 //        videoState = .Ready
-        if startStopButtons[imageController] == nil {
-            let newButton = imageController.addVideoControls()
-            startStopButtons[imageController] = newButton
-        }
+//        if startStopButtons[imageController] == nil {
+//            let newButton = imageController.addVideoControls()
+//            startStopButtons[imageController] = newButton
+//        }
 
         setVideoBtnIsHidden(hide: hideBtnState())
     }
@@ -110,17 +110,25 @@ class PGLVideoMgr {
             case .Ready:
                 newHideState = false
             case .Running:
-                newHideState = true
+                newHideState = false  // toolbar button shows while running
+
+                // newHideState = true
 //            default:
 //                newHideState = false
         }
         return newHideState
     }
+
     func setVideoBtnIsHidden(hide: Bool){
-        for (_, videoBtn ) in startStopButtons {
-            videoBtn.isHidden = hide
-            videoBtn.setNeedsDisplay()
-//            imageController needs update event?
+        if hide {
+            NSLog(#function + ": hide true logic MISSING")
+        } else {
+            NSLog(#function + ": hide false logic MISSING")
         }
+//        for (_, videoBtn ) in startStopButtons {
+//            videoBtn.isHidden = hide
+//            videoBtn.setNeedsDisplay()
+////            imageController needs update event?
+//        }
     }
 }

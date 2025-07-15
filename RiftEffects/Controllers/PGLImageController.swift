@@ -584,6 +584,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         setGestureRecogniziers()
             //        toggleViewControls(hide: false ) // restore removed position & text controls
         if appStack.videoMgr.videoState != .None {
+
             appStack.videoMgr.addStartStopButton(imageController: self)
                 // if controller already has video button, then nothing added
         }

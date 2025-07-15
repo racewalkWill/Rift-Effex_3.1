@@ -795,6 +795,8 @@ class PGLFilterStack: Equatable, Hashable  {
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["transitionFilterAdd" : -1 ])
     }
 
+   
+
     func postCurrentFilterChange() {
         // triggers DoNotDraw to false
         let updateFilterNotification = Notification(name: PGLHideParmControlsOnFilterChange)
