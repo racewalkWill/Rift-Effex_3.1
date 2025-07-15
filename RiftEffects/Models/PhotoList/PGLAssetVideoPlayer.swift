@@ -368,7 +368,7 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
                             // notify PGLRedraw videoSourceStateChange +1
                     }
 
-                    self?.notifyVideoStarted()
+//                    self?.notifyVideoStarted()
 //                    NSLog("PGLAssetVideoPlayer setUpReadyToPlay  videoPlayer?.play")
                 })
             }
@@ -376,10 +376,10 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
         postVideoLoaded()
 
             // center.removeObserver(observer)
-        setupStopVideoListener()
+//        setupStopVideoListener()
     }
 
-    func setupStopVideoListener() {
+//    func setupStopVideoListener() {
 //        let center = NotificationCenter.default
 //        let mainQueue = OperationQueue.main
 
@@ -394,15 +394,15 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
 //                })
 //
 //            }
-    }
+//    }
 
-    func notifyVideoStarted() {
+//    func notifyVideoStarted() {
 
 //        let runningNotification = Notification(name:PGLVideoRunning)
 //        NotificationCenter.default.post(name: runningNotification.name, object: self, userInfo: [ : ])
 //        Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " Notify PGLVideoRunning") "))
 
-    }
+//    }
     
         ///  notify the imageController to show the play  button.
     func postVideoLoaded() {
