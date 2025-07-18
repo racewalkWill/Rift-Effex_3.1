@@ -516,6 +516,7 @@ extension PGLFilterAttributeImage {
             // load relation inputAssets and attach an ImageList as input
             // handles childStacks that are not sequence stacks
             loadInputAssets(cdImageParm: cdImageParm)
+            NSLog( #function + "cdImageParm = \(cdImageParm)" )
         }
     }
 
@@ -526,15 +527,16 @@ extension PGLFilterAttributeImage {
             let storedCloudStrings = inputImageList.assetIDs ?? [String]()
             let cloudIDs: [PHCloudIdentifier] = storedCloudStrings.map({ (cloudString: String )
                     in  PHCloudIdentifier(stringValue: cloudString )})
-
+//            NSLog(#function + " #cloudIDs \(String(describing: cloudIDs) )")
             let localIds = cloudId2LocalId(assetCloudIdentifiers: cloudIDs)
-
+//            NSLog(#function + " #localIds \(String(describing: localIds) )")
             let cloudAlbums = inputImageList.albumIds ?? [String]()
 
             let cloudAlbumIDs: [PHCloudIdentifier] = cloudAlbums.map({ (cloudString: String )
                 in  PHCloudIdentifier(stringValue: cloudString )})
 
             let localAlbums = cloudId2LocalId(assetCloudIdentifiers: cloudAlbumIDs)
+//            NSLog(#function + " #localAlbums \(String(describing: localAlbums) )")
             let newImageList = PGLImageList(localAssetIDs: (localIds),albumIds: (localAlbums) )
                 // in limited Library mode some photos may not load
             newImageList.validateLoad()
@@ -552,9 +554,10 @@ extension PGLFilterAttributeImage {
         if self.storedParmImage == nil {
             guard let newCDImageParm =  NSEntityDescription.insertNewObject(forEntityName: "CDParmImage", into: moContext) as? CDParmImage
                 else {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("Data Create failure for CDParmImage")
                 DispatchQueue.main.async {
                     // put back on the main UI loop for the user alert
-                    let alert = UIAlertController(title: "Data Create Error", message: "Data creation failure ", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Data Create Error", message: "Data creation failure CDParmImage ", preferredStyle: .alert)
 
                     alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
                         Logger(subsystem: LogSubsystem, category: LogCategory).error("The userSaveErrorAlert Data Create Error")
@@ -577,9 +580,10 @@ extension PGLFilterAttributeImage {
             if storedParmImage?.inputAssets == nil{
                 guard let storedImageList =  NSEntityDescription.insertNewObject(forEntityName: "CDImageList", into: moContext) as? CDImageList
                     else {
+                    Logger(subsystem: LogSubsystem, category: LogNavigation).error("Data Create failure for CDImageList")
                     DispatchQueue.main.async {
                         // put back on the main UI loop for the user alert
-                        let alert = UIAlertController(title: "Data Create Error", message: "Data creation failure ", preferredStyle: .alert)
+                        let alert = UIAlertController(title: "Data Create Error", message: "Data creation failure CDImageList ", preferredStyle: .alert)
 
                         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
                             Logger(subsystem: LogSubsystem, category: LogCategory).error ("The userSaveErrorAlert Data Create Error.")
@@ -624,7 +628,9 @@ extension PGLFilterAttributeImage {
 
             }
 
-            }
+        } else {
+            Logger(subsystem: LogSubsystem, category: LogNavigation).error( "PGLFilterAttributeImage.writeCDStack: unexpected nil inputAssets - NO CDImageList " )
+        }
         if self.inputStack != nil {
             // a child stack exists
             let childCDStack = self.inputStack?.writeCDStack(moContext: moContext)

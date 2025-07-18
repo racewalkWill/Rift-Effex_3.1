@@ -256,21 +256,21 @@ extension CoreDataWrapper {
 
     // MARK: clean up delete
 
-        func build14DeleteOrphanStacks() -> Bool {
-                Logger(subsystem: LogSubsystem, category: LogCategory).notice( "build14DeleteOrphanStacks")
-            let imageListProcessed =  deleteOrphanImageList()
-                Logger(subsystem: LogSubsystem, category: LogCategory).notice( "completed deleteOrphanImageList")
-            let parmsProcessed =  deleteOrphanParms()
-                Logger(subsystem: LogSubsystem, category: LogCategory).notice( "completed deleteOrphanParms")
-            let filtersProcessed =  deleteOrphanFilters()
-                Logger(subsystem: LogSubsystem, category: LogCategory).notice( "completed deleteOrphanFilters")
-            let stacksProcessed =  deleteOrphanStacks()
-                Logger(subsystem: LogSubsystem, category: LogCategory).notice( "completed deleteOrphanStacks")
-//                resaveStackThumbnails()
-            return ( stacksProcessed && filtersProcessed && parmsProcessed && imageListProcessed)
-
-
-        }
+//        func build14DeleteOrphanStacks() -> Bool {
+//                Logger(subsystem: LogSubsystem, category: LogCategory).notice( "build14DeleteOrphanStacks")
+//            let imageListProcessed =  deleteOrphanImageList()
+//                Logger(subsystem: LogSubsystem, category: LogCategory).notice( "completed deleteOrphanImageList")
+//            let parmsProcessed =  deleteOrphanParms()
+//                Logger(subsystem: LogSubsystem, category: LogCategory).notice( "completed deleteOrphanParms")
+//            let filtersProcessed =  deleteOrphanFilters()
+//                Logger(subsystem: LogSubsystem, category: LogCategory).notice( "completed deleteOrphanFilters")
+//            let stacksProcessed =  deleteOrphanStacks()
+//                Logger(subsystem: LogSubsystem, category: LogCategory).notice( "completed deleteOrphanStacks")
+////                resaveStackThumbnails()
+//            return ( stacksProcessed && filtersProcessed && parmsProcessed && imageListProcessed)
+//
+//
+//        }
 
 //    func resaveStackThumbnails() {
 //        // before build 14, version 12, the thumbnails were full size
