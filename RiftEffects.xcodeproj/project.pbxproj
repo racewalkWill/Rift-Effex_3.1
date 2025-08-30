@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 90;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -101,6 +101,7 @@
 		A3AF92DD2D40093A001E4785 /* PGLFilterAttributeAffine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AF92DC2D40093A001E4785 /* PGLFilterAttributeAffine.swift */; };
 		A3AF92DF2D400952001E4785 /* PGLFilterAttributeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AF92DE2D400952001E4785 /* PGLFilterAttributeColor.swift */; };
 		A3AF92E12D4009BF001E4785 /* PGLAttributeRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AF92E02D4009BF001E4785 /* PGLAttributeRectangle.swift */; };
+		A3B412962E5B72810060BDC6 /* PGLAppStackOptimize.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B412952E5B72810060BDC6 /* PGLAppStackOptimize.swift */; };
 		A3B5A1412922753B003DBE92 /* AAPLShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = A3B5A1402922753B003DBE92 /* AAPLShaders.metal */; };
 		A3B5BCB02BAFA373007606D0 /* PGLGradientChildFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B5BCAF2BAFA373007606D0 /* PGLGradientChildFilter.swift */; };
 		A3B6EC0D2E1C404400EBCE55 /* PGLMusic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B6EC0C2E1C404400EBCE55 /* PGLMusic.swift */; };
@@ -166,6 +167,8 @@
 		A3C49BF32E16ED4D001AC150 /* AirPlay.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3C49BF22E16ED4D001AC150 /* AirPlay.storyboard */; };
 		A3CA2BFF295A01FD00502A8A /* PGLConvolutionFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CA2BFE295A01FD00502A8A /* PGLConvolutionFilter.swift */; };
 		A3CB99C42BBAE5980015E03F /* PGLVectorScaling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CB99C32BBAE5980015E03F /* PGLVectorScaling.swift */; };
+		A3CBB6282E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CBB6272E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift */; };
+		A3CBB62A2E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CBB6292E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift */; };
 		A3D04B142A8444A300E6DB16 /* PGLStackInfoHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D04B122A8444A300E6DB16 /* PGLStackInfoHeader.swift */; };
 		A3D04B152A8444A300E6DB16 /* PGLStackInfoHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3D04B132A8444A300E6DB16 /* PGLStackInfoHeader.xib */; };
 		A3D68B312D1DC895007FD92E /* PGLMaskFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D68B302D1DC895007FD92E /* PGLMaskFilter.swift */; };
@@ -310,6 +313,7 @@
 		A3AF92DC2D40093A001E4785 /* PGLFilterAttributeAffine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeAffine.swift; sourceTree = "<group>"; };
 		A3AF92DE2D400952001E4785 /* PGLFilterAttributeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeColor.swift; sourceTree = "<group>"; };
 		A3AF92E02D4009BF001E4785 /* PGLAttributeRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAttributeRectangle.swift; sourceTree = "<group>"; };
+		A3B412952E5B72810060BDC6 /* PGLAppStackOptimize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAppStackOptimize.swift; sourceTree = "<group>"; };
 		A3B5A13F2922753B003DBE92 /* AAPLShaderTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLShaderTypes.h; sourceTree = "<group>"; };
 		A3B5A1402922753B003DBE92 /* AAPLShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = AAPLShaders.metal; sourceTree = "<group>"; };
 		A3B5BCAF2BAFA373007606D0 /* PGLGradientChildFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLGradientChildFilter.swift; sourceTree = "<group>"; };
@@ -384,6 +388,8 @@
 		A3C49BF22E16ED4D001AC150 /* AirPlay.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = AirPlay.storyboard; path = AirPlay/AirPlay.storyboard; sourceTree = "<group>"; };
 		A3CA2BFE295A01FD00502A8A /* PGLConvolutionFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLConvolutionFilter.swift; sourceTree = "<group>"; };
 		A3CB99C32BBAE5980015E03F /* PGLVectorScaling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLVectorScaling.swift; sourceTree = "<group>"; };
+		A3CBB6272E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDImageList+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A3CBB6292E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDImageList+CoreDataClass.swift"; sourceTree = "<group>"; };
 		A3D04B122A8444A300E6DB16 /* PGLStackInfoHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackInfoHeader.swift; sourceTree = "<group>"; };
 		A3D04B132A8444A300E6DB16 /* PGLStackInfoHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PGLStackInfoHeader.xib; sourceTree = "<group>"; };
 		A3D68B302D1DC895007FD92E /* PGLMaskFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMaskFilter.swift; sourceTree = "<group>"; };
@@ -417,25 +423,19 @@
 /* Begin PBXFrameworksBuildPhase section */
 		A3BF500624D3298F00CD5114 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				A341186425C300F300587590 /* CloudKit.framework in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A3BF501F24D3299100CD5114 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A3BF502A24D3299100CD5114 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -496,6 +496,7 @@
 				A3BF50A024D32A3400CD5114 /* PGLFilterStack.swift */,
 				A3E17A1A29F5DBB2006A39A6 /* PGLFilterStackDemo.swift */,
 				A3BF508624D32A3400CD5114 /* PGLAppStack.swift */,
+				A3B412952E5B72810060BDC6 /* PGLAppStackOptimize.swift */,
 				A38E6FF42DD0EBD300E050DC /* PGLFilterIndent.swift */,
 				A35311002C33571300FB29EA /* PGLStackSection.swift */,
 			);
@@ -656,7 +657,9 @@
 			isa = PBXGroup;
 			children = (
 				A3712BFC2908628400993C5E /* CDStoredFilter+CoreDataProperties.swift */,
+				A3CBB6272E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift */,
 				A3712BFB2908628400993C5E /* CDStoredFilter+CoreDataClass.swift */,
+				A3CBB6292E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift */,
 				A3BF504B24D32A3400CD5114 /* PGL-CDFilterStack.swift */,
 				A3EAEFD02C29BF9700174793 /* CDFilterStack_Struct.swift */,
 				A375F25E26DFE47E00721D3A /* PGLStackProvider.swift */,
@@ -856,8 +859,6 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
 			name = RiftEffects;
 			productName = Surreality;
 			productReference = A3BF500924D3298F00CD5114 /* RiftEffects.app */;
@@ -932,7 +933,7 @@
 				Base,
 			);
 			mainGroup = A3BF500024D3298F00CD5114;
-			preferredProjectObjectVersion = 77;
+			preferredProjectObjectVersion = 90;
 			productRefGroup = A3BF500A24D3298F00CD5114 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -947,7 +948,6 @@
 /* Begin PBXResourcesBuildPhase section */
 		A3BF500724D3298F00CD5114 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				A308939F251E977400F244D6 /* Launch Screen.storyboard in Resources */,
 				A3BF512C24D32A3400CD5114 /* StackCell.xib in Resources */,
@@ -967,28 +967,22 @@
 				A3651FA42A9BD4E1006F50F6 /* PGLStackAlbumHeader.xib in Resources */,
 				A333185C2CE42D5D00FA8A45 /* SaveButtons.xib in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A3BF502024D3299100CD5114 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A3BF502B24D3299100CD5114 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A3BF500524D3298F00CD5114 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				A3BF511924D32A3400CD5114 /* RiftEffects.xcdatamodeld in Sources */,
 				A303930F27AADED800E2A3D4 /* PGLCompactPresentationController.swift in Sources */,
@@ -1025,6 +1019,7 @@
 				A3BB9E092B73ED4D0041F914 /* AVAssetExtension.swift in Sources */,
 				A320F6262669550E008F6090 /* PGLInfoPrivacyController.swift in Sources */,
 				A3BF50EB24D32A3400CD5114 /* PGLVisionDetection.swift in Sources */,
+				A3B412962E5B72810060BDC6 /* PGLAppStackOptimize.swift in Sources */,
 				A30BF4332CEA503A0062C84C /* PGLRandomParms.swift in Sources */,
 				A3BF511324D32A3400CD5114 /* PGLFilterAttributeAttributedString.swift in Sources */,
 				A3BF512824D32A3400CD5114 /* PGLFilterStack.swift in Sources */,
@@ -1049,10 +1044,12 @@
 				A35FF77E26DC346200D78252 /* PGLCoreData+Defns.swift in Sources */,
 				58165C1C2DEE4D4300A45425 /* PGLAirPlayMetalController.swift in Sources */,
 				A3C11A8B29E9D9F5001D0831 /* PGLPersonSegmentation.swift in Sources */,
+				A3CBB62A2E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift in Sources */,
 				A39466822832E30A00A67319 /* PGLSupplementNavController.swift in Sources */,
 				A3DD328725CC999C00ABEE61 /* PGLHelpPageController.swift in Sources */,
 				A3728BBD2BB4DEAE0019761A /* PGLGradientVectorAttribute.swift in Sources */,
 				A3DC3DE227B17EF500E4C111 /* PGLCompactImageController.swift in Sources */,
+				A3CBB6282E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift in Sources */,
 				A3BF513124D32A3400CD5114 /* Renderer.swift in Sources */,
 				A3BF511424D32A3400CD5114 /* CIFilterExtensions.swift in Sources */,
 				A3BF513B24D32A3400CD5114 /* GridViewCell.swift in Sources */,
@@ -1152,11 +1149,9 @@
 				A39B220E2B558E7C0026C7FE /* PGLImageListPicker.swift in Sources */,
 				A3BF50EC24D32A3400CD5114 /* PGLVisionProtocol.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A3BF501E24D3299100CD5114 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				A3DC6E592DBBF23A00E32FAA /* PGLFilterDescriptorTests.swift in Sources */,
 				A3DC6E5B2DBC02AF00E32FAA /* PGLCategorySurvey.swift in Sources */,
@@ -1164,17 +1159,14 @@
 				A3BF515024D32D3400CD5114 /* PGLSourceFilterTests.swift in Sources */,
 				A3FF819D2DBC39F500CD705C /* PGLDataStoreTests.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A3BF502924D3299100CD5114 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				A3BF503224D3299100CD5114 /* SurrealityUITests.swift in Sources */,
 				A32772F12B336BDC00C4428A /* PGLAsset.swift in Sources */,
 				A3BF515924D32D7400CD5114 /* GlanceUITests.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
@@ -1192,7 +1184,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		A3BF503424D3299100CD5114 /* Debug */ = {
+		A3BF503424D3299100CD5114 /* Debug configuration for PBXProject "RiftEffects" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1230,6 +1222,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEBUG_INFORMATION_VERSION = dwarf5;
 				DEVELOPMENT_TEAM = 9CZQPZ85AZ;
+				ENABLE_DEBUG_DYLIB = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1261,7 +1254,7 @@
 			};
 			name = Debug;
 		};
-		A3BF503524D3299100CD5114 /* Release */ = {
+		A3BF503524D3299100CD5114 /* Release configuration for PBXProject "RiftEffects" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1299,6 +1292,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEBUG_INFORMATION_VERSION = dwarf5;
 				DEVELOPMENT_TEAM = 9CZQPZ85AZ;
+				ENABLE_DEBUG_DYLIB = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1324,7 +1318,7 @@
 			};
 			name = Release;
 		};
-		A3BF503724D3299100CD5114 /* Debug */ = {
+		A3BF503724D3299100CD5114 /* Debug configuration for PBXNativeTarget "RiftEffects" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1342,7 +1336,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Rift Effects";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				"INFOPLIST_KEY_NSHumanReadableCopyright[sdk=*]" = "copyright 2024 Will Loew-Blosser";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1374,7 +1368,7 @@
 			};
 			name = Debug;
 		};
-		A3BF503824D3299100CD5114 /* Release */ = {
+		A3BF503824D3299100CD5114 /* Release configuration for PBXNativeTarget "RiftEffects" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1393,7 +1387,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Rift Effects";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				"INFOPLIST_KEY_NSHumanReadableCopyright[sdk=*]" = "copyright 2024 Will Loew-Blosser";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1427,7 +1421,7 @@
 			};
 			name = Release;
 		};
-		A3BF503A24D3299100CD5114 /* Debug */ = {
+		A3BF503A24D3299100CD5114 /* Debug configuration for PBXNativeTarget "RiftEffectsTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1448,7 +1442,7 @@
 			};
 			name = Debug;
 		};
-		A3BF503B24D3299100CD5114 /* Release */ = {
+		A3BF503B24D3299100CD5114 /* Release configuration for PBXNativeTarget "RiftEffectsTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1469,7 +1463,7 @@
 			};
 			name = Release;
 		};
-		A3BF503D24D3299100CD5114 /* Debug */ = {
+		A3BF503D24D3299100CD5114 /* Debug configuration for PBXNativeTarget "RiftEffectsUITests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -1489,7 +1483,7 @@
 			};
 			name = Debug;
 		};
-		A3BF503E24D3299100CD5114 /* Release */ = {
+		A3BF503E24D3299100CD5114 /* Release configuration for PBXNativeTarget "RiftEffectsUITests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -1515,37 +1509,33 @@
 		A3BF500424D3298F00CD5114 /* Build configuration list for PBXProject "RiftEffects" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A3BF503424D3299100CD5114 /* Debug */,
-				A3BF503524D3299100CD5114 /* Release */,
+				A3BF503424D3299100CD5114 /* Debug configuration for PBXProject "RiftEffects" */,
+				A3BF503524D3299100CD5114 /* Release configuration for PBXProject "RiftEffects" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		A3BF503624D3299100CD5114 /* Build configuration list for PBXNativeTarget "RiftEffects" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A3BF503724D3299100CD5114 /* Debug */,
-				A3BF503824D3299100CD5114 /* Release */,
+				A3BF503724D3299100CD5114 /* Debug configuration for PBXNativeTarget "RiftEffects" */,
+				A3BF503824D3299100CD5114 /* Release configuration for PBXNativeTarget "RiftEffects" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		A3BF503924D3299100CD5114 /* Build configuration list for PBXNativeTarget "RiftEffectsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A3BF503A24D3299100CD5114 /* Debug */,
-				A3BF503B24D3299100CD5114 /* Release */,
+				A3BF503A24D3299100CD5114 /* Debug configuration for PBXNativeTarget "RiftEffectsTests" */,
+				A3BF503B24D3299100CD5114 /* Release configuration for PBXNativeTarget "RiftEffectsTests" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		A3BF503C24D3299100CD5114 /* Build configuration list for PBXNativeTarget "RiftEffectsUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A3BF503D24D3299100CD5114 /* Debug */,
-				A3BF503E24D3299100CD5114 /* Release */,
+				A3BF503D24D3299100CD5114 /* Debug configuration for PBXNativeTarget "RiftEffectsUITests" */,
+				A3BF503E24D3299100CD5114 /* Release configuration for PBXNativeTarget "RiftEffectsUITests" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */

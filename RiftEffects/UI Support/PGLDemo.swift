@@ -288,6 +288,8 @@ class PGLDemo {
         let goToStack = Notification(name: PGLLoadedDataStack)
         NotificationCenter.default.post(goToStack)
 
+//        let optimizeStack = Notification(name: PGLOptimizeStack)
+//        NotificationCenter.default.post(optimizeStack)
 
     }
 

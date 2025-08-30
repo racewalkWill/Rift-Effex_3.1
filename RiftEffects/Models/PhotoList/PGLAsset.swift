@@ -204,6 +204,17 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable  {
             return pickedCIImage
         }
 
+    func uiImage() -> UIImage? {
+        if let myCI = imageFrom()  {
+            return UIImage(ciImage:myCI )
+
+        } else {
+            return nil
+        }
+
+    }
+
+
 
     //MARK: Video
     func isVideo() -> Bool {

@@ -1,10 +1,9 @@
 //
 //  CDImageList+CoreDataClass.swift
-//  Glance
+//  RiftEffects
 //
-//  Created by Will on 12/4/18.
-//  Copyright © 2018 Will. All rights reserved.
-//
+//  Created by Will on 8/30/25.
+//  Copyright © 2025 Will Loew-Blosser. All rights reserved.
 //
 
 import Foundation

@@ -10,6 +10,7 @@ import Foundation
 import os
 import UIKit
 import CoreData
+import Combine
 
 
 let  PGLStackChange = NSNotification.Name(rawValue: "PGLStackChange")
@@ -17,6 +18,9 @@ let  PGLStackNameChange = NSNotification.Name(rawValue: "PGLStackNameChange")
 
 let PGLSelectActiveStackRow = NSNotification.Name(rawValue: "PGLSelectActiveStackRow")
  // 2021/02/02 PGLSelectActiveStackRow may not be used.. remove?
+
+let  PGLOptimizeStack = NSNotification.Name(rawValue: "PGLOptimizeStack")
+
 enum StackDisplayMode: String {
      case All
      case Single
@@ -44,7 +48,9 @@ class PGLAppStack {
 
         /// display just the current filter if true
     var showFilterImage = false
-
+    var publishers = [any Cancellable]()
+    var cancellable: (any Cancellable)?
+    
     lazy var dataProvider: PGLStackProvider = {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
 
@@ -69,7 +75,17 @@ class PGLAppStack {
 //        initialImagePick = PGLImageList.
 //        pixelBuffer = TestPixelBuffer()
 
-        
+        let myCenter =  NotificationCenter.default
+
+        cancellable = myCenter.publisher(for: PGLOptimizeStack )
+            .sink() {[weak self]
+                myUpdate in
+
+                guard let self = self else { return } // a released object sometimes receives the notification
+                              // the guard is based upon the apple sample app 'Conference-Diffable'
+                self.optimizeStack()
+            }
+        publishers.append(cancellable!)
     }
     // MARK: REFACTOR ParmController
     // this section contains the logic from the PGLSelectParmController
