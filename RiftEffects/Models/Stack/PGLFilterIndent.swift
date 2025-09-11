@@ -10,7 +10,7 @@ import UIKit
 import os
 
 @MainActor
-class PGLFilterIndent: Hashable, Equatable {
+class PGLFilterIndent: Hashable, Equatable , @preconcurrency CustomDebugStringConvertible {
 
         //MARK: Hashable, Equatable
     nonisolated static func == (lhs: PGLFilterIndent, rhs: PGLFilterIndent) -> Bool {
@@ -46,6 +46,14 @@ class PGLFilterIndent: Hashable, Equatable {
             return filter.localizedName()
         }
 
+    }
+    public var debugDescription: String {
+        if let thisName = filter.descriptorDisplayName  {
+            return thisName
+        }
+        else {
+            return filter.localizedName()
+        }
     }
 
     func setCellViewerStackBackground(aCell: UITableViewCell, viewerStack: PGLFilterStack) {

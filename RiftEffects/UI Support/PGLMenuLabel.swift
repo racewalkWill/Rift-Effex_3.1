@@ -22,5 +22,6 @@ enum PGLMenuLabel: String {
     case Record = "Record"
     case Guide = "Guide"
     case Music = "Music"
+    case Optimize = "Optimize"
 
 }

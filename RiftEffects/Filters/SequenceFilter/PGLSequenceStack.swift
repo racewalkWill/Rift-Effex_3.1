@@ -258,6 +258,12 @@ class PGLSequenceStack: PGLFilterStack {
         return false
     }
 
+    override func renderOnImageUpdate(stackInputImage: CIImage?) -> Bool {
+        // Sequence stack always is false
+        // will render from the filter list
+        return false
+    }
+
     //MARK: outputImage
 
         /// uses the appStack setting for showCurrentFilterImage

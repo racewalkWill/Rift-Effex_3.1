@@ -669,7 +669,8 @@ class PGLFilterStack: Equatable, Hashable  {
             }
             filter = activeFilters[index]
             if imageInputIsEmpty(atFilterIndex: index) {
-                if thisImage == nil {
+                if renderOnImageUpdate(stackInputImage: thisImage) {
+                    // sequenceStack always will answer false and provide update
                     // don't render from filter with no input.
                     continue
                 }
@@ -810,6 +811,13 @@ class PGLFilterStack: Equatable, Hashable  {
         // parent SequencedFilters
         let thisfilter = activeFilters[atFilterIndex]
         return thisfilter.hasImageParmMissingInput()
+    }
+
+    func renderOnImageUpdate (stackInputImage:CIImage?) -> Bool{
+        // default implementation
+        // sequence stack always answers true
+        return stackInputImage == nil
+
     }
 
     func stackImageInputsExist() -> Bool {

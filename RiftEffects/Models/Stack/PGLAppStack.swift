@@ -75,17 +75,7 @@ class PGLAppStack {
 //        initialImagePick = PGLImageList.
 //        pixelBuffer = TestPixelBuffer()
 
-        let myCenter =  NotificationCenter.default
 
-        cancellable = myCenter.publisher(for: PGLOptimizeStack )
-            .sink() {[weak self]
-                myUpdate in
-
-                guard let self = self else { return } // a released object sometimes receives the notification
-                              // the guard is based upon the apple sample app 'Conference-Diffable'
-                self.optimizeStack()
-            }
-        publishers.append(cancellable!)
     }
     // MARK: REFACTOR ParmController
     // this section contains the logic from the PGLSelectParmController

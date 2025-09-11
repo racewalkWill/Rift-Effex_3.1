@@ -43,26 +43,34 @@ func optimizeStack() {
     var previousOutput: UIImage?
     showFilterImage = true
     self.postFilterChangeRedraw()
-    let startingAttribute = viewerStack.currentFilter().getInputImageAttribute()
-    var startingImage = startingAttribute?.inputCollection?.imageAssets.first?.uiImage() ?? UIImage()
-    previousOutput = startingImage
 
-    for aFilter in flattenFilters() {
+    let allFilters: [PGLFilterIndent] = flattenFilters()
+    let startingAttribute = allFilters.first?.filter.getInputImageAttribute()
+
+    let startingImage = startingAttribute?.inputCollection?.imageAssets.first?.uiImage() ?? UIImage()
+    previousOutput = UIImage() // startingImage
+    for aFilter in allFilters {
         _ = moveTo(filterIndent: aFilter)
         do {
             currentOutput = try appRenderer.captureImage()
         } catch {
             print("Error capturing image during stack optimization: \(error)")
         }
-        if currentOutput != nil && currentOutput!.isEqual(previousOutput) {
+        if currentOutput != nil  {
             //image1 != nil && image1!.isEqual(image2)
-            failingFilters.append(aFilter)
+            if ( currentOutput!.isEqual(previousOutput)) {
+                failingFilters.append(aFilter)
+            } else {
+                passingFilters.append(aFilter)
+            }
+
         } else {
-            passingFilters.append(aFilter)
+            // nil output
+            failingFilters.append(aFilter)
 
         }
-        previousOutput = currentOutput ?? UIImage() // advance for next pass
-
+//        previousOutput = currentOutput // ?? UIImage() // advance for next pass
+// only test against empty UIImage
 
     }
     NSLog(#function + " passingFilters = \(passingFilters)")

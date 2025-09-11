@@ -198,7 +198,11 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
             action in
             imageViewerController.musicButtonTapped(controllerMusicBtn: self.moreBtn)
 
-        },
+        } ,
+          UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) {
+             action in
+            imageViewerController.optimizeStack(controllerMusicBtn: self.moreBtn)
+         }
         ])
         moreBtn.menu = contextMenu
     }

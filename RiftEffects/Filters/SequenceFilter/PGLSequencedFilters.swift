@@ -123,15 +123,8 @@ class PGLSequencedFilters: PGLSourceFilter {
     override func hasImageParmMissingInput() -> Bool {
         // only one of the image inputs is required for sequencedFilters
         // do not test the optional background or mask image for inputs
-
-        if let inputAttribute = attribute(nameKey: kCIInputImageKey )
-        {
-            if  inputAttribute.inputParmType() == ParmInputState.missingImageInput
-                    {
-                return true }
-        }
-
-        return false
+        return sequenceStack.isEmptyStack()
+//   
     }
 
     override  func outputImageBasic() -> CIImage? {
