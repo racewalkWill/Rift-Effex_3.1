@@ -33,50 +33,52 @@ extension PGLAppStack {
         }
         publishers = [any Cancellable]()
     }
-///step through all filters in the stacks and remove filters that do not produce any changes in the output,
-///optimize individual filters to produce changes by updating values
-///compares rendered image output of a filter with the prior filters rendered output
-func optimizeStack() {
-    var passingFilters: [PGLFilterIndent] = []
-    var failingFilters: [PGLFilterIndent] = []
-    var currentOutput: UIImage?
-    var previousOutput: UIImage?
-    showFilterImage = true
-    self.postFilterChangeRedraw()
 
-    let allFilters: [PGLFilterIndent] = flattenFilters()
-    let startingAttribute = allFilters.first?.filter.getInputImageAttribute()
+    func basicOptimizeStack() {
 
-    let startingImage = startingAttribute?.inputCollection?.imageAssets.first?.uiImage() ?? UIImage()
-    previousOutput = UIImage() // startingImage
-    for aFilter in allFilters {
-        _ = moveTo(filterIndent: aFilter)
-        do {
-            currentOutput = try appRenderer.captureImage()
-        } catch {
-            print("Error capturing image during stack optimization: \(error)")
-        }
-        if currentOutput != nil  {
-            //image1 != nil && image1!.isEqual(image2)
-            if ( currentOutput!.isEqual(previousOutput)) {
+        var passingFilters: [PGLFilterIndent] = []
+        var failingFilters: [PGLFilterIndent] = []
+
+        let allFilters: [PGLFilterIndent] = flattenFilters()
+            //    let startingAttribute = allFilters.first?.filter.getInputImageAttribute()
+        
+            //    let startingImage = startingAttribute?.inputCollection?.imageAssets.first?.uiImage() ?? UIImage()
+        NSLog (#function, String(describing: self))
+        for aFilter in allFilters {
+            NSLog (#function, String(describing: aFilter), " moveTo START")
+            _ = moveTo(filterIndent: aFilter)
+            NSLog (#function, String(describing: aFilter), " moveTo END")
+            if aFilter.isAverageLuminanceNearZero() {
+                    //image1 != nil && image1!.isEqual(image2)
                 failingFilters.append(aFilter)
             } else {
                 passingFilters.append(aFilter)
             }
-
-        } else {
-            // nil output
-            failingFilters.append(aFilter)
-
+            
         }
-//        previousOutput = currentOutput // ?? UIImage() // advance for next pass
-// only test against empty UIImage
+        let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
 
+        NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["flag" : false as AnyObject])
+        
+        NSLog(#function + " passingFilters = \(passingFilters)")
+        if !failingFilters.isEmpty {
+            NSLog(#function + " failingFilters = \(failingFilters)")
+        }
     }
-    NSLog(#function + " passingFilters = \(passingFilters)")
-    if !failingFilters.isEmpty {
-        NSLog(#function + " failingFilters = \(failingFilters)")
-    }
+    
+        ///step through all filters in the stacks and remove filters that do not produce any changes in the output,
+///optimize individual filters to produce changes by updating values
+///compares rendered image output of a filter with the prior filters rendered output
+func optimizeStack() {
+
+    // startingImage
+    showFilterImage = true
+    self.postFilterChangeRedraw()
+    let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
+
+    NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["measureFlag" : true as AnyObject])
+    NSLog("PGLAppStack: optimizeStack() posted PGLMetalLuminanceMeasureFlag")
+
 
 }
 

@@ -66,4 +66,8 @@ class PGLFilterIndent: Hashable, Equatable , @preconcurrency CustomDebugStringCo
             aCell.backgroundColor = nil
         }
     }
+
+    func isAverageLuminanceNearZero() -> Bool {
+        return filter.isAverageLuminanceNearZero
+    }
 }

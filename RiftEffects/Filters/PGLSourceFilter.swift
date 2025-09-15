@@ -101,6 +101,8 @@ static let LogParmValues = false
     unowned var wrapper: PGLDissolveWrapperFilter?
 private  var userDescription: String?
 
+    var isAverageLuminanceNearZero = false
+
 @IBInspectable var debugOutputImage = false
 
 

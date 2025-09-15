@@ -20,6 +20,7 @@ let PGLSelectActiveStackRow = NSNotification.Name(rawValue: "PGLSelectActiveStac
  // 2021/02/02 PGLSelectActiveStackRow may not be used.. remove?
 
 let  PGLOptimizeStack = NSNotification.Name(rawValue: "PGLOptimizeStack")
+let PGLRunLuminanceMeasureFlag = NSNotification.Name(rawValue: "PGLRunLuminanceMeasureFlag")
 
 enum StackDisplayMode: String {
      case All
@@ -74,6 +75,15 @@ class PGLAppStack {
         outputStack = viewerStack
 //        initialImagePick = PGLImageList.
 //        pixelBuffer = TestPixelBuffer()
+        let myCenter =  NotificationCenter.default
+        cancellable = myCenter.publisher(for:  PGLRunLuminanceMeasureFlag)
+            .sink() { [weak self]
+                myUpdate in
+                guard let self = self else { return }
+                NSLog("PGLAppStak: received PGLRunLuminanceMeasureFlag")
+                self.basicOptimizeStack()
+            }
+        publishers.append(cancellable!)
 
 
     }

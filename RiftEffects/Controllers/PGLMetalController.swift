@@ -12,8 +12,11 @@ import CoreGraphics
 import UIKit
 import simd
 import os
+import Combine
 
 @MainActor var FullScreenAspectFillMode = false
+
+let  PGLMetalLuminanceMeasureFlag = NSNotification.Name(rawValue: "PGLMetalLuminanceMeasureFlag")
 
 class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
@@ -41,6 +44,8 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
     var startingPinchScale: CGFloat = 1.0
     var startingPanCenter: CGPoint?
 
+    var publishers = [any Cancellable]()
+    var cancellable: (any Cancellable)?
 
     //MARK: View Load/Unload
 
@@ -93,6 +98,13 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
         metalRender = nil
     }
 
+    override func releaseNotifications() {
+        for aCancel in publishers {
+            aCancel.cancel()
+        }
+        publishers = [any Cancellable]()
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         removeGestureRecogniziers()
         super.viewWillDisappear(animated)
@@ -109,6 +121,20 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
            NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by \(FullScreenTargetTransform)")
         }
 
+        let myCenter =  NotificationCenter.default
+        cancellable = myCenter.publisher(for:  PGLMetalLuminanceMeasureFlag)
+            .sink() { [weak self]
+                myUpdate in
+                guard let self = self else { return }
+
+                if let userDataDict = myUpdate.userInfo {
+                    if let flag  = userDataDict["measureFlag"] as? Bool  {
+                        self.setMetalLuminanceFlag(flag: flag)
+                        NSLog("\( String(describing: self) + "-" + #function)" + " setMetalLuminanceFlag to \(flag)")
+                    }
+                }
+            }
+        publishers.append(cancellable!)
 //        DoNotDraw = true
                 // blank the screen briefly fixes fullscreen small to big jump
 
@@ -128,6 +154,7 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
     override func viewDidDisappear(_ animated: Bool) {
         resetVars()
+        releaseNotifications()
     }
 
 
@@ -271,5 +298,20 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
 
+        //MARK: Optimize luminance
+    func setMetalLuminanceFlag(flag:Bool)
+    {
+        // setting metalRender view to nil will turn off luminance capture
+        guard let myMetalView = view as? MTKView else
+        {
+            metalRender?.useLuminanceMeasurementForStacks(myView: nil)
+            return
+        }
+        if flag {
+            metalRender?.useLuminanceMeasurementForStacks(myView: myMetalView)
+        } else {
+            metalRender?.useLuminanceMeasurementForStacks(myView: nil)
+        }
+    }
 
 }

@@ -76,6 +76,9 @@ class Renderer: NSObject, MTKViewDelegate {
     var myCaptureSession: PGLCaptureOutput?
     var DoCapture = false
     var childDeviceRenderer: PGLRenderOnAirPlay?
+    // metalView is temp set for measuringLuminance
+    // normally nil
+    var metalView: MTKView?
 
 
 
@@ -107,6 +110,75 @@ class Renderer: NSObject, MTKViewDelegate {
         let zoomDesc = PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self)!
         let zoomFilter = zoomDesc.pglSourceFilter() as! PGLScaleDownFrame
         return zoomFilter
+    }
+
+    // MARK: Optimize stacks
+    func shouldMeasureLuminance() -> Bool {
+        return metalView != nil
+
+    }
+
+    func isAverageLuminanceNearZero(threshold : CGFloat = 0.0) -> Bool {
+        // should just capture the current rendered ciImage from drawBasicCentered
+        NSLog (#function, String(describing: self))
+        guard let theMetalView = self.metalView else { return false }
+        if let ciOutput = currentDrawableAsCIImage(from: theMetalView) {
+            let extent = ciOutput.extent
+                // CIAreaAverage returns a 1x1 image with RGBA average
+            // need to render the ciOutput
+          guard let areaAverageFilter = CIFilter(name: "CIAreaAverage") else { return false }
+          areaAverageFilter.setValue(ciOutput, forKey: kCIInputImageKey)
+          areaAverageFilter.setValue(CIVector(cgRect: extent), forKey: kCIInputExtentKey)
+
+            guard let outputImage = areaAverageFilter.outputImage else { return false }
+
+                var bitmap = [UInt8](repeating: 0, count: 4)
+                ciMetalContext.render(outputImage,
+                               toBitmap: &bitmap,
+                               rowBytes: 4,
+                               bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
+                               format: .RGBA8,
+                               colorSpace: CGColorSpace(name: CGColorSpace.sRGB))
+
+                let r = CGFloat(bitmap[0]) / 255.0
+                let g = CGFloat(bitmap[1]) / 255.0
+                let b = CGFloat(bitmap[2]) / 255.0
+
+                // Compute perceived luminance
+                let luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+                return luminance <= threshold
+
+        }
+        else { return false }
+    }
+
+    func useLuminanceMeasurementForStacks(myView: MTKView?)  {
+        // will be set to nil after optimize has the luminanceMeasures
+        metalView = myView
+        if metalView != nil {
+            let runMeasureNotification = Notification(name: PGLRunLuminanceMeasureFlag)
+
+            NotificationCenter.default.post(runMeasureNotification)
+            NSLog(#function , "PGLRunLuminanceMeasureFlag posted")
+        }
+        
+    }
+
+    func currentDrawableAsCIImage(from view: MTKView) -> CIImage? {
+        // Safely get the current drawable from the MTKView
+        guard let drawable = view.currentDrawable else { return nil }
+        let texture = drawable.texture
+
+        // Layer colorspace from set(metalView:) setup code
+        let colorSpace = CGColorSpace(name: CGColorSpace.extendedLinearDisplayP3)
+
+        // Try to construct from the texture
+        if let imageFromTexture = CIImage(mtlTexture: texture, options: [.colorSpace: colorSpace as Any]) {
+            // Adjust orientation if needed
+            return imageFromTexture.oriented(.downMirrored)
+        } else {
+            return nil
+        }
     }
     // MARK: Save support
     func captureImage() throws -> UIImage? {
@@ -146,9 +218,15 @@ class Renderer: NSObject, MTKViewDelegate {
             let croppedOutput = ciOutput.cropped(to: targetRect)
 
             let rgbSpace = CGColorSpaceCreateDeviceRGB()
-            let options = [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 1.0 as CGFloat]
-            guard let heifData =  ciMetalContext.heifRepresentation(of: croppedOutput, format: .RGBA8, colorSpace: rgbSpace, options: options)
-            else {
+            let options: [CIImageRepresentationOption: Any] = [
+                kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 1.0 as CGFloat
+            ]
+            guard let heifData = ciMetalContext.heifRepresentation(
+                of: croppedOutput,
+                format: .RGBAh,
+                colorSpace: rgbSpace,
+                options: options
+            ) else {
                 throw savePhotoError.nilReturn
             }
 
@@ -242,7 +320,7 @@ class Renderer: NSObject, MTKViewDelegate {
     }
 
     func draw(in view: MTKView) {
-
+//        NSLog (#function, String(describing: self) + " draw")
         if DoNotDraw {
             view.isHidden = DoNotDraw
                 // view.isHidden for iPhone navigation to different mtkViews
@@ -281,6 +359,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
     func drawBasicCentered(in view: MTKView) {
             // adapted from sample app RenderMetalDestinationView
+        NSLog (#function, String(describing: self))
         _ = inFlightSemaphore.wait(timeout: DispatchTime.distantFuture)
         let desc = MTLCommandBufferDescriptor()
         desc.retainedReferences = true // forces strong refs to vars
@@ -405,6 +484,12 @@ class Renderer: NSObject, MTKViewDelegate {
 
 
                 }
+                if shouldMeasureLuminance() {
+                    let luminanceIsNearZero = self.isAverageLuminanceNearZero()
+                    currentStack.currentFilter().isAverageLuminanceNearZero = luminanceIsNearZero
+                    NSLog(#function + " luminanceIsNearZero: \(luminanceIsNearZero)")
+
+                }
 
             }
         }
@@ -425,3 +510,4 @@ class Primitive {
         return mesh
     }
 }
+
