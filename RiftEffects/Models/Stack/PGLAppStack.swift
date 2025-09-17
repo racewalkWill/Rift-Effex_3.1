@@ -81,7 +81,17 @@ class PGLAppStack {
                 myUpdate in
                 guard let self = self else { return }
                 NSLog("PGLAppStak: received PGLRunLuminanceMeasureFlag")
-                self.basicOptimizeStack()
+                //  call this at the end
+                if activeFilterIsLastRow() {
+                    // stop the lumninanceMeasurs
+                    self.endOptimizeStack()
+                }
+                else {
+                    DispatchQueue.main.async {
+                        self.moveActiveAhead()
+                    }
+                }
+
             }
         publishers.append(cancellable!)
 
@@ -593,6 +603,11 @@ class PGLAppStack {
             }
 
         }
+    }
+
+    func activeFilterIsLastRow() -> Bool {
+        guard let activeRow = activeFilterCellRow() else { return true }
+        return activeRow == flatCellFilters.count - 1
     }
 
     func activeFilterCellRow() -> Int? {

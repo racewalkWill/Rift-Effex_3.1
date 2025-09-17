@@ -152,14 +152,18 @@ class Renderer: NSObject, MTKViewDelegate {
         else { return false }
     }
 
+    fileprivate func postRunLuminanceNotification() {
+        let runMeasureNotification = Notification(name: PGLRunLuminanceMeasureFlag)
+        
+        NotificationCenter.default.post(runMeasureNotification)
+        NSLog(#function , "PGLRunLuminanceMeasureFlag posted")
+    }
+    
     func useLuminanceMeasurementForStacks(myView: MTKView?)  {
         // will be set to nil after optimize has the luminanceMeasures
         metalView = myView
         if metalView != nil {
-            let runMeasureNotification = Notification(name: PGLRunLuminanceMeasureFlag)
-
-            NotificationCenter.default.post(runMeasureNotification)
-            NSLog(#function , "PGLRunLuminanceMeasureFlag posted")
+            postRunLuminanceNotification()
         }
         
     }
@@ -488,6 +492,8 @@ class Renderer: NSObject, MTKViewDelegate {
                     let luminanceIsNearZero = self.isAverageLuminanceNearZero()
                     currentStack.currentFilter().isAverageLuminanceNearZero = luminanceIsNearZero
                     NSLog(#function + " luminanceIsNearZero: \(luminanceIsNearZero)")
+                    self.postRunLuminanceNotification()
+                        // trigger next filter change
 
                 }
 

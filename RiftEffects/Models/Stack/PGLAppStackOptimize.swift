@@ -34,10 +34,14 @@ extension PGLAppStack {
         publishers = [any Cancellable]()
     }
 
-    func basicOptimizeStack() {
+    func endOptimizeStack() {
 
         var passingFilters: [PGLFilterIndent] = []
         var failingFilters: [PGLFilterIndent] = []
+
+        let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
+
+        NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["flag" : false as AnyObject])
 
         let allFilters: [PGLFilterIndent] = flattenFilters()
             //    let startingAttribute = allFilters.first?.filter.getInputImageAttribute()
@@ -45,9 +49,7 @@ extension PGLAppStack {
             //    let startingImage = startingAttribute?.inputCollection?.imageAssets.first?.uiImage() ?? UIImage()
         NSLog (#function, String(describing: self))
         for aFilter in allFilters {
-            NSLog (#function, String(describing: aFilter), " moveTo START")
-            _ = moveTo(filterIndent: aFilter)
-            NSLog (#function, String(describing: aFilter), " moveTo END")
+
             if aFilter.isAverageLuminanceNearZero() {
                     //image1 != nil && image1!.isEqual(image2)
                 failingFilters.append(aFilter)
@@ -56,13 +58,10 @@ extension PGLAppStack {
             }
             
         }
-        let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
 
-        NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["flag" : false as AnyObject])
-        
-        NSLog(#function + " passingFilters = \(passingFilters)")
+        NSLog(#function , " passingFilters = \(passingFilters)")
         if !failingFilters.isEmpty {
-            NSLog(#function + " failingFilters = \(failingFilters)")
+            NSLog(#function , " failingFilters = \(failingFilters)")
         }
     }
     
@@ -70,16 +69,25 @@ extension PGLAppStack {
 ///optimize individual filters to produce changes by updating values
 ///compares rendered image output of a filter with the prior filters rendered output
 func optimizeStack() {
+    guard  let firstFilter = flatCellFilters.first else {
+        return
+    }
 
-    // startingImage
-    showFilterImage = true
-    self.postFilterChangeRedraw()
     let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
 
     NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["measureFlag" : true as AnyObject])
-    NSLog("PGLAppStack: optimizeStack() posted PGLMetalLuminanceMeasureFlag")
+    NSLog("PGLAppStack: optimizeStack() posted  TRUE PGLMetalLuminanceMeasureFlag")
 
+    // startingImage
+    showFilterImage = true
+    // move to first filter
 
-}
+    _ = moveTo(filterIndent: firstFilter)
+    self.postFilterChangeRedraw()
 
+    }
+
+    func advanceStackForLuminanceMeasure() {
+            moveActiveAhead() // moves into child stack if needed
+    }
 }
