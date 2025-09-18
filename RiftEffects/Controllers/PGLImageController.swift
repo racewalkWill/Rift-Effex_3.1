@@ -701,10 +701,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             action in
             self.musicButtonTapped(controllerMusicBtn: self.moreBtn)
         } ,
-         UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) {
-            action in
-            self.optimizeStack(controllerMusicBtn: self.moreBtn)
-        }
+//         UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) {
+//            action in
+//            self.optimizeStack(controllerMusicBtn: self.moreBtn)
+//        }
             ] )
         moreBtn.menu = contextMenu
     }

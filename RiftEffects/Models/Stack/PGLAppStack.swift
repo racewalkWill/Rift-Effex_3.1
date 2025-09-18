@@ -87,8 +87,22 @@ class PGLAppStack {
                     self.endOptimizeStack()
                 }
                 else {
-                    DispatchQueue.main.async {
-                        self.moveActiveAhead()
+                    // if the current filter has failed Luminance test - it's black
+                    // remove it
+                    let currentDisplayFilter = self.viewerStack.currentFilter
+                    let filterIsBlack = currentDisplayFilter().isAverageLuminanceNearZero
+                    if filterIsBlack
+                    {
+                        NSLog ("PGLAppStack - removing black filter \(currentDisplayFilter())")
+                        DispatchQueue.main.async {
+                            _ = self.viewerStack.removeFilter(position: self.viewerStack.activeFilterIndex)
+                        }
+                    } else {
+                            // if the current filter passes Lumanance test - it's not back
+                            // move to the next one
+                        DispatchQueue.main.async {
+                            self.moveActiveAhead()
+                        }
                     }
                 }
 
@@ -481,6 +495,13 @@ class PGLAppStack {
         viewerStack.postFilterNameInTitleBar()
     }
 
+    func currentActiveFilter() -> PGLSourceFilter? {
+        if showFilterImage {
+            return viewerStack.currentFilter()
+        } else {
+            return outputStack.currentFilter()
+        }
+    }
     func moveActiveBack() {
         // called before the postSelectActiveStackRow
 

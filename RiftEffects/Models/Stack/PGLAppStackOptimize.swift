@@ -36,33 +36,17 @@ extension PGLAppStack {
 
     func endOptimizeStack() {
 
-        var passingFilters: [PGLFilterIndent] = []
-        var failingFilters: [PGLFilterIndent] = []
-
         let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
 
         NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["flag" : false as AnyObject])
 
-        let allFilters: [PGLFilterIndent] = flattenFilters()
-            //    let startingAttribute = allFilters.first?.filter.getInputImageAttribute()
-        
-            //    let startingImage = startingAttribute?.inputCollection?.imageAssets.first?.uiImage() ?? UIImage()
-        NSLog (#function, String(describing: self))
-        for aFilter in allFilters {
+        showFilterImage = false // restore to show stack output
 
-            if aFilter.isAverageLuminanceNearZero() {
-                    //image1 != nil && image1!.isEqual(image2)
-                failingFilters.append(aFilter)
-            } else {
-                passingFilters.append(aFilter)
-            }
-            
-        }
+        // trigger stack update display for the single/all button set
+        let stackChangeNotification = Notification(name: PGLStackChange)
+        NotificationCenter.default.post(stackChangeNotification)
 
-        NSLog(#function , " passingFilters = \(passingFilters)")
-        if !failingFilters.isEmpty {
-            NSLog(#function , " failingFilters = \(failingFilters)")
-        }
+
     }
     
         ///step through all filters in the stacks and remove filters that do not produce any changes in the output,

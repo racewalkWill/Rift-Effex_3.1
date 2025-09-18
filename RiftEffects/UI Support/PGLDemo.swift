@@ -259,6 +259,7 @@ class PGLDemo {
             PGLDemo.Category1Index = 0 // reset
         }
         templateDemoCompletion(startingDemoFilter: firstRandomFilter)
+        thisAppStack.optimizeStack()
     }
 
        
@@ -288,8 +289,8 @@ class PGLDemo {
         let goToStack = Notification(name: PGLLoadedDataStack)
         NotificationCenter.default.post(goToStack)
 
-//        let optimizeStack = Notification(name: PGLOptimizeStack)
-//        NotificationCenter.default.post(optimizeStack)
+        let optimizeStack = Notification(name: PGLOptimizeStack)
+        NotificationCenter.default.post(optimizeStack)
 
     }
 

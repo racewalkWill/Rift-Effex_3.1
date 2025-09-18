@@ -363,7 +363,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
     func drawBasicCentered(in view: MTKView) {
             // adapted from sample app RenderMetalDestinationView
-        NSLog (#function, String(describing: self))
+//        NSLog (#function, String(describing: self))
         _ = inFlightSemaphore.wait(timeout: DispatchTime.distantFuture)
         let desc = MTLCommandBufferDescriptor()
         desc.retainedReferences = true // forces strong refs to vars
@@ -489,6 +489,10 @@ class Renderer: NSObject, MTKViewDelegate {
 
                 }
                 if shouldMeasureLuminance() {
+                    if currentStack.isEmptyStack() {
+                        metalView = nil // end this measure loop -- no stack
+                        return
+                    }
                     let luminanceIsNearZero = self.isAverageLuminanceNearZero()
                     currentStack.currentFilter().isAverageLuminanceNearZero = luminanceIsNearZero
                     NSLog(#function + " luminanceIsNearZero: \(luminanceIsNearZero)")
