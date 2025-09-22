@@ -258,7 +258,7 @@ extension PGLLibraryController {
             supplementaryView.configurationUpdateHandler = { supplementaryView, state in
                 guard let supplementaryCell = supplementaryView as? UICollectionViewListCell else { return }
 
-                var contentConfiguration = UIListContentConfiguration.plainHeader().updated(for: state)
+                var contentConfiguration = UIListContentConfiguration.header().updated(for: state)
 
                 contentConfiguration.textProperties.font = PGLAppearance.sectionHeaderFont
                 contentConfiguration.textProperties.color = UIColor.label

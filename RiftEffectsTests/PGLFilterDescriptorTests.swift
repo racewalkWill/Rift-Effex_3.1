@@ -1,18 +1,9 @@
-//
-//  PGLFilterDescriptorTests.swift
-//  PictureGlance
-//
-//  Created by Will on 3/27/17.
-//  Copyright © 2017 Will. All rights reserved.
-//
-
-// import XCTest
+#if canImport(UIKit)
+import UIKit
 import Testing
 import os
-import UIKit
-
+#if canImport(RiftEffects)
 @testable import RiftEffects
-
 @MainActor
 @Suite(.serialized) struct  PGLFilterDescriptorTests {
      let standardFilterName = "CIDiscBlur"
@@ -34,6 +25,7 @@ import UIKit
 //        super.tearDown()
 //    }
 
+    @available(iOS 18.6, *)
     @Test func categoryDescription() {
         let classCategories = [kCICategoryDistortionEffect,
                                kCICategoryGeometryAdjustment]
@@ -46,6 +38,7 @@ import UIKit
 
 
     }
+    @available(iOS 18.6, *)
     @Test func descriptionFilterDescriptor() {
         // check that the print description is working
         let newDescriptor = PGLFilterDescriptor(standardFilterName, standardClass)
@@ -56,13 +49,13 @@ import UIKit
 
 
     }
-
+    @available(iOS 18.6, *)
     @Test func filterCategory() {
         if let aCategory = PGLFilterCategory("CICategoryDistortionEffect") {
             #expect (aCategory.filterDescriptors.count > 2) }
 
     }
-
+    @available(iOS 18.6, *)
     @Test func allFilterCategories() {
         let allCategories = PGLFilterCategory.allFilterCategories()
 
@@ -73,6 +66,7 @@ import UIKit
     }
 
 /// list all filters for test runs
+    @available(iOS 18.6, *)
     @Test func allFilterCreation() throws {
         let allCategories = PGLFilterCategory.allFilterCategories()
         for aCategory in allCategories {
@@ -105,6 +99,7 @@ import UIKit
     }
 
     /// generate to the log the filter category, filtername, localized name and description
+    @available(iOS 18.6, *)
     @Test func filterNameDescriptionCapture() throws {
 
         let allCategories = PGLFilterCategory.allFilterCategories()
@@ -135,6 +130,7 @@ import UIKit
 
     }
 
+    @available(iOS 18.6, *)
     @Test func filterDescriptionCapture() {
         // capture to the log all of the filter info for analysis
         var filterAttributes = [String:Any]()
@@ -163,6 +159,7 @@ import UIKit
         }
     }
 
+    @available(iOS 18.6, *)
     @Test func unknownFilterAttributesList() {
         // capture to the log filter attributes that are not implemented for UI
 
@@ -193,6 +190,7 @@ import UIKit
         Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("Count of nonUI Parms = \(nonUIParmCount)")
     }
 
+    @available(iOS 18.6, *)
     @Test func filterAttributeCounter() {
         // capture to the log counts of filter classes, types
         var filterAttributes = [String:Any]()
@@ -257,6 +255,7 @@ import UIKit
 
     }
 
+    @available(iOS 18.6, *)
     @Test func  descriptorSort() {
         // test duplicate filters in the
         // PGLFilterCategory.filterDescriptors var
@@ -277,3 +276,18 @@ import UIKit
 
 
 }
+#else
+import Testing
+import os
+
+@MainActor
+@Suite(.serialized) struct PGLFilterDescriptorTests {
+    @Test func skippedDueToDeploymentTarget() {
+        // These tests require RiftEffects which targets iOS 18.6+
+        // Running on a lower deployment target; skip.
+        #expect(true)
+    }
+}
+#endif
+#endif
+

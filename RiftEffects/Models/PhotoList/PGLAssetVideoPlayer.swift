@@ -237,11 +237,6 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
     }
 
     func setUpVideoPlayAssets() {
-            // Create a display link
-            // automaticallyLoadedAssetKeys - array
-            // An NSArray of NSStrings, each representing a property key defined by
-            //   AVAsset. See AVAsset.h for property keys, e.g. duration
-        var progressResult: Double = 0
         let thePHAsset = parentAsset.asset
         let options = videoRequestOptions()
         options.progressHandler  = { progress, error, stop, info in
@@ -249,13 +244,12 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
                 NSLog("Download error: \(error.localizedDescription)")
             }
             NSLog("setUpVideoPlayAssets progress = \(progress)")
-            progressResult = progress
         }
 
        PHImageManager.default().requestPlayerItem(forVideo: thePHAsset , options: options) { avAsset, info in
 
 //           NSLog("PGLAssetVideoPlayer requestPlayerItemForVideo completionHandler")
-            if let info = info {
+           if info != nil {
 //                NSLog("PGLAssetVideoPlayer requestPlayerItemForVideo info = \(info)")
             }
             if avAsset == nil {

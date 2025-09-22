@@ -305,7 +305,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             DispatchQueue.main.asyncAfter(deadline: twoSecondsFromNow) {
 
                 if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-                    SKStoreReviewController.requestReview(in: scene)
+                    AppStore.requestReview(in: scene)
                 }
 
                 UserDefaults.standard.set(currentVersion, forKey: PGLUserDefaultKeys.lastVersionPromptedForReviewKey)
@@ -1962,3 +1962,4 @@ extension PGLImageController {
 //    return UIGraphicsGetImageFromCurrentImageContext()
 //  }
 //}
+

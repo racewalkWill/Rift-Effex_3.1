@@ -40,7 +40,9 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
         super.viewDidLoad()
         delegate = self
 
-        preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary 
+      //  preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
+        // comment out iOS26 iPad test
+        
         // if the smaller iPhone is compact then should be the two column where the columns are controlled by buttons
         // used to have this.. check versions
 

@@ -122,7 +122,7 @@ class PGLCaptureOutput {
             await localWriter.finishWriting()
 
             createLivePhoto(videoURL: localVideoPath) { livePhoto in
-                guard let livePhoto = livePhoto else {
+                guard livePhoto != nil else {
                     print("Failed to create Live Photo")
                     return
                 }

@@ -125,7 +125,7 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
             // if video then cache into local file and assign localURL to asset
             if let thisResultProvider = selection[fetchAsset.localIdentifier] {
                 if thisResultProvider.itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
-                    let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
+//                    let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
 //                    myAppDelegate.showWaiting(onController: theController)
 
 //                    loadLocalVideoURL(thisAsset: anNewPGLAsset, pickerResult: selection[fetchAsset.localIdentifier]!)

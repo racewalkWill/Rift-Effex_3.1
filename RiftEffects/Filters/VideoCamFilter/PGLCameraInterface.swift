@@ -135,10 +135,11 @@ class PGLCameraInterface: NSObject, @preconcurrency AVCaptureVideoDataOutputSamp
         }
 
 
-        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
-
-        {  statusBarOrientation = scene.interfaceOrientation }
-        else { statusBarOrientation = .landscapeLeft }
+        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+            statusBarOrientation = scene.effectiveGeometry.interfaceOrientation
+        } else {
+            statusBarOrientation = .landscapeLeft
+        }
 
         let initialThermalState = ProcessInfo.processInfo.thermalState
         if initialThermalState == .serious || initialThermalState == .critical {
@@ -403,10 +404,10 @@ class PGLCameraInterface: NSObject, @preconcurrency AVCaptureVideoDataOutputSamp
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(sessionRuntimeError),
-                                               name: NSNotification.Name.AVCaptureSessionRuntimeError,
+                                               name: AVCaptureSession.runtimeErrorNotification,
                                                object: session)
 
-        session.addObserver(self, forKeyPath: "running", options: NSKeyValueObservingOptions.new, context: &sessionRunningContext)
+        session.addObserver(self, forKeyPath: #keyPath(AVCaptureSession.isRunning), options: .new, context: &sessionRunningContext)
 
             // A session can run only when the app is full screen. It will be interrupted in a multi-app layout.
             // Add observers to handle these session interruptions and inform the user.
@@ -414,18 +415,18 @@ class PGLCameraInterface: NSObject, @preconcurrency AVCaptureVideoDataOutputSamp
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(sessionWasInterrupted),
-                                               name: NSNotification.Name.AVCaptureSessionWasInterrupted,
+                                               name: AVCaptureSession.wasInterruptedNotification,
                                                object: session)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(sessionInterruptionEnded),
-                                               name: NSNotification.Name.AVCaptureSessionInterruptionEnded,
+                                               name: AVCaptureSession.interruptionEndedNotification,
                                                object: session)
     }
 
     func removeObservers() {
         NotificationCenter.default.removeObserver(self)
-//        session.removeObserver(self, forKeyPath: "running", context: &sessionRunningContext)
+//        session.removeObserver(self, forKeyPath: #keyPath(AVCaptureSession.running), context: &sessionRunningContext)
     }
 
 

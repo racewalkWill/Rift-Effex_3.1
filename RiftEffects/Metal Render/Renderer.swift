@@ -198,7 +198,22 @@ class Renderer: NSObject, MTKViewDelegate {
 
             Logger(subsystem: LogSubsystem, category: LogCategory).debug("Renderer #captureImage croppedOutput = \(croppedOutput)")
             filterStack()?.setThumbnail(image: ciOutput)
-            return UIImage( cgImage: currentOutputImage, scale: UIScreen.main.scale, orientation: .up)
+            // Prefer a scale derived from context (deprecated: UIScreen.main)
+            let contextScale: CGFloat = { 
+                // Try to derive from an on-screen context; captureImage is usually called from a view controller context.
+                // Use the most recently used MTKView if available, otherwise fall back.
+                if let view = self.metalView, 
+                   let scale = view.window?.windowScene?.screen.scale { 
+                    return scale 
+                } 
+                // As a secondary option, try the current trait collection on the key window if accessible.
+                if let scale = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.traitCollection.displayScale { 
+                    return scale 
+                } 
+                // Safe fallback when no UI context is available (e.g., offscreen capture). 
+                return 1.0 
+            }()
+            return UIImage(cgImage: currentOutputImage, scale: contextScale, orientation: .up)
                 // kaliedoscope needs down.. portraits need up.. why.. they both look .up in the imageController
 
                 // let theOrientation = CGImagePropertyOrientation(theImage.imageOrientation)
