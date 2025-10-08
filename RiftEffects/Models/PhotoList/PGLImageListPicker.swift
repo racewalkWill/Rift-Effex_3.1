@@ -149,6 +149,9 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
         } else {
             if let mySplitController = controller as? PGLSplitViewController {
                 mySplitController.startupImageList = pickingImageList
+                let notifier = Notification(name: PGLUpdateSplitView)
+                NotificationCenter.default.post(notifier)
+
             }
         }
 

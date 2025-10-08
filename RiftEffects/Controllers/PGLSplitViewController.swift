@@ -13,7 +13,9 @@ import CoreData
 
 
 
-class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelegate, NSFetchedResultsControllerDelegate {
+class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerDelegate {
+
+    private let splitDelegate = PGLSplitViewDelegate()
 
     var startupImageList: PGLImageList? {
         didSet {
@@ -35,10 +37,16 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
 
     var imageListPicker: PGLImageListPicker?
 
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        get { .landscapeLeft}
+    }
+
     override func viewDidLoad() {
+
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         super.viewDidLoad()
-        delegate = self
+        delegate = splitDelegate
+
 
       //  preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
         // comment out iOS26 iPad test
@@ -55,6 +63,10 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
 
         let horizontalSize = traitCollection.horizontalSizeClass
         if horizontalSize == .compact {
+            preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary }
+            else {
+                preferredDisplayMode = UISplitViewController.DisplayMode.twoDisplaceSecondary
+            }
 
 //            preferredPrimaryColumnWidthFraction = 0.3
 //            preferredSupplementaryColumnWidthFraction = 0.3
@@ -67,31 +79,41 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
 //                supplementaryNav.setViewControllers([stackImageController], animated: true)
 //            }
 
-        }
-
         // Do any additional setup after loading the view.
         requestStartupImage()
         // moved to the AppStack
+        // rotate to trigger display issue
+
+       // self.setNeedsUpdateProperties()
+        // or setNeedsDisplay ? or other setNeeds...
+
+        let myCenter =  NotificationCenter.default
+        let queue = OperationQueue.main
+        myCenter.addObserver(forName: PGLUpdateSplitView, object: nil , queue: queue) { [weak self]
+            myUpdate in
+            guard let self = self else { return } // a released object sometimes receives the notification
+                          // the guard is based upon the apple sample app 'Conference-Diffable'
+
+//            Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLSupplementNavController  notificationBlock PGLShowStackImageContainer")
+
+            Task { @MainActor in
+                self.setNeedsUpdateProperties()
+            }
+
+        }
+
+
 
     }
 
 
 
-    func splitViewControllerDidCollapse(_ svc: UISplitViewController) {
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
-    }
 
-    func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
-        //horizontally regular to a horizontally compact size class
 
-        return proposedTopColumn
-
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+                //    override func didReceiveMemoryWarning() {
+//        super.didReceiveMemoryWarning()
+//        // Dispose of any resources that can be recreated.
+//    }
 
 
     /*
@@ -104,6 +126,14 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
     }
     */
 // MARK: iPhone Navigation
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
+
+
+    }
+
+
     override func viewWillLayoutSubviews() {
 
 //     navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
@@ -155,3 +185,4 @@ class PGLSplitViewController: UISplitViewController, UISplitViewControllerDelega
         }
 
 }
+

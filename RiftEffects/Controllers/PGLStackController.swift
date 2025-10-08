@@ -11,7 +11,7 @@ import Photos
 import os
 import Combine
 
-let PGLShowStackImageContainer = NSNotification.Name(rawValue: "PGLShowStackImageContainer")
+let PGLUpdateSplitView = NSNotification.Name(rawValue: "PGLUpdateSplitView")
 let PGLSaveStackAction = NSNotification.Name(rawValue: "PGLSaveStackAction")
 
 class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate {

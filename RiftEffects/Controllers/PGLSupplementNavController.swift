@@ -17,18 +17,7 @@ class PGLSupplementNavController: UINavigationController {
         // Do any additional setup after loading the view.
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
 
-//        let myCenter =  NotificationCenter.default
-//        let queue = OperationQueue.main
-//        myCenter.addObserver(forName: PGLShowStackImageContainer, object: nil , queue: queue) { [weak self]
-//            myUpdate in
-//            guard let self = self else { return } // a released object sometimes receives the notification
-//                          // the guard is based upon the apple sample app 'Conference-Diffable'
-//
-//            Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLSupplementNavController  notificationBlock PGLShowStackImageContainer")
-//
-////            let pushedNewContainer = self.pushStackImageContainer()
 
-//        }
 
     }
 
@@ -51,7 +40,7 @@ class PGLSupplementNavController: UINavigationController {
         super .viewDidDisappear(animated)
 //        NSLog("PGLSelectFilterController #viewDidDisappear removing notification observor")
 
-        NotificationCenter.default.removeObserver(self, name: PGLShowStackImageContainer, object: self)
+//        NotificationCenter.default.removeObserver(self, name: PGLShowStackImageContainer, object: self)
     }
 
         /// push StackImageController in the iPhone compact mode
