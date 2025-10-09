@@ -62,6 +62,8 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
             // NOT needed now that doubletap to full screen is implemented
 
         let horizontalSize = traitCollection.horizontalSizeClass
+        /// columns are Primary on the left (Library) , Supplementary for filter & parms, Secondary shows the image controller
+        ///  iPhone only uses Supplementary and Secondary. the Library to open stacks is  a menu command, not a column
         if horizontalSize == .compact {
             preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary }
             else {
@@ -97,7 +99,12 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 //            Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLSupplementNavController  notificationBlock PGLShowStackImageContainer")
 
             Task { @MainActor in
-                self.setNeedsUpdateProperties()
+//                self.setNeedsUpdateProperties()
+
+                self.view.setNeedsLayout()
+                self.view.setNeedsDisplay()
+                Logger(subsystem: LogSubsystem, category: LogNavigation).info("\(String(describing: self)) - task ran setNeedsLayout and setNeedsDisplay")
+//                self.performSegue(withIdentifier:"compact view controller",sender:self)
             }
 
         }
