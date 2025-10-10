@@ -65,21 +65,36 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         /// columns are Primary on the left (Library) , Supplementary for filter & parms, Secondary shows the image controller
         ///  iPhone only uses Supplementary and Secondary. the Library to open stacks is  a menu command, not a column
         if horizontalSize == .compact {
-            preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary }
-            else {
-                preferredDisplayMode = UISplitViewController.DisplayMode.twoDisplaceSecondary
+//                preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary }
+            preferredDisplayMode = UISplitViewController.DisplayMode.secondaryOnly }
+                // load controllers
+
+
+//                if let supplementNav = self.storyboard?.instantiateViewController(identifier:
+//                    "SupplementNavController") as? UINavigationController {
+//                    self .setViewController(supplementNav, for: .supplementary)
+//                }
+            // "PGLNavStackImageController" compact case .secondaryOnly
+                if let secondaryNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavStackImageController") as? UINavigationController {
+                    self.setViewController(secondaryNav, for: .secondary)
+                }
+        else {
+            preferredDisplayMode = UISplitViewController.DisplayMode.twoDisplaceSecondary
+            if let primaryNav = self.storyboard?.instantiateViewController(identifier: "PGLNavPrimaryController") as? UINavigationController {
+                self.setViewController(primaryNav, for: .primary)
+
+                if let supplementNav = self.storyboard?.instantiateViewController(identifier:
+                                                                                    "SupplementNavController") as? UINavigationController {
+                    self .setViewController(supplementNav, for: .supplementary)
+                }
+
+                if let secondaryNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavSecondaryController") as? UINavigationController {
+                    self.setViewController(secondaryNav, for: .secondary)
+                }
             }
+        }
 
-//            preferredPrimaryColumnWidthFraction = 0.3
-//            preferredSupplementaryColumnWidthFraction = 0.3
 
-//            guard let stackImageController = self.storyboard?.instantiateViewController(withIdentifier: "StackImageContainer")
-//            else { checkPhotoLibraryAccess()
-//                    return
-//            }
-//            if let supplementaryNav = viewController(for: .supplementary) as? UINavigationController {
-//                supplementaryNav.setViewControllers([stackImageController], animated: true)
-//            }
 
         // Do any additional setup after loading the view.
         requestStartupImage()
@@ -111,12 +126,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 
 
 
-    }
-
-
-
-
-
+    }  // viewDidLoad
                 //    override func didReceiveMemoryWarning() {
 //        super.didReceiveMemoryWarning()
 //        // Dispose of any resources that can be recreated.
