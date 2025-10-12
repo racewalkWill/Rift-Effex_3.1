@@ -35,32 +35,6 @@
                 return UISplitViewController()
             }
 
-            let horizontalSize = window.traitCollection.horizontalSizeClass
-            if horizontalSize == .compact {
-                // iPhone compact width: show secondary only
-                svc.preferredDisplayMode = .secondaryOnly
-                if let navStackImageController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PGLNavStackImageController") as? PGLNavStackImageController {
-                    svc.setViewController(navStackImageController, for: .secondary)
-                }
-            } else {
-                // iPad / regular width: configure split behavior and display mode
-                if #available(iOS 14.0, *) {
-                    // Use preferredSplitBehavior to request tiling; splitBehavior is read-only
-                    svc.preferredSplitBehavior = .tile
-                }
-                svc.presentsWithGesture = true
-                svc.preferredDisplayMode = .twoBesideSecondary
-                if let navPrimaryController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PGLNavPrimaryController") as? PGLNavPrimaryController {
-                    svc.setViewController(navPrimaryController, for: .primary)
-                }
-                if let navSupplementaryController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SupplementNavController") as? PGLSupplementNavController {
-                    svc.setViewController(navSupplementaryController, for: .supplementary)
-                }
-                if let navSecondaryController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PGLNavSecondaryController") as? PGLNavSecondaryController {
-                    svc.setViewController(navSecondaryController, for: .secondary)
-                }
-            }
-
             return svc
         }
     }

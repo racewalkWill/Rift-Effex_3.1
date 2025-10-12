@@ -61,73 +61,55 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
             // it goes to full screen secondaryOnly column
             // NOT needed now that doubletap to full screen is implemented
 
-        let horizontalSize = traitCollection.horizontalSizeClass
-        /// columns are Primary on the left (Library) , Supplementary for filter & parms, Secondary shows the image controller
-        ///  iPhone only uses Supplementary and Secondary. the Library to open stacks is  a menu command, not a column
-        if horizontalSize == .compact {
-//                preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary }
-            preferredDisplayMode = UISplitViewController.DisplayMode.secondaryOnly }
-                // load controllers
-
-
-//                if let supplementNav = self.storyboard?.instantiateViewController(identifier:
-//                    "SupplementNavController") as? UINavigationController {
-//                    self .setViewController(supplementNav, for: .supplementary)
-//                }
-            // "PGLNavStackImageController" compact case .secondaryOnly
-                if let secondaryNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavStackImageController") as? UINavigationController {
-                    self.setViewController(secondaryNav, for: .secondary)
-                }
-        else {
-            preferredDisplayMode = UISplitViewController.DisplayMode.twoDisplaceSecondary
-            if let primaryNav = self.storyboard?.instantiateViewController(identifier: "PGLNavPrimaryController") as? UINavigationController {
-                self.setViewController(primaryNav, for: .primary)
-
-                if let supplementNav = self.storyboard?.instantiateViewController(identifier:
-                                                                                    "SupplementNavController") as? UINavigationController {
-                    self .setViewController(supplementNav, for: .supplementary)
-                }
-
-                if let secondaryNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavSecondaryController") as? UINavigationController {
-                    self.setViewController(secondaryNav, for: .secondary)
-                }
-            }
-        }
-
-
+        // loadNavigationControllers()  moved to viewWillAppear
 
         // Do any additional setup after loading the view.
-        requestStartupImage()
+
         // moved to the AppStack
         // rotate to trigger display issue
 
-       // self.setNeedsUpdateProperties()
-        // or setNeedsDisplay ? or other setNeeds...
+}  // viewDidLoad
 
-        let myCenter =  NotificationCenter.default
-        let queue = OperationQueue.main
-        myCenter.addObserver(forName: PGLUpdateSplitView, object: nil , queue: queue) { [weak self]
-            myUpdate in
-            guard let self = self else { return } // a released object sometimes receives the notification
-                          // the guard is based upon the apple sample app 'Conference-Diffable'
+    func loadNavigationControllers()
+    {
 
-//            Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLSupplementNavController  notificationBlock PGLShowStackImageContainer")
+            //        /// columns are Primary on the left (Library) , Supplementary for filter & parms, Secondary shows the image controller
+            //        ///  iPhone only uses Supplementary and Secondary. the Library to open stacks is  a menu command, not a column
+        let horizontalSize = traitCollection.horizontalSizeClass
+        if horizontalSize == .compact {
 
-            Task { @MainActor in
-//                self.setNeedsUpdateProperties()
+                //                preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary }
+            preferredDisplayMode = UISplitViewController.DisplayMode.secondaryOnly
+                // load controllers
 
-                self.view.setNeedsLayout()
-                self.view.setNeedsDisplay()
-                Logger(subsystem: LogSubsystem, category: LogNavigation).info("\(String(describing: self)) - task ran setNeedsLayout and setNeedsDisplay")
-//                self.performSegue(withIdentifier:"compact view controller",sender:self)
+                //                if let supplementNav = self.storyboard?.instantiateViewController(identifier:
+                //                    "SupplementNavController") as? UINavigationController {
+                //                    self .setViewController(supplementNav, for: .supplementary)
+                //                }
+                // "PGLNavStackImageController" compact case .secondaryOnly
+            if let secondaryNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavStackImageController") as? UINavigationController {
+                self.setViewController(secondaryNav, for: .secondary)
+            }
+        }
+        else {
+                preferredDisplayMode = UISplitViewController.DisplayMode.twoDisplaceSecondary
+                if let primaryNav = self.storyboard?.instantiateViewController(identifier: "PGLNavPrimaryController") as? UINavigationController {
+                    self.setViewController(primaryNav, for: .primary)
+
+                    if let supplementNav = self.storyboard?.instantiateViewController(identifier:
+                                                                                        "SupplementNavController") as? UINavigationController {
+                        self .setViewController(supplementNav, for: .supplementary)
+                    }
+
+                    if let secondaryNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavSecondaryController") as? UINavigationController {
+                        self.setViewController(secondaryNav, for: .secondary)
+                    }
+                }
             }
 
-        }
+    }
 
-
-
-    }  // viewDidLoad
-                //    override func didReceiveMemoryWarning() {
+        //    override func didReceiveMemoryWarning() {
 //        super.didReceiveMemoryWarning()
 //        // Dispose of any resources that can be recreated.
 //    }
@@ -146,7 +128,8 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
-
+        loadNavigationControllers()
+        requestStartupImage()
 
     }
 
