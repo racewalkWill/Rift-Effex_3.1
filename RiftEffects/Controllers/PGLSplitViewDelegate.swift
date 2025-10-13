@@ -15,10 +15,13 @@ class PGLSplitViewDelegate:  UISplitViewControllerDelegate  {
 
 
 //    Specifying the interface orientations
-    func splitViewControllerPreferredInterfaceOrientationForPresentation(_: UISplitViewController) -> UIInterfaceOrientation {
+    func splitViewControllerPreferredInterfaceOrientationForPresentation(_ mySplit: UISplitViewController) -> UIInterfaceOrientation {
             //      Asks the delegate for the orientation to use when presenting the split view controller.
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
-        return .landscapeLeft
+        let horizontalSize = mySplit.traitCollection.horizontalSizeClass
+        if horizontalSize == .compact {
+            return .landscapeLeft }
+        return .portrait
     }
 
     func splitViewControllerSupportedInterfaceOrientations(_: UISplitViewController) -> UIInterfaceOrientationMask {
