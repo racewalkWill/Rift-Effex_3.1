@@ -30,11 +30,15 @@
         func setupSplitViewController(window: UIWindow) -> UISplitViewController {
             let splitViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "RootSplitView")
 
-            guard let svc = splitViewController as? UISplitViewController else {
+            guard let splitVC = splitViewController as? UISplitViewController else {
                 // If the storyboard identifier doesn't match a UISplitViewController, fallback to an empty one
+
                 return UISplitViewController()
             }
+            splitVC.preferredSplitBehavior = .automatic
+            splitVC.preferredDisplayMode = .automatic
+            splitVC.displayModeButtonVisibility = .automatic
 
-            return svc
+            return splitVC
         }
     }

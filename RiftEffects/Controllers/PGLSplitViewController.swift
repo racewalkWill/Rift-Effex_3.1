@@ -16,6 +16,9 @@ import CoreData
 class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerDelegate {
 
     private let splitDelegate = PGLSplitViewDelegate()
+    private var firstStartUpImageRun = false
+    private var didConfigureColumns = false
+
 
     var startupImageList: PGLImageList? {
         didSet {
@@ -37,9 +40,9 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 
     var imageListPicker: PGLImageListPicker?
 
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        get { .landscapeLeft}
-    }
+//    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+//        get { .landscapeLeft}
+//    }
 
     override func viewDidLoad() {
 
@@ -61,51 +64,46 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
             // it goes to full screen secondaryOnly column
             // NOT needed now that doubletap to full screen is implemented
 
-        // loadNavigationControllers()  moved to viewWillAppear
+        if !didConfigureColumns {
+            loadNavigationControllers()
+            didConfigureColumns = true
+        }
 
-        // Do any additional setup after loading the view.
 
-        // moved to the AppStack
-        // rotate to trigger display issue
 
 }  // viewDidLoad
 
     func loadNavigationControllers()
     {
-
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
             //        /// columns are Primary on the left (Library) , Supplementary for filter & parms, Secondary shows the image controller
             //        ///  iPhone only uses Supplementary and Secondary. the Library to open stacks is  a menu command, not a column
         let horizontalSize = traitCollection.horizontalSizeClass
         if horizontalSize == .compact {
-
                 //                preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary }
             preferredDisplayMode = UISplitViewController.DisplayMode.secondaryOnly
                 // load controllers
-
-                //                if let supplementNav = self.storyboard?.instantiateViewController(identifier:
-                //                    "SupplementNavController") as? UINavigationController {
-                //                    self .setViewController(supplementNav, for: .supplementary)
-                //                }
-                // "PGLNavStackImageController" compact case .secondaryOnly
-            if let secondaryNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavStackImageController") as? UINavigationController {
-                self.setViewController(secondaryNav, for: .secondary)
-            }
         }
         else {
-                preferredDisplayMode = UISplitViewController.DisplayMode.twoDisplaceSecondary
-                if let primaryNav = self.storyboard?.instantiateViewController(identifier: "PGLNavPrimaryController") as? UINavigationController {
-                    self.setViewController(primaryNav, for: .primary)
+            preferredDisplayMode = UISplitViewController.DisplayMode.twoDisplaceSecondary
 
-                    if let supplementNav = self.storyboard?.instantiateViewController(identifier:
-                                                                                        "SupplementNavController") as? UINavigationController {
-                        self .setViewController(supplementNav, for: .supplementary)
-                    }
-
-                    if let secondaryNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavSecondaryController") as? UINavigationController {
-                        self.setViewController(secondaryNav, for: .secondary)
-                    }
-                }
             }
+        if let primaryNav = self.storyboard?.instantiateViewController(identifier: "PGLNavPrimaryController") as? UINavigationController {
+            self.setViewController(primaryNav, for: .primary)
+
+            if let supplementNav = self.storyboard?.instantiateViewController(identifier:
+                                                                                "SupplementNavController") as? UINavigationController {
+                self .setViewController(supplementNav, for: .supplementary)
+            }
+
+            if let secondaryNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavSecondaryController") as? UINavigationController {
+                self.setViewController(secondaryNav, for: .secondary)
+            }
+
+            if let compactNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavStackImageController") as? UINavigationController {
+                self.setViewController(compactNav, for: .compact)
+            }
+        }
 
     }
 
@@ -128,9 +126,28 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
-        loadNavigationControllers()
-        requestStartupImage()
 
+        let deviceIdom = traitCollection.userInterfaceIdiom
+        navigationItem.leftItemsSupplementBackButton = true
+
+        if deviceIdom == .phone {
+            navigationItem.hidesBackButton = false
+            showsSecondaryOnlyButton = false
+                // showsSecondaryOnlyButton  not needed for full screen of the PGLImageController
+                // now doubleTap on the PGLImageController opens full screen of the PGLMetalController
+            }
+//
+//        loadNavigationControllers()
+//        requestStartupImage()
+
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
+        if didConfigureColumns {
+            firstStartUpImageRun = requestStartupImage()
+        }
     }
 
 
@@ -169,20 +186,42 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 
     // MARK: startup Pick
 
-    func requestStartupImage() {
-//        if startupImageList == nil {
-            let newList = PGLImageList()
-
-            imageListPicker = PGLImageListPicker(targetList: newList, controller: self)
-            if imageListPicker != nil {
-                    /// with  a nil  target attribute just picks one image from the photoLibary
-                guard let pickerViewController = imageListPicker!.set(targetAttribute: nil)
-                    else { return }
-                self.present(pickerViewController, animated: true)
-            }
-            // where is the pickerCompletion and the picker dismiss?
-        
+    func requestStartupImage() -> Bool {
+            // return true on first run
+        let alwaysReturnTrue = true
+        if firstStartUpImageRun {
+                //already run at startup
+            return alwaysReturnTrue
         }
+        let newList = PGLImageList()
+
+        imageListPicker = PGLImageListPicker(targetList: newList, controller: self)
+        if imageListPicker != nil {
+                /// with  a nil  target attribute just picks one image from the photoLibary
+            guard let pickerViewController = imageListPicker!.set(targetAttribute: nil)
+            else { return  alwaysReturnTrue }
+            DispatchQueue.main.async { [weak self] in
+                self?.present(pickerViewController, animated: true)
+            }
+
+            return alwaysReturnTrue
+
+        }
+        return alwaysReturnTrue
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - previousTraitCollection: \(String(describing: previousTraitCollection))")
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - traitCollection: \(String(describing: self.traitCollection))")
+
+        if !didConfigureColumns {
+            loadNavigationControllers()
+            didConfigureColumns = true
+        }
+
+    }
+
 
 }
 

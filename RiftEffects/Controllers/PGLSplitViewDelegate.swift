@@ -15,20 +15,20 @@ class PGLSplitViewDelegate:  UISplitViewControllerDelegate  {
 
 
 //    Specifying the interface orientations
-    func splitViewControllerPreferredInterfaceOrientationForPresentation(_ mySplit: UISplitViewController) -> UIInterfaceOrientation {
-            //      Asks the delegate for the orientation to use when presenting the split view controller.
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
-        let horizontalSize = mySplit.traitCollection.horizontalSizeClass
-        if horizontalSize == .compact {
-            return .landscapeLeft }
-        return .portrait
-    }
+//    func splitViewControllerPreferredInterfaceOrientationForPresentation(_ mySplit: UISplitViewController) -> UIInterfaceOrientation {
+//            //      Asks the delegate for the orientation to use when presenting the split view controller.
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
+//        let horizontalSize = mySplit.traitCollection.horizontalSizeClass
+//        if horizontalSize == .compact {
+//            return .landscapeLeft }
+//        return .portrait
+//    }
 
-    func splitViewControllerSupportedInterfaceOrientations(_: UISplitViewController) -> UIInterfaceOrientationMask {
-            //        Asks the delegate to specify the interface orientations that the split view controller supports.
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
-        return .landscapeLeft
-    }
+//    func splitViewControllerSupportedInterfaceOrientations(_: UISplitViewController) -> UIInterfaceOrientationMask {
+//            //        Asks the delegate to specify the interface orientations that the split view controller supports.
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
+//        return .landscapeLeft
+//    }
 
 //        Responding to display mode changes
     func splitViewController(_: UISplitViewController, willChangeTo: UISplitViewController.DisplayMode) {
@@ -37,22 +37,22 @@ class PGLSplitViewDelegate:  UISplitViewControllerDelegate  {
     }
 
 
-    func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode {
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
-        let horizontalSize = svc.traitCollection.horizontalSizeClass
-        if horizontalSize == .compact {
-            return .oneBesideSecondary
-        }
-        return .twoDisplaceSecondary
-    }
-
-//            Collapsing the interface
-    @objc   func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
-            //horizontally regular to a horizontally compact size class
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
-        return proposedTopColumn
-
-    }
+//    func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode {
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
+//        let horizontalSize = svc.traitCollection.horizontalSizeClass
+//        if horizontalSize == .compact {
+//            return .oneBesideSecondary
+//        }
+//        return .twoDisplaceSecondary
+//    }
+//
+////            Collapsing the interface
+//    @objc   func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
+//            //horizontally regular to a horizontally compact size class
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
+//        return proposedTopColumn
+//
+//    }
 
     func splitViewController(_: UISplitViewController, willHide: UISplitViewController.Column) {
             //            Tells the delegate that the specified column is about to be hidden.
