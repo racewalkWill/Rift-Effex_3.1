@@ -89,19 +89,44 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 
             }
         if let primaryNav = self.storyboard?.instantiateViewController(identifier: "PGLNavPrimaryController") as? UINavigationController {
+
             self.setViewController(primaryNav, for: .primary)
 
-            if let supplementNav = self.storyboard?.instantiateViewController(identifier:
-                                                                                "SupplementNavController") as? UINavigationController {
-                self .setViewController(supplementNav, for: .supplementary)
+            // does the child need to be set too?  OpenStackController
+            if let childController = self.storyboard?.instantiateViewController(withIdentifier: "OpenStackController") as? PGLOpenStackController {
+                primaryNav.setViewControllers([childController], animated: false)
+
             }
+                // primaryNav.topViewController as? PGLStackImageController {
+
+
+           //  primaryNav.setViewControllers(<#T##viewControllers: [UIViewController]##[UIViewController]#>, animated: <#T##Bool#>)
+
+            if let supplementNav =
+                self.storyboard?.instantiateViewController(identifier:
+                    "SupplementNavController") as? UINavigationController {
+                self .setViewController(supplementNav, for: .supplementary)
+                if let childController = self.storyboard?.instantiateViewController(withIdentifier: "StackController") as? PGLStackController {
+                    supplementNav.setViewControllers([childController], animated: false)
+                }
+            }
+
+
 
             if let secondaryNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavSecondaryController") as? UINavigationController {
                 self.setViewController(secondaryNav, for: .secondary)
+                if let childController = self.storyboard?.instantiateViewController(withIdentifier: "PGLImageController") as? PGLImageController {
+                    secondaryNav.setViewControllers([childController], animated: false)
+                }
             }
+
+
 
             if let compactNav = self.storyboard?.instantiateViewController(withIdentifier: "PGLNavStackImageController") as? UINavigationController {
                 self.setViewController(compactNav, for: .compact)
+                if let childController = self.storyboard?.instantiateViewController(withIdentifier: "PGLStackImageContainerController") as? PGLStackImageContainerController {
+                    compactNav.setViewControllers([childController], animated: false)
+                }
             }
         }
 
