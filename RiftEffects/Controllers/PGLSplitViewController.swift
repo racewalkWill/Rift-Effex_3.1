@@ -17,7 +17,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 
     private let splitDelegate = PGLSplitViewDelegate()
     private var firstStartUpImageRun = false
-    private var didConfigureColumns = false
+    private var didConfigureColumns = true
 
 
     var startupImageList: PGLImageList? {
@@ -64,10 +64,10 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
             // it goes to full screen secondaryOnly column
             // NOT needed now that doubletap to full screen is implemented
 
-        if !didConfigureColumns {
-            loadNavigationControllers()
-            didConfigureColumns = true
-        }
+//        if !didConfigureColumns {
+//            loadNavigationControllers()
+//            didConfigureColumns = true
+//        }
 
 
 
@@ -240,10 +240,10 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - previousTraitCollection: \(String(describing: previousTraitCollection))")
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - traitCollection: \(String(describing: self.traitCollection))")
 
-        if !didConfigureColumns {
-            loadNavigationControllers()
-            didConfigureColumns = true
-        }
+//        if !didConfigureColumns {
+//            loadNavigationControllers()
+//            didConfigureColumns = true
+//        }
 
     }
 
