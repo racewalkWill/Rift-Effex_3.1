@@ -87,7 +87,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
             }
         publishers.append(cancellable!)
 
-        cancellable = myCenter.publisher(for: PGLStackChange)
+        let stackChangePublisher = myCenter.publisher(for: PGLStackChange, object: nil)
+        let updateSplitViewPublisher = myCenter.publisher(for: PGLUpdateSplitView, object: nil)
+        cancellable = Publishers.Merge(stackChangePublisher, updateSplitViewPublisher)
             .sink() { [weak self]
             myUpdate in
             Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLStackController  notificationBlock PGLStackChange")
@@ -138,7 +140,6 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
             }
         }
         registerCellNibs()
-
 
         
         // provide the album names (aka stackTypes) for the header album choice menu
@@ -1148,3 +1149,4 @@ extension PGLStackController {
 
 
 }
+

@@ -236,8 +236,8 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - previousTraitCollection: \(String(describing: previousTraitCollection))")
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - previousTraitCollection: \(String(describing: previousTraitCollection))")
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - traitCollection: \(String(describing: self.traitCollection))")
 
 //        if !didConfigureColumns {
@@ -247,6 +247,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 
     }
 
+     
 
 }
 

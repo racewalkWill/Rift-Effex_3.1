@@ -50,4 +50,16 @@
               return .automatic
               //Windowing controls will use the default system style
       }
+
+        func windowScene( _ windowScene: UIWindowScene,
+                            didUpdateEffectiveGeometry previousGeometry: UIWindowScene.Geometry) {
+
+                let wasLocked = previousGeometry.isInterfaceOrientationLocked
+                let isLocked = windowScene.effectiveGeometry.isInterfaceOrientationLocked
+
+                if wasLocked != isLocked {
+                    NSLog("PGLWindowSceneDelegate #didUpdateEffectiveGeometry:")
+//            game.pauseIfNeeded(isInterfaceOrientationLocked: isLocked)
+                }
+            }
     }
