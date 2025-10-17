@@ -41,4 +41,13 @@
 
             return splitVC
         }
+
+        @available(iOS 26.0, *)
+        func preferredWindowingControlStyle(
+              for scene: UIWindowScene) -> UIWindowScene.WindowingControlStyle {
+                      // return .unified  Windowing controls will appear as part of the scene’s content
+
+              return .automatic
+              //Windowing controls will use the default system style
+      }
     }
