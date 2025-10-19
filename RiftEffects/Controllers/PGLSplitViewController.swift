@@ -17,7 +17,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 
     private let splitDelegate = PGLSplitViewDelegate()
     private var firstStartUpImageRun = false
-    private var didConfigureColumns = true
+    private var didConfigureColumns = false
 
 
     var startupImageList: PGLImageList? {
@@ -64,10 +64,10 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
             // it goes to full screen secondaryOnly column
             // NOT needed now that doubletap to full screen is implemented
 
-//        if !didConfigureColumns {
-//            loadNavigationControllers()
-//            didConfigureColumns = true
-//        }
+        if !didConfigureColumns {
+            loadNavigationControllers()
+            didConfigureColumns = true
+        }
 
 
 
@@ -78,16 +78,16 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
             //        /// columns are Primary on the left (Library) , Supplementary for filter & parms, Secondary shows the image controller
             //        ///  iPhone only uses Supplementary and Secondary. the Library to open stacks is  a menu command, not a column
-        let horizontalSize = traitCollection.horizontalSizeClass
-        if horizontalSize == .compact {
-                //                preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary }
-            preferredDisplayMode = UISplitViewController.DisplayMode.secondaryOnly
-                // load controllers
-        }
-        else {
-            preferredDisplayMode = UISplitViewController.DisplayMode.twoDisplaceSecondary
-
-            }
+//        let horizontalSize = traitCollection.horizontalSizeClass
+//        if horizontalSize == .compact {
+//                //                preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary }
+//            preferredDisplayMode = UISplitViewController.DisplayMode.secondaryOnly
+//                // load controllers
+//        }
+//        else {
+//            preferredDisplayMode = UISplitViewController.DisplayMode.twoDisplaceSecondary
+//
+//            }
         if let primaryNav = self.storyboard?.instantiateViewController(identifier: "PGLNavPrimaryController") as? UINavigationController {
 
             self.setViewController(primaryNav, for: .primary)
@@ -170,6 +170,10 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
+
+        show(.primary)
+        show(.secondary)
+        show(.supplementary)
         if didConfigureColumns {
             firstStartUpImageRun = requestStartupImage()
         }
@@ -188,6 +192,8 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         // and the information provided by the delegate object.
         // mode is controlled by targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode
 
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
+        
         let deviceIdom = traitCollection.userInterfaceIdiom
         navigationItem.leftItemsSupplementBackButton = true
 

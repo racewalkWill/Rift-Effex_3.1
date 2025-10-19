@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         registerCustomFilters()
 
         Logger(subsystem: LogSubsystem, category: LogCategory).notice( " didFinishLaunchingWithOptions appStack created")
-        checkVersion()
+//        checkVersion()
         MainViewImageResize = UserDefaults.standard.bool(forKey: "MainViewImageResize")
             // If the specified key doesn‘t exist, this method returns false.
         
@@ -232,17 +232,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // MARK: Migration
 
-    func checkVersion() {
-            //        self.dataWrapper.build14DeleteOrphanStacks()
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice( "completed checkVersion")
-    }
+//    func checkVersion() {
+//            //        self.dataWrapper.build14DeleteOrphanStacks()
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice( "completed checkVersion")
+//    }
 
 
 
 
 
 
-    func pushSchemaToCloudKit() {
+//    func pushSchemaToCloudKit() {
     // was used in application(_ application: UIApplication, didFinishLaunchingWithOptions
         //******* START ONLY One time to push schema to cloudKit
 
@@ -274,5 +274,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //            NSLog("initializeCloudKitSchema  END " )
     //        }
     //            ******* END ONLY One time to push schema to cloudKit
-    }
+//    }
 }
