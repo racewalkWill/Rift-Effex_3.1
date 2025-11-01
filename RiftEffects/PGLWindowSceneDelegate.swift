@@ -35,9 +35,9 @@
 
                 return UISplitViewController()
             }
-            splitVC.preferredSplitBehavior = .automatic
-            splitVC.preferredDisplayMode = .automatic
-            splitVC.displayModeButtonVisibility = .automatic
+            splitVC.preferredSplitBehavior = .tile //.automatic
+            splitVC.preferredDisplayMode = .twoBesideSecondary // .automatic
+            splitVC.displayModeButtonVisibility = .never //.automatic
 
             return splitVC
         }

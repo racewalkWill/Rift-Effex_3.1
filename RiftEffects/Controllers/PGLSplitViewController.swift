@@ -58,8 +58,8 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         // used to have this.. check versions
 
 
-        presentsWithGesture = true
-        showsSecondaryOnlyButton = false
+//        presentsWithGesture = true
+//        showsSecondaryOnlyButton = false
             // this button shows on the navigation of the secondary controller - the imageController
             // it goes to full screen secondaryOnly column
             // NOT needed now that doubletap to full screen is implemented
@@ -195,7 +195,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
         
         let deviceIdom = traitCollection.userInterfaceIdiom
-        navigationItem.leftItemsSupplementBackButton = true
+       // navigationItem.leftItemsSupplementBackButton = true
 
         if deviceIdom == .phone {
             navigationItem.hidesBackButton = false

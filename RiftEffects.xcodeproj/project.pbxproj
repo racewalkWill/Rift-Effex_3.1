@@ -715,10 +715,10 @@
 		A3C71700255C3D1F005C2CAD /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				A3BF507A24D32A3400CD5114 /* PGLSplitViewController.swift */,
 				A3181C032974C84F00834D89 /* PGLNeedsRedraw.swift */,
 				A3BF505324D32A3400CD5114 /* PGLStackController.swift */,
 				A3DC264E2698FD83003E48C2 /* PGLImageController.swift */,
-				A3BF507A24D32A3400CD5114 /* PGLSplitViewController.swift */,
 				A3FA93E32E958C7D008859D5 /* PGLSplitViewDelegate.swift */,
 				A3BF506024D32A3400CD5114 /* PGLMainFilterController.swift */,
 				A3BF50A324D32A3400CD5114 /* PGLSelectParmController.swift */,

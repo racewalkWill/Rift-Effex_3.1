@@ -209,6 +209,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
            navigationItem.title = filterOpenTitle
            let editingItem = UIBarButtonItem(title: tableView.isEditing ? "Delete" : "Edit", style: .plain, target: self, action: #selector(toggleEditing))
            navigationItem.rightBarButtonItems = [editingItem]
+        // why does the systme displayMode show on the right of the edit button?
 
 //             navigationController?.setToolbarHidden(false, animated: false)
            }

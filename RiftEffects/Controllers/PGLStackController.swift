@@ -21,11 +21,11 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     // edit order by drag or delete a filter in the edit mode
 
     var appStack: PGLAppStack!
-    var filterShiftBtn: UIBarButtonItem!
+//    var filterShiftBtn: UIBarButtonItem!
     var filterShiftImage: UIBarButtonItem!
     var upChevronBtn: UIBarButtonItem!
     var downChevronBtn: UIBarButtonItem!
-    var toolBarSpacer: UIBarButtonItem!
+//    var toolBarSpacer: UIBarButtonItem!
 
     var longPressGesture: UILongPressGestureRecognizer!
     var longPressStart: IndexPath?
@@ -248,21 +248,27 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     }
     
     func addToolBarButtons(toController: UIViewController) {
+        // removed reduant button filterShiftBtn
 
-
-        filterShiftBtn = UIBarButtonItem(title: "", style: .plain, target: self , action: #selector(singleFilterOutput))
+//        filterShiftBtn = UIBarButtonItem(title: "", style: .plain, target: self , action: #selector(singleFiltferOutput))
         filterShiftImage = UIBarButtonItem(title: "", style: .plain, target: self , action: #selector(singleFilterOutput))
+        filterShiftImage.width = 24.0
+
         // both use the same selector...
 
         filterShiftImage.image = UIImage(systemName: "chart.bar.doc.horizontal")
-        filterShiftBtn.possibleTitles = [StackDisplayMode.Single.rawValue, StackDisplayMode.All.rawValue ]
+//        filterShiftBtn.possibleTitles = [StackDisplayMode.Single.rawValue, StackDisplayMode.All.rawValue ]
 
         upChevronBtn = UIBarButtonItem(title: "", style: .plain, target: self , action: #selector(upChevronAction))
+        upChevronBtn.width = filterShiftImage.width
         upChevronBtn.image = UIImage(systemName:"chevron.up")
+
         downChevronBtn = UIBarButtonItem(title: "", style: .plain, target: self , action: #selector(downChevronAction))
+        downChevronBtn.width = filterShiftImage.width
+
         downChevronBtn.image = UIImage(systemName:"chevron.down")
-        toolBarSpacer = UIBarButtonItem.fixedSpace(15.0)
-        toController.setToolbarItems([filterShiftImage, filterShiftBtn,  toolBarSpacer, upChevronBtn, downChevronBtn], animated: true)
+//        toolBarSpacer = UIBarButtonItem.fixedSpace(15.0)
+        toController.setToolbarItems([ filterShiftImage, upChevronBtn, downChevronBtn], animated: true) // removed  elements  filterShiftBtntoolBarSpacer
         setShiftBtnState()
         setChevronState()
     }
@@ -279,15 +285,15 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     }
 
     func setShiftBtnState() {
-        if filterShiftBtn != nil {
-            filterShiftBtn.isEnabled = (appStack.flatRowCount() > 1)
-            filterShiftImage.isEnabled = filterShiftBtn.isEnabled
+        if filterShiftImage != nil {
+//            filterShiftBtn.isEnabled = (appStack.flatRowCount() > 1)
+            filterShiftImage.isEnabled = (appStack.flatRowCount() > 1 )
             setChevronState()
-            if (appStack.showFilterImage) {
-                filterShiftBtn.title  = StackDisplayMode.Single.rawValue
-            } else {
-                filterShiftBtn.title  = StackDisplayMode.All.rawValue
-            }
+//            if (appStack.showFilterImage) {
+//                filterShiftBtn.title  = StackDisplayMode.Single.rawValue
+//            } else {
+//                filterShiftBtn.title  = StackDisplayMode.All.rawValue
+//            }
         }
 
     }
