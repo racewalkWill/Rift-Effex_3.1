@@ -467,7 +467,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func postImageViewWillAppear() {
-            //        NSLog("\(String(describing: self) + "-" + #function)")
+                    NSLog("\(String(describing: self) + " - " + #function)")
         let imageViewWillAppearNotification = Notification(name:PGLImageViewWillAppear)
         NotificationCenter.default.post(imageViewWillAppearNotification)
     }

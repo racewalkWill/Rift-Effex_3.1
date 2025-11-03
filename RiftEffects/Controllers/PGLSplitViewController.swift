@@ -10,6 +10,7 @@ import UIKit
 import os
 import Photos
 import CoreData
+import Combine
 
 
 
@@ -18,6 +19,9 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
     private let splitDelegate = PGLSplitViewDelegate()
     private var firstStartUpImageRun = false
     private var didConfigureColumns = false
+
+    var publishers = [any Cancellable]()
+    var cancellable: (any Cancellable)?
 
 
     var startupImageList: PGLImageList? {
@@ -50,7 +54,9 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         super.viewDidLoad()
         delegate = splitDelegate
 
-
+        if displayMode != .twoBesideSecondary {
+            preferredDisplayMode = .twoBesideSecondary
+        }
       //  preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
         // comment out iOS26 iPad test
         
@@ -64,14 +70,21 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
             // it goes to full screen secondaryOnly column
             // NOT needed now that doubletap to full screen is implemented
 
-        if !didConfigureColumns {
-            loadNavigationControllers()
-            didConfigureColumns = true
-        }
+//        if !didConfigureColumns {
+//            loadNavigationControllers()
+//            didConfigureColumns = true
+//        }
 
 
 
 }  // viewDidLoad
+
+    override func releaseNotifications() {
+        for aCancel in publishers {
+            aCancel.cancel()
+        }
+        publishers = [any Cancellable]()
+    }
 
     func loadNavigationControllers()
     {
@@ -153,7 +166,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
 
         let deviceIdom = traitCollection.userInterfaceIdiom
-        navigationItem.leftItemsSupplementBackButton = true
+//        navigationItem.leftItemsSupplementBackButton = true
 
         if deviceIdom == .phone {
             navigationItem.hidesBackButton = false
@@ -161,6 +174,9 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
                 // showsSecondaryOnlyButton  not needed for full screen of the PGLImageController
                 // now doubleTap on the PGLImageController opens full screen of the PGLMetalController
             }
+        if displayMode != .twoBesideSecondary {
+            preferredDisplayMode = .twoBesideSecondary
+        }
 //
 //        loadNavigationControllers()
 //        requestStartupImage()
@@ -170,13 +186,16 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
-
+        if displayMode != .twoBesideSecondary {
+            preferredDisplayMode = .twoBesideSecondary
+        }
         show(.primary)
         show(.secondary)
         show(.supplementary)
-        if didConfigureColumns {
-            firstStartUpImageRun = requestStartupImage()
-        }
+//        if didConfigureColumns {
+//            firstStartUpImageRun = requestStartupImage()
+//        }
+//        firstStartUpImageRun = requestStartupImage()
     }
 
 
@@ -241,17 +260,17 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         return alwaysReturnTrue
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 //        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
 //        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - previousTraitCollection: \(String(describing: previousTraitCollection))")
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - traitCollection: \(String(describing: self.traitCollection))")
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - traitCollection: \(String(describing: self.traitCollection))")
 
 //        if !didConfigureColumns {
 //            loadNavigationControllers()
 //            didConfigureColumns = true
 //        }
 
-    }
+//    }
 
      
 

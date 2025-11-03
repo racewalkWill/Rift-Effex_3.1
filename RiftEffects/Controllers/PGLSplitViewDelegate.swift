@@ -37,14 +37,14 @@ class PGLSplitViewDelegate:  UISplitViewControllerDelegate  {
     }
 
 
-//    func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode {
-//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
-//        let horizontalSize = svc.traitCollection.horizontalSizeClass
-//        if horizontalSize == .compact {
-//            return .oneBesideSecondary
-//        }
-//        return .twoDisplaceSecondary
-//    }
+    func targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode {
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
+        let horizontalSize = svc.traitCollection.horizontalSizeClass
+        if horizontalSize == .compact {
+            return .oneBesideSecondary
+        }
+        return .twoBesideSecondary
+    }
 //
 ////            Collapsing the interface
 //    @objc   func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {

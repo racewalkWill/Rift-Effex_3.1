@@ -685,9 +685,9 @@
 			children = (
 				A3BF50A724D32A3400CD5114 /* PGLFilterAttribute.swift */,
 				A3AF92E02D4009BF001E4785 /* PGLAttributeRectangle.swift */,
-				A3AF92DE2D400952001E4785 /* PGLFilterAttributeColor.swift */,
 				A3AF92DC2D40093A001E4785 /* PGLFilterAttributeAffine.swift */,
 				A3AF92DA2D400921001E4785 /* PGLFilterAttributeAngle.swift */,
+				A3AF92DE2D400952001E4785 /* PGLFilterAttributeColor.swift */,
 				A3AF92D82D4007BB001E4785 /* PGLFilterAttributeImage.swift */,
 				A30BF4322CEA503A0062C84C /* PGLRandomParms.swift */,
 				A3BF505424D32A3400CD5114 /* PGLFilterAttributeNumber.swift */,
