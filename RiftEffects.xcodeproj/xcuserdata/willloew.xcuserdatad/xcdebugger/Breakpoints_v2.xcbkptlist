@@ -100,32 +100,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "366C5876-B853-4567-9463-EDF2794028D1"
+            uuid = "BA697FDF-D089-48A4-BC47-C42386E61BA3"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Controllers/PGLSplitViewController.swift"
+            filePath = "RiftEffects/Controllers/PGLStackImageContainerController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
-            landmarkName = "viewWillAppear(_:)"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
+            landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "1D00DEC6-5559-47F2-9373-CE45A219322F"
+            uuid = "C6056B28-3EC4-47D4-BECD-50D63C40B06E"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Controllers/PGLSplitViewController.swift"
+            filePath = "RiftEffects/Controllers/PGLNavStackImageController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "247"
-            endingLineNumber = "247"
-            landmarkName = "viewWillLayoutSubviews()"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "popViewController(animated:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

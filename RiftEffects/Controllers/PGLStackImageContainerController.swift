@@ -159,7 +159,10 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     }
     
     func setMoreBtnMenu() {
-            //      if traitCollection.userInterfaceIdiom == .phone {
+        var musicItemState = UIMenuElement.Attributes.keepsMenuPresented
+        if traitCollection.userInterfaceIdiom == .phone {
+            musicItemState = UIMenuElement.Attributes.hidden
+        }
         guard let imageViewerController = imageController()
             else { return }
         let libraryMenu = UIAction.init(title: PGLMenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
@@ -194,7 +197,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
         },
 
-         UIAction(title: PGLMenuLabel.Music.rawValue, image:UIImage(systemName: "music.note.list")) {
+         UIAction(title: PGLMenuLabel.Music.rawValue, image:UIImage(systemName: "music.note.list"),attributes: (musicItemState)) {
             action in
             imageViewerController.musicButtonTapped(controllerMusicBtn: self.moreBtn)
 
