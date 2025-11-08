@@ -590,7 +590,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         }
         if traitCollection.userInterfaceIdiom == .phone {
             metalController?.updateDrawableSize()
-            NSLog(String(describing:self) + "viewWillAppear \(String(describing: view))")
+            NSLog(String(describing:self) + "viewWillAppear and metalController updateDrawableSize \(String(describing: view))")
         }
 
             /// this animationToggle is not needed..

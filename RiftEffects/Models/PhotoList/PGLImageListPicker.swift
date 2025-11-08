@@ -151,6 +151,10 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
                 mySplitController.startupImageList = pickingImageList
                 let notifier = Notification(name: PGLUpdateSplitView)
                 NotificationCenter.default.post(notifier)
+//                if #available(iOS 26.0, *) {
+//                    controller.setNeedsUpdateProperties()
+//                    Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "- calls setNeedsUpdateProperties") ")
+//                }
 
             }
         }

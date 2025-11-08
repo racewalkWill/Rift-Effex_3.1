@@ -40,6 +40,7 @@ class PGLCompactImageController: PGLImageController {
 //                  present(navController, animated: true, completion: nil )
 //                  let items = stackEffectsController.toolbarItems
 //                  NSLog("stack has tool bar items \(items)")
+                  NSLog ("\( String(describing: self) + "-" + #function)" )
                  present(stackEffectsController, animated: true, completion: nil )
                     // but no nav bar item with the buttons !
 

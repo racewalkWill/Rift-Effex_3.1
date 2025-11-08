@@ -320,6 +320,7 @@ class Renderer: NSObject, MTKViewDelegate {
         }
         if mtkViewSize != nil, mtkViewSize == size {
                 // no change needed
+            Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " no change needed drawableSizeWillChange to \(String(describing: size))") "))
             return
         }
 

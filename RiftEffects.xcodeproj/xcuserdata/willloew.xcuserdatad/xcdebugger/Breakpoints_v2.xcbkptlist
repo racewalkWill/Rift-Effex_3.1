@@ -79,36 +79,6 @@
             endingLineNumber = "960"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "94D3B826-3C67-43FD-B1BA-FC453C75349F - 6816929249347b7b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "RiftEffects.PGLImageController.viewDidLoad() -&gt; ()"
-                  moduleName = "RiftEffects.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/willloew/Developer/Rift-Effex_3.6/RiftEffects/Controllers/PGLImageController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "960"
-                  endingLineNumber = "960">
-               </Location>
-               <Location
-                  uuid = "94D3B826-3C67-43FD-B1BA-FC453C75349F - 6ac7936480d28cf1"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; Swift.Optional&lt;RiftEffects.PGLFilterStack&gt; in RiftEffects.PGLImageController.viewDidLoad() -&gt; ()"
-                  moduleName = "RiftEffects.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/willloew/Developer/Rift-Effex_3.6/RiftEffects/Controllers/PGLImageController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "960"
-                  endingLineNumber = "960">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -121,8 +91,8 @@
             filePath = "RiftEffects/Controllers/PGLSplitViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "188"
-            endingLineNumber = "188"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -153,8 +123,8 @@
             filePath = "RiftEffects/Controllers/PGLSplitViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
             landmarkName = "viewWillLayoutSubviews()"
             landmarkType = "7">
          </BreakpointContent>

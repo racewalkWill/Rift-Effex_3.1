@@ -47,12 +47,12 @@ class PGLSplitViewDelegate:  UISplitViewControllerDelegate  {
     }
 //
 ////            Collapsing the interface
-//    @objc   func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
-//            //horizontally regular to a horizontally compact size class
-//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
-//        return proposedTopColumn
-//
-//    }
+    @objc   func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
+            //horizontally regular to a horizontally compact size class
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
+        return proposedTopColumn
+
+    }
 
     func splitViewController(_: UISplitViewController, willHide: UISplitViewController.Column) {
             //            Tells the delegate that the specified column is about to be hidden.

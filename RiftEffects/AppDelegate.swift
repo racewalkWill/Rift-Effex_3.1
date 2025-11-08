@@ -88,7 +88,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ = dataWrapper.persistentContainer
         registerCustomFilters()
 
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice( " didFinishLaunchingWithOptions appStack created")
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice( " didFinishLaunchingWithOptions appStack created")
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
 //        checkVersion()
         MainViewImageResize = UserDefaults.standard.bool(forKey: "MainViewImageResize")
             // If the specified key doesn‘t exist, this method returns false.
@@ -116,7 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // everything else
         let myConfig =  UISceneConfiguration(
             name: "MainScene",
-            sessionRole: .windowApplication)
+            sessionRole: connectingSceneSession.role)
         myConfig.delegateClass = PGLWindowSceneDelegate.self
         NSLog( #function + " return MainScene config")
         return myConfig

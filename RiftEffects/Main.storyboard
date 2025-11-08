@@ -143,7 +143,7 @@
                         <viewControllerLayoutGuide type="top" id="EJI-ec-Z2e"/>
                         <viewControllerLayoutGuide type="bottom" id="CVu-JS-I30"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="FIa-oA-7jC">
+                    <view key="view" contentMode="scaleToFill" id="FIa-oA-7jC">
                         <rect key="frame" x="0.0" y="0.0" width="1180" height="820"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -324,7 +324,7 @@
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xxl-iS-nJV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1269" y="-724"/>
+            <point key="canvasLocation" x="-1424" y="-731"/>
         </scene>
         <!--Metal Controller-->
         <scene sceneID="31t-u1-PFW">
@@ -721,8 +721,8 @@
         <scene sceneID="dfj-In-sbB">
             <objects>
                 <tableViewController storyboardIdentifier="StackController" title="Stack" id="dDm-tJ-e98" customClass="PGLStackController" customModule="RiftEffects" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="djp-vO-L7b">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="742"/>
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="djp-vO-L7b">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="820"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
@@ -814,7 +814,7 @@
             <objects>
                 <navigationController storyboardIdentifier="SupplementNavController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="8fb-qg-1Kn" customClass="PGLSupplementNavController" customModule="RiftEffects" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="2xo-Qn-0Om">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="2xo-Qn-0Om">
                         <rect key="frame" x="0.0" y="24" width="320" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -834,7 +834,7 @@
                 <navigationController storyboardIdentifier="PGLNavSecondaryController" automaticallyAdjustsScrollViewInsets="NO" id="sz9-Js-XAp" customClass="PGLNavSecondaryController" customModule="RiftEffects" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="kFL-fi-S8n">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="kFL-fi-S8n">
                         <rect key="frame" x="0.0" y="24" width="1180" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -870,7 +870,6 @@
         <scene sceneID="OG0-oh-es9">
             <objects>
                 <navigationController storyboardIdentifier="PGLNavPrimaryController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r9v-Qy-C7F" customClass="PGLNavPrimaryController" customModule="RiftEffects" customModuleProvider="target" sceneMemberID="viewController">
-                    <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="hIS-0d-fCX">
                         <rect key="frame" x="0.0" y="24" width="280" height="54"/>
@@ -988,13 +987,13 @@
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

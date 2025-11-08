@@ -64,7 +64,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         // used to have this.. check versions
 
 
-//        presentsWithGesture = true
+        presentsWithGesture = true
 //        showsSecondaryOnlyButton = false
             // this button shows on the navigation of the secondary controller - the imageController
             // it goes to full screen secondaryOnly column
@@ -162,11 +162,11 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
     */
 // MARK: iPhone Navigation
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
 
         let deviceIdom = traitCollection.userInterfaceIdiom
-//        navigationItem.leftItemsSupplementBackButton = true
+        navigationItem.leftItemsSupplementBackButton = true
 
         if deviceIdom == .phone {
             navigationItem.hidesBackButton = false
@@ -180,24 +180,52 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 //
 //        loadNavigationControllers()
 //        requestStartupImage()
+        super.viewWillAppear(animated)
 
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
         if displayMode != .twoBesideSecondary {
             preferredDisplayMode = .twoBesideSecondary
         }
-        show(.primary)
-        show(.secondary)
-        show(.supplementary)
+        super.viewDidAppear(animated)
+//        show(.primary)
+//        show(.secondary)
+//        show(.supplementary)
 //        if didConfigureColumns {
 //            firstStartUpImageRun = requestStartupImage()
 //        }
-//        firstStartUpImageRun = requestStartupImage()
+
+
+        if !firstStartUpImageRun {
+            firstStartUpImageRun = requestStartupImage()
+        }
+//        if #available(iOS 26.0, *) {
+//            setNeedsUpdateProperties()
+//            Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "- calls setNeedsUpdateProperties") ")
+//        }
     }
 
+   override func viewLayoutMarginsDidChange() {
+       super.viewLayoutMarginsDidChange()
+       Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
+    }
+
+    override func updateProperties() {
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
+        if #available(iOS 26.0, *) {
+            super.updateProperties()
+        } else {
+                // Fallback on earlier versions
+        }
+    }
 
     override func viewWillLayoutSubviews() {
 
@@ -222,6 +250,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
                 // showsSecondaryOnlyButton  not needed for full screen of the PGLImageController
                 // now doubleTap on the PGLImageController opens full screen of the PGLMetalController
             }
+        super.viewWillLayoutSubviews()
 
     }
 
@@ -260,17 +289,22 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         return alwaysReturnTrue
     }
 
-//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
-//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - previousTraitCollection: \(String(describing: previousTraitCollection))")
-//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - traitCollection: \(String(describing: self.traitCollection))")
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - previousTraitCollection: \(String(describing: previousTraitCollection))")
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - traitCollection: \(String(describing: self.traitCollection))")
 
 //        if !didConfigureColumns {
 //            loadNavigationControllers()
 //            didConfigureColumns = true
 //        }
 
-//    }
+//        if #available(iOS 26.0, *) {
+//            setNeedsUpdateProperties()
+//            Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "- calls setNeedsUpdateProperties") ")
+//        }
+
+    }
 
      
 
