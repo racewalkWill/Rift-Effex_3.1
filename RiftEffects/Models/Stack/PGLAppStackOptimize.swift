@@ -38,7 +38,7 @@ extension PGLAppStack {
 
         let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
 
-        NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["flag" : false as AnyObject])
+        NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["measureFlag" : false as AnyObject])
 
         showFilterImage = false // restore to show stack output
 
