@@ -323,7 +323,7 @@ class Renderer: NSObject, MTKViewDelegate {
             Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " no change needed drawableSizeWillChange to \(String(describing: size))") "))
             return
         }
-
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " drawableSizeWillChange from \(String(describing: self.mtkViewSize))") "))
         Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " drawableSizeWillChange to \(String(describing: size))") "))
 
         let translate = CGAffineTransform.init(translationX:  (size.width - TargetSize.width)/2, y:  (size.height - TargetSize.height)/2)

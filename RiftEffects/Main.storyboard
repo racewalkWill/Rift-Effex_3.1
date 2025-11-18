@@ -315,7 +315,7 @@
         <!--RootSplit-->
         <scene sceneID="nHH-rO-VOb">
             <objects>
-                <splitViewController storyboardIdentifier="RootSplitView" title="RootSplit" useStoryboardIdentifierAsRestorationIdentifier="YES" allowDoubleColumnStyle="YES" preferredDisplayMode="twoBeside" behavior="tile" id="vbC-U8-P9f" customClass="PGLSplitViewController" customModule="RiftEffects" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="RootSplitView" title="RootSplit" useStoryboardIdentifierAsRestorationIdentifier="YES" allowDoubleColumnStyle="YES" behavior="tile" id="vbC-U8-P9f" customClass="PGLSplitViewController" customModule="RiftEffects" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
                         <segue destination="sz9-Js-XAp" kind="relationship" relationship="detailViewController" id="DCq-97-jjZ"/>
                         <segue destination="r9v-Qy-C7F" kind="relationship" relationship="masterViewController" id="3NQ-7G-CVx"/>

@@ -530,14 +530,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         // MARK: viewController lifecycle
 
-        //    override func viewLayoutMarginsDidChange() {
-        //        NSLog("PGLImageController # viewLayoutMarginsDidChange")
-        //        if  (splitViewController?.isCollapsed)! {
-        //            splitViewController?.preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
-        //        }
 
-        //        hideParmControls()
-        //    }
     override func viewWillLayoutSubviews() {
 
             //     navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem

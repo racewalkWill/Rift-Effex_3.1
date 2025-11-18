@@ -265,7 +265,6 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
                 // do not update if editing rows
          }
 
-
          let deviceIdom = traitCollection.userInterfaceIdiom
          if deviceIdom == .phone {
              // test for compact fo
@@ -279,13 +278,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
              // selected stack is loaded into the image controller behind the openStackViewController
              // ie. a little preview..
              dismiss(animated: true, completion: nil )
-         }
-         else {
-             if !tableView.isEditing {
-                 self.splitViewController?.preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
-             }
-         }
-
+            }
          }
 
 

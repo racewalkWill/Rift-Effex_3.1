@@ -54,30 +54,11 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         super.viewDidLoad()
         delegate = splitDelegate
 
-        if displayMode != .twoBesideSecondary {
-            preferredDisplayMode = .twoBesideSecondary
-        }
-      //  preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
-        // comment out iOS26 iPad test
-        
-        // if the smaller iPhone is compact then should be the two column where the columns are controlled by buttons
-        // used to have this.. check versions
 
 
         presentsWithGesture = true
-//        showsSecondaryOnlyButton = false
-            // this button shows on the navigation of the secondary controller - the imageController
-            // it goes to full screen secondaryOnly column
-            // NOT needed now that doubletap to full screen is implemented
 
-//        if !didConfigureColumns {
-//            loadNavigationControllers()
-//            didConfigureColumns = true
-//        }
-
-
-
-}  // viewDidLoad
+    }  // viewDidLoad
 
     override func releaseNotifications() {
         for aCancel in publishers {
@@ -91,16 +72,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
             //        /// columns are Primary on the left (Library) , Supplementary for filter & parms, Secondary shows the image controller
             //        ///  iPhone only uses Supplementary and Secondary. the Library to open stacks is  a menu command, not a column
-//        let horizontalSize = traitCollection.horizontalSizeClass
-//        if horizontalSize == .compact {
-//                //                preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary }
-//            preferredDisplayMode = UISplitViewController.DisplayMode.secondaryOnly
-//                // load controllers
-//        }
-//        else {
-//            preferredDisplayMode = UISplitViewController.DisplayMode.twoDisplaceSecondary
-//
-//            }
+
         if let primaryNav = self.storyboard?.instantiateViewController(identifier: "PGLNavPrimaryController") as? UINavigationController {
 
             self.setViewController(primaryNav, for: .primary)
@@ -174,12 +146,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
                 // showsSecondaryOnlyButton  not needed for full screen of the PGLImageController
                 // now doubleTap on the PGLImageController opens full screen of the PGLMetalController
             }
-        if displayMode != .twoBesideSecondary {
-            preferredDisplayMode = .twoBesideSecondary
-        }
-//
-//        loadNavigationControllers()
-//        requestStartupImage()
+
         super.viewWillAppear(animated)
 
     }
@@ -187,25 +154,11 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
     override func viewDidAppear(_ animated: Bool) {
 
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
-        if displayMode != .twoBesideSecondary {
-            preferredDisplayMode = .twoBesideSecondary
-        }
-        super.viewDidAppear(animated)
-//        show(.primary)
-//        show(.secondary)
-//        show(.supplementary)
-//        if didConfigureColumns {
-//            firstStartUpImageRun = requestStartupImage()
-//        }
-
 
         if !firstStartUpImageRun {
             firstStartUpImageRun = requestStartupImage()
         }
-//        if #available(iOS 26.0, *) {
-//            setNeedsUpdateProperties()
-//            Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "- calls setNeedsUpdateProperties") ")
-//        }
+
     }
 
    override func viewLayoutMarginsDidChange() {
@@ -244,12 +197,12 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         let deviceIdom = traitCollection.userInterfaceIdiom
        // navigationItem.leftItemsSupplementBackButton = true
 
-        if deviceIdom == .phone {
+//        if deviceIdom == .phone {
             navigationItem.hidesBackButton = false
             showsSecondaryOnlyButton = false
                 // showsSecondaryOnlyButton  not needed for full screen of the PGLImageController
                 // now doubleTap on the PGLImageController opens full screen of the PGLMetalController
-            }
+//            }
         super.viewWillLayoutSubviews()
 
     }
