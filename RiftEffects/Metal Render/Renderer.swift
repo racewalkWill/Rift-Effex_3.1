@@ -232,16 +232,33 @@ class Renderer: NSObject, MTKViewDelegate {
         if let ciOutput = filterStack()?.stackOutputImage(false)
 
         {
-            let targetRect = CGRect(origin: CGPoint.zero, size: cropSize)
+            let widthEven = (Int(cropSize.width) / 2) * 2
+            let heightEven = (Int(cropSize.height) / 2) * 2
+            let evenRect = CGRect(origin: .zero,
+                                  size: CGSize(width: widthEven, height: heightEven))
 
-            let croppedOutput = ciOutput.cropped(to: targetRect)
+            // 2) Crop to finite, even extent
+            var output = ciOutput.cropped(to: evenRect)
 
-            let rgbSpace = CGColorSpaceCreateDeviceRGB()
+            output = output.applyingFilter("CIColorClamp",
+                                           parameters: [
+                                               "inputMinComponents": CIVector(x: 0, y: 0, z: 0, w: 0),
+                                               "inputMaxComponents": CIVector(x: 1, y: 1, z: 1, w: 1)
+                                           ])
+
+                // 4) Remove alpha by compositing over an opaque background
+                let bg = CIImage(color: .black).cropped(to: evenRect)
+                output = output.composited(over: bg)
+
+                // 5) Use sRGB and 8-bit format
+                let rgbSpace = CGColorSpace(name: CGColorSpace.sRGB)!
+
+
             let options: [CIImageRepresentationOption: Any] = [
                 kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 1.0 as CGFloat
             ]
             guard let heifData = ciMetalContext.heifRepresentation(
-                of: croppedOutput,
+                of: output,
                 format: .RGBAh,
                 colorSpace: rgbSpace,
                 options: options

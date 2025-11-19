@@ -628,9 +628,12 @@ extension PGLFilterAttributeImage {
 
             }
 
-        } else {
-            Logger(subsystem: LogSubsystem, category: LogNavigation).error( "PGLFilterAttributeImage.writeCDStack: unexpected nil inputAssets - NO CDImageList " )
         }
+//        else {
+            // nothing wrong here if the input image is from the prior filter output.. no imageList is needed.
+//            Logger(subsystem: LogSubsystem, category: LogNavigation).error( "PGLFilterAttributeImage.writeCDStack: unexpected nil inputAssets - NO CDImageList " )
+//        }
+        
         if self.inputStack != nil {
             // a child stack exists
             let childCDStack = self.inputStack?.writeCDStack(moContext: moContext)
@@ -699,7 +702,7 @@ extension PGLFilterAttributeImage {
                         myAppDelegate.displayDataError(error: iCloudError)
                     }
 
-                    Logger(subsystem: LogSubsystem, category: LogCategory).error("iCloud Error occurred in localId2CloudId" )
+                    Logger(subsystem: LogSubsystem, category: LogCategory).error("iCloud Error occurred in localId2CloudId + String(describing: iCloudError)" )
             }
         }
         NSLog(#function + "success + \(String(describing: mappedIdentifiers.first))" )
@@ -809,7 +812,7 @@ extension PGLAppStack {
     func userSaveErrorAlert(withError: any Error) {
         DispatchQueue.main.async {
             // all UI needs to be in the main queue including creation of UIAlertController
-        let alert = UIAlertController(title: "Save Error", message: "Try again with 'Save As' command", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Photo Library Save Error", message: "Did not save to the Photo Library. \(withError.localizedDescription)", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
             Logger(subsystem: LogSubsystem, category: LogCategory).error ("The userSaveErrorAlert \(withError.localizedDescription)")
         }))
