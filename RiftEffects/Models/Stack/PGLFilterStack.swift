@@ -223,6 +223,26 @@ class PGLFilterStack: Equatable, Hashable  {
         return activeFilterIndex == (activeFilters.count - 1)
     }
 
+// MARK: Edit Paste
+
+        /// create a BlendWithMask filter
+        /// filter input  WITHOUT  an imageList
+    func pasteCIImage(_ pasteImage: CIImage) {
+
+        guard let filterDescriptor =  PGLFilterDescriptor(kUIImagePasteFilter, nil )
+        else { return }
+
+        guard let blendMask = filterDescriptor.pglSourceFilter()
+        else { return }
+
+           blendMask.setImageValue(newValue: pasteImage, keyName:   kCIInputImageKey )
+//           blendMask.setImageValue(newValue: pasteImage, keyName: kCIInputBackgroundImageKey)
+        // background is set on append
+//            blendMask.setImageValue(newValue: pasteImage, keyName: kCIInputMaskImageKey)
+        appendFilter(blendMask)
+        postStackChange()
+
+    }
     // MARK: Add/Remove filters
 
     func isEmptyStack() -> Bool {

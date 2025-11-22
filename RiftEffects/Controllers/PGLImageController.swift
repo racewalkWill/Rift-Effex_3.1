@@ -594,6 +594,64 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     }
 
+    // MARK: Menus
+
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+          if action == #selector(paste(_:)) {
+
+              let hasImages =   UIPasteboard.general.hasImages
+              NSLog(#function + "hasImages:\(hasImages) ")
+              return hasImages
+          }
+          return super.canPerformAction(action, withSender: sender)
+      }
+
+      override func paste(_ sender: Any?) {
+          // Handle paste from UIPasteboard
+          NSLog(#function)
+          let pb = UIPasteboard.general
+
+          if let uiImage = pb.image {
+              if let ci =  CIImage.init(image: uiImage) {
+                  let theOrientation = CGImagePropertyOrientation(uiImage.imageOrientation)
+                  let pickedCIImage = ci.oriented(theOrientation)
+                  pasteCIImage(pickedCIImage)
+                  return
+              }
+          }
+
+      }
+
+    func pasteCIImage(_ ciImage: CIImage) {
+        appStack.outputOrViewFilterStack().pasteCIImage(ciImage)
+    }
+
+    func updateLibraryMenu() {
+        // from open stack delete command or the saveActionBtns
+        // enable/disable the More button library menu item
+//        if traitCollection.userInterfaceIdiom == .pad
+//            { return
+//                // leave as default ie disabled on the iPad
+//        }
+        if let mySplitView =  splitViewController as? PGLSplitViewController {
+            guard let theActions = moreBtn.menu?.children
+            else { return }
+            for aMenuAction in theActions {
+                if let thisAction = aMenuAction as? UIAction {
+                    if thisAction.identifier == PGLImageController.LibraryMenuIdentifier {
+                        if mySplitView.stackProviderHasRows() {
+                            thisAction.attributes = []  // ie not disabled
+                        } else {
+                            thisAction.attributes = [.disabled]
+                        }
+                    break
+                    }
+                }
+            }
+
+        }
+    }
+
     func setTemplateBtnMenu() {
         let imageName = "photo.stack"
         let contextMenu = UIMenu(title: "",
@@ -727,6 +785,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
 
+    // MARK: Notifications
     fileprivate func registerImageControllerNotifications() {
         let myCenter =  NotificationCenter.default
 
@@ -895,6 +954,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     }
 
+    // MARK: setup Metal
     fileprivate func loadMetalController() {
         if let myMetalControllerView = storyboard!.instantiateViewController(withIdentifier: "MetalController") as? PGLMetalController {
                 // does the metalView extend under the navigation bar?? change constraints???
@@ -1092,43 +1152,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         myVideoPreview.dismiss(animated: true, completion: nil)
     }
 
-//MARK: library menu
-    func updateLibraryMenu() {
-        // from open stack delete command or the saveActionBtns
-        // enable/disable the More button library menu item
-//        if traitCollection.userInterfaceIdiom == .pad
-//            { return
-//                // leave as default ie disabled on the iPad
-//        }
-        if let mySplitView =  splitViewController as? PGLSplitViewController {
-            guard let theActions = moreBtn.menu?.children
-            else { return }
-            for aMenuAction in theActions {
-                if let thisAction = aMenuAction as? UIAction {
-                    if thisAction.identifier == PGLImageController.LibraryMenuIdentifier {
-                        if mySplitView.stackProviderHasRows() {
-                            thisAction.attributes = []  // ie not disabled
-                        } else {
-                            thisAction.attributes = [.disabled]
-                        }
-                    break
-                    }
-                }
-            }
-
-        }
-    }
-
-
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
-
-
+//    override func didReceiveMemoryWarning() {
+//        super.didReceiveMemoryWarning()
+//        // Dispose of any resources that can be recreated.
+//    }
 
 
     // MARK: parmUI
