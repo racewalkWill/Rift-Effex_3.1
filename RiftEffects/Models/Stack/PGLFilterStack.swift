@@ -232,14 +232,14 @@ class PGLFilterStack: Equatable, Hashable  {
         guard let filterDescriptor =  PGLFilterDescriptor(kUIImagePasteFilter, nil )
         else { return }
 
-        guard let blendMask = filterDescriptor.pglSourceFilter()
+        guard let pasteMaskFilter = filterDescriptor.pglSourceFilter()
         else { return }
 
-           blendMask.setImageValue(newValue: pasteImage, keyName:   kCIInputImageKey )
-//           blendMask.setImageValue(newValue: pasteImage, keyName: kCIInputBackgroundImageKey)
-        // background is set on append
-//            blendMask.setImageValue(newValue: pasteImage, keyName: kCIInputMaskImageKey)
-        appendFilter(blendMask)
+        pasteMaskFilter.setImageValue(newValue: pasteImage, keyName:   kCIInputBackgroundImageKey )
+        let inputBackGroundAttribute = pasteMaskFilter.attribute(nameKey: kCIInputBackgroundImageKey)
+        inputBackGroundAttribute?.setImageParmState(newState: .inputPhoto)
+
+        appendFilter(pasteMaskFilter)
         postStackChange()
 
     }

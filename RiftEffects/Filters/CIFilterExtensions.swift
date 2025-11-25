@@ -32,7 +32,7 @@ let kTriangleGradient = "Triangle Gradient"
 let k4SidedGradient = "4 Sided Gradient"
 
 let kPMaskFilter = "MaskFilter"
-let kUIImagePasteFilter = "Paste Filter"
+let kUIImagePasteFilter = "PasteFilter"
 
 // MOVED in  121.05  to CIFilterToPGLFilter.Map
 

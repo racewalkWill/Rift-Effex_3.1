@@ -10,9 +10,14 @@ import UIKit
 
 ///  input UIImage from clipboard add to stack with Blend with Mask
 ///     saves UIImage to PhotoLibrary on save command
-class PGLPasteUIImageFilter: PGLFilterCIAbstract {
+class PGLPasteUIImageFilter: CIFilter {
     // pattern fromn PGLBumpBlendCI PGLBumpBlend
-    override class func register() {
+
+    @objc dynamic   var inputImage: CIImage?
+    @objc dynamic   var inputBackgroundImage: CIImage?
+//    @objc dynamic   var inputMaskImage: CIImage?
+
+    class func register() {
         //       let attr: [String: AnyObject] = [:]
 
         CIFilter.registerName(kUIImagePasteFilter, constructor: PGLFilterConstructor(), classAttributes: PGLPasteUIImageFilter.customAttributes())
@@ -24,10 +29,10 @@ class PGLPasteUIImageFilter: PGLFilterCIAbstract {
         return true
     }}
 
-    @objc override class func customAttributes() -> [String: Any] {
+    @objc class func customAttributes() -> [String: Any] {
 
         let customDict:[String: Any] = [
-            kCIAttributeFilterDisplayName : "Paste Image",
+            kCIAttributeFilterDisplayName : kUIImagePasteFilter,
 
             kCIAttributeFilterCategories :
                 [kCICategoryStillImage , kCICategoryStylize],
@@ -77,30 +82,32 @@ class PGLPasteUIImageFilter: PGLFilterCIAbstract {
         return customDict
 
     }
+        //    @objc  var inputImage:  CIImage?
+        //  standard input from prior filter
 
-    @objc  var pasteImage:  CIImage?
-    @objc  var  inputRadius: NSNumber = 100.0
-    @objc  var  inputRadius1: NSNumber = 400.0
-    @objc var inputCenter:CIVector = CIVector(x: 200, y: 200)
-     @objc  var  inputScale: NSNumber = 0.50
+//    @objc  var pasteImage:  CIImage?
+//    @objc  var  inputRadius: NSNumber = 100.0
+//    @objc  var  inputRadius1: NSNumber = 400.0
+//    @objc var inputCenter:CIVector = CIVector(x: 200, y: 200)
+//     @objc  var  inputScale: NSNumber = 0.50
 
 
 
-    override func setDefaults()
-    {
-        self.inputRadius = 400.0
-        self.inputRadius1 = 400.0
-        self.inputCenter = CIVector(x: 600 , y: 600)
-        self.inputScale = 0.50
-    }
+//    override func setDefaults()
+//    {
+//        self.inputRadius = 400.0
+//        self.inputRadius1 = 400.0
+//        self.inputCenter = CIVector(x: 600 , y: 600)
+//        self.inputScale = 0.50
+//    }
 
     override var outputImage: CIImage? {
         guard let myInput = inputImage else { return nil }
 
 
         guard let blendFilter = CIFilter(name:"CIBlendWithMask",  parameters: [
-            kCIInputImageKey: pasteImage!,
-            "inputMaskImage": pasteImage!,
+            kCIInputImageKey: inputBackgroundImage!,
+            "inputMaskImage": inputBackgroundImage!,
             "inputBackgroundImage": myInput ])
         else { return CIImage.empty() }
 

@@ -600,13 +600,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
           if action == #selector(paste(_:)) {
 
               let hasImages =   UIPasteboard.general.hasImages
-              NSLog(#function + "hasImages:\(hasImages) ")
+              NSLog(#function + "paste hasImages:\(hasImages) ")
               return hasImages
           }
           return super.canPerformAction(action, withSender: sender)
       }
 
-      override func paste(_ sender: Any?) {
+    override func paste(_ sender: Any?) {
           // Handle paste from UIPasteboard
           NSLog(#function)
           let pb = UIPasteboard.general
