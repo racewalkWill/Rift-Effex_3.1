@@ -21,7 +21,7 @@ class CIFilterToPGLFilter {
     static let Map: [String: [PGLSourceFilter.Type]] =   [
             "CIRoundedRectangleStrokeGenerator" : [PGLRectangleGenerator.self],
             "CIBlurredRectangleGenerator" : [PGLRectangleGenerator.self],
-            "CIMaximumScaleTransform" : [ PGLScaleUpFrame.self ],
+            "CIMaximumScaleTransform" : [ PGLScaleUpFrame.self , PGLPasteUIImageFilter.self],
             "CICrop": [PGLRectangleFilter.self, PGLMaskFilter.self] ,
 
             "CIClamp": [PGLRectangleFilter.self] ,

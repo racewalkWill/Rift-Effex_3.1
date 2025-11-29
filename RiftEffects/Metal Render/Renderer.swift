@@ -107,9 +107,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
     }
     func initZoomPanFilter() -> PGLScaleDownFrame {
-        let zoomDesc = PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self)!
-        let zoomFilter = zoomDesc.pglSourceFilter() as! PGLScaleDownFrame
-        return zoomFilter
+        return PGLScaleDownFrame.initZoomPanFilter()
     }
 
     // MARK: Optimize stacks

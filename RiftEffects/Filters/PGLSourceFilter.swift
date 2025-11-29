@@ -918,11 +918,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
     }
 
-    func updateChange(_ frameDelta: PGLFilterChange) {
-        // if any attributes in this filter match the key in the frameDelta
-        // then alter the value by the delta in the change record
-        // min/max issues?
-    }
+   
 
     func setImageListClone(imageList: PGLImageList, sourceKey: String) {
         // empty implementation

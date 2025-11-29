@@ -21,8 +21,8 @@ class PGLFilterConstructor: NSObject,  CIFilterConstructor {
             case kPBumpBlend :
                 return PGLBumpBlendCI()
 
-            case kUIImagePasteFilter :
-                return PGLPasteUIImageFilter()
+//            case kUIImagePasteFilter :
+//                return CIMaximumScaleTransform()
 
 //            case kPBumpFace:
 //                return PGLBumpFaceCIFilter()

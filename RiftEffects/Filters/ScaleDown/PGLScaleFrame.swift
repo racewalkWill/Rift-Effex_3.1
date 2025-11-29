@@ -48,6 +48,13 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
        return "Reduce to a smaller frame"
     }
 
+    class func initZoomPanFilter() -> PGLScaleDownFrame {
+        let zoomDesc = PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self)!
+        // see also  let zoomDesc = PGLFilterDescriptor("CIMaximumScaleTransform", PGLScaleUpFrame.self)!
+        let zoomFilter = zoomDesc.pglSourceFilter() as! PGLScaleDownFrame
+        return zoomFilter
+    }
+
     /// defines centerPoint for the LanczosScale rendering
     func centerPointAttribute() -> PGLFilterAttributeVector {
         let inputDict: [String:Any] = [

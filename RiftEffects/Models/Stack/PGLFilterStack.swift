@@ -58,7 +58,7 @@ class PGLFilterStack: Equatable, Hashable  {
     }()
 
 
-    var frameValueDeltas = PGLFilterChange()
+//    var frameValueDeltas = PGLFilterChange()
     var storedStack: CDFilterStack?
         // was weak var managedObject write/read to Core Data
     var thumbnail: Data? //  for Core Data store
@@ -230,14 +230,17 @@ class PGLFilterStack: Equatable, Hashable  {
     func pasteCIImage(_ pasteImage: CIImage) {
 
         guard let filterDescriptor =  PGLFilterDescriptor(kUIImagePasteFilter, nil )
-        else { return }
+        else {
+            return }
 
         guard let pasteMaskFilter = filterDescriptor.pglSourceFilter()
-        else { return }
+        else {
+            return }
 
-        pasteMaskFilter.setImageValue(newValue: pasteImage, keyName:   kCIInputBackgroundImageKey )
-        let inputBackGroundAttribute = pasteMaskFilter.attribute(nameKey: kCIInputBackgroundImageKey)
-        inputBackGroundAttribute?.setImageParmState(newState: .inputPhoto)
+        pasteMaskFilter.setImageValue(newValue: pasteImage, keyName:   kCIInputImageKey )
+
+        let inputAttribute = pasteMaskFilter.attribute(nameKey: kCIInputImageKey)
+        inputAttribute?.setImageParmState(newState: .inputPhoto)
 
         appendFilter(pasteMaskFilter)
         postStackChange()

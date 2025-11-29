@@ -10,123 +10,91 @@ import UIKit
 
 ///  input UIImage from clipboard add to stack with Blend with Mask
 ///     saves UIImage to PhotoLibrary on save command
-class PGLPasteUIImageFilter: CIFilter {
-    // pattern fromn PGLBumpBlendCI PGLBumpBlend
 
-    @objc dynamic   var inputImage: CIImage?
-    @objc dynamic   var inputBackgroundImage: CIImage?
-//    @objc dynamic   var inputMaskImage: CIImage?
+@MainActor
+class PGLPasteUIImageFilter: PGLScaleUpFrame {
 
-    class func register() {
-        //       let attr: [String: AnyObject] = [:]
+        /// add the centerPoint attribute to other Lanczos Scale attributes
+    required init?(filter: String, position: PGLFilterCategoryIndex) {
+        super.init(filter: filter, position: position)
+        attributes.append(self.clipboardImageAttribute())
+        hasAnimation = true }
 
-        CIFilter.registerName(kUIImagePasteFilter, constructor: PGLFilterConstructor(), classAttributes: PGLPasteUIImageFilter.customAttributes())
+
+    var clipboardImage: CIImage?
+
+    var blendFilter = CIFilter(name:"CIBlendWithAlphaMask")
+    // else { return CIImage.empty() }
+
+    override class func localizedDescription(filterName: String) -> String {
+        // custom subclasses should override
+       return "Paste image from clipboard"
     }
 
-    class override var supportsSecureCoding: Bool { get {
-        // subclasses must  implement this
-        // Core Data requires secureCoding to store the filter
-        return true
-    }}
+    override class func displayName() -> String? {
 
-    @objc class func customAttributes() -> [String: Any] {
-
-        let customDict:[String: Any] = [
-            kCIAttributeFilterDisplayName : kUIImagePasteFilter,
-
-            kCIAttributeFilterCategories :
-                [kCICategoryStillImage , kCICategoryStylize],
-
-            "pasteImage": [kCIAttributeIdentity: 0,
-                kCIAttributeClass: "CIImage",
-                kCIAttributeDisplayName: "Paste Image",
-                kCIAttributeType: kCIAttributeTypeImage] as [String : Any],
-
-            "inputRadius" :
-                [
-                    kCIAttributeMin       :  0.0,
-                    kCIAttributeSliderMin :  0.0,
-                    kCIAttributeSliderMax : 1000.0,
-                    kCIAttributeDefault   : 300.0,
-                    kCIAttributeIdentity  :  0.0,
-                    kCIAttributeType      : kCIAttributeTypeScalar
-                ] as [String : Any],
-            "inputRadius1" :
-                [
-                    kCIAttributeMin       :  0.0,
-                    kCIAttributeSliderMin :  0.0,
-                    kCIAttributeSliderMax : 1000.0,
-                    kCIAttributeDefault   : 400.0,
-                    kCIAttributeIdentity  :  0.0,
-                    kCIAttributeType      : kCIAttributeTypeScalar
-                ] as [String : Any],
-            "inputScale" : [
-
-                kCIAttributeMin       : -5.0 ,
-                kCIAttributeSliderMin : -5.0,
-                kCIAttributeSliderMax : 5.0 ,
-                kCIAttributeDefault   : 0.50 ,
-                kCIAttributeIdentity  : 0,
-                kCIAttributeType      : kCIAttributeTypeScalar
-
-            ] as [String : Any],
-
-            "inputCenter" : [  //kCIInputCenterKey"
-                kCIAttributeClass : "CIVector" ,
-                kCIAttributeDefault : CIVector(x: 300, y: 300),
-                kCIAttributeDescription :"The center of the effect as x and y coordinates",
-                kCIAttributeDisplayName :"Center",
-                kCIAttributeType : kCIAttributeTypePosition
-                            ] as [String : Any],
-        ]
-        return customDict
-
+        // FilterDescriptor will use the ciFilter.localizedName if this is nil.
+        // where a ciFilter is used with different pglSourceFilter classes then this method should be implemented
+        // by the subclass
+        return kUIImagePasteFilter
     }
-        //    @objc  var inputImage:  CIImage?
-        //  standard input from prior filter
 
-//    @objc  var pasteImage:  CIImage?
-//    @objc  var  inputRadius: NSNumber = 100.0
-//    @objc  var  inputRadius1: NSNumber = 400.0
-//    @objc var inputCenter:CIVector = CIVector(x: 200, y: 200)
-//     @objc  var  inputScale: NSNumber = 0.50
-
-
-
-//    override func setDefaults()
-//    {
-//        self.inputRadius = 400.0
-//        self.inputRadius1 = 400.0
-//        self.inputCenter = CIVector(x: 600 , y: 600)
-//        self.inputScale = 0.50
+//    override var filterName: String? {
+//        return "CIMaximumTran"
+//
 //    }
 
-    override var outputImage: CIImage? {
-        guard let myInput = inputImage else { return nil }
 
+  func clipboardImageAttribute() -> PGLFilterAttributeImage {
 
-        guard let blendFilter = CIFilter(name:"CIBlendWithMask",  parameters: [
-            kCIInputImageKey: inputBackgroundImage!,
-            "inputMaskImage": inputBackgroundImage!,
-            "inputBackgroundImage": myInput ])
-        else { return CIImage.empty() }
+      let inputDict: [String:Any] = [
 
-        let pasteOutput = blendFilter.outputImage?.cropped(to: myInput.extent )
+          "CIAttributeType" : kCIAttributeTypeImage,
+          "CIAttributeDisplayName" : "Clipboard Image" ,
+          "kCIAttributeDescription": "Image pasted from clipboard",
+          "CIAttributeClass":  "CIImage"
+      ]
+      let newImageAttribute = PGLFilterAttributeImage(pglFilter: self, attributeDict: inputDict, inputKey: kUIImagePasteFilter)
+      return newImageAttribute!
 
-//        let opaqueGreen      = CIColor(red:0.0, green:1.0, blue:0.0, alpha:1.0)
-//        let transparentGreen = CIColor(red:0.0, green:1.0, blue:0.0, alpha:0.0)
-//
-//        let gradient0Filter = CIFilter(name: "CIRadialGradient", parameters: [
-//            "inputCenter": inputCenter,
-//            "inputRadius0": inputRadius,
-//            "inputRadius1": inputRadius1,
-//            "inputColor0": opaqueGreen,
-//            "inputColor1": transparentGreen ] )
-//        let gradient0 = gradient0Filter?.outputImage
-
-        return pasteOutput
     }
 
+// implement set and valueFor??/
+/// set center point
+///  cifilter does not hold the center point
+    override func setImageValue(newValue: CIImage, keyName: String) {
+    //        logParm(#function, newValue.debugDescription, keyName)
+    //        shouldMoveCenter = true
+        clipboardImage = newValue
+        postImageChange()
+    }
 
+    override func valueFor( keyName: String) -> Any? {
+        if keyName == kUIImagePasteFilter {
+            return clipboardImage
+        } else {
+            return super.valueFor(keyName: keyName)
+        }
+    }
+
+   // ===================
+    override func outputImageBasic() -> CIImage? {
+        // Ensure required inputs are available
+        guard let myBlendFilter = blendFilter
+            else { return nil }
+        guard let myClipboardImage = clipboardImage
+            else { return nil }
+        guard let myInput = inputImage()
+            else { return nil }
+
+        // prior filter input will be background. Pasted clipped scaled image is mask and input
+        myBlendFilter.setValue(myClipboardImage, forKey: kCIInputImageKey)
+        myBlendFilter.setValue(myInput, forKey: kCIInputBackgroundImageKey)
+        myBlendFilter.setValue(myClipboardImage, forKey: kCIInputMaskImageKey)
+
+        // Produce output
+        return myBlendFilter.outputImage
+    }
 
 }
+
