@@ -78,7 +78,8 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
         }
         // Blend the image over an opaque background image.
         // This is needed if the image is smaller than the view, or if it has transparent pixels.
-        return scaledImage?.composited(over: self.opaqueBackground) ?? CIImage.empty()
+//        return scaledImage?.composited(over: self.opaqueBackground) ?? CIImage.empty()
+        return scaledImage ?? CIImage.empty()
     }
 
     func positionOutput(ciOutput: CIImage, inFrame: CGRect, newCenterPoint: CGPoint ) -> CIImage {

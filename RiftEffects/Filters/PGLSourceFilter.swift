@@ -675,7 +675,8 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
     func inputImage() -> CIImage?  {
         if isImageInputType {
-            return valueFor(keyName: kCIInputImageKey) as? CIImage
+            let thisValue = valueFor(keyName: kCIInputImageKey) as? CIImage
+            return thisValue
         }
         else {
             return CIImage.empty()}

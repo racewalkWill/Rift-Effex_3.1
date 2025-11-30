@@ -13,6 +13,10 @@ import UIKit
 
 @MainActor
 class PGLPasteUIImageFilter: PGLScaleUpFrame {
+    // need to pass customAttributes into the blendFilter
+    // or surface the blendFilter attributes into the interfadce
+    // consider that customeAttributes will be stored...
+
 
         /// add the centerPoint attribute to other Lanczos Scale attributes
     required init?(filter: String, position: PGLFilterCategoryIndex) {
@@ -59,38 +63,67 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
 
     }
 
+//    func imageInputAttribute() -> PGLFilterAttributeImage?
+//    {
+//        blendFilter.attribute(nameKey: kCIInputImageKey) as? PGLFilterAttributeImage
+//    }
+
 // implement set and valueFor??/
 /// set center point
 ///  cifilter does not hold the center point
     override func setImageValue(newValue: CIImage, keyName: String) {
     //        logParm(#function, newValue.debugDescription, keyName)
     //        shouldMoveCenter = true
-        clipboardImage = newValue
-        postImageChange()
+        switch keyName {
+            case kUIImagePasteFilter:
+                clipboardImage = newValue
+                super.setImageValue(newValue: newValue, keyName: kCIInputImageKey)
+//                postImageChange()
+            case kCIInputImageKey:
+                // blend uses prior input as background
+                blendFilter?.setValue(newValue, forKey: kCIInputBackgroundImageKey)
+            default:
+                super.setImageValue(newValue: newValue, keyName: keyName)
+        }
+
+
     }
 
     override func valueFor( keyName: String) -> Any? {
-        if keyName == kUIImagePasteFilter {
-            return clipboardImage
-        } else {
-            return super.valueFor(keyName: keyName)
+        switch keyName {
+            case kUIImagePasteFilter:
+                return clipboardImage
+
+//            case kCIInputImageKey:
+//                // re map prior input to blend filter background
+//                return blendFilter?.value( forKey: kCIInputBackgroundImageKey)
+
+            default:
+                return super.valueFor(keyName: keyName)
         }
+
     }
+
+    
 
    // ===================
     override func outputImageBasic() -> CIImage? {
         // Ensure required inputs are available
+
+        let resizedClipImage = super.outputImageBasic()
+
         guard let myBlendFilter = blendFilter
             else { return nil }
-        guard let myClipboardImage = clipboardImage
-            else { return nil }
-        guard let myInput = inputImage()
-            else { return nil }
+
+//        guard let myInput = inputImage()
+//            else { return nil }
 
         // prior filter input will be background. Pasted clipped scaled image is mask and input
-        myBlendFilter.setValue(myClipboardImage, forKey: kCIInputImageKey)
-        myBlendFilter.setValue(myInput, forKey: kCIInputBackgroundImageKey)
-        myBlendFilter.setValue(myClipboardImage, forKey: kCIInputMaskImageKey)
+        myBlendFilter.setValue(resizedClipImage, forKey: kCIInputImageKey)
+        myBlendFilter.setValue(resizedClipImage, forKey: kCIInputMaskImageKey)
+
+//        myBlendFilter.setValue(myInput, forKey: kCIInputBackgroundImageKey)
+        // background set already
 
         // Produce output
         return myBlendFilter.outputImage
