@@ -25,6 +25,7 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
 
     var shouldMoveCenter = false
     let opaqueBackground: CIImage = CIImage.black // CIImage.clear
+    var addBackground: Bool = true
 
     // TargetSize is global but with airPlay extr
     var centerPoint: CGPoint = CGPoint(x: TargetSize.width/2, y: TargetSize.height/2) {
@@ -78,8 +79,11 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
         }
         // Blend the image over an opaque background image.
         // This is needed if the image is smaller than the view, or if it has transparent pixels.
-//        return scaledImage?.composited(over: self.opaqueBackground) ?? CIImage.empty()
-        return scaledImage ?? CIImage.empty()
+        if addBackground {
+            return scaledImage?.composited(over: self.opaqueBackground) ?? CIImage.empty()
+        } else {
+            return scaledImage ?? CIImage.empty()
+        }
     }
 
     func positionOutput(ciOutput: CIImage, inFrame: CGRect, newCenterPoint: CGPoint ) -> CIImage {

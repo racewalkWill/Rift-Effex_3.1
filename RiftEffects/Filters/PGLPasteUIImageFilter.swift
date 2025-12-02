@@ -22,7 +22,11 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
     required init?(filter: String, position: PGLFilterCategoryIndex) {
         super.init(filter: filter, position: position)
         attributes.append(self.clipboardImageAttribute())
-        hasAnimation = true }
+        hasAnimation = true
+        
+        addBackground = false
+            // do not composite over opaqueBackground
+    }
 
 
     var clipboardImage: CIImage?
