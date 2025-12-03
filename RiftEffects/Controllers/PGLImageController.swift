@@ -603,11 +603,34 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 //              NSLog(#function + "hasImages:\(hasImages) "  + String(describing: self ))
               return hasImages
           }
+
+        if action == #selector(copy(_ : )) {
+            NSLog(#function  + String(describing: self ) +  " #selector(copy) ")
+            return true // image controller always has an image.. maybe CIImage.empty
+
+        }
         else {
             return super.canPerformAction(action, withSender: sender)
         }
 
       }
+
+    override func copy(_ sender: Any?) {
+        NSLog(#function)
+
+        guard let myMetalController = self.metalController
+        else { return }
+        _ = try? myMetalController.metalRender.captureImage()
+
+        let pb = UIPasteboard.general
+        if let cgImage =
+            appStack.outputOrViewFilterStack().outputImage()?.cgImage ?? CIImage.empty().cgImage {
+            // this fails - need to render the ciImage.
+            let uiImage = UIImage(cgImage: cgImage)
+            pb.image = uiImage
+        }
+    }
+
 
     override func paste(_ sender: Any?) {
           // Handle paste from UIPasteboard
