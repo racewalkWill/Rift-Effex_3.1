@@ -43,6 +43,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         setMoreBtnMenu() // needs the child imageController loaded
         setHelpBtnMenu()
         setTemplateBtnMenu()
+        setEditBtnMenu ()
 
         // no toolbar on the stackImageContainerController so  toolbar buttons don't show
 //        containerStackController?.addToolBarButtons(toController: self)
@@ -110,7 +111,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     }
 
 
-
+    @IBOutlet weak var editBtn: UIBarButtonItem!
+    
 
 
     @IBOutlet weak var templateBtn: UIBarButtonItem!
@@ -301,6 +303,23 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
     }
 
+    func setEditBtnMenu () {
+        guard let imageViewerController = imageController()
+            else { return }
+
+        let copyAction =  UIAction.init(title: "", image: UIImage(systemName: "Copy"), identifier: PGLImageController.EditMenuIdentifier, discoverabilityTitle: "Copy", attributes: [], state: UIMenuElement.State.on) {
+            [weak self ]
+            action in
+            guard self != nil else { return }
+            imageViewerController.copy(imageViewerController.editButtonItem)
+            }
+
+        let editMenu = UIMenu(title: "Edit",
+                                 children: [copyAction as UIMenuElement]
+
+                                 )
+        editBtn.menu = editMenu
+    }
 
     func updateNavigationBar() {
 
@@ -341,3 +360,4 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     */
 
 }
+

@@ -926,6 +926,7 @@
                         <leftBarButtonItems>
                             <barButtonItem title="More Btn" image="rectangle.stack.badge.plus" catalog="system" id="X6h-Dm-yVE"/>
                             <barButtonItem title="Random" image="plus.viewfinder" catalog="system" id="0Zt-QC-w2E"/>
+                            <barButtonItem systemItem="edit" changesSelectionAsPrimaryAction="YES" id="fnJ-Gf-KO3"/>
                         </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem title="toggleAnimationPause" hidden="YES" id="qG0-1L-lmY">
@@ -953,6 +954,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="editBtn" destination="fnJ-Gf-KO3" id="Enm-0e-Qhw"/>
                         <outlet property="helpBtn" destination="Cgl-oe-TKV" id="pm5-4f-QgI"/>
                         <outlet property="moreBtn" destination="X6h-Dm-yVE" id="xPk-mE-gvb"/>
                         <outlet property="newTrashBtn" destination="pEQ-Uh-ooY" id="LYx-ax-Q7i"/>

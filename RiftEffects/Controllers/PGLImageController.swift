@@ -58,6 +58,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     static var LibraryMenuIdentifier = UIAction.Identifier("Library")
     static var TemplateMenuIdentifier = UIAction.Identifier("Template")
+    static var EditMenuIdentifier = UIAction.Identifier("Edit")
         //
 
 
@@ -620,15 +621,17 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         guard let myMetalController = self.metalController
         else { return }
-        _ = try? myMetalController.metalRender.captureImage()
+        if let clipboardImage = try? myMetalController.metalRender.captureImage()
+        {
+            let pb = UIPasteboard.general
 
-        let pb = UIPasteboard.general
-        if let cgImage =
-            appStack.outputOrViewFilterStack().outputImage()?.cgImage ?? CIImage.empty().cgImage {
-            // this fails - need to render the ciImage.
-            let uiImage = UIImage(cgImage: cgImage)
-            pb.image = uiImage
+            pb.image = clipboardImage }
+        else {
+            return
         }
+
+
+
     }
 
 
