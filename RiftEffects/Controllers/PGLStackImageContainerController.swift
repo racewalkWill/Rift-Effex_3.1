@@ -306,19 +306,25 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
     func setEditBtnMenu () {
         guard let imageViewerController = imageController()
             else { return }
+        let pasteAttributes: UIMenuElement.Attributes = (UIPasteboard.general.hasImages ? [] : [.disabled])
 
-        let copyAction =  UIAction.init(title: "", image: UIImage(systemName: "Copy"), identifier: PGLImageController.EditMenuIdentifier, discoverabilityTitle: "Copy", attributes: [], state: UIMenuElement.State.on) {
-            [weak self ]
+        let copyAction =  UIAction.init(title: PGLMenuLabel.Copy.rawValue, image: UIImage(systemName: "Copy"), identifier: PGLImageController.EditMenuIdentifier, discoverabilityTitle: PGLMenuLabel.Copy.rawValue, attributes: [], state: UIMenuElement.State.on) {
             action in
-            guard self != nil else { return }
-            imageViewerController.copy(imageViewerController.editButtonItem)
+                imageViewerController.copy(imageViewerController.editButtonItem)
             }
+        // , state: UIMenuElement.State.off
 
-        let editMenu = UIMenu(title: "Edit",
-                                 children: [copyAction as UIMenuElement]
+        let buttonEditMenu = UIMenu(title: "",
+                        children: [ copyAction ,
 
-                                 )
-        editBtn.menu = editMenu
+                        UIAction(title: PGLMenuLabel.Paste.rawValue, image: UIImage(systemName: "Paste"), attributes: pasteAttributes){
+                            action in
+                            imageViewerController.paste(imageViewerController.editButtonItem)
+                        }
+                        ]
+                    )
+
+        editBtn.menu = buttonEditMenu
     }
 
     func updateNavigationBar() {
