@@ -47,10 +47,10 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
         return kUIImagePasteFilter
     }
 
-//    override var filterName: String? {
-//        return "CIMaximumTran"
-//
-//    }
+    override func canPasteImage() -> Bool {
+        // subclsses answer true as needed see PGLPasteUIImage
+        return true
+    }
 
 
   func clipboardImageAttribute() -> PGLFilterAttributeImage {

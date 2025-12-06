@@ -229,6 +229,16 @@ class PGLFilterStack: Equatable, Hashable  {
         /// filter input  WITHOUT  an imageList
     func pasteCIImage(_ pasteImage: CIImage) {
 
+        if currentFilter().canPasteImage() {
+            // replace the current pasted image attribute
+            if let pasteFilterAttribute = currentFilter().attribute(nameKey: kUIImagePasteFilter) {
+                currentFilter().setImageValue(newValue: pasteImage, keyName:   kUIImagePasteFilter )
+                pasteFilterAttribute.setImageParmState(newState: .inputPhoto)
+                postFilterChangeRedraw()
+//                postStackChange()
+                return
+            }
+        }
         guard let filterDescriptor =  PGLFilterDescriptor("CIMaximumScaleTransform", PGLPasteUIImageFilter.self  )
         else {
             return }

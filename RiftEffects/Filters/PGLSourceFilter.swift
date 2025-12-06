@@ -404,6 +404,10 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         }
 
 
+    func canPasteImage() -> Bool {
+        // subclsses answer true as needed see PGLPasteUIImage
+        return false
+    }
 
     func hasImageParmMissingInput() -> Bool {
        // answer true if one image Parm is missing an input
