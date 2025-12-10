@@ -366,7 +366,6 @@
 		A3BF508824D32A3400CD5114 /* PGLFeatureTransitionFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLFeatureTransitionFilter.swift; sourceTree = "<group>"; };
 		A3BF508924D32A3400CD5114 /* PGLFilterAttributeAttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeAttributedString.swift; sourceTree = "<group>"; };
 		A3BF508A24D32A3400CD5114 /* CIFilterExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIFilterExtensions.swift; sourceTree = "<group>"; };
-		A3BF509124D32A3400CD5114 /* RiftEffects.xcdatamodel */ = {isa = PBXFileReference; explicitFileType = wrapper.xcdatamodel; path = RiftEffects.xcdatamodel; sourceTree = "<group>"; };
 		A3BF509C24D32A3400CD5114 /* PGLImageList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLImageList.swift; sourceTree = "<group>"; };
 		A3BF50A024D32A3400CD5114 /* PGLFilterStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLFilterStack.swift; sourceTree = "<group>"; };
 		A3BF50A224D32A3400CD5114 /* PGLTransitionFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLTransitionFilter.swift; sourceTree = "<group>"; };
@@ -1559,7 +1558,6 @@
 			isa = XCVersionGroup;
 			children = (
 				A3BDD3CC290D95D000842B51 /* RiftEffects 2.2.xcdatamodel */,
-				A3BF509124D32A3400CD5114 /* RiftEffects.xcdatamodel */,
 			);
 			currentVersion = A3BDD3CC290D95D000842B51 /* RiftEffects 2.2.xcdatamodel */;
 			path = RiftEffects.xcdatamodeld;

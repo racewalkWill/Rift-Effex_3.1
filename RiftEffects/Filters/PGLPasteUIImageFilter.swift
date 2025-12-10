@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 ///  input UIImage from clipboard add to stack with Blend with Mask
 ///     saves UIImage to PhotoLibrary on save command
@@ -38,6 +39,8 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
         // custom subclasses should override
        return "Paste image from clipboard"
     }
+
+    
 
     override class func displayName() -> String? {
 
@@ -132,6 +135,45 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
         // Produce output
         return myBlendFilter.outputImage
     }
+
+        // MARK: Store clipboard
+    override func createCDClipboardData(filterImageAttribute: PGLFilterAttributeImage,
+                                        moContext: NSManagedObjectContext) {
+        // my image parm does not come from PhotoLibrary
+        // copy my clipboardImage into table CDImageData
+
+        let myCGImage = clipboardImage?.cgImage
+        let myUIImage = UIImage(cgImage: myCGImage!)
+        guard let rawImageData = myUIImage.pngData()
+            else {
+                return }
+
+        // assume that the normal cdParmImage row exists
+        guard let myCDImageRow: CDParmImage = filterImageAttribute.storedParmImage
+            else { return }
+            // assign the image data to the CDImageData
+        if myCDImageRow.parmImageData != nil {
+            myCDImageRow.parmImageData!.imageData = rawImageData   //as Data
+            }
+        else {
+        // need to create new CDImageData
+            guard let newCDClipboardData: CDImageData = NSEntityDescription.insertNewObject(forEntityName: "CDImageData", into:moContext ) as? CDImageData
+                else { // surface error to user see #createNewCDImageParm example
+                    return }
+
+            // establsh relationship
+            myCDImageRow.parmImageData = newCDClipboardData
+            newCDClipboardData.imageData = rawImageData   //  as Data
+            newCDClipboardData.imageDataType = "uiImage"
+        }
+    }
+
+    override func supportsImageClipboardData() -> Bool {
+        return true
+    }
+
+    
+
 
 }
 

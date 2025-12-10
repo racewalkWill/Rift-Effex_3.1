@@ -259,7 +259,7 @@ extension PGLFilterStack {
 // ================= end extension PGLFilterStack ======================
 
 extension PGLSourceFilter {
-    // core data methods
+    // Core Data methods
     // MARK: CoreData
 
     class func readPGLFilter(myCDFilter: CDStoredFilter, savedSize: CGSize?) -> PGLSourceFilter? {
@@ -426,6 +426,7 @@ extension PGLSourceFilter {
             for anImageParm in myImageParms {
                 anImageParm.createNewCDImageParm(moContext: moContext)
                  // creates where relationship does not exist
+                createCDClipboardData(filterImageAttribute: anImageParm , moContext: moContext)
             }
         }
 
@@ -492,7 +493,10 @@ extension PGLFilterAttributeImage {
 
 //       in the UI sequencedFilter is handled by
         // aSourceFilter.addChildSequenceStack(appStack: <#T##PGLAppStack#>)
+        if let rawImageDataRow = cdImageParm.parmImageData  {
 
+            return loadImageData(cdImageRow: rawImageDataRow)
+        }
         if let childStack = cdImageParm.inputStack  {
 
             let newPGLChildStack = aSourceFilter.setUpStack(onParentImageParm: self)
@@ -546,6 +550,24 @@ extension PGLFilterAttributeImage {
         }
     }
 
+    func loadImageData(cdImageRow: CDImageData) {
+        // image not in the PhotoLibrary. Usually pasted from clipboard
+        if !aSourceFilter.supportsImageClipboardData()  {
+            return
+        }
+
+
+        if let rawData = cdImageRow.imageData  {
+            let newImage = UIImage(data: rawData) ?? UIImage()
+            let clipBoardImage = newImage.ciImage ?? CIImage(cgImage: newImage.cgImage!)
+            if let myClipBoardFilter = aSourceFilter as? PGLPasteUIImageFilter {
+                myClipBoardFilter.setImageValue(newValue: clipBoardImage, keyName: kUIImagePasteFilter)
+            } else {
+                return // did not load the filter
+            }
+        }
+    }
+
     func createNewCDImageParm(moContext: NSManagedObjectContext) {
         // 4EntityModel
 //        NSLog("PGLFilterAttributeImage #createNewCDImageParm filter \(String(describing: attributeName ))")
@@ -595,12 +617,12 @@ extension PGLFilterAttributeImage {
                 }
                     storedParmImage?.inputAssets = storedImageList // sets up the relationship parm to inputAssets
                 }
-                if let theAssetIdentifiers = self.inputCollection?.assetIDs {
-                    // on the iPhone PHPicker the imageAssets do not have the identifiers
-                    // use the inputCollection identifiers
-                    let cloudAssetIDs = localId2CloudId(localIdentifiers: theAssetIdentifiers)
-                    storedParmImage?.inputAssets?.assetIDs = cloudAssetIDs
-                }
+            if let theAssetIdentifiers = self.inputCollection?.assetIDs {
+                // on the iPhone PHPicker the imageAssets do not have the identifiers
+                // use the inputCollection identifiers
+                let cloudAssetIDs = localId2CloudId(localIdentifiers: theAssetIdentifiers)
+                storedParmImage?.inputAssets?.assetIDs = cloudAssetIDs
+            }
             else {
                 if let imageListAssets = self.inputCollection?.imageAssets {
 
@@ -1760,7 +1782,5 @@ extension PGLFilterAttributeVector3 {
     }
 
 }
-
-
 
 

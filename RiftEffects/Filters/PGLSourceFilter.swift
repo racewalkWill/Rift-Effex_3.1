@@ -12,6 +12,7 @@ import CoreImage
 import simd
 import UIKit
 import os
+import CoreData
 
 
 protocol PGLAnimation {
@@ -578,6 +579,17 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 //        NotificationCenter.default.post(outputImageUpdate)
     }
 
+    // MARK: UIImage Store/Read
+    func createCDClipboardData(filterImageAttribute: PGLFilterAttributeImage, moContext: NSManagedObjectContext) {
+        // empty superclass implementation
+        // save into coreData images that are not in the photoLibrary
+        // see PGLPastUIImageFilter
+
+    }
+
+    func supportsImageClipboardData() -> Bool {
+        return false
+    }
         // MARK: set/get value
 
     func setImageValue(newValue: CIImage, keyName: String) {
