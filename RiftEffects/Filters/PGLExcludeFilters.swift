@@ -46,14 +46,14 @@ class PGLExcludeFilters {
 "CIColorClamp" ,  // see note N73.7.3 CIColorClamp for how to implement interface at later time
 
 // 2022-07-10 exclude failing for beta tests
-"CIAccordionFoldTransition" ,
+ // "CIAccordionFoldTransition" , restored ver 3.6.1 2025-12-13
 
 "CIAttributedTextImageGenerator",
 "CIAztecCodeGenerator",
 "CILabDeltaE",
 "CIQRCodeGenerator",
 "CIRoundedRectangleGenerator",
-"CIPDF417BarcodeGenerator",
+// "CIPDF417BarcodeGenerator", restored ver 3.6.1 2025-12-13
 //"WarpItMetalFilter"
 "FaceFilter",
 "VideoCam",
@@ -65,7 +65,7 @@ class PGLExcludeFilters {
 // after setting a value from the UI.. it then holds an affine
 // can't seem to force the vector out in code before displaying the filter
 "CIAffineClamp",
-"CIAffineTransform",
+// "CIAffineTransform", restored for ver 3.6.1 2025-12-13
 "CIAffineTile",
         ]
 

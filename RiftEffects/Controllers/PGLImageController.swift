@@ -629,15 +629,12 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         else {
             return
         }
-
-
-
     }
 
 
     override func paste(_ sender: Any?) {
           // Handle paste from UIPasteboard
-//          NSLog(#function)
+          NSLog(#function + String(describing: self ))
           let pb = UIPasteboard.general
 
           if let uiImage = pb.image {

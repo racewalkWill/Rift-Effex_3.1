@@ -242,22 +242,87 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         return alwaysReturnTrue
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - previousTraitCollection: \(String(describing: previousTraitCollection))")
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - traitCollection: \(String(describing: self.traitCollection))")
+//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - previousTraitCollection: \(String(describing: previousTraitCollection))")
+//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - traitCollection: \(String(describing: self.traitCollection))")
+//
+////        if !didConfigureColumns {
+////            loadNavigationControllers()
+////            didConfigureColumns = true
+////        }
+//
+////        if #available(iOS 26.0, *) {
+////            setNeedsUpdateProperties()
+////            Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "- calls setNeedsUpdateProperties") ")
+////        }
+//
+//    }
+        // MARK: Menus
 
-//        if !didConfigureColumns {
-//            loadNavigationControllers()
-//            didConfigureColumns = true
-//        }
+        override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
 
-//        if #available(iOS 26.0, *) {
-//            setNeedsUpdateProperties()
-//            Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "- calls setNeedsUpdateProperties") ")
-//        }
+          if action == #selector(paste(_:)) {
 
-    }
+              let hasImages =   UIPasteboard.general.hasImages
+//              NSLog(#function + "hasImages:\(hasImages) "  + String(describing: self ))
+              return hasImages
+          }
+
+            if action == #selector(copy(_ : )) {
+                NSLog(#function  + String(describing: self ) +  " #selector(copy) ")
+                return true // image controller always has an image.. maybe CIImage.empty
+
+            }
+            else {
+                return super.canPerformAction(action, withSender: sender)
+            }
+
+          }
+
+        override func copy(_ sender: Any?) {
+            NSLog(#function  + String(describing: self ))
+            guard let myAppStack = self.appStack
+            else {return }
+            if !myAppStack.isImageControllerOpen {
+               return
+            }
+            let metalRenderer = myAppStack.appRenderer
+
+            if let clipboardImage = try? metalRenderer.captureImage()
+                {
+                    let pb = UIPasteboard.general
+                    pb.image = clipboardImage }
+                else {
+                    return
+                }
+        }
+
+
+        override func paste(_ sender: Any?) {
+              // Handle paste from UIPasteboard
+          NSLog(#function + String(describing: self ))
+          let pb = UIPasteboard.general
+          if pb.numberOfItems < 1 {
+                // this should prevent the system allow paste confirmation from showing
+                return
+            }
+          if let uiImage = pb.image {
+              if let ci =  CIImage.init(image: uiImage) {
+                  let theOrientation = CGImagePropertyOrientation(uiImage.imageOrientation)
+                  let pickedCIImage = ci.oriented(theOrientation)
+                  pasteCIImage(pickedCIImage)
+                  return
+              }
+          }
+
+          }
+
+        func pasteCIImage(_ ciImage: CIImage) {
+            NSLog(#function + String(describing: self ))
+            appStack.outputOrViewFilterStack().pasteCIImage(ciImage)
+        }
+
 
      
 

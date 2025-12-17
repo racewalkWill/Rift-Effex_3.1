@@ -9,10 +9,12 @@
 import UIKit
 import os
 /// iPhone two column Stack and Image
-class PGLStackImageContainerController: PGLTwoColumnSplitController {
+class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuInteractionDelegate {
         //  2024-05-22 changed to use the super class PGLColumns.control and PGLColumns.imageViewer
         // removed duplicate vars var containerImageController,containerStackController
         // two vars pointed to the same controller - memory issue
+
+    var editMenuInteraction: UIEditMenuInteraction?
 
     deinit {
 //        releaseVars()
@@ -43,7 +45,17 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         setMoreBtnMenu() // needs the child imageController loaded
         setHelpBtnMenu()
         setTemplateBtnMenu()
-        setEditBtnMenu ()
+
+
+
+        // should implement delegate methods
+         editMenuInteraction = UIEditMenuInteraction(delegate: self)
+         if editMenuInteraction != nil {
+                view.addInteraction(editMenuInteraction!)
+                setEditBtnMenu(theEditBtn: editBtn)
+            }
+
+//        setEditBtnMenu(hasClipBoardImages: false) // default
 
         // no toolbar on the stackImageContainerController so  toolbar buttons don't show
 //        containerStackController?.addToolBarButtons(toController: self)
@@ -93,6 +105,21 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
         }
         publishers.append(cancellable!)
 
+        // UIPasteboard.changedNotification
+
+        cancellable = myCenter.publisher(for: UIPasteboard.changedNotification)
+            .sink() { [weak self]
+            myUpdate in
+                Logger(subsystem: LogSubsystem, category: LogNavigation).info("\(#function) UIPasteboard.changedNotification")
+
+            guard let self = self else { return } // a released object sometimes receives the notification
+                          // the guard is based upon the apple sample app 'Conference-Diffable'
+      //          self.setEditBtnMenu(hasClipBoardImages: UIPasteboard.general.hasImages   )
+                // flips the 'Edit' button hidden or visible
+
+        }
+        publishers.append(cancellable!)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -105,15 +132,24 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
             //        NSLog(#function + "PGLImageController toggleAnimationPauseBtn \(toggleAnimationPauseBtn)")
 
-
         updateNavigationBar()
         super.viewWillAppear(animated)
     }
 
 
     @IBOutlet weak var editBtn: UIBarButtonItem!
-    
 
+    @IBAction func editBtnAction(_ sender: UIBarButtonItem) {
+        let configuration = UIEditMenuConfiguration(identifier: nil, sourcePoint: .zero)
+           if let interaction = editMenuInteraction {
+               // Present the edit menu interaction.
+               interaction.presentEditMenu(with: configuration)
+               // same as protocol UIEditMenuInteractionDelegate #editMenuInteraction(_:menuFor:suggestedActions:)
+           }
+    }
+
+
+   
 
     @IBOutlet weak var templateBtn: UIBarButtonItem!
 
@@ -303,28 +339,45 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController {
 
     }
 
-    func setEditBtnMenu () {
+    func setEditBtnMenu (theEditBtn: UIBarButtonItem) {
+        // based on example code in Apple app 'ControlMenus'
+        //  - class DeferredMenuElementDemoViewController #viewDidLoad
         guard let imageViewerController = imageController()
             else { return }
-        let pasteAttributes: UIMenuElement.Attributes = (UIPasteboard.general.hasImages ? [] : [.disabled])
 
-        let copyAction =  UIAction.init(title: PGLMenuLabel.Copy.rawValue, image: UIImage(systemName: "Copy"), identifier: PGLImageController.EditMenuIdentifier, discoverabilityTitle: PGLMenuLabel.Copy.rawValue, attributes: [], state: UIMenuElement.State.on) {
-            action in
-                imageViewerController.copy(imageViewerController.editButtonItem)
+        let copyAction = UIAction(
+            title: PGLMenuLabel.Copy.rawValue,
+            image: UIImage(systemName: "Copy"),
+            identifier: PGLImageController.EditMenuIdentifier,
+            discoverabilityTitle: PGLMenuLabel.Copy.rawValue,
+            attributes: []
+        ) { action in
+            imageViewerController.copy(imageViewerController.editButtonItem)
+        }
+
+        let pasteAction = UIDeferredMenuElement({ completion in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                let hasClipBoardImage = UIPasteboard.general.hasImages
+                let pasteAttribute: UIMenuElement.Attributes = hasClipBoardImage ? [] : [.disabled]
+
+                let thePasteAction = UIAction(
+                    title: PGLMenuLabel.Paste.rawValue,
+                    image: UIImage(systemName: "Paste"),
+                    attributes: pasteAttribute
+                ) { action in
+                    imageViewerController.paste(imageViewerController.editButtonItem)
+                }
+                completion([thePasteAction])
+
             }
-        // , state: UIMenuElement.State.off
-
-        let buttonEditMenu = UIMenu(title: "",
-                        children: [ copyAction ,
-
-                        UIAction(title: PGLMenuLabel.Paste.rawValue, image: UIImage(systemName: "Paste"), attributes: pasteAttributes){
-                            action in
-                            imageViewerController.paste(imageViewerController.editButtonItem)
-                        }
-                        ]
-                    )
-
-        editBtn.menu = buttonEditMenu
+        })
+        let buttonEditMenu = UIMenu(
+            title: "",
+            image: nil,
+            identifier: nil,
+            children: [copyAction, pasteAction]
+        )
+        theEditBtn.menu = buttonEditMenu
     }
 
     func updateNavigationBar() {
