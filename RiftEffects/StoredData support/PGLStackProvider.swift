@@ -93,7 +93,7 @@ class PGLStackProvider {
                     fatalError("###\(#function): Failed to performFetch: \(error)") }
         }
 
-    func delete(stack: FilterStack, shouldSave: Bool = true, completionHandler: (() -> Void)? = nil) {
+    func delete(stack: FilterStack, shouldSave: Bool = true) {
         guard let cdStack = providerManagedObjectContext.registeredObject(for: stack.objectID)
                 else { return }
         guard let context = cdStack.managedObjectContext else {
@@ -103,13 +103,15 @@ class PGLStackProvider {
             // annoying !!
             return
         }
-        context.perform {
-            context.delete(cdStack)
+        let objectID = cdStack.objectID
+        context.perform { [objectID] in
+            if let object = context.registeredObject(for: objectID) ?? (try? context.existingObject(with: objectID)) {
+                context.delete(object)
 
-            if shouldSave {
-                context.save(with: .deletePost)
+                if shouldSave {
+                    context.save(with: .deletePost)
+                }
             }
-            completionHandler?()
         }
     }
 

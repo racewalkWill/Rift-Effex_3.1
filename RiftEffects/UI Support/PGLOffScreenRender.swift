@@ -40,18 +40,22 @@ class PGLOffScreenRender {
 
     }
 
+    // used only in test cases.. hard code arbitrary scale for iOS26 to replace the UIScreen.main.scale
     func captureUIImage(filterStack: PGLFilterStack) -> UIImage? {
-         let ciOutput = filterStack.stackOutputImage(false)
+        let hardCodeScale: CGFloat = 2.0
+
+        let ciOutput = filterStack.stackOutputImage(false)
           let currentRect = CGRect(x: 0, y: 0, width: TargetSize.width, height: TargetSize.height)
 //          NSLog("PGLOffScreenRender #captureUIImage currentRect = \(currentRect)")
           let croppedOutput = ciOutput.cropped(to: currentRect)
           guard let currentOutputImage = offScreenContext.createCGImage(croppedOutput, from: croppedOutput.extent)
-            else {
-            // [api] -[CIContext(CIRenderDestination) _startTaskToRender:toDestination:forPrepareRender:forClear:error:] No need to render
-            return UIImage(ciImage: ciOutput, scale: UIScreen.main.scale, orientation: .up) }
+        else {
+                  // [api] -[CIContext(CIRenderDestination) _startTaskToRender:toDestination:forPrepareRender:forClear:error:] No need to render
+                  // return UIImage(ciImage: ciOutput, scale: UIScreen.main.scale, orientation: .up)
+              return UIImage(ciImage: ciOutput, scale: hardCodeScale, orientation: .up)}
 //          NSLog("PGLOffScreenRender #captureImage croppedOutput.extent = \(croppedOutput.extent)")
 
-          return UIImage( cgImage: currentOutputImage, scale: UIScreen.main.scale, orientation: .up)
+          return UIImage( cgImage: currentOutputImage, scale: hardCodeScale, orientation: .up)
           // kaliedoscope needs down.. portraits need up.. why.. they both look .up in the imageController
 
 

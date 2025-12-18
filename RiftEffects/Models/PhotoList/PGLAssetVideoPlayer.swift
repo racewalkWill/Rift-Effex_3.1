@@ -121,18 +121,18 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
          A dictionary providing information about the status of the request. See Image Result Info Keys for possible keys and values
          */
 
-        let videoColorProperties = [
+        let videoColorProperties: [String : String] = [
             AVVideoColorPrimariesKey: AVVideoColorPrimaries_P3_D65,
             AVVideoTransferFunctionKey: AVVideoTransferFunction_Linear,
             AVVideoYCbCrMatrixKey: AVVideoYCbCrMatrix_ITU_R_2020
         ]
-        let outPutSettings = [
+        let outPutSettings: [String: any Sendable] = [
             AVVideoAllowWideColorKey: true,
             AVVideoColorPropertiesKey: videoColorProperties,
             kCVPixelBufferPixelFormatTypeKey as String: NSNumber(value: kCVPixelFormatType_64RGBAHalf),
             kCVPixelBufferWidthKey as String: NSNumber(value: parentAsset.asset.pixelWidth),
             kCVPixelBufferHeightKey as String: NSNumber(value: parentAsset.asset.pixelHeight)
-        ] as [String : Any]
+        ] 
 
         return AVPlayerItemVideoOutput(outputSettings: outPutSettings)
     }

@@ -1240,17 +1240,14 @@ class PGLSelectParmController: PGLCommonController,
 //
 //    }
 
-    func requestAccessReadWrite() -> PHAuthorizationStatus? {
-        var myPhotoAccessAuthority: PHAuthorizationStatus?
-        PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
-            myPhotoAccessAuthority = status
 
-//            Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
-
+    func requestAccessReadWrite() async -> PHAuthorizationStatus {
+        await withCheckedContinuation { continuation in
+            PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
+                continuation.resume(returning: status)
             }
-            // .notDetermined, .denied, .authorized:. .limited:
-        return myPhotoAccessAuthority
         }
+    }
     
     func pickImage( _ attribute: PGLFilterAttribute) {
         // triggers segue to detail of the collection.
@@ -1260,20 +1257,20 @@ class PGLSelectParmController: PGLCommonController,
         let readWriteStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         switch readWriteStatus {
             case .notDetermined:
-                guard let userPermission = requestAccessReadWrite()
-                else {
-//                    userPhotoAccessAlert()
-                       return }
-                switch userPermission {
-                    case .authorized, .limited :
-                        return  // user must open the image pick again
-                    // continue to the open picker
+                Task { [weak self] in
+                    guard let self = self else { return }
+                    let userPermission = await self.requestAccessReadWrite()
+                    switch userPermission {
+                    case .authorized, .limited:
+                        // user must open the image pick again manually; just return
+                        return
                     default:
-                        // .notDetermined, .denied, .restricted:
-//                        userPhotoAccessAlert()
-                        // user must open the image pick again
-                    return
+                        // .notDetermined, .denied, .restricted or future cases
+                        self.userPhotoAccessAlert()
+                        return
+                    }
                 }
+                return
             case .denied, .restricted:
 
                 userPhotoAccessAlert()
@@ -1331,27 +1328,18 @@ class PGLSelectParmController: PGLCommonController,
 
 
 
-    func isFullPhotoLibraryAccess() -> Bool {
-        var isFullLibraryAccess = false
-        PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
-            switch status {
-                case .authorized:
-                    // The user authorized this app to access Photos data.
-                    isFullLibraryAccess = true
-                case .notDetermined ,.restricted ,.denied, .limited :
-                // one of the following conditions
-                // The user hasn't determined this app's access.
-                // The system restricted this app's access.
-                // The user explicitly denied this app's access.
-                // The user authorized this app for limited Photos access.
-
-                    isFullLibraryAccess = false
-
-            @unknown default:
-                    isFullLibraryAccess = false
+    func hasFullPhotoLibraryAccess() async -> Bool {
+        let status = await withCheckedContinuation { continuation in
+            PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
+                continuation.resume(returning: status)
             }
         }
-        return isFullLibraryAccess
+        switch status {
+        case .authorized:
+            return true
+        default:
+            return false
+        }
     }
 
 
@@ -1508,3 +1496,5 @@ func showTextValueInCell(){
 }
 
  
+
+

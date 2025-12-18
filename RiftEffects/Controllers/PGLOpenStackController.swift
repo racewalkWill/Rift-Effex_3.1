@@ -347,7 +347,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
         }
 
         func delete(cdStack: FilterStack) {
-            dataProvider?.delete(stack: cdStack, shouldSave: true, completionHandler: nil)
+            dataProvider?.delete(stack: cdStack, shouldSave: true)
             let stackNotification = Notification(name:PGLUpdateLibraryMenu)
             NotificationCenter.default.post(stackNotification)
             let hideNotification = Notification(name: PGLHideImageViewReleaseStack)

@@ -198,7 +198,7 @@ extension PGLLibraryController {
     func performDelete(_ indexPath: IndexPath) {
         guard let cdStack = dataSource.itemIdentifier(for: indexPath)
         else {return}
-        dataProvider.delete(stack: cdStack, shouldSave: true, completionHandler: nil)
+        dataProvider.delete(stack: cdStack, shouldSave: true)
 
         var currentSnapShot = dataSource.snapshot()
         currentSnapShot.deleteItems([cdStack])
