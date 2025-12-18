@@ -100,20 +100,19 @@ class PGLFilterAttributeData: PGLFilterAttribute {
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
            super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
-            // init to default value of "inputText"
-        var defaultMsg  = "inputMessage"
-        let defaultData = NSData(bytes: &defaultMsg, length: defaultMsg.count )
-        pglFilter.setDataValue(newValue: defaultData, keyName: inputKey)
+            // init to default value of "inputMessage"
+        let defaultMsg = "inputMessage"
+        let defaultData = defaultMsg.data(using: .isoLatin1) ?? Data()
+        pglFilter.setDataValue(newValue: defaultData as NSData, keyName: inputKey)
 
        }
 
     override func set(_ value: Any) {
         if attributeName != nil {
-        var stringValue = value as? String
-            if stringValue == nil { return }  // guard for nil
-        let valueData =  NSData(bytes: &stringValue, length: stringValue?.count ?? 0 )
-        aSourceFilter.setDataValue(newValue: valueData, keyName: attributeName!)
-        parmInputState = .inputValueSet
+            guard let stringValue = value as? String else { return }  // guard for nil
+            let valueData = stringValue.data(using: .isoLatin1) ?? Data()
+            aSourceFilter.setDataValue(newValue: valueData as NSData, keyName: attributeName!)
+            parmInputState = .inputValueSet
         }
     }
 

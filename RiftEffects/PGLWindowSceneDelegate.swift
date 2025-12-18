@@ -14,7 +14,7 @@
 
         func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
             Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
-          guard let windowScene = scene as? UIWindowScene else { return }
+//          guard let windowScene = scene as? UIWindowScene else { return }
 //          let sceneWindow = UIWindow(windowScene: windowScene)
 //                // The 'window' property will automatically be loaded with the storyboard's initial view controller.
 //

@@ -112,7 +112,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuI
             myUpdate in
                 Logger(subsystem: LogSubsystem, category: LogNavigation).info("\(#function) UIPasteboard.changedNotification")
 
-            guard let self = self else { return } // a released object sometimes receives the notification
+                guard self != nil else { return } // a released object sometimes receives the notification
                           // the guard is based upon the apple sample app 'Conference-Diffable'
       //          self.setEditBtnMenu(hasClipBoardImages: UIPasteboard.general.hasImages   )
                 // flips the 'Edit' button hidden or visible

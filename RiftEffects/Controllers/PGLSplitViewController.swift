@@ -194,7 +194,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
         
-        let deviceIdom = traitCollection.userInterfaceIdiom
+//        let deviceIdom = traitCollection.userInterfaceIdiom
        // navigationItem.leftItemsSupplementBackButton = true
 
 //        if deviceIdom == .phone {
