@@ -143,6 +143,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuI
         let configuration = UIEditMenuConfiguration(identifier: nil, sourcePoint: .zero)
            if let interaction = editMenuInteraction {
                // Present the edit menu interaction.
+       //        NSLog(#function + String(describing: self))
                interaction.presentEditMenu(with: configuration)
                // same as protocol UIEditMenuInteractionDelegate #editMenuInteraction(_:menuFor:suggestedActions:)
            }
