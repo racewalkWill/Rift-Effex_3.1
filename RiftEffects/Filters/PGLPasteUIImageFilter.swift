@@ -40,7 +40,7 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
        return "Paste image from clipboard"
     }
 
-    
+
 
     override class func displayName() -> String? {
 
@@ -70,6 +70,13 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
 
     }
 
+    override func removeImagesTo(collectImagesList: PGLImageList) {
+        // no imageList for copy/paste
+        // just remove the clipboardImage
+        localFilter.setValue(nil, forKey: kCIInputImageKey)
+
+        clipboardImage = nil
+    }
 //    func imageInputAttribute() -> PGLFilterAttributeImage?
 //    {
 //        blendFilter.attribute(nameKey: kCIInputImageKey) as? PGLFilterAttributeImage

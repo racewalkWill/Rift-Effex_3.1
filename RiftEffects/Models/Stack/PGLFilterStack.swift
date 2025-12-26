@@ -410,37 +410,8 @@ class PGLFilterStack: Equatable, Hashable  {
         }
 
         for thisFilter in activeFilters {
-                let imageKeys = thisFilter.imageInputAttributeKeys
-            for anKey in imageKeys {
-                guard let imageAttribute = thisFilter.attribute(nameKey: anKey) as? PGLFilterAttributeImage
-                else { continue }
-                if (imageAttribute.inputStack != nil) {
-                        // drill down child stacks
-                    _ =  imageAttribute.inputStack!.removeAllImagesAndStopAnimations(collectImagesList: collectImagesList)
-                }
-                else {
-                        // not a child stack.. collect this level
-                    guard let thisAttributeImageCollection = imageAttribute.inputCollection
-                    else { continue }
-                    imageAttribute.removeTransitionCounts() // call this before the images are removed
-                    collectImagesList.moveContentsFrom(thisAttributeImageCollection)
-                }
-                if imageAttribute.parmInputState == .inputPhoto {
-                    // other states .inputChildStack or .inputPriorFilter or .missingInput
-                    // do not need to be changed
-                    imageAttribute.set(CIImage.empty() )
-                    imageAttribute.setImageParmState(newState: .missingImageInput)
-
-                }
-
-                }
-//            thisFilter.stopAllAnimation()
-
-//            thisFilter.setDefaults()
-            // stop any vary actions
-            //
+            thisFilter.removeImagesTo(collectImagesList: collectImagesList)
             }
-
         return collectImagesList
     }
 
