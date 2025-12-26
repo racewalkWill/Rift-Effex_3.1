@@ -228,7 +228,9 @@ class PGLFilterStack: Equatable, Hashable  {
         /// create a BlendWithMask filter
         /// filter input  WITHOUT  an imageList
     func pasteCIImage(_ pasteImage: CIImage) {
-
+        if isEmptyStack() {
+            return
+        }
         if currentFilter().canPasteImage() {
             // replace the current pasted image attribute
             if let pasteFilterAttribute = currentFilter().attribute(nameKey: kUIImagePasteFilter) {

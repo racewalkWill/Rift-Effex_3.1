@@ -497,8 +497,14 @@ class PGLAppStack {
 
     func currentActiveFilter() -> PGLSourceFilter? {
         if showFilterImage {
+            if viewerStack.isEmptyStack() {
+                return nil
+            }
             return viewerStack.currentFilter()
         } else {
+            if outputStack.isEmptyStack() {
+                return nil
+            }
             return outputStack.currentFilter()
         }
     }
