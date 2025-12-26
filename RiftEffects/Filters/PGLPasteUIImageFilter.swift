@@ -179,6 +179,18 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
         return true
     }
 
+    override func setDefaults() {
+        // change default of attribute key : "CIAttributeSliderMax"
+       // from old value : 1.5 to 5
+       super.setDefaults()
+        if let scaleInputParm = attribute(nameKey: "inputScale")
+            {
+                scaleInputParm.defaultValue = 0.3500
+                setNumberValue(newValue: 0.3500
+                                , keyName: kCIInputScaleKey)
+            }
+    }
+
     
 
 

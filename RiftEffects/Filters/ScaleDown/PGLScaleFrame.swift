@@ -102,6 +102,7 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
     override func setVectorValue(newValue: CIVector, keyName: String) {
 //        logParm(#function, newValue.debugDescription, keyName)
 //        shouldMoveCenter = true
+        logParm(#function, newValue.debugDescription, keyName)
         centerPoint = CGPoint(x: newValue.x, y: newValue.y)
         postImageChange()
     }
