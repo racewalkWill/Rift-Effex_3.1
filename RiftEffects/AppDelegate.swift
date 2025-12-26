@@ -21,6 +21,8 @@ let LogNavigation = "PGL_Nav"
 let LogMemoryRelease = "PGL_Mem"
 let LogMigration = "PGL_Migration"
 let LogParms = "PGL_Parms"
+let LogMetal = "PGL_Metal"
+
 // change in areas as needed.
 // caution on changes it is a GLOBAL
 

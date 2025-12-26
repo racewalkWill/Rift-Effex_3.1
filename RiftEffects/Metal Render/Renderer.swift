@@ -81,6 +81,17 @@ class Renderer: NSObject, MTKViewDelegate {
     var metalView: MTKView?
 
 
+    @MainActor
+    private func resetMetalPipeline() {
+        let newDevice = MTLCreateSystemDefaultDevice()!
+        let newQueue = newDevice.makeCommandQueue()!
+        self.device = newDevice
+        self.commandQueue = newQueue
+        self.ciMetalContext = CIContext(mtlCommandQueue: newQueue,
+                                        options: [.name: "Renderer",
+                                                  .cacheIntermediates: false,
+                                                  .allowLowPower: true])
+    }
 
 
     override init() {
@@ -415,9 +426,15 @@ class Renderer: NSObject, MTKViewDelegate {
                 // see https://developer.apple.com/forums/thread/764777?answerId=807248022#807248022
             commandBuffer.addCompletedHandler { @Sendable (_ commandBuffer)-> Swift.Void in
                 if let error = commandBuffer.error as NSError? {
-                    NSLog("%@", error)
+//                    NSLog("%@", error)
+                    Logger(subsystem: LogSubsystem, category: LogMetal).error("\(#function): Metal command buffer resetting after error: \(error, privacy: .public)")
+                    Task { @MainActor in
+                        self.resetMetalPipeline()
+                    }
                 }
              semaphore.signal()
+             return // .. reset needs to run
+                
             }
             if let drawable = view.currentDrawable {
                 let dSize = view.drawableSize
