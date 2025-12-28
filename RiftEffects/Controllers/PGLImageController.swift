@@ -258,7 +258,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         self.appStack.saveStack(metalRender: self.metalController!.metalRender)
         saveToPhotoLibrary()
-
+        self.incrementCountForAppReview()
     }
 
     func saveToPhotoLibrary() {
@@ -829,9 +829,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 self?.hideParmControls()
             }
 
-            self?.incrementCountForAppReview()
-                // requests user app review on the app store
-                // after two increments on a new version
+//
         }
         publishers.append(cancellable!)
 

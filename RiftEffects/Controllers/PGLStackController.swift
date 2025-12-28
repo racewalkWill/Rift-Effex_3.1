@@ -566,11 +566,20 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
             let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
             NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
 
-            self.updateDisplay()
+//            self.updateDisplay()
 
-            let selectedCell = tableView.cellForRow(at: indexPath)
-            selectedCell?.setSelected(true, animated: true)
-                // setSelected does NOT call this delegate didSelectRowAt again
+            guard let selectedCell = tableView.cellForRow(at: indexPath)
+                else {
+                    return }
+
+            if selectedCell.isSelected  {
+                return // nothing to update
+            } else {
+                selectedCell.setSelected(true, animated: true)
+            }
+                    // setSelected does NOT call this delegate didSelectRowAt again
+
+
         }
     }
 
