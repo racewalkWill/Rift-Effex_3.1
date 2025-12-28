@@ -301,7 +301,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         let lastVersionPromptedForReview = UserDefaults.standard.string(forKey: PGLUserDefaultKeys.lastVersionPromptedForReviewKey)
 
-        if saveCount >= 2 && currentVersion != lastVersionPromptedForReview {
+        if saveCount >= 4 && currentVersion != lastVersionPromptedForReview {
             let twoSecondsFromNow = DispatchTime.now() + 2.0
             DispatchQueue.main.asyncAfter(deadline: twoSecondsFromNow) {
 
