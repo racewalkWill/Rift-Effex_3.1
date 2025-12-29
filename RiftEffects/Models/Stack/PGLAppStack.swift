@@ -331,24 +331,35 @@ class PGLAppStack {
         // any filter - parent or child.
         
     }
-    func moveTo(filterIndent: PGLFilterIndent) -> Bool {
-        Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLAppStack #moveTo(filterIndent: \(filterIndent.filterPosition)")
-        /// check if move is needed - already on the correct filter?
+
+    func isActive(filterIndent: PGLFilterIndent) -> Bool {
         if viewerStack ===  filterIndent.stack {
             // on the right stack
             let currentActiveIndex = viewerStack.activeFilterIndex
-            if currentActiveIndex == filterIndent.filterPosition {
-                // already on the current filter
-              return false
-                // no change needed
-            }
+            return currentActiveIndex == filterIndent.filterPosition
+
+        } else {
+            return false
         }
+    }
+
+    func moveTo(filterIndent: PGLFilterIndent) -> Bool {
+        Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLAppStack #moveTo(filterIndent: \(filterIndent.filterPosition)")
+        /// check if move is needed - already on the correct filter?
+//        if isActive(filterIndent: filterIndent) {
+//            return false
+//        }
         ///  move to the new filter
+        // set old filter to non selected
+
+
+        // now get new cell setup
         filterIndent.stack.imageCIContext = viewerStack.imageCIContext
             // set the context from the old viewStack
 
         viewerStack = filterIndent.stack
-        viewerStack.activeFilterIndex = filterIndent.filterPosition
+ //       viewerStack.activeFilterIndex = filterIndent.filterPosition
+         // why was this called twice?? source of double calls?
 
 //        NSLog("PGLAppStack #moveTo( viewerStack now \(viewerStack)")
         viewerStack.activeFilterIndex = filterIndent.filterPosition

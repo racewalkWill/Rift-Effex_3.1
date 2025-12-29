@@ -435,6 +435,36 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
 
 
+    fileprivate func setCellImageView(_ aFilterIndent: PGLFilterIndent, _ cell: UITableViewCell) {
+        if aFilterIndent.stack is PGLSequenceStack {
+            cell.imageView?.image = PGLFilterAttribute.SequenceSymbol }
+        
+        else {
+            switch aFilterIndent.level {
+                case 0:
+                    cell.imageView?.image = PGLFilterAttribute.TopStackSymbol
+                case 1:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStack1Symbol
+                case 2:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStack2Symbol
+                case 3:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStack3Symbol
+                case 4:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStack4Symbol
+                case 5:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStack5Symbol
+                default:
+                    cell.imageView?.image = PGLFilterAttribute.ChildStackSymbol
+            }
+        }
+        
+        if appStack.isOutputFilter(aFilterIndent) {
+                // shows in single mode the filter being displayed in the image
+                // or in All mode the last filter of the output
+            cell.imageView?.image = PGLFilterAttribute.OutputFilterSymbol
+        }
+    }
+    
     fileprivate func filterCellFor(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
         // filter cell section
         let cell = tableView.dequeueReusableCell(withIdentifier: "filterRowCell", for: indexPath)
@@ -460,33 +490,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         }
         aFilterIndent.setCellViewerStackBackground(aCell: cell, viewerStack: appStack.viewerStack)
 
-        if aFilterIndent.stack is PGLSequenceStack {
-            cell.imageView?.image = PGLFilterAttribute.SequenceSymbol }
-
-        else {
-            switch aFilterIndent.level {
-                case 0:
-                    cell.imageView?.image = PGLFilterAttribute.TopStackSymbol
-                case 1:
-                    cell.imageView?.image = PGLFilterAttribute.ChildStack1Symbol
-                case 2:
-                    cell.imageView?.image = PGLFilterAttribute.ChildStack2Symbol
-                case 3:
-                    cell.imageView?.image = PGLFilterAttribute.ChildStack3Symbol
-                case 4:
-                    cell.imageView?.image = PGLFilterAttribute.ChildStack4Symbol
-                case 5:
-                    cell.imageView?.image = PGLFilterAttribute.ChildStack5Symbol
-                default:
-                    cell.imageView?.image = PGLFilterAttribute.ChildStackSymbol
-            }
-        }
-
-        if appStack.isOutputFilter(aFilterIndent) {
-            // shows in single mode the filter being displayed in the image
-            // or in All mode the last filter of the output
-            cell.imageView?.image = PGLFilterAttribute.OutputFilterSymbol
-        }
+        setCellImageView(aFilterIndent, cell)
         aFilterIndent.setCellViewerStackBackground(aCell: cell, viewerStack: appStack.viewerStack)
 
             // Configure the cell...
@@ -556,31 +560,59 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
             // no segue naviation on header cells
             return
         }
-        if !appStack.flatCellFilters.isEmpty {
-            let cellIndent = appStack.flatCellFilters[indexPath.row]
-            _ = appStack.moveTo(filterIndent: cellIndent)
+        if appStack.flatCellFilters.isEmpty {
+            return // nothing here
+        }
 
-                /// make the imageController show the new output either single filter or stack output
+     let cellIndent = appStack.flatCellFilters[indexPath.row]
+        if appStack.isActive(filterIndent: cellIndent) {
+          // no move needed just toggle the showFilterImage state
             appStack.showFilterImage = !appStack.showFilterImage
+            if let currentCell = tableView.cellForRow(at: indexPath) {
+                setCellImageView(cellIndent, currentCell)
+            }
+            if let lastOutputCellIndent = appStack.flatCellFilters.last {
+                let lastOutputCellIndex = IndexPath(row: appStack.flatCellFilters.count - 1, section: StackSections.filters.rawValue)
 
-            let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
-            NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+                if let lastOutputCell = tableView.cellForRow(at: lastOutputCellIndex) {
+                    setCellImageView(lastOutputCellIndent, lastOutputCell)
+                }
+
+
+            }
+            return // no further action needed
+        }
+        else {
+            if let oldIndexOfFlatCellFilters = appStack.activeFilterCellRow() {
+                // set old filter to non selected
+                let oldIndex = IndexPath(row: oldIndexOfFlatCellFilters, section: StackSections.filters.rawValue)
+                if let oldCell = tableView.cellForRow(at: oldIndex) {
+                    // the settings in filterCellfor.. need to be applied
+                    setCellImageView(cellIndent, oldCell)
+                }
+            }
+        }
+        _ = appStack.moveTo(filterIndent: cellIndent)
+
+            /// make the imageController show the new output either single filter or stack output
+        appStack.showFilterImage = !appStack.showFilterImage
+
+        let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
+        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
 
 //            self.updateDisplay()
 
-            guard let selectedCell = tableView.cellForRow(at: indexPath)
-                else {
-                    return }
+        guard let selectedCell = tableView.cellForRow(at: indexPath)
+            else {
+                return }
 
-            if selectedCell.isSelected  {
-                return // nothing to update
-            } else {
-                selectedCell.setSelected(true, animated: true)
-            }
-                    // setSelected does NOT call this delegate didSelectRowAt again
-
-
+        if selectedCell.isSelected  {
+            return // nothing to update
+        } else {
+            selectedCell.setSelected(true, animated: true)
         }
+                // in iOS26 this else clause setSelected starts an infinite loop
+                // prior to iOS26 setSelected does NOT call this delegate didSelectRowAt again
     }
 
     func segueToParmController() {
