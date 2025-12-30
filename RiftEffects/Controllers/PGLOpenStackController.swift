@@ -359,26 +359,28 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
                    return true
                }
 
-        override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-            if editingStyle == .delete {
-
-                if let identifierToDelete = itemIdentifier(for: indexPath) {
-                    var snapshot = self.snapshot()
-                    let matchingSection = snapshot.sectionIdentifier(containingItem: identifierToDelete)
-
-                    // this #snapshot.deleteItems is not needed because the #delete(cdStack:..) to the dataProvider
-                    // causes the snapshot to load correctly.
-//                    snapshot.deleteItems([identifierToDelete])
-//                    apply(snapshot)
-
-                    delete(cdStack: identifierToDelete) //need to remove from the datastore too
-                        // is identifierToDelete a CDFilterStack?
-                    if let sectionToReload = matchingSection {
-                        snapshot.reloadSections([sectionToReload])
-                    }
-                }
-            }
-        }
+//        override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+// COMMENT OUT in ver 3.6.1 This methede adds the delete swipe call
+// delete is handled by the 'Edit' button which enables standard delete
+//            if editingStyle == .delete {
+//
+//                if let identifierToDelete = itemIdentifier(for: indexPath) {
+//                    var snapshot = self.snapshot()
+//                    let matchingSection = snapshot.sectionIdentifier(containingItem: identifierToDelete)
+//
+//                    // this #snapshot.deleteItems is not needed because the #delete(cdStack:..) to the dataProvider
+//                    // causes the snapshot to load correctly.
+////                    snapshot.deleteItems([identifierToDelete])
+////                    apply(snapshot)
+//
+//                    delete(cdStack: identifierToDelete) //need to remove from the datastore too
+//                        // is identifierToDelete a CDFilterStack?
+//                    if let sectionToReload = matchingSection {
+//                        snapshot.reloadSections([sectionToReload])
+//                    }
+//                }
+//            }
+//        }
 
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             // start with saved stack... later have it insert on the selected parm as new input
