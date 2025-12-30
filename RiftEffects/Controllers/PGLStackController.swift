@@ -81,7 +81,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                 myUpdate in
                 guard let self = self else { return } // a released object sometimes receives the
 
-                Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLStackController  notificationBlock PGLCurrentFilterChange")
+                Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLStackController  notificationBlock PGLHideParmControlsOnFilterChange")
 
                 self.updateDisplay()
             }
@@ -554,6 +554,11 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 //
 //    }
 
+    fileprivate func postRedrawFilterChange() {
+        let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
+        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         if indexPath.section == StackSections.header.rawValue {
@@ -580,6 +585,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
 
             }
+            // need to trigger a redraw on the imageController
+            postRedrawFilterChange()
+            setShiftBtnState()
             return // no further action needed
         }
         else {
@@ -597,8 +605,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
             /// make the imageController show the new output either single filter or stack output
         appStack.showFilterImage = !appStack.showFilterImage
 
-        let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
-        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+        postRedrawFilterChange()
+        setShiftBtnState()
 
 //            self.updateDisplay()
 
