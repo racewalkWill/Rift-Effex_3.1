@@ -29,11 +29,19 @@ class PGLStackProvider {
         let fetchRequest: NSFetchRequest<CDFilterStack> = CDFilterStack.fetchRequest()
         if showChildStack {
             fetchRequest.predicate = NSPredicate(value: true) // return all stacks
+        } else {
+            // Only parent stacks: outputToParm == nil
+            let left = NSExpression(forKeyPath: "outputToParm")
+            let right = NSExpression(forConstantValue: NSNull())
+            fetchRequest.predicate = NSComparisonPredicate(
+                leftExpression: left,
+                rightExpression: right,
+                modifier: .direct,
+                type: .equalTo,
+                options: []
+            )
         }
-        else {
-            fetchRequest.predicate = NSPredicate(format: "outputToParm = null")
-                // only parent stacks
-        }
+
         fetchRequest.fetchBatchSize = 15  // usually 12 rows visible -
             // breaks up the full object fetch into view sized chunks
 
@@ -62,7 +70,7 @@ class PGLStackProvider {
     }
 
         func setFetchControllerForBackgroundContext() {
-            providerManagedObjectContext = persistentContainer.backgroundContext()
+            providerManagedObjectContext = persistentContainer.newBackgroundContext()
             let fetchRequest: NSFetchRequest<CDFilterStack> = CDFilterStack.fetchRequest()
     //        fetchRequest.predicate = NSPredicate(format: "outputToParm = null")  // only parent stacks
             fetchRequest.predicate = NSPredicate(value: true) // return all stacks

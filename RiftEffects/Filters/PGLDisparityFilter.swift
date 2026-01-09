@@ -129,6 +129,9 @@ class PGLDisparityFilter: PGLRectangleFilter {
                 // is PHContentEditingInputErrorKey in the info
                 Logger(subsystem: LogSubsystem,  category: LogCategory).debug("PGLImageList #requestDisparityMap has info returned \(info) for \(inputAsset.asset)")
             }
+            guard let fullSizeImage = input.fullSizeImageURL
+                else { self.hasDisparity = false
+                        return }
             self.auxImage = CIImage(contentsOf: input.fullSizeImageURL!, options: [CIImageOption.auxiliaryDisparity: true])
 
             guard var depthData = self.auxImage?.depthData

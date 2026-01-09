@@ -223,10 +223,13 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
 //                self.fetchedResultsController.fetchRequest.resultType = .managedObjectIDResultType
                 var deleteIds = [NSManagedObjectID]()
                 let rowsToDelete = tableView.indexPathsForSelectedRows!
+
                 for aRowPath in rowsToDelete {
 
-                    let theFetchedObject  = dataProvider.fetchedResultsController.object(at: aRowPath)
-                     deleteIds.append(theFetchedObject.objectID)
+                    let cdStackObject =  dataSource.itemIdentifier(for: aRowPath)
+                    if let cdObjectId = cdStackObject?.objectID {
+                        deleteIds.append(cdObjectId)
+                    }
 
                     // mark for batch delete
 
