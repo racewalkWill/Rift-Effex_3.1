@@ -35,6 +35,7 @@ let RendererScale:Float32 = 0.98
 // should be a user setting
 // 2/12/2020 leave as false - makes the cropped produce an empty image if in single filter edit mode.
 @MainActor var ShowHelpOnOpen = false
+@MainActor var AlbumPrefix = "PhotoArt"
 
 //@UIApplicationMain   //@main
 // see https://github.com/swiftlang/swift-evolution/blob/main/proposals/0383-deprecate-uiapplicationmain-and-nsapplicationmain.md
@@ -99,6 +100,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 //        RendererScale = UserDefaults.standard.float(forKey: "RendererScale")
         ShowHelpOnOpen =   UserDefaults.standard.bool(forKey: "DisplayStartHelp")
+
+        AlbumPrefix = UserDefaults.standard.string(forKey: "AlbumPrefix") ?? "PhotoArt"
         return true
     }
 

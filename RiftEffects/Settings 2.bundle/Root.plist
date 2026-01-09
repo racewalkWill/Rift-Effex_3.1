@@ -8,6 +8,16 @@
 	<array>
 		<dict>
 			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Album Prefix</string>
+			<key>DefaultValue</key>
+			<string>PhotoArt</string>
+			<key>Key</key>
+			<string>AlbumPrefix</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
 			<string>MainViewImageResize</string>

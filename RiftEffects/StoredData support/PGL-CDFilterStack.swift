@@ -917,8 +917,36 @@ extension PGLAppStack {
         }
     }
 
+    fileprivate func basicPhotoLibChange(placeholder: PHObjectPlaceholder, _ stack: PGLFilterStack, _ assetCollection: PHAssetCollection?) {
+        // AlbumPrefix is never added to the stack name as shown in Rift Effects
+        // only the export to photos has the added prefix
+        let userEnteredAlbumName = stack.exportAlbumName ?? "" // user may leave it blank
+        if (assetCollection == nil) && (stack.exportAlbumName != nil) {
+            let prefixedExportAlbumName = AlbumPrefix + " " + userEnteredAlbumName
+            NSLog(#function + ": creating new album \(prefixedExportAlbumName)")
+            let assetCollectionRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: prefixedExportAlbumName)
+            assetCollectionRequest.addAssets([placeholder] as NSArray)
+            stack.exportAlbumIdentifier = assetCollectionRequest.placeholderForCreatedAssetCollection.localIdentifier
+        } else {
+            if let assetCollection {
+                let addAssetRequest = PHAssetCollectionChangeRequest(for: assetCollection)
+                if let existingTitle = addAssetRequest?.title {
+                    if !existingTitle.hasPrefix(AlbumPrefix) {
+                        addAssetRequest!.title = AlbumPrefix + " " + userEnteredAlbumName
+                        NSLog(#function + ": title changed to \(addAssetRequest!.title)")
+                    }
+                } else {
+                    NSLog(#function + ": title NOT changed \(addAssetRequest!.title)")
+                }
+                addAssetRequest?.addAssets([placeholder] as NSArray)
+            }
+        }
+    }
+    
     fileprivate func
     photoLibPerformHEIFChange(_ stack: PGLFilterStack, _ heifData: Data?, _ assetCollection: PHAssetCollection?) {
+        // fill in HEIF data and do photoLib change save
+
         do { try PHPhotoLibrary.shared().performChangesAndWait( {
 
             let creationRequest = PHAssetCreationRequest.forAsset()
@@ -929,21 +957,7 @@ extension PGLAppStack {
                 data: heifData!,
                 options: fileNameOption)
 
-            if ( assetCollection == nil ) && ( stack.exportAlbumName != nil) {
-                // new collection
-                let assetCollectionRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: stack.exportAlbumName ?? "exportAlbum")
-                assetCollectionRequest.addAssets([creationRequest.placeholderForCreatedAsset!] as NSArray)
-                stack.exportAlbumIdentifier = assetCollectionRequest.placeholderForCreatedAssetCollection.localIdentifier
-                //                            NSLog("PGLAppStack #saveToPhotosLibrary new assetCollectionRequest = \(assetCollectionRequest)")
-
-            } else {
-                // asset collection exists
-                if assetCollection != nil {
-                    let addAssetRequest = PHAssetCollectionChangeRequest(for: assetCollection!)
-                    addAssetRequest?.addAssets([creationRequest.placeholderForCreatedAsset!] as NSArray)
-                    //                            NSLog("PGLAppStack #saveToPhotosLibrary existing assetCollection adds = \(String(describing: addAssetRequest))")
-                }
-            }
+            self.basicPhotoLibChange(placeholder: creationRequest.placeholderForCreatedAsset!, stack, assetCollection)
 
         } )
         } catch  { userSaveErrorAlert(withError: error)}
@@ -986,20 +1000,7 @@ extension PGLAppStack {
 
             let creationRequest = PHAssetChangeRequest.creationRequestForAsset(from: uiImageOutput!)
 
-            if ( assetCollection == nil ) && ( stack.exportAlbumName != nil) {
-                // new collection
-                let assetCollectionRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: stack.exportAlbumName ?? "exportAlbum")
-                assetCollectionRequest.addAssets([creationRequest.placeholderForCreatedAsset!] as NSArray)
-                stack.exportAlbumIdentifier = assetCollectionRequest.placeholderForCreatedAssetCollection.localIdentifier
-
-            } else {
-                // asset collection exists
-                if assetCollection != nil {
-                    let addAssetRequest = PHAssetCollectionChangeRequest(for: assetCollection!)
-                    addAssetRequest?.addAssets([creationRequest.placeholderForCreatedAsset!] as NSArray)
-                    //                            NSLog("PGLAppStack #saveToPhotosLibrary existing assetCollection adds = \(String(describing: addAssetRequest))")
-                }
-            }
+            self.basicPhotoLibChange(placeholder: creationRequest.placeholderForCreatedAsset!, stack, assetCollection)
 
         } )
         } catch  { userSaveErrorAlert(withError: error)}
