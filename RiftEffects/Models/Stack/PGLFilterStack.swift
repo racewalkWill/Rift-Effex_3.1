@@ -90,7 +90,7 @@ class PGLFilterStack: Equatable, Hashable  {
     }
 
     // MARK: Init default
-    nonisolated init(){
+    init(){
 
 //        setStartupDefault()
 
@@ -274,7 +274,11 @@ class PGLFilterStack: Equatable, Hashable  {
 //        NSLog("PGLFilterStack #stackFilterName = \(answer)")
         return answer
     }
-    
+
+    func indexOfFilter(_ aFilter: PGLSourceFilter) -> Int? {
+        return activeFilters.firstIndex(where: { $0 === aFilter })
+    }
+
     func append(_ newFilter: PGLSourceFilter) {
         // private - assumes inputs are set
         activeFilters.append(newFilter)

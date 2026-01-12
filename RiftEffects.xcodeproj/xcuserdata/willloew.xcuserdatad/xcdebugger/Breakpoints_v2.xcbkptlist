@@ -3,4 +3,98 @@
    uuid = "DD0C0316-C0BC-49AF-9C7C-FF800F34D0BB"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5816D941-CC6E-451D-ABBF-562966B68031"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Models/Stack/PGLFilterStack.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "320"
+            endingLineNumber = "320"
+            landmarkName = "appendFilter(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "5816D941-CC6E-451D-ABBF-562966B68031 - 83b4b739d3798883"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RiftEffects.PGLFilterStack.appendFilter(_: RiftEffects.PGLSourceFilter, controllerUndoManager: Swift.Optional&lt;__C.NSUndoManager&gt;) -&gt; ()"
+                  moduleName = "RiftEffects.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex_3.7/RiftEffects/Models/Stack/PGLFilterStack.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "325"
+                  endingLineNumber = "325">
+               </Location>
+               <Location
+                  uuid = "5816D941-CC6E-451D-ABBF-562966B68031 - e1f93d7245f4917f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor (RiftEffects.PGLFilterStack) -&gt; () in RiftEffects.PGLFilterStack.appendFilter(_: RiftEffects.PGLSourceFilter, controllerUndoManager: Swift.Optional&lt;__C.NSUndoManager&gt;) -&gt; ()"
+                  moduleName = "RiftEffects.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex_3.7/RiftEffects/Models/Stack/PGLFilterStack.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "327"
+                  endingLineNumber = "327">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5EEB8C3E-1381-4B4C-8197-281850982031"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Models/Stack/PGLFilterStack.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "595"
+            endingLineNumber = "595"
+            landmarkName = "removeFilter(position:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "5EEB8C3E-1381-4B4C-8197-281850982031 - 41524abbbd186ae"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RiftEffects.PGLFilterStack.removeFilter(position: Swift.Int) -&gt; Swift.Optional&lt;RiftEffects.PGLSourceFilter&gt;"
+                  moduleName = "RiftEffects.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex_3.7/RiftEffects/Models/Stack/PGLFilterStack.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "610"
+                  endingLineNumber = "610">
+               </Location>
+               <Location
+                  uuid = "5EEB8C3E-1381-4B4C-8197-281850982031 - 6c85b64a5241064e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor (RiftEffects.PGLFilterStack) -&gt; () in RiftEffects.PGLFilterStack.removeFilter(position: Swift.Int) -&gt; Swift.Optional&lt;RiftEffects.PGLSourceFilter&gt;"
+                  moduleName = "RiftEffects.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex_3.7/RiftEffects/Models/Stack/PGLFilterStack.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "567"
+                  endingLineNumber = "567">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

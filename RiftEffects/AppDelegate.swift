@@ -54,6 +54,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var activityIndicator: UIActivityIndicatorView?
 
+    // MARK: - Menus
+
+//    override func buildMenu(with builder: any UIMenuBuilder) {
+//        super.buildMenu(with: builder)
+//
+//        // Ensure that the builder is modifying the menu bar system.
+//        guard builder.system == UIMenuSystem.main else { return }
+//            builder.remove(command: undoManager)
+//            let editMenu = builder.menu(for: .edit)
+//            let undoRedo     = builder.menu(for: .undoRedo)
+////        undoRedo?.children
+//
+//
+//
+//
+//        // ...
+//    }
+
+    /** Add the various menus to the menu bar.
+        The system only asks UIApplication and UIApplicationDelegate for the main menus.
+        Main menus appear regardless of who is in the responder chain.
+
+    */
+
     /// added required implementations of  the  protocol UIApplicationDelegate
     func application(
         _ application: UIApplication,
