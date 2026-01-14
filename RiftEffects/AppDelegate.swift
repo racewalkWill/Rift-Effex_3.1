@@ -67,29 +67,77 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Ensure that the builder is modifying the menu bar system.
         guard builder.system == UIMenuSystem.main else { return }
 
-
         builder.remove(menu: UIMenu.Identifier.file)
         builder.remove(menu: UIMenu.Identifier.format)
+//        builder.remove(command: #selector())
         let editMenu = builder.menu(for: .edit)
-        var theEditCommands = editMenu?.children
-//        theEditCommands?.removeAll { $0.title == "Cut" || $0.title == "Select All  " }
-        builder.replace(menu: .edit, with: UIMenu(title: "Edit", children: theEditCommands ?? []))
+        let standardCommands = builder.menu(for: UIMenu.Identifier(rawValue: "com.apple.menu.standard-edit"))
+        let _ = editMenu?.children // keep if you need to inspect later
 
-
-            //            let editChildern = editMenu?.children
-            //            let undoRedoMenu     = builder.menu(for: .undoRedo)
-            //            let undoRedoChildren = undoRedoMenu?.children
-
-        let myUndo =  UIKeyCommand(input: "z", modifierFlags: .command, action: #selector(undoCommand))
-        let myRedo = UIKeyCommand(input: "Z", modifierFlags: [.command, .shift], action: #selector(redoCommand))
-        builder.replace(menu: .edit, with: UIMenu(title: "Edit", children: [myUndo,myRedo] ))
-//
-//        builder.insertElements([myUndo, myRedo], atEndOfMenu: .edit)
-            //        NSLog(#function + " editMenu childern: \( String(describing: editMenu?.children))")
-            //        editMenu?.replacingChildren( [myUndo, myRedo ])
-            //        NSLog(#function + " editMenu changed childern: \( String(describing: editMenu?.children))")
-//        if let undoRedoMenu = builder.menu(for: UIMenu.Identifier.undoRedo) {
-//            undoRedoMenu.replacingChildren( [myUndo, myRedo ]) }
+        if let standardCommands {
+                // Filter out specific items and replace the menu
+            let filteredChildren = standardCommands.children.filter { item in
+                !(item.title == "Cut" ||
+                  item.title == "Select All" ||
+                  item.title == "Paste and Match Style" ||
+                  item.title == "Writing Tools" ||
+                  item.title == "AutoFill" ||
+                  item.title == "Dictation" ||
+                  item.title == "Emoji" ||
+                  item.title == "Show Keyboard"
+                )
+            }
+            let newStandardMenu = UIMenu(title: standardCommands.title,
+                                         image: standardCommands.image,
+                                         identifier: standardCommands.identifier,
+                                         options: standardCommands.options,
+                                         children: filteredChildren)
+            builder.replace(menu: standardCommands.identifier, with: newStandardMenu)
+        }
+         builder.remove(menu: UIMenu.Identifier(rawValue: "com.apple.menu.find"))
+        // these are edit command menus
+//        builder.remove(menu: UIMenu.Identifier(rawValue: "com.apple.command.speech"))
+//        builder.remove(menu: UIMenu.Identifier(rawValue: "com.apple.menu.transformation"))
+//        builder.remove(menu: UIMenu.Identifier(rawValue: "com.apple.menu.substitutions"))
+//        builder.remove(menu: UIMenu.Identifier(rawValue: "com.apple.menu.spelling"))
+//      NSLog(#function + "\(String(describing: builder.system))")
+        /*
+         from inspecting builder.system.baseUIMenuSystem@0.cachedInitialRootMenu
+        identifier = 0x0000000209c49658 @"com.apple.menu.application"
+        _identifier = 0x0000000209c49718 @"com.apple.menu.about"
+        identifier = 0x0000000209c49738 @"com.apple.menu.preferences"
+         identifier = 0x0000000209c49738 @"com.apple.menu.preferences"
+         _identifier = 0x0000000209c49778 @"com.apple.menu.hide"
+         _identifier = 0x0000000209c49798 @"com.apple.menu.quit"
+         _identifier = 0x0000000209c49698 @"com.apple.menu.file"
+         _identifier = 0x0000000209c497d8 @"com.apple.menu.new-item"
+         _identifier = 0x0000000209c497f8 @"com.apple.menu.open"
+         _identifier = 0x0000000209c49838 @"com.apple.menu.close"
+         _identifier = 0x0000000209c49878 @"com.apple.menu.document"
+         _identifier = 0x0000000209c49858 @"com.apple.menu.print"
+         _identifier = 0x0000000209c49678 @"com.apple.menu.edit"
+         _identifier = 0x0000000209c49898 @"com.apple.menu.undo-redo"
+         _identifier = 0x0000000209c498b8 @"com.apple.menu.standard-edit"
+            .. _title = "Delete"
+         _identifier = 0x0000000209c498d8 @"com.apple.menu.find"
+         _identifier = 0x0000000209c498f8 @"com.apple.menu.find-panel"
+         _identifier = 0x0000000209c49978 @"com.apple.menu.spelling"
+         _identifier = 0x0000000209c499d8 @"com.apple.menu.substitutions"
+         _identifier = 0x0000000209c49a58 @"com.apple.menu.transformations"
+         _identifier = 0x0000000209c49a78 @"com.apple.command.speech"
+         _identifier = 0x0000000209c49ad8 @"com.apple.menu.format"
+         _identifier = 0x0000000209c49af8 @"com.apple.menu.font"
+         _identifier = 0x0000000209c49958 @"com.apple.menu.text-style"
+         _identifier = 0x0000000209c49b18 @"com.apple.menu.text-size"
+         _identifier = 0x0000000209c49b38 @"com.apple.menu.text-color"
+         _identifier = 0x0000000209c49b78 @"com.apple.menu.text"
+         _identifier = 0x0000000209c496b8 @"com.apple.menu.view"
+         _identifier = 0x0000000209c49c58 @"com.apple.menu.toolbar"
+         _identifier = 0x0000000209c49c78 @"com.apple.menu.sidebar"
+         _identifier = 0x0000000209c49c98 @"com.apple.menu.fullscreen"
+         _identifier = 0x0000000209c496d8 @"com.apple.menu.window"
+         _identifier = 0x0000000209c496f8 @"com.apple.menu.help"
+         */
 
     }
 

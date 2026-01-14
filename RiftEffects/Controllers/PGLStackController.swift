@@ -1070,7 +1070,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         // change back to the mainstck
         appStack.resetViewStack()
 
-
+        
        self.updateDisplay()
         if appStack.showFilterImage {appStack.postSelectActiveStackRow()}
         // other updates in PGLImageController
@@ -1083,6 +1083,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     func undoRemoveFilterFromStack(_ filter: PGLSourceFilter) {
 
         appStack.viewerStack.performFilterPick(selectedFilter: filter)
+        updateDisplay()
+
         // Note that the MainFilterController also calls
 //        updateFilterLabel()
 //        postImageChange()

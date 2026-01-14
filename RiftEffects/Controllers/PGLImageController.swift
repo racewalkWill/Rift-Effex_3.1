@@ -33,6 +33,9 @@ enum SliderColor: Int {
     case Red = 3
 }
 
+let UndoActionSelector = sel_registerName("undo:")
+let RedoActionSelector = sel_registerName("redo:")
+
 let  PGLHideParmControlsOnFilterChange = NSNotification.Name(rawValue: "PGLHideParmControlsOnFilterChange")
 //let  PGLOutputImageChange = NSNotification.Name(rawValue: "PGLOutputImageChange")
 let  PGLUserAlertNotice = NSNotification.Name(rawValue: "PGLUserAlertNotice")
@@ -611,9 +614,9 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             return true // image controller always has an image.. maybe CIImage.empty
 
         }
-        let undoActionName = sel_registerName("undo:")
 
-        if action == undoActionName  {
+
+        if action == UndoActionSelector  {
             NSLog(#function  + String(describing: self ) +  " #selector(undo) ")
             NSLog("undoManager \(String(describing: undoManager))")
             let isUndoable = undoManager?.canUndo ?? false

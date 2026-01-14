@@ -436,6 +436,8 @@ class PGLFilterStack: Equatable, Hashable  {
             if oldFilterIndex >= 0 {
                     // removedFilters.append(oldFilter)
                 _ = removeFilter(position: oldFilterIndex)
+                // get the display updated
+                postCurrentFilterChange()
             }
         }
     }
