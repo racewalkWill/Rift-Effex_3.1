@@ -28,6 +28,16 @@ class PGLCommonController: UIViewController, UIAdaptivePresentationControllerDel
     var publishers = [any Cancellable]()
     var cancellable: (any Cancellable)?
 
+    override var undoManager: UndoManager? {
+        // subclasse PGLImageController and PGLSelectParmController will use this implmentation
+           // Return a shared or per-document undo manager
+        if let mySplitController = splitViewController as? PGLSplitViewController {
+            return mySplitController.undoManager }
+        else {
+             return  super.undoManager
+            }
+       }
+
         // MARK:  UIFontPickerViewControllerDelegate
     func showFontPicker(_ sender: Any) {
 

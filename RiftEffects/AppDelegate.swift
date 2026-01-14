@@ -56,21 +56,56 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - Menus
 
-//    override func buildMenu(with builder: any UIMenuBuilder) {
-//        super.buildMenu(with: builder)
+    override func buildMenu(with builder: any UIMenuBuilder) {
+            //        Add the various menus to the menu bar.
+            //            The system only asks UIApplication and UIApplicationDelegate for the main menus.
+            //            Main menus appear regardless of who is in the responder chain.
+
+            //        super.buildMenu(with: builder)
+
+
+            // Ensure that the builder is modifying the menu bar system.
+        guard builder.system == UIMenuSystem.main else { return }
+
+
+        builder.remove(menu: UIMenu.Identifier.file)
+        builder.remove(menu: UIMenu.Identifier.format)
+        let editMenu = builder.menu(for: .edit)
+        var theEditCommands = editMenu?.children
+//        theEditCommands?.removeAll { $0.title == "Cut" || $0.title == "Select All  " }
+        builder.replace(menu: .edit, with: UIMenu(title: "Edit", children: theEditCommands ?? []))
+
+
+            //            let editChildern = editMenu?.children
+            //            let undoRedoMenu     = builder.menu(for: .undoRedo)
+            //            let undoRedoChildren = undoRedoMenu?.children
+
+        let myUndo =  UIKeyCommand(input: "z", modifierFlags: .command, action: #selector(undoCommand))
+        let myRedo = UIKeyCommand(input: "Z", modifierFlags: [.command, .shift], action: #selector(redoCommand))
+        builder.replace(menu: .edit, with: UIMenu(title: "Edit", children: [myUndo,myRedo] ))
 //
-//        // Ensure that the builder is modifying the menu bar system.
-//        guard builder.system == UIMenuSystem.main else { return }
-//            builder.remove(command: undoManager)
-//            let editMenu = builder.menu(for: .edit)
-//            let undoRedo     = builder.menu(for: .undoRedo)
-////        undoRedo?.children
-//
-//
-//
-//
-//        // ...
-//    }
+//        builder.insertElements([myUndo, myRedo], atEndOfMenu: .edit)
+            //        NSLog(#function + " editMenu childern: \( String(describing: editMenu?.children))")
+            //        editMenu?.replacingChildren( [myUndo, myRedo ])
+            //        NSLog(#function + " editMenu changed childern: \( String(describing: editMenu?.children))")
+//        if let undoRedoMenu = builder.menu(for: UIMenu.Identifier.undoRedo) {
+//            undoRedoMenu.replacingChildren( [myUndo, myRedo ]) }
+
+    }
+
+    @objc func undoCommand() {
+        NSLog(#function + " called")
+    }
+
+    @objc func redoCommand() {
+        NSLog(#function + " called")
+    }
+
+    override var undoManager: UndoManager? {
+           // Return a shared or per-document undo manager
+        NSLog(#function + "\( String(describing: self))")
+        return super.undoManager
+       }
 
     /** Add the various menus to the menu bar.
         The system only asks UIApplication and UIApplicationDelegate for the main menus.

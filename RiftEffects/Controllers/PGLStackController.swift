@@ -39,6 +39,15 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     var publishers = [any Cancellable]()
     var cancellable: (any Cancellable)?
 
+    override var undoManager: UndoManager? {
+           // Return a shared or per-document undo manager
+        if let mySplitController = splitViewController as? PGLSplitViewController {
+            return mySplitController.undoManager }
+        else {
+             return  super.undoManager
+            }
+       }
+
     /// default to title and album input cells as hidden
     private var showStackTitleAlbumCells = false
     private var titleAlbumSectionRowCount: Int = 0
@@ -731,7 +740,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                     saveStackBtn = cell.saveBtn
                     saveStackBtn?.setTitle("Save", for: .normal)
                     return cell
-                default :
+                default:
                         // or let cell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
 
                     guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
@@ -1042,7 +1051,18 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
         let thisStack = appStack.getViewerStack()
 
-        _ = thisStack.removeFilter(position: thisStack.activeFilterIndex)
+        if let removedFilter = thisStack.removeFilter(position: thisStack.activeFilterIndex)
+        {
+            if let myUndoManager = undoManager {
+                myUndoManager.registerUndo(withTarget: self) { target in
+                    target.undoRemoveFilterFromStack(removedFilter)
+                }
+                myUndoManager.setActionName("undo Remove Filter")
+                UIMenuSystem.main.setNeedsRevalidate()
+            }
+
+        }
+
         // needs work here... the parent of the child stack needs to
         // set the inputStack to nil and update the inputParmState to
         // missingInput
@@ -1060,7 +1080,15 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     }
 
-    //
+    func undoRemoveFilterFromStack(_ filter: PGLSourceFilter) {
+
+        appStack.viewerStack.performFilterPick(selectedFilter: filter)
+        // Note that the MainFilterController also calls
+//        updateFilterLabel()
+//        postImageChange()
+//        postCurrentFilterChange()
+//        appStack.resetCellFilters()
+    }
 
     // MARK: editing support
 

@@ -299,9 +299,20 @@ class PGLMainFilterController:  UIViewController,
             postCurrentFilterChange()
             appStack.resetCellFilters()
 
-
+            undoManager?.registerUndo(withTarget: self ) {
+                target in
+                target.undoAddFilter(selectedFilter)
+            }
+            UIMenuSystem.main.setNeedsRevalidate()
         }
     }
+
+    func undoAddFilter(_ oldFilter: PGLSourceFilter) {
+        // tell stackController
+
+        appStack.viewerStack.undoAddFilter(oldFilter: oldFilter)
+    }
+
 
    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
     if let theCell =  sender as? UITableViewCell {

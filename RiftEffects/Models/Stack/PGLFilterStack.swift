@@ -431,6 +431,15 @@ class PGLFilterStack: Equatable, Hashable  {
 
     }
 
+    func undoAddFilter(oldFilter: PGLSourceFilter) {
+        if let oldFilterIndex = indexOfFilter(oldFilter) {
+            if oldFilterIndex >= 0 {
+                    // removedFilters.append(oldFilter)
+                _ = removeFilter(position: oldFilterIndex)
+            }
+        }
+    }
+
     func replace(updatedFilter: PGLSourceFilter) {
 
         updatedFilter.setCIContext(detectorContext: imageCIContext)

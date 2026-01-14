@@ -598,6 +598,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     // MARK: Menus
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        NSLog(#function + "\(String(describing: action))")
           if action == #selector(paste(_:)) {
 
               let hasImages =   UIPasteboard.general.hasImages
@@ -610,12 +611,30 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             return true // image controller always has an image.. maybe CIImage.empty
 
         }
+        let undoActionName = sel_registerName("undo:")
+
+        if action == undoActionName  {
+            NSLog(#function  + String(describing: self ) +  " #selector(undo) ")
+            NSLog("undoManager \(String(describing: undoManager))")
+            let isUndoable = undoManager?.canUndo ?? false
+            NSLog("undoManager canUndo \(isUndoable)")
+            return isUndoable
+        }
+//        if action == #selector(UndoManager.redo) || action == #selector(UndoManager.redo(_:)) {
+//            return undoManager?.canRedo == true
+//        }
         else {
-            return super.canPerformAction(action, withSender: sender)
+//            return super.canPerformAction(action, withSender: sender)
+            return false  // do not run up the UIResponder chain
         }
 
       }
 
+  @objc  func undo( _: Any?) {
+        NSLog(#function)
+        undoManager?.undo()
+    }
+    
     override func copy(_ sender: Any?) {
         NSLog(#function)
 
@@ -2007,4 +2026,5 @@ extension PGLImageController {
 //    return UIGraphicsGetImageFromCurrentImageContext()
 //  }
 //}
+//
 
