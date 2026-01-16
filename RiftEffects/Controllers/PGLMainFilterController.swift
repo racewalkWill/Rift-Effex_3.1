@@ -319,23 +319,6 @@ class PGLMainFilterController:  UIViewController,
         appStack.resetCellFilters()
     }
 
-    func undoAddFilter(_ oldFilter: PGLSourceFilter) {
-        // tell stackController
-
-        appStack.viewerStack.undoAddFilter(oldFilter: oldFilter)
-        undoManager?.registerUndo(withTarget: self ) {
-            target in
-            target.appStack.setFilterChangeModeToAdd()
-                // the addfilter set the mode to replace..
-                // just add back not replace
-            
-            target.performBasicPick(filter: oldFilter)
-
-        }
-        NSLog(#function + " \(String(describing: undoManager))" )
-        undoManager?.setActionName("Add Filter")
-    }
-
 
    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
     if let theCell =  sender as? UITableViewCell {

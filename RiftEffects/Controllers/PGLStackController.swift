@@ -1051,17 +1051,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
         let thisStack = appStack.getViewerStack()
 
-        if let removedFilter = thisStack.removeFilter(position: thisStack.activeFilterIndex)
-        {
-            if let myUndoManager = undoManager {
-                myUndoManager.registerUndo(withTarget: self) { target in
-                    target.undoRemoveFilterFromStack(removedFilter)
-                }
-                myUndoManager.setActionName("Delete Filter")
-
+        if let removedFilter = thisStack.removeFilter(position: thisStack.activeFilterIndex)     {
+            registerUndoRemoveFilter( removedFilter)
             }
-
-        }
 
         // needs work here... the parent of the child stack needs to
         // set the inputStack to nil and update the inputParmState to
@@ -1080,28 +1072,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     }
 
-    func undoRemoveFilterFromStack(_ filter: PGLSourceFilter) {
-        appStack.setFilterChangeModeToAdd()
-        appStack.viewerStack.performFilterPick(selectedFilter: filter)
-        updateDisplay()
-        if let myUndoManager = undoManager {
-            myUndoManager.registerUndo(withTarget: self) { target in
-                target.appStack.setFilterChangeModeToAdd()
-                let myStack = target.appStack.viewerStack
-                myStack.performFilterPick(selectedFilter: filter)
 
-            }
-            myUndoManager.setActionName("Delete Filter")
-
-        }
-
-
-        // Note that the MainFilterController also calls
-//        updateFilterLabel()
-//        postImageChange()
-//        postCurrentFilterChange()
-//        appStack.resetCellFilters()
-    }
 
     // MARK: editing support
 

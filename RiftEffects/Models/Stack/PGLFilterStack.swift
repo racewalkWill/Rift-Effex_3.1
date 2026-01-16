@@ -605,7 +605,10 @@ class PGLFilterStack: Equatable, Hashable  {
         }
         setFiltersStackPosition()
         postFilterChangeRedraw()
-        returnValue?.releaseVars()
+
+            //        returnValue?.releaseVars()
+                // do not release at this point - allow undo remove to carry the inputs forward
+        
         return returnValue
     }
 
