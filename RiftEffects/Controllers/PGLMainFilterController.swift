@@ -325,6 +325,10 @@ class PGLMainFilterController:  UIViewController,
         appStack.viewerStack.undoAddFilter(oldFilter: oldFilter)
         undoManager?.registerUndo(withTarget: self ) {
             target in
+            target.appStack.setFilterChangeModeToAdd()
+                // the addfilter set the mode to replace..
+                // just add back not replace
+            
             target.performBasicPick(filter: oldFilter)
 
         }
