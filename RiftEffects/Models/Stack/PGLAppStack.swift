@@ -51,7 +51,8 @@ class PGLAppStack {
     var showFilterImage = false
     var publishers = [any Cancellable]()
     var cancellable: (any Cancellable)?
-    
+    var appStackUndoManager = UndoManager()
+
     lazy var dataProvider: PGLStackProvider = {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
 
@@ -310,6 +311,7 @@ class PGLAppStack {
         parmControls = [String : UIView]() // string index by attributeName
                                            // holds point and textfield input
         parms =  [String : PGLFilterAttribute]()
+        appStackUndoManager = UndoManager()
 
              // nil out refs so the memory is released
     }

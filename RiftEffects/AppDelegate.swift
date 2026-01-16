@@ -69,9 +69,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         builder.remove(menu: UIMenu.Identifier.file)
         builder.remove(menu: UIMenu.Identifier.format)
+        builder.remove(menu: UIMenu.Identifier.autoFill)
+            // autofill is still showing - apple bug?
+        builder.remove(menu: UIMenu.Identifier(rawValue: "com.apple.menu.find"))
+
 //        builder.remove(command: #selector())
         let editMenu = builder.menu(for: .edit)
-        let standardCommands = builder.menu(for: UIMenu.Identifier(rawValue: "com.apple.menu.standard-edit"))
+//        let standardCommands = builder.menu(for: UIMenu.Identifier(rawValue: "com.apple.menu.standard-edit"))
+        let standardCommands = builder.menu(for: UIMenu.Identifier.standardEdit)
         let _ = editMenu?.children // keep if you need to inspect later
 
         if let standardCommands {
@@ -81,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                   item.title == "Select All" ||
                   item.title == "Paste and Match Style" ||
                   item.title == "Writing Tools" ||
-                  item.title == "AutoFill" ||
+//                  item.title == "AutoFill" ||
                   item.title == "Dictation" ||
                   item.title == "Emoji" ||
                   item.title == "Show Keyboard"
@@ -94,7 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                          children: filteredChildren)
             builder.replace(menu: standardCommands.identifier, with: newStandardMenu)
         }
-         builder.remove(menu: UIMenu.Identifier(rawValue: "com.apple.menu.find"))
+
         // these are edit command menus
 //        builder.remove(menu: UIMenu.Identifier(rawValue: "com.apple.command.speech"))
 //        builder.remove(menu: UIMenu.Identifier(rawValue: "com.apple.menu.transformation"))
@@ -102,6 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        builder.remove(menu: UIMenu.Identifier(rawValue: "com.apple.menu.spelling"))
 //      NSLog(#function + "\(String(describing: builder.system))")
         /*
+         see also UIMenu.identifier type properties
          from inspecting builder.system.baseUIMenuSystem@0.cachedInitialRootMenu
         identifier = 0x0000000209c49658 @"com.apple.menu.application"
         _identifier = 0x0000000209c49718 @"com.apple.menu.about"
@@ -141,13 +147,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
-    @objc func undoCommand() {
-        NSLog(#function + " called")
-    }
-
-    @objc func redoCommand() {
-        NSLog(#function + " called")
-    }
+    // these are not used
+//    @objc func undoCommand() {
+//        NSLog(#function + " called")
+//    }
+//
+//    @objc func redoCommand() {
+//        NSLog(#function + " called")
+//    }
 
     override var undoManager: UndoManager? {
            // Return a shared or per-document undo manager

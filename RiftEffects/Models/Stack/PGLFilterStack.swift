@@ -438,6 +438,7 @@ class PGLFilterStack: Equatable, Hashable  {
                 _ = removeFilter(position: oldFilterIndex)
                 // get the display updated
                 postCurrentFilterChange()
+                NSLog(#function + " undo removed filter at \(String(describing: oldFilterIndex))")
             }
         }
     }

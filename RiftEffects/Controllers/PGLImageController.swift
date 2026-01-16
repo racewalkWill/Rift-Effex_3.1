@@ -617,15 +617,19 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
 
         if action == UndoActionSelector  {
-            NSLog(#function  + String(describing: self ) +  " #selector(undo) ")
+//            NSLog(#function  + String(describing: self ) +  " #selector(undo) ")
             NSLog("undoManager \(String(describing: undoManager))")
             let isUndoable = undoManager?.canUndo ?? false
             NSLog("undoManager canUndo \(isUndoable)")
             return isUndoable
         }
-//        if action == #selector(UndoManager.redo) || action == #selector(UndoManager.redo(_:)) {
-//            return undoManager?.canRedo == true
-//        }
+        if action == RedoActionSelector {
+            NSLog("undoManager \(String(describing: undoManager))")
+            let isRedoable = undoManager?.canRedo ?? false
+            NSLog("undoManager isRedoable \(isRedoable)")
+            return isRedoable
+        }
+
         else {
 //            return super.canPerformAction(action, withSender: sender)
             return false  // do not run up the UIResponder chain
@@ -634,10 +638,15 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
       }
 
   @objc  func undo( _: Any?) {
-        NSLog(#function)
+        NSLog(#function + String(describing: self ))
         undoManager?.undo()
     }
-    
+
+    @objc  func redo( _: Any?) {
+          NSLog(#function + String(describing: self ))
+          undoManager?.redo()
+      }
+
     override func copy(_ sender: Any?) {
         NSLog(#function)
 

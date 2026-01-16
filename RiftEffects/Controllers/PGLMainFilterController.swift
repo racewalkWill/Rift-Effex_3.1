@@ -48,6 +48,15 @@ class PGLMainFilterController:  UIViewController,
 
     var filters = PGLFilterCategory.filterDescriptors
 
+    override var undoManager: UndoManager? {
+           // Return a shared  undo manager
+        if let myAppStack = appStack {
+            return myAppStack.appStackUndoManager }
+        else {
+             return  super.undoManager
+            }
+       }
+
     var matchFilters = [PGLFilterDescriptor]()
 
     let frequentCategoryPath = IndexPath(row:0,section: 0)
@@ -287,30 +296,40 @@ class PGLMainFilterController:  UIViewController,
 
 //        Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLFilterTableController performFilterPick \(descriptor)")
         if let selectedFilter = descriptor.pglSourceFilter() {
-            stackData()?.performFilterPick(selectedFilter: selectedFilter)
-                // depending on mode will replace or add to the stack
-            selectedFilter.addChildSequenceStack(appStack: appStack) // usually empty method except for the PGLSequencedFilters
-            Logger(subsystem: LogSubsystem, category: LogCategory).notice("filter set = \(String(describing: selectedFilter.filterName))")
-
-            // post notification that filter is changed. The parmSettings manager should listen
-
-            updateFilterLabel()
-            postImageChange()
-            postCurrentFilterChange()
-            appStack.resetCellFilters()
+            performBasicPick(filter: selectedFilter)
 
             undoManager?.registerUndo(withTarget: self ) {
                 target in
                 target.undoAddFilter(selectedFilter)
             }
-            UIMenuSystem.main.setNeedsRevalidate()
+            undoManager?.setActionName("Add Filter")
         }
+    }
+
+    func performBasicPick(filter: PGLSourceFilter) {
+        stackData()?.performFilterPick(selectedFilter: filter)
+            // depending on mode will replace or add to the stack
+        filter.addChildSequenceStack(appStack: appStack) // usually empty method except for the PGLSequencedFilters
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice("filter set = \(String(describing: filter.filterName))")
+
+            // post notification that filter is changed. The parmSettings manager should listen
+        updateFilterLabel()
+        postImageChange()
+        postCurrentFilterChange()
+        appStack.resetCellFilters()
     }
 
     func undoAddFilter(_ oldFilter: PGLSourceFilter) {
         // tell stackController
 
         appStack.viewerStack.undoAddFilter(oldFilter: oldFilter)
+        undoManager?.registerUndo(withTarget: self ) {
+            target in
+            target.performBasicPick(filter: oldFilter)
+
+        }
+        NSLog(#function + " \(String(describing: undoManager))" )
+        undoManager?.setActionName("Add Filter")
     }
 
 
@@ -845,3 +864,4 @@ extension PGLMainFilterController {
     }
 
 } // end PGLMainFilterController methods
+

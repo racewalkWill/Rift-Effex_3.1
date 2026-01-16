@@ -41,8 +41,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     override var undoManager: UndoManager? {
            // Return a shared or per-document undo manager
-        if let mySplitController = splitViewController as? PGLSplitViewController {
-            return mySplitController.undoManager }
+        if let myAppStack = appStack {
+            return myAppStack.appStackUndoManager }
         else {
              return  super.undoManager
             }

@@ -26,8 +26,8 @@ enum PGLMenuLabel: String {
     case Copy = "Copy"
     case Paste = "Paste"
     case Delete = "Delete"
-    case Undo = "Undo"
-    case Redo = "Redo"
+//    case Undo = "Undo"
+//    case Redo = "Redo"
 
 
 }

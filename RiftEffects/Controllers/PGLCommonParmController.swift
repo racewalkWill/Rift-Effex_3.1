@@ -31,8 +31,8 @@ class PGLCommonController: UIViewController, UIAdaptivePresentationControllerDel
     override var undoManager: UndoManager? {
         // subclasse PGLImageController and PGLSelectParmController will use this implmentation
            // Return a shared or per-document undo manager
-        if let mySplitController = splitViewController as? PGLSplitViewController {
-            return mySplitController.undoManager }
+        if let myAppStack = appStack {
+            return myAppStack.appStackUndoManager }
         else {
              return  super.undoManager
             }
