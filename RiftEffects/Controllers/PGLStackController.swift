@@ -1057,8 +1057,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                 myUndoManager.registerUndo(withTarget: self) { target in
                     target.undoRemoveFilterFromStack(removedFilter)
                 }
-                myUndoManager.setActionName("undo Remove Filter")
-                UIMenuSystem.main.setNeedsRevalidate()
+                myUndoManager.setActionName("Delete Filter")
+
             }
 
         }
@@ -1081,9 +1081,20 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     }
 
     func undoRemoveFilterFromStack(_ filter: PGLSourceFilter) {
-
+        appStack.setFilterChangeModeToAdd()
         appStack.viewerStack.performFilterPick(selectedFilter: filter)
         updateDisplay()
+        if let myUndoManager = undoManager {
+            myUndoManager.registerUndo(withTarget: self) { target in
+                target.appStack.setFilterChangeModeToAdd()
+                let myStack = target.appStack.viewerStack
+                myStack.performFilterPick(selectedFilter: filter)
+
+            }
+            myUndoManager.setActionName("Delete Filter")
+
+        }
+
 
         // Note that the MainFilterController also calls
 //        updateFilterLabel()
