@@ -28,8 +28,13 @@ enum StackDisplayMode: String {
 }
 @MainActor
 class PGLAppStack {
+
+    ///  final image output  stack
     var outputStack: PGLFilterStack
+
+    /// selected stack in the UI - may be a child or the top stack
     var viewerStack = PGLFilterStack()
+
     var pushedStacks = [PGLFilterStack]()
   
 //    var initialImagePick: PGLImageList
@@ -353,17 +358,11 @@ class PGLAppStack {
 //        }
         ///  move to the new filter
         // set old filter to non selected
-
-
+        viewerStack = filterIndent.stack
         // now get new cell setup
         filterIndent.stack.imageCIContext = viewerStack.imageCIContext
             // set the context from the old viewStack
-
-        viewerStack = filterIndent.stack
- //       viewerStack.activeFilterIndex = filterIndent.filterPosition
-         // why was this called twice?? source of double calls?
-
-//        NSLog("PGLAppStack #moveTo( viewerStack now \(viewerStack)")
+ 
         viewerStack.activeFilterIndex = filterIndent.filterPosition
         // remove from pushedStacks???
         pushedStacks.removeAll(where: { $0 === viewerStack })
@@ -644,6 +643,8 @@ class PGLAppStack {
 
         }
     }
+
+    
 
     func activeFilterIsLastRow() -> Bool {
         guard let activeRow = activeFilterCellRow() else { return true }

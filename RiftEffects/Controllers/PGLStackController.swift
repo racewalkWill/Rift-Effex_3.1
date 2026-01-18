@@ -1043,16 +1043,29 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     }
     func removeFilter(indexPath: IndexPath) {
+        var nextCell: PGLFilterIndent?
 
         let cellIndent = appStack.flatCellFilters[indexPath.row]
+        // need to know the receiver of the output of this cellIndent
+        if indexPath.row == (appStack.flatCellFilters.count - 1) {
+            // this is the last cell
+        } else {
+            nextCell = appStack.flatCellFilters[indexPath.row + 1]
+        }
+        // usually receiver of removedFilter output is the next cell first image input attribute..
+        // but not always !
+        // check the description of the cell
+
         _ = appStack.moveTo(filterIndent: cellIndent)
             // sets the activeFilterIndex of the childStack
             // makes the childStack the viewerStack
 
         let thisStack = appStack.getViewerStack()
+        let positionOfRemovedFilter = thisStack.activeFilterIndex
 
-        if let removedFilter = thisStack.removeFilter(position: thisStack.activeFilterIndex)     {
-            registerUndoRemoveFilter( removedFilter)
+        if let removedFilter = thisStack.removeFilter(position: positionOfRemovedFilter)     {
+            //registerUndoRemoveFilter( removedFilter)
+//            registerUndoRemoveFilter( removedFilter, oldIndex: cellIndent)
             }
 
         // needs work here... the parent of the child stack needs to
