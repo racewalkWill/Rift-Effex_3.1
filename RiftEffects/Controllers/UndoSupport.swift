@@ -23,7 +23,7 @@ extension PGLStackController {
     // may have memory capture problems with the method vars passed into the blocks
     // currentStack and currentActiveIndex are passed to the undo blocks
 
-    func registerUndoRemoveFilter(_ removedFilter: PGLSourceFilter, oldIndex: IndexPath ) {
+    func registerUndoRemoveFilter(_ removedCell: PGLFilterIndent ) {
             // need to store this filter and stack position for the undo of the add
 
 //        let currentStack = appStack.getViewerStack()
@@ -31,29 +31,33 @@ extension PGLStackController {
 
         if let myUndoManager = undoManager {
             myUndoManager.registerUndo(withTarget: self) { target in
-                target.undoRemoveFilterFromStack(removedFilter, flatArrayPosition: oldIndex)
+                target.undoRemoveFilterFromStack(removedCell: removedCell)
             }
             myUndoManager.setActionName("Delete Filter")
 
         }
+        UIMenuSystem.main.setNeedsRevalidate()
     }
 
 
-    func undoRemoveFilterFromStack(_ filter: PGLSourceFilter, flatArrayPosition: IndexPath) {
+    func undoRemoveFilterFromStack(removedCell: PGLFilterIndent ) {
 
-//        appStack.resetOutputAppStack( targetStack )
-       // appStack.restore(removedFilter: filter, destinationRow: flatArrayPosition )
-//        appStack.restore(removedFilter: filter, inputCell:  )
+        appStack.restore(removedCell)
         updateDisplay()
+        let flatCells = appStack.flatCellFilters
+        guard let flatArrayPosition = flatCells.firstIndex(where: { $0.stack == removedCell.stack && $0.filter.stackPosition == removedCell.filter.stackPosition && $0.filter.filterName == removedCell.filter.filterName })
+            else {
+                return }
 
         if let myUndoManager = undoManager {
             myUndoManager.registerUndo(withTarget: self) { target in
                     //                target.appStack.setFilterChangeModeToAdd()
                 // reset the viewerStack and index
-                target.removeFilter(indexPath: flatArrayPosition)
-                target.updateDisplay()
+                let newIndex = IndexPath(row:flatArrayPosition, section: StackSections.filters.rawValue)
+                target.removeFilter(indexPath: newIndex)
             }
             myUndoManager.setActionName("Delete Filter")
+            UIMenuSystem.main.setNeedsRevalidate()
         }
     }
 
@@ -68,6 +72,7 @@ extension PGLMainFilterController {
             target.undoAddFilter(newFilter)
         }
         undoManager?.setActionName("Add Filter")
+        UIMenuSystem.main.setNeedsRevalidate()
     }
 
     func undoAddFilter(_ oldFilter: PGLSourceFilter) {
@@ -90,37 +95,44 @@ extension PGLMainFilterController {
 }
 
 extension PGLAppStack {
-    func restore(removedFilter: PGLSourceFilter, inputCell: PGLFilterIndent ) {
-        // inputCell was receiving the output of the removed filter
-        // which attribute was it connected to ?
-        // a filter input to another attribute will be in a child stack
-        // the child stack has the parentAttrbiute relation
-        // does the removed filter know it's stack??
-        
+    func restore( _ removedCell: PGLFilterIndent ) {
+        // filter indent has filter, stack and filterPosition vars
 
 //        let targetIndentCell = filterAt(indexPath:  destinationRow)
-        let targetStack = inputCell.stack
+        var existingFilter: PGLSourceFilter?
+        let targetStack = removedCell.stack
+        let removedFilter = removedCell.filter
+        if targetStack.activeFilters.indices.contains(removedCell.filterPosition)
+            {
+                existingFilter = targetStack.activeFilters[removedCell.filterPosition]
+            }
+
+        viewerStack = targetStack
+        // reset the AppStack
 
         // is the removedFilter a transition that may change transition state with the move?
         // i.e. dissolve with priorFilterInput will lose an input if moved to first
         // capture initial state
 
-        let oldImageInput = removedFilter.getInputImageAttribute() // may be nil depending on filter type
+//        let oldImageInput = removedFilter.getInputImageAttribute() // may be nil depending on filter type
 //        let isPriorFilterInput = (oldImageInput?.parmInputState == ParmInputState.inputPriorFilter) // nil answers false
 
         // so move
-        targetStack.activeFilters.insert(removedFilter, at: inputCell.filterPosition)
+        targetStack.activeFilters.insert(removedFilter, at: removedCell.filterPosition)
 
         // reset the imageInput chain
         // does first filter need inputs set? priorFilter is no longer valid
         // could have inputCollection or a childStack as working input
-        if inputCell.filterPosition == 0 {
-            if let inputImageAttribute = targetStack.activeFilters[0].getInputImageAttribute(){
-                    if inputImageAttribute.parmInputState == ParmInputState.inputPriorFilter {
-                        inputImageAttribute.setImageParmState(newState: ParmInputState.missingImageInput)
-                    }
-                }
-        }
+
+        // this is not needed to reset the first filter missingImageInputState
+        // the state has not changed
+//        if removedCell.filterPosition == 0 {
+//            if let inputImageAttribute = removedFilter.getInputImageAttribute(){
+//                    if inputImageAttribute.parmInputState == ParmInputState.inputPriorFilter {
+//                        inputImageAttribute.setImageParmState(newState: ParmInputState.missingImageInput)
+//                    }
+//                }
+//        }
 
         for index in 1 ..< targetStack.activeFilters.count {
             let priorFilter = targetStack.activeFilters[index - 1 ]
@@ -131,7 +143,9 @@ extension PGLAppStack {
 
         targetStack.setFiltersStackPosition()
 
-
+      //
+        // DOES the existingFilter in a child stack need to get the parm parent inputStack var reset
+        // and the targetStack parentAttribute reset to point to the parm parent?
 
     }
 
