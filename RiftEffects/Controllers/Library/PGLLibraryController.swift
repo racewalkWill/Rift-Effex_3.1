@@ -11,7 +11,7 @@ import CoreData
 import os
 import Combine
 
-let ThumbnailPreferredHeight: CGFloat = 75.0
+let ThumbnailPreferredHeight: CGFloat = 60.0 // 75.0
 let ThumbnailiPhonePreferredHeight: CGFloat = 50
 let ThumbnailSpacing: CGFloat = 5.0
 
@@ -33,10 +33,19 @@ class PGLLibraryController:  UIViewController, NSFetchedResultsControllerDelegat
 
     var collectionView: UICollectionView!
     /// selected Library stack is child input OR new topLevel stack
-    var provideStackAsChild: PGLFilterAttributeImage?
+    var parentInputImageParm: PGLFilterAttributeImage? {
+        didSet {
+            singleMode = parentInputImageParm?.isSingleSourceInput() ?? true
+            collectionView.allowsMultipleSelection = !singleMode
+
+        }
+    }
 
     fileprivate let sectionHeaderElementKind = "SectionHeader"
     let searchBar = UISearchBar(frame: .zero)
+    var rightCompletionBtn: UIBarButtonItem?
+    var selectedStackIds = [NSManagedObjectID]()
+    var singleMode = true  // select only one stack at a time
 
 // MARK: View Lifecycle
     override func viewDidLoad() {
@@ -53,7 +62,10 @@ class PGLLibraryController:  UIViewController, NSFetchedResultsControllerDelegat
 extension PGLLibraryController {
     func configureHierarchy() {
         let layout = createLayout()
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        let viewInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+        let newFrame = view.bounds.inset(by: viewInset)
+
+        collectionView = UICollectionView(frame: newFrame, collectionViewLayout: layout)
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .systemBackground
 
@@ -68,6 +80,28 @@ extension PGLLibraryController {
         view.addSubview(collectionView)
         view.addSubview(searchBar)
 
+         rightCompletionBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+        navigationItem.rightBarButtonItem = rightCompletionBtn
+        
+//        // Fallback: if not embedded in a UINavigationController, add a local navigation bar so the Done button shows
+        if self.navigationController == nil {
+            let navBar = UINavigationBar(frame: .zero)
+            navBar.translatesAutoresizingMaskIntoConstraints = false
+            let navItem = UINavigationItem(title: self.navigationItem.title ?? "")
+            navItem.rightBarButtonItem = rightCompletionBtn
+            navBar.items = [navItem]
+            view.addSubview(navBar)
+            rightCompletionBtn?.isEnabled = false
+            // Adjust constraints: place navBar above the searchBar
+            NSLayoutConstraint.activate([
+                navBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                navBar.heightAnchor.constraint(equalToConstant: 50) ,
+                searchBar.topAnchor.constraint(equalTo: navBar.bottomAnchor)
+
+            ])
+        }
 
         let views: [String: UIView] = ["cv": collectionView, "searchBar": searchBar]
         var constraints = [NSLayoutConstraint]()
@@ -77,12 +111,14 @@ extension PGLLibraryController {
             withVisualFormat: "H:|[searchBar]|", options: [], metrics: nil, views: views))
         constraints.append(contentsOf: NSLayoutConstraint.constraints(
             withVisualFormat: "V:[searchBar]-0-[cv]|", options: [], metrics: nil, views: views))
-        constraints.append(searchBar.topAnchor.constraint(
-            equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 1.0))
+//        constraints.append(searchBar.topAnchor.constraint(
+//            equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 1.0))
         NSLayoutConstraint.activate(constraints)
+
 
         collectionView.delegate = self
         searchBar.delegate = self
+
 
 
     }
@@ -332,7 +368,22 @@ extension PGLLibraryController {
 }
 
 extension PGLLibraryController: UICollectionViewDelegate {
+    @objc func doneTapped() {
+        if !singleMode  {
+            guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
+                else {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).fault("\( String(describing: self) + "-" + #function) appDelegate not assigned")
+                return
+            }
 
+            let theAppStack = myAppDelegate.appStack
+
+            for aStackObjectId in selectedStackIds {
+                theAppStack.loadChildStack(childStackId: aStackObjectId, onParm: parentInputImageParm!)
+            }
+        }
+        dismiss(animated: true)
+    }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
             // pick and show this row
             // even if in edit mode
@@ -348,9 +399,15 @@ extension PGLLibraryController: UICollectionViewDelegate {
                 let stackId = object.objectID // managedObjectID
 
                 let theAppStack = myAppDelegate.appStack
-            if provideStackAsChild != nil {
-                theAppStack.loadChildStack(childStackId: stackId, onParm: provideStackAsChild!)
-                dismiss(animated: true)
+            if parentInputImageParm != nil {
+                rightCompletionBtn?.isEnabled = true
+                if singleMode {
+                    theAppStack.loadChildStack(childStackId: stackId, onParm: parentInputImageParm!) }
+                else {
+                    selectedStackIds.append(stackId)
+                }
+                rightCompletionBtn?.isEnabled = true
+//                dismiss(animated: true)
             }
             else {
                 theAppStack.resetToTopStack(newStackId: stackId)
@@ -375,6 +432,5 @@ extension PGLLibraryController: UICollectionViewDelegate {
     }
 
 }
-
 
 

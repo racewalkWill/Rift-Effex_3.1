@@ -601,7 +601,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     // MARK: Menus
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        NSLog(#function + "\(String(describing: action))")
+//        NSLog(#function + "\(String(describing: action))")
           if action == #selector(paste(_:)) {
 
               let hasImages =   UIPasteboard.general.hasImages
@@ -610,7 +610,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
           }
 
         if action == #selector(copy(_ : )) {
-            NSLog(#function  + String(describing: self ) +  " #selector(copy) ")
+//            NSLog(#function  + String(describing: self ) +  " #selector(copy) ")
             return true // image controller always has an image.. maybe CIImage.empty
 
         }
@@ -618,15 +618,15 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         if action == UndoActionSelector  {
 //            NSLog(#function  + String(describing: self ) +  " #selector(undo) ")
-            NSLog("undoManager \(String(describing: undoManager))")
+//            NSLog("undoManager \(String(describing: undoManager))")
             let isUndoable = undoManager?.canUndo ?? false
-            NSLog("undoManager canUndo \(isUndoable)")
+//            NSLog("undoManager canUndo \(isUndoable)")
             return isUndoable
         }
         if action == RedoActionSelector {
-            NSLog("undoManager \(String(describing: undoManager))")
+//            NSLog("undoManager \(String(describing: undoManager))")
             let isRedoable = undoManager?.canRedo ?? false
-            NSLog("undoManager isRedoable \(isRedoable)")
+//            NSLog("undoManager isRedoable \(isRedoable)")
             return isRedoable
         }
 
@@ -638,12 +638,12 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
       }
 
   @objc  func undo( _: Any?) {
-        NSLog(#function + String(describing: self ))
+//        NSLog(#function + String(describing: self ))
         undoManager?.undo()
     }
 
     @objc  func redo( _: Any?) {
-          NSLog(#function + String(describing: self ))
+//          NSLog(#function + String(describing: self ))
           undoManager?.redo()
       }
 
@@ -665,7 +665,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     override func paste(_ sender: Any?) {
           // Handle paste from UIPasteboard
-          NSLog(#function + String(describing: self ))
+//          NSLog(#function + String(describing: self ))
           let pb = UIPasteboard.general
 
           if let uiImage = pb.image {
@@ -680,7 +680,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
       }
 
     func pasteCIImage(_ ciImage: CIImage) {
-        NSLog(#function + String(describing: self ))
+//        NSLog(#function + String(describing: self ))
         appStack.outputOrViewFilterStack().pasteCIImage(ciImage)
     }
 

@@ -7,80 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "47AE7AC6-40A3-44FD-8E12-41D49B3F4CA6"
-            shouldBeEnabled = "No"
+            uuid = "A3CBDF33-F1C9-41D9-B5E6-46431EE5CD48"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Controllers/UndoSupport.swift"
+            filePath = "RiftEffects/Filters/SequenceFilter/PGLSequenceStack.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32"
-            landmarkName = "registerUndoRemoveFilter(_:)"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
+            landmarkName = "appendFilter(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "86AA1138-3429-492E-81D3-F474686ADB4E"
-            shouldBeEnabled = "No"
+            uuid = "D64AAA7A-9BB0-4677-A0C2-DCC4FCF01FDD"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/Stack/PGLFilterStack.swift"
+            filePath = "RiftEffects/Filters/SequenceFilter/PGLFilterAttrChildStack.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "564"
-            endingLineNumber = "564"
-            landmarkName = "removeFilter(position:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B51491BB-38CC-4ED9-AB35-E0A58AACB8F6"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Controllers/PGLStackController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1058"
-            endingLineNumber = "1058"
-            landmarkName = "removeFilter(indexPath:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "1901AA24-F292-47DA-B6DB-D0CAE9DDA85F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Controllers/UndoSupport.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "undoRemoveFilterFromStack(removedCell:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6632A805-97A7-4620-9646-21550743A641"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/Stack/PGLFilterStack.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "684"
-            endingLineNumber = "684"
-            landmarkName = "imageUpdate(_:_:thisWindowSize:)"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
+            landmarkName = "loadChildStackToSequenceStack(inAppStack:userPickLibraryStack:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

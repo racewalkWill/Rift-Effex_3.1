@@ -533,6 +533,12 @@ class PGLFilterAttribute {
 
     }
 
+    func isSingleSourceInput() -> Bool {
+        // PGLFilterAttrSequenceStack answers false
+        // it will use a sequence of stacks as visual input
+        return true
+    }
+
     func valueString() -> String {
         // subclasses such as number will restrict the number of decimial places
         return String(describing: (getValue() ?? "") )

@@ -26,6 +26,12 @@ class PGLFilterAttrSequenceStack: PGLFilterAttributeImage {
         }
     }
 
+    override func isSingleSourceInput() -> Bool {
+        // PGLFilterAttrSequenceStack answers false
+        // it will use a sequence of stacks as visual input
+        return false
+    }
+
     /// answer  TableCellAction Hard coded to SequencedFilter
     override func cellAction() -> [PGLTableCellAction ] {
             //  cell does not add subUI cells

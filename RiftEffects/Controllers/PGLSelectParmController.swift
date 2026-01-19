@@ -1124,7 +1124,7 @@ class PGLSelectParmController: PGLCommonController,
         else { return }
 
         let pickStoredStackViewController = PGLLibraryController()
-        pickStoredStackViewController.provideStackAsChild = targetImageParm
+        pickStoredStackViewController.parentInputImageParm = targetImageParm
         NSLog("PGLSelectParmController pickLibraryChildStack target = \(targetImageParm.description)")
 
         pickStoredStackViewController.modalPresentationStyle = .popover
