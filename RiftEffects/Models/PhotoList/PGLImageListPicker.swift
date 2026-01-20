@@ -155,6 +155,7 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
 //                    controller.setNeedsUpdateProperties()
 //                    Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "- calls setNeedsUpdateProperties") ")
 //                }
+                mySplitController.imageListPicker = nil // release
 
             }
         }

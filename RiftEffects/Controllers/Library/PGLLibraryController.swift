@@ -36,8 +36,6 @@ class PGLLibraryController:  UIViewController, NSFetchedResultsControllerDelegat
     var parentInputImageParm: PGLFilterAttributeImage? {
         didSet {
             singleMode = parentInputImageParm?.isSingleSourceInput() ?? true
-            collectionView.allowsMultipleSelection = !singleMode
-
         }
     }
 
@@ -54,9 +52,12 @@ class PGLLibraryController:  UIViewController, NSFetchedResultsControllerDelegat
         configureHierarchy()
         configureDataSource()
         setCategoryData()
+        collectionView.allowsMultipleSelection = !singleMode
     }
 
 }
+
+
 
 // MARK: Configure
 extension PGLLibraryController {
@@ -381,7 +382,11 @@ extension PGLLibraryController: UICollectionViewDelegate {
             for aStackObjectId in selectedStackIds {
                 theAppStack.loadChildStack(childStackId: aStackObjectId, onParm: parentInputImageParm!)
             }
+
         }
+        parentInputImageParm = nil
+//        postStackChange()
+                // trigger the image controller to show the stack}
         dismiss(animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -402,11 +407,13 @@ extension PGLLibraryController: UICollectionViewDelegate {
             if parentInputImageParm != nil {
                 rightCompletionBtn?.isEnabled = true
                 if singleMode {
-                    theAppStack.loadChildStack(childStackId: stackId, onParm: parentInputImageParm!) }
+                    theAppStack.loadChildStack(childStackId: stackId, onParm: parentInputImageParm!)
+//                    postStackChange()
+                }
+                            // trigger the image controller to show the stack}
                 else {
                     selectedStackIds.append(stackId)
                 }
-                rightCompletionBtn?.isEnabled = true
 //                dismiss(animated: true)
             }
             else {
@@ -414,8 +421,7 @@ extension PGLLibraryController: UICollectionViewDelegate {
                 // do not dismiss  stay open if the user continues to pick
             }
 
-            postStackChange()
-                    // trigger the image controller to show the stack
+
 
 
             }

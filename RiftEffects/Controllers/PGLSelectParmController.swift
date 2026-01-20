@@ -1372,6 +1372,7 @@ class PGLSelectParmController: PGLCommonController,
         // and are called before this method
 //        pickerController.dismiss(animated: false)
 //        pickerController.delegate = nil
+        imagePicker = nil
 
     }
 
