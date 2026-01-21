@@ -110,6 +110,7 @@
 		A3B6EC0D2E1C404400EBCE55 /* PGLMusic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B6EC0C2E1C404400EBCE55 /* PGLMusic.swift */; };
 		A3B785162B224E6F00F3DA68 /* PGLCameraViewFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B785152B224E6F00F3DA68 /* PGLCameraViewFilter.swift */; };
 		A3B785182B224FC300F3DA68 /* PGLCopyOutCIFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B785172B224FC300F3DA68 /* PGLCopyOutCIFilter.swift */; };
+		A3BB63AD2F21915B001ADFE1 /* RunTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BB63AC2F21915B001ADFE1 /* RunTime.swift */; };
 		A3BB9E092B73ED4D0041F914 /* AVAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BB9E082B73ED4D0041F914 /* AVAssetExtension.swift */; };
 		A3BF503224D3299100CD5114 /* SurrealityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF503124D3299100CD5114 /* SurrealityUITests.swift */; };
 		A3BF50DB24D32A3400CD5114 /* PGL-CDFilterStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF504B24D32A3400CD5114 /* PGL-CDFilterStack.swift */; };
@@ -325,6 +326,7 @@
 		A3B6EC0C2E1C404400EBCE55 /* PGLMusic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMusic.swift; sourceTree = "<group>"; };
 		A3B785152B224E6F00F3DA68 /* PGLCameraViewFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCameraViewFilter.swift; sourceTree = "<group>"; };
 		A3B785172B224FC300F3DA68 /* PGLCopyOutCIFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCopyOutCIFilter.swift; sourceTree = "<group>"; };
+		A3BB63AC2F21915B001ADFE1 /* RunTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunTime.swift; sourceTree = "<group>"; };
 		A3BB9E082B73ED4D0041F914 /* AVAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAssetExtension.swift; sourceTree = "<group>"; };
 		A3BDD3CC290D95D000842B51 /* RiftEffects 2.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.2.xcdatamodel"; sourceTree = "<group>"; };
 		A3BF500924D3298F00CD5114 /* RiftEffects.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RiftEffects.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -685,6 +687,7 @@
 			isa = PBXGroup;
 			children = (
 				A3BF50A724D32A3400CD5114 /* PGLFilterAttribute.swift */,
+				A3BB63AC2F21915B001ADFE1 /* RunTime.swift */,
 				A3AF92E02D4009BF001E4785 /* PGLAttributeRectangle.swift */,
 				A3AF92DC2D40093A001E4785 /* PGLFilterAttributeAffine.swift */,
 				A3AF92DA2D400921001E4785 /* PGLFilterAttributeAngle.swift */,
@@ -1033,6 +1036,7 @@
 				A3167D122ED255750029FA92 /* AppDelegate.swift in Sources */,
 				A320F6262669550E008F6090 /* PGLInfoPrivacyController.swift in Sources */,
 				A3BF50EB24D32A3400CD5114 /* PGLVisionDetection.swift in Sources */,
+				A3BB63AD2F21915B001ADFE1 /* RunTime.swift in Sources */,
 				A3B412962E5B72810060BDC6 /* PGLAppStackOptimize.swift in Sources */,
 				A30BF4332CEA503A0062C84C /* PGLRandomParms.swift in Sources */,
 				A3BF511324D32A3400CD5114 /* PGLFilterAttributeAttributedString.swift in Sources */,

@@ -111,16 +111,24 @@ extension PGLSelectParmController {
     func undoImageChange(imageAttribute: PGLFilterAttributeImage,
                          oldImageList: PGLImageList) {
 
-        if let existingImageList = imageAttribute.inputCollection {
-                // case of inputStack and input priorfilter
-            registerRedoImageChange(
-                imageAttribute: imageAttribute,
-                oldImageList: existingImageList)
+        if imageAttribute.inputParmType() == .inputChildStack {
+            return  // needs work
+            // restore a child stack
+            // appStack.addChildStackBasic(childStack: imageAttribute.inputStack!
+        } else {
+            // restore the imageList
+            // imageAttribute.inputParmType() == .inputPhoto
+            if let existingImageList = imageAttribute.inputCollection {
+                    // case of inputStack and input priorfilter
+                registerRedoImageChange(
+                    imageAttribute: imageAttribute,
+                    oldImageList: existingImageList)
 
-        let targetFilter = imageAttribute.aSourceFilter
-        targetFilter.setUserPick(attribute: imageAttribute,
-                                 imageList: oldImageList)
-        // some filter classes override setUserPick
+                let targetFilter = imageAttribute.aSourceFilter
+                targetFilter.setUserPick(attribute: imageAttribute,
+                                         imageList: oldImageList)
+                    // some filter classes override setUserPick
+        }
 
         updateAfterImagePick(imageAttribute)
 

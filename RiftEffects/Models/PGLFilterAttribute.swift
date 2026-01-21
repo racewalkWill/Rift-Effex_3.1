@@ -757,6 +757,7 @@ class PGLFilterAttribute {
     }
 
     // MARK: animation values
+   
 
     func hasAnimation() -> Bool {
         return attributeValueDelta  != nil

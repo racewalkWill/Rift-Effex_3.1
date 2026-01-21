@@ -203,6 +203,13 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     }
 
 // MARK: State
+
+    func estimateRunSeconds() -> Double {
+        let imageCount: Double = Double(cachedImages.count)
+        return imageCount * 0.010
+        
+    }
+
     func validateLoad() {
         // raise user message if the identifier and image count is not equal
         // in limitedLibrary mode the image may not be obtained but the identifier is set
@@ -588,6 +595,8 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
             return CIImage.empty()
         }
     }
+
+
     func increment() -> CIImage? {
         if hasImageStack() { return inputStack?.stackOutputImage(false)} // needs scaleToFrame??
         if isEmpty() {return nil } // guard
@@ -705,3 +714,4 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
 
 }
+

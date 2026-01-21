@@ -83,6 +83,7 @@ static let LogParmValues = false
     // animation vars
     var hasAnimation = false
     var animationAttributes = [PGLFilterAttribute]()
+    var userLengthSeconds: Float = 0.0
     var stepTime = 0.0 {
         // range -1.0 to 1.0
         didSet {
@@ -746,8 +747,9 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
                 aParm.addChildFilters(level, into: &into )
             }
         }
-
     }
+
+
 
      // MARK: input source
     func attribute(nameKey: String) -> PGLFilterAttribute? {

@@ -26,6 +26,7 @@ class PGLTransitionFilter: PGLRectangleFilter {
     var transitionFilterStepTime = 0.0
     var isRandomTime: Bool = false
 
+
     /// can pause or go if there are multiple inputs for transition
     ///  several parms can have one input or at least one parm has multiple inputs
 //    var hasMultipleTransitionInputs =  false
@@ -104,7 +105,7 @@ class PGLTransitionFilter: PGLRectangleFilter {
         // dt should be the amount of change to add to the input time
         // to make the dissolve in lenghtSeconds total. This is also the incrment time
         // from one image to another.
-
+        userLengthSeconds = lengthSeconds
         let framesPerSec: Float = 60.0 // later read actual framerate from UI
         let varyTotalFrames = framesPerSec * lengthSeconds
 

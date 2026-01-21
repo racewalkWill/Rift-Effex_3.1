@@ -800,6 +800,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         } else {
             titleAlbumSectionRowCount = 0
         }
+        let runTimeSeconds = appStack.outputStack.estimateStackRunSeconds()
+        NSLog(#function + " runTimeSeconds: \(runTimeSeconds)")
         tableView.reloadData()
     }
 
