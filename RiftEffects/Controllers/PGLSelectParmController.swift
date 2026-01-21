@@ -1343,30 +1343,35 @@ class PGLSelectParmController: PGLCommonController,
     }
 
 
+     func updateAfterImagePick(_ targetAttribute: PGLFilterAttribute) {
+        if let cellPath = targetAttribute.uiIndexPath {
+            self.parmsTableView.reloadRows(at: [cellPath], with: .automatic) }
+            // gets the parm cell icon updated for an input image
+        else { self.parmsTableView.reloadData() }
+        
+        if (traitCollection.userInterfaceIdiom) == .phone &&
+            (traitCollection.horizontalSizeClass == .compact) {
+                // this case just go back to the twoContainer view
+        } else {
+                // ipad three column
+            splitViewController?.show(.secondary)  }
+        postCurrentFilterChange() // triggers PGLImageController to set view.isHidden to false
+        let updateNotification = Notification(name:PGLRedrawFilterChange)
+        NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+    }
+    
     func pickerCompletion(pickerController:PHPickerViewController, pickedImageList: PGLImageList) {
-        guard let targetAttribute = self.tappedAttribute
+        guard let targetAttribute = self.tappedAttribute as? PGLFilterAttributeImage
             else {  return }
         if targetAttribute.hasFilterStackInput() {
             targetAttribute.inputStack = nil
             appStack.popToParentStack()
         }
-        self.currentFilter?.setUserPick(attribute: targetAttribute, imageList: pickedImageList)
 
 
-        if let cellPath = targetAttribute.uiIndexPath {
-            self.parmsTableView.reloadRows(at: [cellPath], with: .automatic) }
-        // gets the parm cell icon updated for an input image
-        else { self.parmsTableView.reloadData() }
-
-        if (traitCollection.userInterfaceIdiom) == .phone &&
-            (traitCollection.horizontalSizeClass == .compact) {
-                // this case just go back to the twoContainer view
-        } else {
-            // ipad three column
-            splitViewController?.show(.secondary)  }
-        postCurrentFilterChange() // triggers PGLImageController to set view.isHidden to false
-        let updateNotification = Notification(name:PGLRedrawFilterChange)
-        NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+          self.currentFilter?.setUserPick(attribute: targetAttribute, imageList: pickedImageList)
+        NSLog(#function + " pickedImageList: \(pickedImageList)")
+        updateAfterImagePick(targetAttribute)
         // clean up.. do not keep  ref to the picker
         // these clean up statements are in the PGLImageListPicker
         // and are called before this method

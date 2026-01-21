@@ -6,7 +6,6 @@
 //  Copyright © 2026 Will Loew-Blosser. All rights reserved.
 //
 
-
 //
 //  UndoSupport.swift
 //  RiftEffects
@@ -94,18 +93,65 @@ extension PGLMainFilterController {
 
 }
 
+extension PGLSelectParmController {
+    func registerUndoImageChange(imageAttribute: PGLFilterAttributeImage,
+                                 oldImageList: PGLImageList) {
+        if oldImageList.isEmpty() {
+            return // nothing to revert to
+        }
+        undoManager?.registerUndo(withTarget: self ) {
+            target in
+            target.undoImageChange(imageAttribute: imageAttribute,
+                                   oldImageList: oldImageList)
+        }
+        undoManager?.setActionName("Change Image")
+        UIMenuSystem.main.setNeedsRevalidate()
+    }
+
+    func undoImageChange(imageAttribute: PGLFilterAttributeImage,
+                         oldImageList: PGLImageList) {
+
+        if let existingImageList = imageAttribute.inputCollection {
+                // case of inputStack and input priorfilter
+            registerRedoImageChange(
+                imageAttribute: imageAttribute,
+                oldImageList: existingImageList)
+
+        let targetFilter = imageAttribute.aSourceFilter
+        targetFilter.setUserPick(attribute: imageAttribute,
+                                 imageList: oldImageList)
+        // some filter classes override setUserPick
+
+        updateAfterImagePick(imageAttribute)
+
+        }
+
+    }
+
+    func registerRedoImageChange(imageAttribute: PGLFilterAttributeImage,
+                                 oldImageList: PGLImageList) {
+        if oldImageList.isEmpty() {
+            return
+        }
+        undoManager?.registerUndo(withTarget: self ) {
+            target in
+            target.undoImageChange(imageAttribute: imageAttribute,
+                                   oldImageList: oldImageList)
+        }
+        undoManager?.setActionName("Change Image")
+        UIMenuSystem.main.setNeedsRevalidate()
+    }
+}
+
+
+
 extension PGLAppStack {
     func restore( _ removedCell: PGLFilterIndent ) {
         // filter indent has filter, stack and filterPosition vars
 
 //        let targetIndentCell = filterAt(indexPath:  destinationRow)
-        var existingFilter: PGLSourceFilter?
         let targetStack = removedCell.stack
         let removedFilter = removedCell.filter
-        if targetStack.activeFilters.indices.contains(removedCell.filterPosition)
-            {
-                existingFilter = targetStack.activeFilters[removedCell.filterPosition]
-            }
 
         viewerStack = targetStack
         // reset the AppStack

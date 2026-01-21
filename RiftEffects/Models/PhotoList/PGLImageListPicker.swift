@@ -145,6 +145,18 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
             // when setting inputs to the parm controller
             // not used for the PGLSplitViewController case
 //            myTargetParm.postListSizeChange( newList: pickingImageList)
+
+            //register undo here
+            if let oldInputs = myTargetParm.inputCollection {
+                if !oldInputs.isEmpty() {
+                    if let parmController = controller as? PGLSelectParmController {
+                        parmController.registerUndoImageChange(
+                            imageAttribute: myTargetParm,
+                            oldImageList: oldInputs)
+                    }
+                }
+            }
+
             myTargetParm.inputCollection = pickingImageList
         } else {
             if let mySplitController = controller as? PGLSplitViewController {
