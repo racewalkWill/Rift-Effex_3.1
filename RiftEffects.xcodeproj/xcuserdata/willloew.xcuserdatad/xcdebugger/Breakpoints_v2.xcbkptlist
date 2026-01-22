@@ -7,32 +7,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "58962CA1-98A1-4E2D-852B-987033F4E7C4"
-            shouldBeEnabled = "Yes"
+            uuid = "F5FE872D-F033-4EFC-ABE5-0CD5827C052A"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/Stack/PGLAppStack.swift"
+            filePath = "RiftEffects/Models/EstimatedRunTime.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "427"
-            endingLineNumber = "427"
-            landmarkName = "addChildStackTo(parm:)"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "estimateStackRunSeconds()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "562484EF-7A4C-4CCC-B8BC-B1007C207209"
-            shouldBeEnabled = "Yes"
+            uuid = "490EA469-E41B-4727-8D03-35D0EDFA5177"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/Stack/PGLAppStack.swift"
+            filePath = "RiftEffects/Models/EstimatedRunTime.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "406"
-            endingLineNumber = "406"
-            landmarkName = "addChildStackBasic(_:_:)"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "estimateStackRunSeconds()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "794C4FDC-5025-4B78-9A7E-F9F8F9FA26C7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Controllers/PGLStackController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "807"
+            endingLineNumber = "807"
+            landmarkName = "toggleStackTitleAlbumCellsVisible()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

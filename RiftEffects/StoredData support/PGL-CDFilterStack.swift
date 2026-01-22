@@ -1447,6 +1447,7 @@ extension PGLFilterAttributeTime {
             cd = storedParmValue as! CDAttributeTime
         }
         cd.floatValue = uiSliderValue
+        cd.attributeValueDelta = attributeValueDelta as NSNumber?
 
     }
 
