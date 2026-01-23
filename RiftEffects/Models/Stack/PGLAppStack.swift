@@ -57,7 +57,7 @@ class PGLAppStack {
     var publishers = [any Cancellable]()
     var cancellable: (any Cancellable)?
     var appStackUndoManager = UndoManager()
-    var outputEstimateRunSeconds: Double = 0.0  // length of PGLCaptureOutput saved video
+    var runTimeSeconds: Int = 0  // length of PGLCaptureOutput saved video
 
     lazy var dataProvider: PGLStackProvider = {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate

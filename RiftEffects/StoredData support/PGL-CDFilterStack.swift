@@ -869,7 +869,11 @@ extension PGLAppStack {
 
     func saveToPhotoLibrary(metalRender: Renderer) {
         let targetStack =  self.viewerStackOrPushedFirstStack()!
-        if appRenderer.isRunningFrameUpdates() {
+                    // this should be outputStack ????
+
+        if  runTimeSeconds > 0 {
+            // appRenderer.isRunningFrameUpdates() {
+            metalRender.startCaptureSession(runTimeSeconds)
             metalRender.DoCapture = true
             DoNotDraw = false
             // triggers save of 2 sec video burst

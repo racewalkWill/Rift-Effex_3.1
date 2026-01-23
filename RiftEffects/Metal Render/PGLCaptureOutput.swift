@@ -15,7 +15,7 @@ class PGLCaptureOutput {
 
     var currentTime = CMTime.zero
     var frameCount: Int = 0
-    var maxFrames = 120  // 2 secs at 60 fps
+    var maxFrames: Int = 120  // 2 secs at 60 fps
     let videoPath = FileManager.default.temporaryDirectory.appendingPathComponent("video.mov")
     var writerInput: AVAssetWriterInput!
     var writer: AVAssetWriter!

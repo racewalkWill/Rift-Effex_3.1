@@ -403,6 +403,13 @@ class Renderer: NSObject, MTKViewDelegate {
 
 
 
+     func startCaptureSession(_ secondsToCapture: Int = 2) {
+         // default to 2 second save
+        myCaptureSession = PGLCaptureOutput(context: ciMetalContext, size: TargetSize)
+        myCaptureSession?.maxFrames = secondsToCapture * 60 // assuming 60 frames per second
+
+    }
+    
     func drawBasicCentered(in view: MTKView) {
             // adapted from sample app RenderMetalDestinationView
 //        NSLog (#function, String(describing: self))
@@ -523,7 +530,7 @@ class Renderer: NSObject, MTKViewDelegate {
                         // add to the output queue to save
 
                         if myCaptureSession == nil {
-                            myCaptureSession = PGLCaptureOutput(context: ciMetalContext, size: TargetSize)
+                            startCaptureSession()
                                 // CGSize(width: 1936.0, height: 1520.0 )
                         }
                         DoCapture =  myCaptureSession?.addFrame(ciOutputImage) ?? false

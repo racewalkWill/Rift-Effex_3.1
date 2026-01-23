@@ -52,6 +52,12 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     private var showStackTitleAlbumCells = false
     private var titleAlbumSectionRowCount: Int = 0
 
+    var runTimeSeconds: Int = 0 {
+        didSet {
+            appStack.runTimeSeconds = runTimeSeconds
+        }
+    }
+
     enum StackSections: Int {
         case header = 0
         case filters = 1
@@ -61,6 +67,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         case title = 0
         case album = 1
         case saveBtn = 2
+        case videoRunSecs = 3
     }
 
     // MARK: View LifeCycle
@@ -654,6 +661,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         let saveButtonsCellNib = UINib(nibName: PGLSaveButtonRow.nibName, bundle: nil)
         tableView.register(saveButtonsCellNib , forCellReuseIdentifier: PGLSaveButtonRow.reuseIdentifer)
 
+        let stackRunSecondsCellNib = UINib(nibName: PGLStackInfoRunSeconds.nibName, bundle: nil)
+        tableView.register(stackRunSecondsCellNib ,forCellReuseIdentifier: PGLStackInfoRunSeconds.reuseIdentifer)
+
         let effexButtonsCellNib = UINib(nibName: PGLEffexButtonsHeader.nibName, bundle: nil)
         tableView.register(effexButtonsCellNib , forHeaderFooterViewReuseIdentifier: PGLEffexButtonsHeader.reuseIdentifer)
     }
@@ -740,6 +750,24 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                     saveStackBtn = cell.saveBtn
                     saveStackBtn?.setTitle("Save", for: .normal)
                     return cell
+
+                case StackHeaderCell.videoRunSecs.rawValue  :
+                    guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoRunSeconds.reuseIdentifer, for: indexPath) as? PGLStackInfoRunSeconds else {
+                        fatalError("PGLStackController headerCell did not load")
+                    }
+                    // secondsValue is Int; assign from runTimeSeconds
+                    cell.secondsValue = Int(runTimeSeconds)
+                    // userSeconds.text expects String
+//                    cell.userSeconds.text = String(format: "%.0f", runTimeSeconds)
+                    cell.userSeconds.text = String(runTimeSeconds)
+                    cell.cellLabel.text = "Seconds:"
+                    // userText.text expects String; format from runTimeSeconds
+
+                    cell.userSeconds.tag = StackHeaderCell.videoRunSecs.rawValue
+                    cell.userSeconds.returnKeyType = .done
+                    cell.userSeconds.delegate = self
+                    return cell
+
                 default:
                         // or let cell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
 
@@ -793,10 +821,18 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     }
 
     func toggleStackTitleAlbumCellsVisible() {
+        var expandedSectionRowCount = 3
 
         showStackTitleAlbumCells = !showStackTitleAlbumCells
         if showStackTitleAlbumCells {
-            titleAlbumSectionRowCount = 3
+            if appStack.appRenderer.isRunningFrameUpdates() {
+                runTimeSeconds = Int(appStack.outputStack.estimateStackRunSeconds())
+                if runTimeSeconds > 0 {
+                    expandedSectionRowCount = 4
+                    // add a row for the video duration time
+                }
+            }
+            titleAlbumSectionRowCount = expandedSectionRowCount
         } else {
             titleAlbumSectionRowCount = 0
         }
@@ -804,7 +840,6 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
         tableView.reloadData()
 
-        let runTimeSeconds = appStack.outputStack.estimateStackRunSeconds()
         NSLog(#function + " runTimeSeconds: \(runTimeSeconds)")
     }
 
@@ -1202,11 +1237,21 @@ extension PGLStackController {
                 }
 
             case StackHeaderCell.album.rawValue:
-                    if newText != thisStack.stackType {
-                        thisStack.stackType = newText
-                        thisStack.exportAlbumName = thisStack.stackType
-                        postStackNameChange()
+                if newText != thisStack.stackType {
+                    thisStack.stackType = newText
+                    thisStack.exportAlbumName = thisStack.stackType
+                    postStackNameChange()
+                }
+
+            case StackHeaderCell.videoRunSecs.rawValue:
+                if let newValue = Int(newText) {
+                    if newValue >= 0 {
+                        runTimeSeconds = newValue
                     }
+
+                }
+
+
             default:
                 return
         }

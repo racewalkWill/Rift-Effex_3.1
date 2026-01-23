@@ -79,6 +79,8 @@
 		A3811C032DC57CE100A1A178 /* PGLRectangleGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811C022DC57CE100A1A178 /* PGLRectangleGenerator.swift */; };
 		A38735A72CDBD98F000EE038 /* PGLEffexButtonsHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */; };
 		A38735AB2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */; };
+		A389C2C02F22A180007B2ABA /* PGLStackRunSeconds.xib in Resources */ = {isa = PBXBuildFile; fileRef = A389C2BF2F22A180007B2ABA /* PGLStackRunSeconds.xib */; };
+		A389C2C22F22A22F007B2ABA /* PGLStackInfoRunSeconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = A389C2C12F22A22F007B2ABA /* PGLStackInfoRunSeconds.swift */; };
 		A38D76AB2DBAF42B00318585 /* Swift TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */; };
 		A38E6FF52DD0EBD300E050DC /* PGLFilterIndent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38E6FF42DD0EBD300E050DC /* PGLFilterIndent.swift */; };
 		A38F9D76250442B800B58F6B /* CVPixelBufferExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */; };
@@ -293,6 +295,8 @@
 		A384CF912B968DA300ACC220 /* iPad3.0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = iPad3.0.xctestplan; sourceTree = "<group>"; };
 		A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PGLEffexButtonsHeader.xib; sourceTree = "<group>"; };
 		A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLEffexButtonsHeader.swift; sourceTree = "<group>"; };
+		A389C2BF2F22A180007B2ABA /* PGLStackRunSeconds.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PGLStackRunSeconds.xib; sourceTree = "<group>"; };
+		A389C2C12F22A22F007B2ABA /* PGLStackInfoRunSeconds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackInfoRunSeconds.swift; sourceTree = "<group>"; };
 		A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Swift TestPlan.xctestplan"; sourceTree = "<group>"; };
 		A38E6FF42DD0EBD300E050DC /* PGLFilterIndent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterIndent.swift; sourceTree = "<group>"; };
 		A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVPixelBufferExtension.swift; sourceTree = "<group>"; };
@@ -648,6 +652,7 @@
 				A3BF506624D32A3400CD5114 /* TextCell.swift */,
 				A3651FA12A9BD4E1006F50F6 /* PGLStackAlbumHeader.swift */,
 				A3D04B122A8444A300E6DB16 /* PGLStackInfoHeader.swift */,
+				A389C2C12F22A22F007B2ABA /* PGLStackInfoRunSeconds.swift */,
 				A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */,
 				A333185D2CE42E5100FA8A45 /* PGLSaveButtonRow.swift */,
 				A3BF506724D32A3400CD5114 /* OutlineItemCell.swift */,
@@ -846,6 +851,7 @@
 				A3BF506124D32A3400CD5114 /* TableCell.xib */,
 				A3D04B132A8444A300E6DB16 /* PGLStackInfoHeader.xib */,
 				A3651FA22A9BD4E1006F50F6 /* PGLStackAlbumHeader.xib */,
+				A389C2BF2F22A180007B2ABA /* PGLStackRunSeconds.xib */,
 				A38735A62CDBD98F000EE038 /* PGLEffexButtonsHeader.xib */,
 				A333185B2CE42D5D00FA8A45 /* SaveButtons.xib */,
 			);
@@ -970,6 +976,7 @@
 				A3BF510224D32A3400CD5114 /* Main.storyboard in Resources */,
 				A320F62A26699FA8008F6090 /* PrivacyPolicy.rtf in Resources */,
 				A3D04B152A8444A300E6DB16 /* PGLStackInfoHeader.xib in Resources */,
+				A389C2C02F22A180007B2ABA /* PGLStackRunSeconds.xib in Resources */,
 				A38D76AB2DBAF42B00318585 /* Swift TestPlan.xctestplan in Resources */,
 				A3C49BF32E16ED4D001AC150 /* AirPlay.storyboard in Resources */,
 				A37D91622D5CF166006E1426 /* Root.strings in Resources */,
@@ -1149,6 +1156,7 @@
 				A3BF50FF24D32A3400CD5114 /* PGLAttributeUI.swift in Sources */,
 				A3552BEE2946AA7D002FBC72 /* PGLAttributeVectorNumeric.swift in Sources */,
 				A3AF92DB2D400921001E4785 /* PGLFilterAttributeAngle.swift in Sources */,
+				A389C2C22F22A22F007B2ABA /* PGLStackInfoRunSeconds.swift in Sources */,
 				A3BF50F224D32A3400CD5114 /* ListCell.swift in Sources */,
 				A3CB99C42BBAE5980015E03F /* PGLVectorScaling.swift in Sources */,
 				A3BF50F724D32A3400CD5114 /* TitleSupplementaryView.swift in Sources */,
