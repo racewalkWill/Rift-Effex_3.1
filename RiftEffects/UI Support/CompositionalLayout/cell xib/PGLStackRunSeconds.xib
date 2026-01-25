@@ -34,10 +34,6 @@
                             <action selector="userSecondChanged:" destination="KGk-i7-Jjw" eventType="valueChanged" id="NWQ-Rz-Exl"/>
                         </connections>
                     </textField>
-                    <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="VzW-xn-MHh">
-                        <rect key="frame" x="173" y="7" width="94" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    </stepper>
                 </subviews>
                 <constraints>
                     <constraint firstItem="Yyo-J2-ivl" firstAttribute="centerY" secondItem="bKe-xs-Afz" secondAttribute="centerY" id="4YT-wF-npi"/>
@@ -57,7 +53,7 @@
     </objects>
     <resources>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

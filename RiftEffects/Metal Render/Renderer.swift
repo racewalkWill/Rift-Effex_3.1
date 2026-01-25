@@ -539,6 +539,8 @@ class Renderer: NSObject, MTKViewDelegate {
                         if !DoCapture {
                             myCaptureSession = nil
                             NSLog("Renderer myCaptureSession set to nil")
+                            displaySaveCompletionAlert()
+
                         }
 
 
@@ -558,6 +560,23 @@ class Renderer: NSObject, MTKViewDelegate {
 
             }
         }
+    }
+
+    func displaySaveCompletionAlert() {
+
+        DispatchQueue.main.async {
+                // put back on the main UI loop for the user alert
+            let alert = UIAlertController(title: "Save Completed", message: "Completed video saved to Photos", preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default) )
+                                          // handler: { _ in
+//                Logger(subsystem: LogSubsystem, category: LogCategory).error("")
+//            }))
+//            let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
+            // this fails .. metalView is nil.. what is displaying ???
+            self.metalView?.window?.rootViewController?.present(alert, animated: true, completion: nil)
+        }
+
     }
 
     func animationState() -> PGLAnimationState {

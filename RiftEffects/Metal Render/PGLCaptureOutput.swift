@@ -254,9 +254,12 @@ class PGLCaptureOutput {
                 
             }
             videoWriterInput.markAsFinished()
+            NSLog(#function , " markAsFinished ")
+
 
             videoWriter.finishWriting { () -> Void in
-                NSLog(#function , "finishWriting ")
+                // This method returns immediately and causes its work to be performed asynchronously.
+                NSLog(#function , " finishWriting return handler block ")
 
                 PHPhotoLibrary.shared().performChanges({
                     PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: videoOutputURL)

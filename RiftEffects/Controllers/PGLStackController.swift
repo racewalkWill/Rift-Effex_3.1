@@ -66,8 +66,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     enum StackHeaderCell: Int {
         case title = 0
         case album = 1
-        case saveBtn = 2
-        case videoRunSecs = 3
+        case videoRunSecs = 2 // this one is skipped if no motion  or video
+        case saveBtn = 3
     }
 
     // MARK: View LifeCycle
@@ -426,7 +426,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                case 0:
                    // may be zero or 3
                    return titleAlbumSectionRowCount
-                   //  stackName, type, saveBtn input rows
+                   //  stackName, type, video secs, saveBtn input rows
                case 1:
                    return appStack.flatRowCount()
                default:
@@ -710,7 +710,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     fileprivate func titleAlbumCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
             // header
-
+       // titleAlbumSectionRowCount may be 0,3,4
         let myStack = appStack.outputStack
         if indexPath.section == 0 {
             switch indexPath.row {
@@ -742,31 +742,19 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                     albumUserTextCell = cell.userText
                     return cell
 
-                case StackHeaderCell.saveBtn.rawValue :
-                    guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLSaveButtonRow.reuseIdentifer, for: indexPath) as? PGLSaveButtonRow
-                    else { fatalError("PGLStackController did not load save buttons") }
-                    cell.cancelBtn.addTarget(self, action: #selector(cancelStackSave), for: .touchUpInside)
-                    cell.saveBtn.addTarget(self, action: #selector(saveStack), for: .touchUpInside)
-                    saveStackBtn = cell.saveBtn
-                    saveStackBtn?.setTitle("Save", for: .normal)
-                    return cell
 
                 case StackHeaderCell.videoRunSecs.rawValue  :
-                    guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoRunSeconds.reuseIdentifer, for: indexPath) as? PGLStackInfoRunSeconds else {
-                        fatalError("PGLStackController headerCell did not load")
+                    if titleAlbumSectionRowCount == 3 {
+                        // case of three rows.. omit the stackRunSeconds
+                        // answer the saveBtnRow
+                        return stackSaveBtnCell(toIndexPath: IndexPath(row: 0, section: titleAlbumSectionRowCount - 1))!
                     }
-                    // secondsValue is Int; assign from runTimeSeconds
-                    cell.secondsValue = Int(runTimeSeconds)
-                    // userSeconds.text expects String
-//                    cell.userSeconds.text = String(format: "%.0f", runTimeSeconds)
-                    cell.userSeconds.text = String(runTimeSeconds)
-                    cell.cellLabel.text = "Seconds:"
-                    // userText.text expects String; format from runTimeSeconds
+                    else {
+                       return stackRunSecondsCell(toIndexPath: IndexPath(row: 0, section: titleAlbumSectionRowCount - 1))!
+                    }
 
-                    cell.userSeconds.tag = StackHeaderCell.videoRunSecs.rawValue
-                    cell.userSeconds.returnKeyType = .done
-                    cell.userSeconds.delegate = self
-                    return cell
+                case StackHeaderCell.saveBtn.rawValue :
+                    return stackSaveBtnCell(toIndexPath: IndexPath(row: 0, section: titleAlbumSectionRowCount - 1))!
 
                 default:
                         // or let cell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
@@ -779,6 +767,35 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
             }
         }
         return UITableViewCell()
+    }
+
+    func stackSaveBtnCell(toIndexPath: IndexPath) -> UITableViewCell? {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLSaveButtonRow.reuseIdentifer, for: toIndexPath) as? PGLSaveButtonRow
+        else { fatalError("PGLStackController did not load save buttons") }
+        cell.cancelBtn.addTarget(self, action: #selector(cancelStackSave), for: .touchUpInside)
+        cell.saveBtn.addTarget(self, action: #selector(saveStack), for: .touchUpInside)
+        saveStackBtn = cell.saveBtn
+        saveStackBtn?.setTitle("Save", for: .normal)
+        return cell
+    }
+
+    func stackRunSecondsCell(toIndexPath: IndexPath) -> UITableViewCell? {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoRunSeconds.reuseIdentifer, for: toIndexPath) as? PGLStackInfoRunSeconds else {
+            fatalError("PGLStackController headerCell did not load")
+        }
+        // secondsValue is Int; assign from runTimeSeconds
+        cell.secondsValue = Int(runTimeSeconds)
+        // userSeconds.text expects String
+//                    cell.userSeconds.text = String(format: "%.0f", runTimeSeconds)
+        cell.userSeconds.text = String(runTimeSeconds)
+        cell.cellLabel.text = "Seconds:"
+        // userText.text expects String; format from runTimeSeconds
+
+        cell.userSeconds.tag = StackHeaderCell.videoRunSecs.rawValue
+        cell.userSeconds.returnKeyType = .done
+        cell.userSeconds.delegate = self
+        return cell
+
     }
 
 
@@ -822,14 +839,15 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     func toggleStackTitleAlbumCellsVisible() {
         var expandedSectionRowCount = 3
-
+                // without the video seconds save time cell row
+        runTimeSeconds = 0 // default
         showStackTitleAlbumCells = !showStackTitleAlbumCells
         if showStackTitleAlbumCells {
             if appStack.appRenderer.isRunningFrameUpdates() {
                 runTimeSeconds = Int(appStack.outputStack.estimateStackRunSeconds())
                 if runTimeSeconds > 0 {
                     expandedSectionRowCount = 4
-                    // add a row for the video duration time
+                    // add a row for the video seconds save time
                 }
             }
             titleAlbumSectionRowCount = expandedSectionRowCount
