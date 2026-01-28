@@ -11,6 +11,9 @@ import MetalKit
 import os
 import AVFoundation
 
+let PGLVideoHasSavedNotification = NSNotification.Name(rawValue: "PGLVideoHasSavedNotification")
+
+
 @MainActor var TargetSize = CGSize(width: 1040, height: 768)
 @MainActor var FullScreenTargetTransform = CGAffineTransform.identity
 @MainActor var DoNotDraw = false
@@ -566,15 +569,10 @@ class Renderer: NSObject, MTKViewDelegate {
 
         DispatchQueue.main.async {
                 // put back on the main UI loop for the user alert
-            let alert = UIAlertController(title: "Save Completed", message: "Completed video saved to Photos", preferredStyle: .alert)
 
-            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default) )
-                                          // handler: { _ in
-//                Logger(subsystem: LogSubsystem, category: LogCategory).error("")
-//            }))
-//            let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
-            // this fails .. metalView is nil.. what is displaying ???
-            self.metalView?.window?.rootViewController?.present(alert, animated: true, completion: nil)
+            let videoHasSavedNotification = Notification(name: PGLVideoHasSavedNotification)
+            NotificationCenter.default.post(videoHasSavedNotification)
+
         }
 
     }

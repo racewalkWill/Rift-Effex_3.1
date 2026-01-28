@@ -161,15 +161,6 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
 
     }
 
-   override func viewLayoutMarginsDidChange() {
-       super.viewLayoutMarginsDidChange()
-       Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
-    }
 
     override func updateProperties() {
         Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "-" + #function)")
@@ -242,22 +233,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         return alwaysReturnTrue
     }
 
-//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - \(#function)")
-//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - previousTraitCollection: \(String(describing: previousTraitCollection))")
-//        Logger(subsystem: LogSubsystem, category: LogCategory).notice("\(String(describing: self)) - traitCollection: \(String(describing: self.traitCollection))")
-//
-////        if !didConfigureColumns {
-////            loadNavigationControllers()
-////            didConfigureColumns = true
-////        }
-//
-////        if #available(iOS 26.0, *) {
-////            setNeedsUpdateProperties()
-////            Logger(subsystem: LogSubsystem, category: LogCategory).notice("\( String(describing: self) + "- calls setNeedsUpdateProperties") ")
-////        }
-//
-//    }
+
         // MARK: Menus
 
         override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {

@@ -95,7 +95,7 @@ class PGLCaptureOutput {
             saveVideoToLibrary(outputSize: TargetSize,
                                inContext: metalContext, framesToSave: framesToSave)
             framesToSave = [CIImage]() // clear the frame capture
-//            NSLog("Saving video to photo library")
+            NSLog("Frame count completed Saving video to photo library")
         }
             // add the video frame
         let shouldContinue = addFrameCount()
@@ -113,51 +113,6 @@ class PGLCaptureOutput {
         }
     }
 
-    func finishVideo() {
-
-        Task { [writer, videoPath] in
-            guard let localWriter = writer else { return }
-            let localVideoPath = videoPath
-            writerInput.markAsFinished()
-            await localWriter.finishWriting()
-
-            createLivePhoto(videoURL: localVideoPath) { livePhoto in
-                guard livePhoto != nil else {
-                    print("Failed to create Live Photo")
-                    return
-                }
-
-                PHPhotoLibrary.shared().performChanges {
-                    let creationRequest = PHAssetCreationRequest.forAsset()
-                    let options = PHAssetResourceCreationOptions()
-
-                        //            creationRequest.addResource(with: .photo, fileURL: photoURL, options: options)
-                    creationRequest.addResource(with: .fullSizeVideo, fileURL: localVideoPath, options: options)
-                }
-                    //                { success, error in
-                    //                    if success {
-                    //                        print("Live Photo saved successfully")
-                    //                    } else if let error = error {
-                    //                        print("Error saving Live Photo: \(error.localizedDescription)")
-                    //                    }
-                    //
-                    //                }
-
-                    //                saveToPhotos(videoURL: localVideoPath, completion: { success, error in
-                    //                    if success {
-                    //                        print("Live Photo saved successfully")
-                    //                    } else if let error = error {
-                    //                        print("Error saving Live Photo: \(error.localizedDescription)")
-                    //                    }
-                    //                })
-
-            }
-
-        }  // end task
-
-    }
-
-
 
     func saveVideoToLibrary(outputSize: CGSize, inContext: CIContext, framesToSave: [CIImage])  {
         let images = framesToSave
@@ -166,6 +121,7 @@ class PGLCaptureOutput {
         guard let documentDirectory = urls.first else {
             fatalError("documentDir Error")
         }
+        NSLog(#function , " frameaToSave.count = \(framesToSave.count)" )
 
         let videoOutputURL = documentDirectory.appendingPathComponent("OutputVideo.mov")
 
@@ -208,7 +164,7 @@ class PGLCaptureOutput {
             // now 10/60 = 1/6 sec
             // was  1/60th frame duration or 60 frames/second
         // was value: 100
-        NSLog("saveVideo frameDuration = \(frameDuration)" )
+//        NSLog("saveVideo frameDuration = \(frameDuration)" )
         videoWriter.overallDurationHint = CMTimeMultiply(frameDuration, multiplier: Int32(framesToSave.count))
         var frameCount: Int64 = 10
             // skips the first ten frames that have a crop offset..
@@ -228,7 +184,7 @@ class PGLCaptureOutput {
                     let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
 
                     NSLog("saveVideo lastFrameTime = \(lastFrameTime) ")
-                    NSLog("saveVideo presentationTime = \(presentationTime)")
+//                    NSLog("saveVideo presentationTime = \(presentationTime)")
 
                     var pixelBuffer: CVPixelBuffer? = nil
                     let status: CVReturn = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pixelBufferAdaptor.pixelBufferPool!, &pixelBuffer)
@@ -246,7 +202,7 @@ class PGLCaptureOutput {
                         if appendSucceeded {
                             frameCount += 1
                             NSLog (" appendSucceeded - incrememt frameCount to \(frameCount)")
-                            NSLog (" appendSucceeded presentationTime = \(presentationTime)")
+//                            NSLog (" appendSucceeded presentationTime = \(presentationTime)")
                         }
                         // what if appendSucceeded is never true for some append step?? how to break
                     }
@@ -269,7 +225,7 @@ class PGLCaptureOutput {
                         NSLog (#function , "Error saving video to librayr: \(error.localizedDescription)")
                     }
                     if saved {
-                        NSLog (#function , "Video save to library")
+                        NSLog (#function , "videoWriter finishWriting Video save to library")
 
                     }
                 }
@@ -286,17 +242,5 @@ class PGLCaptureOutput {
             completion(livePhoto)
         }
     }
-
-    // Save LivePhoto to Photos Library
-//    func saveToPhotos(photoURL: URL, videoURL: URL, completion: @escaping (Bool, (any Error)?) -> Void) {
-//    func saveToPhotos( videoURL: URL, completion: @escaping (Bool, (any Error)?) -> Void) {
-//
-//        completionHandler:  (success, error) in
-//           completion(success, error)
-//
-//    }
-
-
-
 
 }

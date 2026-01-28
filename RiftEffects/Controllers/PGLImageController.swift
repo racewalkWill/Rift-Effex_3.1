@@ -969,15 +969,17 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         }
         publishers.append(cancellable!)
 
-//        cancellable = myCenter.publisher(for: PGLVideoRunning)
-//            .sink() { [weak self]
-//            myUpdate in
-//                self?.appStack.videoMgr.setStartStop(newState: .Running)
-//
-//
-//            }
-//
-//        publishers.append(cancellable!)
+        cancellable = myCenter.publisher(for: PGLVideoHasSavedNotification)
+            .sink() { [weak self]
+            myUpdate in
+                let alert = UIAlertController(title: "Save Completed", message: "Video has been saved to Photos", preferredStyle: .alert)
+
+                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default) )
+
+                self?.present(alert, animated: true, completion: nil)
+            }
+
+        publishers.append(cancellable!)
 
         cancellable = myCenter.publisher(for: PGLAnimationStateChanged)
             .sink() {
