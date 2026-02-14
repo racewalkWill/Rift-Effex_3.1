@@ -283,14 +283,14 @@ extension PGLStackImageContainerController {
 
         }
 
-        if action == UndoActionSelector  {
+        if  action == #selector(undo)  {
             NSLog(#function  + String(describing: self ) +  " #selector(undo) ")
                 //            NSLog("undoManager \(String(describing: undoManager))")
             let isUndoable = undoManager?.canUndo ?? false
                 //            NSLog("undoManager canUndo \(isUndoable)")
             return isUndoable
         }
-        if action == RedoActionSelector {
+        if  action == #selector(redo)  {
                 //            NSLog("undoManager \(String(describing: undoManager))")
             let isRedoable = undoManager?.canRedo ?? false
                 //            NSLog("undoManager isRedoable \(isRedoable)")
@@ -311,6 +311,16 @@ extension PGLStackImageContainerController {
     override func paste(_ sender: Any?) {
         splitViewController?.paste(sender)
     }
+
+    @objc  func undo( _: Any?) {
+  //        NSLog(#function + String(describing: self ))
+          undoManager?.undo()
+      }
+
+      @objc  func redo( _: Any?) {
+  //          NSLog(#function + String(describing: self ))
+            undoManager?.redo()
+        }
 
 
 }

@@ -33,8 +33,8 @@ enum SliderColor: Int {
     case Red = 3
 }
 
-let UndoActionSelector = sel_registerName("undo:")
-let RedoActionSelector = sel_registerName("redo:")
+//let UndoActionSelector = sel_registerName("undo:")
+//let RedoActionSelector = sel_registerName("redo:")
 
 let  PGLHideParmControlsOnFilterChange = NSNotification.Name(rawValue: "PGLHideParmControlsOnFilterChange")
 //let  PGLOutputImageChange = NSNotification.Name(rawValue: "PGLOutputImageChange")
@@ -616,14 +616,15 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         }
 
 
-        if action == UndoActionSelector  {
+        if action == #selector(undo)   {
 //            NSLog(#function  + String(describing: self ) +  " #selector(undo) ")
 //            NSLog("undoManager \(String(describing: undoManager))")
             let isUndoable = undoManager?.canUndo ?? false
 //            NSLog("undoManager canUndo \(isUndoable)")
             return isUndoable
         }
-        if action == RedoActionSelector {
+        if action == #selector(redo)   {
+                //            NSLog(#function  + String(de {
 //            NSLog("undoManager \(String(describing: undoManager))")
             let isRedoable = undoManager?.canRedo ?? false
 //            NSLog("undoManager isRedoable \(isRedoable)")
