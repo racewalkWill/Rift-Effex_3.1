@@ -29,8 +29,9 @@ extension PGLStackController {
 //        let currentActiveIndex = currentStack.activeFilterIndex
 
         if let myUndoManager = undoManager {
-            myUndoManager.registerUndo(withTarget: self) { target in
-                target.undoRemoveFilterFromStack(removedCell: removedCell)
+            myUndoManager.registerUndo(withTarget: self) { [weak self] _ in
+                guard let self = self else { return }
+                self.undoRemoveFilterFromStack(removedCell: removedCell)
             }
             myUndoManager.setActionName("Delete Filter")
 
@@ -49,11 +50,11 @@ extension PGLStackController {
                 return }
 
         if let myUndoManager = undoManager {
-            myUndoManager.registerUndo(withTarget: self) { target in
-                    //                target.appStack.setFilterChangeModeToAdd()
+            myUndoManager.registerUndo(withTarget: self) { [weak self] _ in
+                    //                self.appStack.setFilterChangeModeToAdd()
                 // reset the viewerStack and index
-                let newIndex = IndexPath(row:flatArrayPosition, section: StackSections.filters.rawValue)
-                target.removeFilter(indexPath: newIndex)
+                let newIndex = IndexPath(row: flatArrayPosition, section: StackSections.filters.rawValue)
+                self?.removeFilter(indexPath: newIndex)
             }
             myUndoManager.setActionName("Delete Filter")
             UIMenuSystem.main.setNeedsRevalidate()
@@ -66,9 +67,9 @@ extension PGLStackController {
 extension PGLMainFilterController {
 
     func registerUndoAddFilter(_ newFilter: PGLSourceFilter) {
-        undoManager?.registerUndo(withTarget: self ) {
-            target in
-            target.undoAddFilter(newFilter)
+        undoManager?.registerUndo(withTarget: self ) { [weak self] _ in
+            guard let self = self else { return }
+            self.undoAddFilter(newFilter)
         }
         undoManager?.setActionName("Add Filter")
         UIMenuSystem.main.setNeedsRevalidate()
@@ -78,13 +79,13 @@ extension PGLMainFilterController {
         // tell stackController
 
         appStack.viewerStack.undoAddFilter(oldFilter: oldFilter)
-        undoManager?.registerUndo(withTarget: self ) {
-            target in
-            target.appStack.setFilterChangeModeToAdd()
+        undoManager?.registerUndo(withTarget: self ) { [weak self] _ in
+            guard let self = self else { return }
+            self.appStack.setFilterChangeModeToAdd()
                 // the addfilter set the mode to replace..
                 // just add back not replace
 
-            target.performBasicPick(filter: oldFilter)
+            self.performBasicPick(filter: oldFilter)
 
         }
 //        NSLog(#function + " \(String(describing: undoManager))" )
@@ -110,10 +111,10 @@ extension PGLSelectParmController {
         if oldImageList.isEmpty() {
             return // nothing to revert to
         }
-        undoManager?.registerUndo(withTarget: self ) {
-            target in
-            target.undoImageChange(imageAttribute: imageAttribute,
-                                   oldImageList: oldImageList)
+        undoManager?.registerUndo(withTarget: self ) { [weak self] _ in
+            guard let self = self else { return }
+            self.undoImageChange(imageAttribute: imageAttribute,
+                                 oldImageList: oldImageList)
         }
         undoManager?.setActionName("Change Image")
         UIMenuSystem.main.setNeedsRevalidate()
@@ -167,10 +168,10 @@ extension PGLSelectParmController {
         if oldImageList.isEmpty() {
             return
         }
-        undoManager?.registerUndo(withTarget: self ) {
-            target in
-            target.undoImageChange(imageAttribute: imageAttribute,
-                                   oldImageList: oldImageList)
+        undoManager?.registerUndo(withTarget: self ) { [weak self] _ in
+            guard let self = self else { return }
+            self.undoImageChange(imageAttribute: imageAttribute,
+                                 oldImageList: oldImageList)
         }
         undoManager?.setActionName("Change Image")
         UIMenuSystem.main.setNeedsRevalidate()
@@ -314,7 +315,7 @@ extension PGLStackImageContainerController {
 
     @objc  func undo( _: Any?) {
   //        NSLog(#function + String(describing: self ))
-          undoManager?.undo()
+        undoManager?.undo() 
       }
 
       @objc  func redo( _: Any?) {

@@ -640,11 +640,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
   @objc  func undo( _: Any?) {
 //        NSLog(#function + String(describing: self ))
+        if (undoManager?.canUndo ?? false) == false { return }
         undoManager?.undo()
     }
 
     @objc  func redo( _: Any?) {
 //          NSLog(#function + String(describing: self ))
+        if (undoManager?.canRedo ?? false) == false { return }
           undoManager?.redo()
       }
 

@@ -421,7 +421,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
                     discoverabilityTitle: PGLMenuLabel.Undo.rawValue,
                     attributes: unDoAttribute
                 ) { action in
-                    self.undoManager?.undo()
+                    if (self.undoManager?.canUndo ?? false) == false { return }
+                        self.undoManager?.undo()
                 }
                 completion([theUndo])
             }
@@ -440,6 +441,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
                     discoverabilityTitle: PGLMenuLabel.Redo.rawValue,
                     attributes: unDoAttribute
                 ) { action in
+                    if (self.undoManager?.canRedo ?? false) == false { return }
                     self.undoManager?.redo()
                 }
                 completion([theRedo])

@@ -1118,10 +1118,10 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
        // let positionOfRemovedFilter = thisStack.activeFilterIndex
         let positionOfRemovedFilter = cellIndent.filterPosition
 
-        if let removedFilter = thisStack.removeFilter(position: positionOfRemovedFilter)     {
+        _ = thisStack.removeFilter(position: positionOfRemovedFilter)     
             //registerUndoRemoveFilter( removedFilter)
 //            registerUndoRemoveFilter( removedFilter, oldIndex: cellIndent)
-            }
+
 
         registerUndoRemoveFilter( cellIndent)
 

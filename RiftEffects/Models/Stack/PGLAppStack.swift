@@ -22,6 +22,8 @@ let PGLSelectActiveStackRow = NSNotification.Name(rawValue: "PGLSelectActiveStac
 let  PGLOptimizeStack = NSNotification.Name(rawValue: "PGLOptimizeStack")
 let PGLRunLuminanceMeasureFlag = NSNotification.Name(rawValue: "PGLRunLuminanceMeasureFlag")
 
+let PGLUndoManagerLevels = 8
+
 enum StackDisplayMode: String {
      case All
      case Single
@@ -115,6 +117,8 @@ class PGLAppStack {
 
             }
         publishers.append(cancellable!)
+
+        appStackUndoManager.levelsOfUndo = PGLUndoManagerLevels
 
 
     }
@@ -318,6 +322,7 @@ class PGLAppStack {
                                            // holds point and textfield input
         parms =  [String : PGLFilterAttribute]()
         appStackUndoManager = UndoManager()
+        appStackUndoManager.levelsOfUndo = PGLUndoManagerLevels
 
              // nil out refs so the memory is released
     }
