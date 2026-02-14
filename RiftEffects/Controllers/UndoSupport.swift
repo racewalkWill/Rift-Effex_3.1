@@ -94,8 +94,19 @@ extension PGLMainFilterController {
 }
 
 extension PGLSelectParmController {
+
+
     func registerUndoImageChange(imageAttribute: PGLFilterAttributeImage,
                                  oldImageList: PGLImageList) {
+
+
+        if (traitCollection.userInterfaceIdiom == .phone){
+            // in iOS26.3 there is a crash on the iPhone
+            // ERROR Could not cast value of type 'AGXG16GFamilyComputeProgram' (0x1157133d8) to 'RiftEffects.PGLSelectParmController' (0x10264c490).
+            // iPad is okay - possible Apple iOS bug
+            return
+        }
+
         if oldImageList.isEmpty() {
             return // nothing to revert to
         }
@@ -110,6 +121,13 @@ extension PGLSelectParmController {
 
     func undoImageChange(imageAttribute: PGLFilterAttributeImage,
                          oldImageList: PGLImageList) {
+
+        if (traitCollection.userInterfaceIdiom == .phone){
+            // in iOS26.3 there is a crash on the iPhone
+            // ERROR Could not cast value of type 'AGXG16GFamilyComputeProgram' (0x1157133d8) to 'RiftEffects.PGLSelectParmController' (0x10264c490).
+            // iPad is okay - possible Apple iOS bug
+            return
+        }
 
         if imageAttribute.inputParmType() == .inputChildStack {
             return  // needs work
@@ -138,6 +156,14 @@ extension PGLSelectParmController {
 
     func registerRedoImageChange(imageAttribute: PGLFilterAttributeImage,
                                  oldImageList: PGLImageList) {
+
+        if (traitCollection.userInterfaceIdiom == .phone){
+            // in iOS26.3 there is a crash on the iPhone
+            // ERROR Could not cast value of type 'AGXG16GFamilyComputeProgram' (0x1157133d8) to 'RiftEffects.PGLSelectParmController' (0x10264c490).
+            // iPad is okay - possible Apple iOS bug
+            return
+        }
+
         if oldImageList.isEmpty() {
             return
         }
@@ -202,6 +228,90 @@ extension PGLAppStack {
         // and the targetStack parentAttribute reset to point to the parm parent?
 
     }
+
+}
+
+extension PGLStackImageContainerController {
+//    var undoAction: UIAction {
+//           UIAction(
+//               title: PGLMenuLabel.Undo.rawValue,
+//               image: UIImage(systemName: "Undo"),
+//               identifier: PGLImageController.EditMenuIdentifier,
+//               discoverabilityTitle: PGLMenuLabel.Undo.rawValue,
+//               attributes: []
+//           ) { [weak self] _ in
+//               guard let self = self else { return }
+//               self.undo(self.editButtonItem)
+//           }
+//       }
+//   
+//       var redoAction: UIAction {
+//           UIAction(
+//               title: PGLMenuLabel.Redo.rawValue,
+//               image: UIImage(systemName: "Undo"),
+//               identifier: PGLImageController.EditMenuIdentifier,
+//               discoverabilityTitle: PGLMenuLabel.Redo.rawValue,
+//               attributes: []
+//           ) { [weak self] _ in
+//               guard let self = self else { return }
+//               self.redo(self.editButtonItem)
+//           }
+//       }
+//
+//    func undo(_ sender: UIBarButtonItem) {
+//        // need to ask the undoManager if there
+////        self.containerStackController.undoRemoveFilterFromStack(removedCell: nil)
+//
+//    }
+//
+//    func redo(_ sender: UIBarButtonItem) {
+////        self.containerStackController.undoRemoveFilterFromStack(removedCell: nil)
+//    }
+
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        NSLog(#function + String(describing: self ) + (String(describing: action)))
+          if action == #selector(paste(_:)) {
+
+              let hasImages =   UIPasteboard.general.hasImages
+//              NSLog(#function + "hasImages:\(hasImages) "  + String(describing: self ))
+              return hasImages
+          }
+
+        if action == #selector(copy(_ : )) {
+//            NSLog(#function  + String(describing: self ) +  " #selector(copy) ")
+            return true // image controller always has an image.. maybe CIImage.empty
+
+        }
+
+        if action == UndoActionSelector  {
+            NSLog(#function  + String(describing: self ) +  " #selector(undo) ")
+                //            NSLog("undoManager \(String(describing: undoManager))")
+            let isUndoable = undoManager?.canUndo ?? false
+                //            NSLog("undoManager canUndo \(isUndoable)")
+            return isUndoable
+        }
+        if action == RedoActionSelector {
+                //            NSLog("undoManager \(String(describing: undoManager))")
+            let isRedoable = undoManager?.canRedo ?? false
+                //            NSLog("undoManager isRedoable \(isRedoable)")
+            return isRedoable
+        }
+
+//        else {
+//            return super.canPerformAction(action, withSender: sender)
+        return false  // do not run up the UIResponder chain
+//        }
+
+    }
+
+    override func copy(_ sender: Any?) {
+        splitViewController?.copy(sender)
+    }
+
+    override func paste(_ sender: Any?) {
+        splitViewController?.paste(sender)
+    }
+
 
 }
 

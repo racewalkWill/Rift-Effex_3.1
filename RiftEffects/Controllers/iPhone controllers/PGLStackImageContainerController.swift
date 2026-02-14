@@ -9,12 +9,26 @@
 import UIKit
 import os
 /// iPhone two column Stack and Image
-class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuInteractionDelegate {
+class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor UIEditMenuInteractionDelegate {
         //  2024-05-22 changed to use the super class PGLColumns.control and PGLColumns.imageViewer
         // removed duplicate vars var containerImageController,containerStackController
         // two vars pointed to the same controller - memory issue
 
     var editMenuInteraction: UIEditMenuInteraction?
+    
+    var containerImageController: PGLCompactImageController?
+    var containerStackController: PGLStackController?
+
+    override var undoManager: UndoManager? {
+           // Return a shared  undo manager
+        if let myAppStack = appStack {
+            return myAppStack.appStackUndoManager }
+        else {
+             return  super.undoManager
+            }
+       }
+
+    var appStack: PGLAppStack?
 
     deinit {
 //        releaseVars()
@@ -22,8 +36,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuI
     }
 
     override func viewDidLoad() {
-        var containerImageController: PGLCompactImageController?
-        var containerStackController: PGLStackController?
+
         super.viewDidLoad()
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         // Do any additional setup after loading the view.
@@ -46,13 +59,11 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuI
         setHelpBtnMenu()
         setTemplateBtnMenu()
 
-
-
         // should implement delegate methods
          editMenuInteraction = UIEditMenuInteraction(delegate: self)
          if editMenuInteraction != nil {
-                view.addInteraction(editMenuInteraction!)
-                setEditBtnMenu(theEditBtn: editBtn)
+             view.addInteraction(editMenuInteraction!)
+             editBtn.menu = setEditBtnMenu()
             }
 
 //        setEditBtnMenu(hasClipBoardImages: false) // default
@@ -82,7 +93,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuI
             if let userDataDict = myUpdate.userInfo {
                 // isViewLoaded or isBeingPresented??
                 if let newState = userDataDict["animationState"]  as? PGLAnimationState  {
-                    containerImageController?.setAnimation(newState , self!.toggleAnimationPauseBtn)
+                    self?.containerImageController?.setAnimation(newState , self!.toggleAnimationPauseBtn)
 //                    NSLog(#function + "PGLStackImageContainer PGLAnimationStateChanged toggleAnimationPauseBtn \(String(describing: self?.toggleAnimationPauseBtn))")
 
                 }
@@ -120,6 +131,13 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuI
         }
         publishers.append(cancellable!)
 
+        guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
+            else { Logger(subsystem: LogSubsystem, category: LogCategory).fault (" PGLStackImageContainerController viewDidLoad error AppDelegate not loaded")
+                return
+        }
+        appStack = myAppDelegate.appStack
+
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -147,6 +165,23 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuI
                interaction.presentEditMenu(with: configuration)
                // same as protocol UIEditMenuInteractionDelegate #editMenuInteraction(_:menuFor:suggestedActions:)
            }
+    }
+
+    func editMenuInteraction(
+        _ interaction: UIEditMenuInteraction,
+        menuFor configuration: UIEditMenuConfiguration,
+        suggestedActions: [UIMenuElement]
+    ) -> UIMenu? {
+
+        let myEditMenu = setEditBtnMenu()
+
+        return myEditMenu
+
+
+
+//        menu.addObserver(self, forKeyPath: "selectedElement", options: .new, context: nil)
+//        menu.addObserver(self, forKeyPath: "isEnabled", options: .new, context: nil)
+
     }
 
 
@@ -340,11 +375,11 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuI
 
     }
 
-    func setEditBtnMenu (theEditBtn: UIBarButtonItem) {
+    func setEditBtnMenu () -> UIMenu? {
         // based on example code in Apple app 'ControlMenus'
         //  - class DeferredMenuElementDemoViewController #viewDidLoad
         guard let imageViewerController = imageController()
-            else { return }
+            else { return nil }
 
         let copyAction = UIAction(
             title: PGLMenuLabel.Copy.rawValue,
@@ -372,14 +407,63 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, UIEditMenuI
 
             }
         })
+
+        let undoAction =
+        UIDeferredMenuElement({ completion in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                let hasUndo = self.undoManager?.canUndo ?? false
+                let unDoAttribute: UIMenuElement.Attributes = hasUndo ? [] : [.disabled]
+
+                let theUndo = UIAction(
+                title: PGLMenuLabel.Undo.rawValue,
+//                    image: UIImage(systemName: "arrow.2.circlepath.circle"),
+                    identifier: PGLImageController.EditMenuIdentifier,
+                    discoverabilityTitle: PGLMenuLabel.Undo.rawValue,
+                    attributes: unDoAttribute
+                ) { action in
+                    self.undoManager?.undo()
+                }
+                completion([theUndo])
+            }
+        })
+
+        let redoAction =
+        UIDeferredMenuElement({ completion in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                let hasRedo = self.undoManager?.canRedo ?? false
+                let unDoAttribute: UIMenuElement.Attributes = hasRedo ? [] : [.disabled]
+
+                let theRedo = UIAction(
+                title: PGLMenuLabel.Redo.rawValue,
+//                    image: UIImage(systemName: "arrow.2.circlepath.circle"),
+                    identifier: PGLImageController.EditMenuIdentifier,
+                    discoverabilityTitle: PGLMenuLabel.Redo.rawValue,
+                    attributes: unDoAttribute
+                ) { action in
+                    self.undoManager?.redo()
+                }
+                completion([theRedo])
+            }
+        })
+
+        var menuChildern = [copyAction, pasteAction]
+        if self.undoManager?.canUndo ?? false {
+            menuChildern.append(undoAction)
+        }
+        if self.undoManager?.canRedo ?? false {
+            menuChildern.append(redoAction)
+        }
+
         let buttonEditMenu = UIMenu(
             title: "",
             image: nil,
             identifier: nil,
-            children: [copyAction, pasteAction]
+            children: menuChildern
         )
-        theEditBtn.menu = buttonEditMenu
+        return buttonEditMenu
+//                theEditBtn.menu = buttonEditMenu
     }
+
 
     func updateNavigationBar() {
 
