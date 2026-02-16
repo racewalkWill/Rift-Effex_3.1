@@ -193,6 +193,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PGLCISequenced.register()
         PGLCopyToOutputCIFilter.register()
         PGLPolygonGradientCI.register()
+//        PGLKenBurnsCI.register()
 //        PGLPasteUIImageFilter.register()
     }
     

@@ -68,6 +68,8 @@
 		A37426BB2B7FD5AB001A5EC7 /* PGLViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37426BA2B7FD5AB001A5EC7 /* PGLViewControllerExtension.swift */; };
 		A375F25F26DFE47E00721D3A /* PGLStackProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A375F25E26DFE47E00721D3A /* PGLStackProvider.swift */; };
 		A37D23AE2825C27D00EE3723 /* PGLParmImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37D23AD2825C27D00EE3723 /* PGLParmImageController.swift */; };
+		A37D84F42F4226D70058669F /* PGLKenBurnsFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37D84F32F4226D70058669F /* PGLKenBurnsFilter.swift */; };
+		A37D84F62F4285570058669F /* PGLKenBurnsCI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37D84F52F4285570058669F /* PGLKenBurnsCI.swift */; };
 		A37D91512D5CEFC1006E1426 /* PGLRectangleFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37D91502D5CEFC1006E1426 /* PGLRectangleFilter.swift */; };
 		A37D91552D5CF0FC006E1426 /* PGLDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37D91542D5CF0FB006E1426 /* PGLDetector.swift */; };
 		A37D91622D5CF166006E1426 /* Root.strings in Resources */ = {isa = PBXBuildFile; fileRef = A37D915E2D5CF166006E1426 /* Root.strings */; };
@@ -283,6 +285,8 @@
 		A37426BA2B7FD5AB001A5EC7 /* PGLViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLViewControllerExtension.swift; sourceTree = "<group>"; };
 		A375F25E26DFE47E00721D3A /* PGLStackProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackProvider.swift; sourceTree = "<group>"; };
 		A37D23AD2825C27D00EE3723 /* PGLParmImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLParmImageController.swift; sourceTree = "<group>"; };
+		A37D84F32F4226D70058669F /* PGLKenBurnsFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLKenBurnsFilter.swift; sourceTree = "<group>"; };
+		A37D84F52F4285570058669F /* PGLKenBurnsCI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLKenBurnsCI.swift; sourceTree = "<group>"; };
 		A37D91502D5CEFC1006E1426 /* PGLRectangleFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLRectangleFilter.swift; sourceTree = "<group>"; };
 		A37D91542D5CF0FB006E1426 /* PGLDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLDetector.swift; sourceTree = "<group>"; };
 		A37D915D2D5CF166006E1426 /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en.lproj; path = "Settings 2.bundle/en.lproj"; sourceTree = "<group>"; };
@@ -790,6 +794,8 @@
 				A35D412C294B678B00EDEB4E /* PGLVectorBasedFilter.swift */,
 				A3CA2BFE295A01FD00502A8A /* PGLConvolutionFilter.swift */,
 				A3D68B302D1DC895007FD92E /* PGLMaskFilter.swift */,
+				A37D84F32F4226D70058669F /* PGLKenBurnsFilter.swift */,
+				A37D84F52F4285570058669F /* PGLKenBurnsCI.swift */,
 			);
 			path = Filters;
 			sourceTree = "<group>";
@@ -1140,6 +1146,7 @@
 				A357B17C2950F60D00331980 /* CGAffineTransform.swift in Sources */,
 				A3BF50E524D32A3400CD5114 /* PGLFilterCategoryIndex.swift in Sources */,
 				A35FF77926DC316400D78252 /* PGLCoreDataStack.swift in Sources */,
+				A37D84F62F4285570058669F /* PGLKenBurnsCI.swift in Sources */,
 				A342AE3026C333BA00D14ECB /* PGLRandomFilterAction.swift in Sources */,
 				A3CA2BFF295A01FD00502A8A /* PGLConvolutionFilter.swift in Sources */,
 				A3DD2BD82919964700295DF1 /* PGLPopUpOpenStack.swift in Sources */,
@@ -1160,6 +1167,7 @@
 				A3BF50F224D32A3400CD5114 /* ListCell.swift in Sources */,
 				A3CB99C42BBAE5980015E03F /* PGLVectorScaling.swift in Sources */,
 				A3BF50F724D32A3400CD5114 /* TitleSupplementaryView.swift in Sources */,
+				A37D84F42F4226D70058669F /* PGLKenBurnsFilter.swift in Sources */,
 				A3FA93E42E958C7D008859D5 /* PGLSplitViewDelegate.swift in Sources */,
 				A3BF511024D32A3400CD5114 /* PGLAppStack.swift in Sources */,
 				A3E593B32541F0FD0001EDF9 /* PGLFilterCDDataTransformer.swift in Sources */,

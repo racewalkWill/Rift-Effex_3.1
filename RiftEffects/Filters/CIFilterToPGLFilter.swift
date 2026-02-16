@@ -24,6 +24,8 @@ class CIFilterToPGLFilter {
             "CIMaximumScaleTransform" : [ PGLScaleUpFrame.self , PGLPasteUIImageFilter.self],
             "CICrop": [PGLRectangleFilter.self, PGLMaskFilter.self] ,
 
+            kKenBurnsDissolve: [PGLKenBurnsFilter.self],
+
             "CIClamp": [PGLRectangleFilter.self] ,
             "CIPerspectiveTransformWithExtent": [PGLRectangleFilter.self] ,
 //            "CIGaussianGradient": [PGLScalingFilter.self] ,
@@ -31,7 +33,7 @@ class CIFilterToPGLFilter {
             kPFaceFilter : [PGLDetectorFilter.self],
             kPBumpFace : [PGLDetectorFilter.self],
             kPBumpBlend : [PGLBumpBlend.self] ,
-            "CIDissolveTransition" : [  PGLTransitionFilter.self  ],
+            "CIDissolveTransition" : [  PGLTransitionFilter.self, PGLKenBurnsFilter.self  ],
 //             PGLFaceTransitionFilter.self,  PGLBumpTransitionFilter.self  , PGLDissolveWrapperFilter.self  PGLDissolveWrapperFilter is NOT a user facing filter.. only use internally
             kPImages : [PGLTransitionFilter.self ],
             "CILanczosScaleTransform" : [ PGLScaleDownFrame.self] ,

@@ -57,6 +57,8 @@ class PGLFilterConstructor: NSObject,  CIFilterConstructor {
 
             case k4SidedGradient: return PGLPolygonGradientCI()
 
+//            case kKenBurnsDissolve: return PGLKenBurnsCI()
+
             default:
                 return CIFilter(name: withName)!
         }
