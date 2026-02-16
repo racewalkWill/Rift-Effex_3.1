@@ -908,7 +908,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         removeAnimationTarget.postVaryTimerOff() 
     }
 
-    fileprivate func updateImageVideoFrames() {
+     func updateImageVideoFrames() {
         if let existingImageParms = imageParms() {
             for anImageParm in existingImageParms {
                 anImageParm.updateVideoFrame()

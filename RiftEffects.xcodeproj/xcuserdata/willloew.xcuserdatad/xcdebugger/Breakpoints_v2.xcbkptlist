@@ -7,32 +7,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "CB742422-562E-4DD4-9B13-1A9F0F4FC978"
-            shouldBeEnabled = "Yes"
+            uuid = "C04E32C0-2ED5-46B2-BD31-152B13820FC1"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RiftEffects/Filters/PGLKenBurnsFilter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "40"
-            endingLineNumber = "40"
-            landmarkName = "init?(filter:position:)"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
+            landmarkName = "addFilterStepTime()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A402ACB4-258B-47D4-B6BB-C1DF3E22DAD8"
-            shouldBeEnabled = "Yes"
+            uuid = "F7924E1B-3B79-4DD0-B680-DF9BD09908C1"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Filters/PGLKenBurnsFilter.swift"
+            filePath = "RiftEffects/Filters/PGLSourceFilter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "localizedDescription(filterName:)"
+            startingLineNumber = "756"
+            endingLineNumber = "756"
+            landmarkName = "attribute(nameKey:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C7AE6C7A-7E0B-4761-B830-B708139A03F2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Filters/ScaleDown/PGLScaleFrame.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "outputImageBasic()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
