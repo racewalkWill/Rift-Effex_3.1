@@ -133,10 +133,6 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
             // initially kCIInputTargetImageKey is offscreen
             // initially the kCIInputImageKey is the currentDisplay
 
-
-            //        var currentFrame: Int = 0
-            //        var effectFrames: Int = 0
-
         if (effectFrames == 0) {
                 // no dissolve set
             return
@@ -147,7 +143,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
                 // need to start next loop
             currentFrame = 0
             dissolveRunning = true
-            NSLog(#function + String(describing: self) + " dissolveRunning to TRUE")
+//            NSLog(#function + String(describing: self) + " dissolveRunning to TRUE")
         }
 
         if dissolveRunning {
@@ -155,7 +151,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
 
                 transitionFilterStepTime = 0.0
                 dissolveRunning = false
-                NSLog(#function + String(describing: self) + " dissolveRunning to FALSE case <=0.0")
+//                NSLog(#function + String(describing: self) + " dissolveRunning to FALSE case <=0.0")
                 currentPanZoom = panImageFilter
                 nextPanZoom = panTargetFilter
                 dissolveDeltaPerFrame = abs( dissolveDeltaPerFrame) // make it positive
@@ -165,13 +161,13 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
                 dissolveNextAttribute = attribute(nameKey: kCIInputTargetImageKey)
                 if (dissolveNextAttribute != nil) {
                     incrementOnAttribute(attribute: dissolveNextAttribute!)
-                    NSLog(#function + String(describing: self) + " kCIInputTargetImageKey increment")
+//                    NSLog(#function + String(describing: self) + " kCIInputTargetImageKey increment")
                 }
             }
             if  transitionFilterStepTime > 1.0 {
                 transitionFilterStepTime = 1.0
                 dissolveRunning = false
-                NSLog(#function + String(describing: self) + " dissolveRunning to FALSE case >1.0")
+//                NSLog(#function + String(describing: self) + " dissolveRunning to FALSE case >1.0")
                 currentPanZoom = panTargetFilter
                 nextPanZoom = panImageFilter
                 dissolveDeltaPerFrame = -1 * dissolveDeltaPerFrame
@@ -180,24 +176,14 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
                 dissolveNextAttribute = attribute(nameKey: kCIInputImageKey)
                 if (dissolveNextAttribute != nil) {
                     incrementOnAttribute(attribute: dissolveNextAttribute!)
-                    NSLog(#function + String(describing: self) + " kCIInputImageKey increment")
+//                    NSLog(#function + String(describing: self) + " kCIInputImageKey increment")
                 }
-
             }
                 // move the dissolve ahead
-
             transitionFilterStepTime += dissolveDeltaPerFrame
             let inputTime = simd_smoothstep(0, 1, transitionFilterStepTime)
             localFilter.setValue(inputTime, forKey: kCIInputTimeKey)
 //            NSLog(#function + String(describing: self) + " dissolve inputTime set to \(inputTime)")
-
-//            if  transitionFilterStepTime > 0.0 && transitionFilterStepTime < 1.0 {
-//                NSLog(#function + String(describing: self) + " dissolve running stepTime \(transitionFilterStepTime)")
-//                NSLog(#function + String(describing: self) + " dissolve running delta change \(dissolveDeltaPerFrame)")
-
-//                dissolveRunning = true
-//            }
-
 
         } // end dissolveRunning = true
 
@@ -223,7 +209,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
         // is it target or input attribute of the dissolve
         var changeTarget: PGLScaleUpFrame
 
-        let isInputTarget = (attribute.attributeName == kCIInputTargetImageKey)
+        let isInputTarget = (attribute.attributeName == kCIInputImageKey)
         if isInputTarget {
              changeTarget = panImageFilter
         } else {
@@ -234,7 +220,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
         if let nextImage = dissolveImageList?.increment() {
              changeTarget.setImageValue(newValue: nextImage, keyName: kCIInputImageKey)
             changeTarget.setInputImageParmState(newState: .inputPhoto)
-            NSLog(#function + String(describing: self) + "changing image " + String(describing: attribute.attributeName ))
+//            NSLog(#function + String(describing: self) + "changing image " + String(describing: attribute.attributeName ))
 
             //  setImageValue puts the image directly into the filter
             // ? setImageCollectionInput(cycleStack: imageList)
@@ -243,13 +229,32 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
 
         }
 
-
     }
 
 //
 //    override func setRandomTimerDt() {
 //
 //    }
+
+  override  func setUserPick(attribute: PGLFilterAttribute, imageList: PGLImageList) {
+      // put the first images into the panZoom for initial display
+
+      super.setUserPick(attribute: attribute, imageList: imageList)
+
+      var dissolveNextAttribute = self.attribute(nameKey: kCIInputImageKey) as? PGLFilterAttributeImage
+
+      if (dissolveNextAttribute != nil) {
+          incrementOnAttribute(attribute: dissolveNextAttribute!)
+      }
+
+       dissolveNextAttribute = self.attribute(nameKey: kCIInputTargetImageKey) as? PGLFilterAttributeImage
+
+      if (dissolveNextAttribute != nil) {
+          incrementOnAttribute(attribute: dissolveNextAttribute!)
+      }
+
+
+    }
 
 
 
