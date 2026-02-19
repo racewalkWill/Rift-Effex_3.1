@@ -25,8 +25,8 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
 
         //    var dissolveFilter: PGLTransitionFilter
         // dissolve is the output filter
-    var panImageFilter: PGLScaleUpFrame // kCIInputImageKey
-    var panTargetFilter: PGLScaleUpFrame //kCIInputTargetImageKey
+    var panImageFilter: PGLPanZoomFilter // kCIInputImageKey
+    var panTargetFilter: PGLPanZoomFilter //kCIInputTargetImageKey
 
     var currentFrame: Int = 0
     var effectFrames: Int = 0
@@ -42,14 +42,15 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
             // "CIDissolveTransition" : [  PGLTransitionFilter.self  ],
             // add to the CIFilterToPGLFilter.Map
 
-        let panImageDescriptor = PGLFilterDescriptor("CIMaximumScaleTransform", PGLScaleUpFrame.self)!
+        let panImageDescriptor = PGLFilterDescriptor("CIMaximumScaleTransform", PGLPanZoomFilter.self)!
 
-        let panBackgroundDescriptor = PGLFilterDescriptor("CIMaximumScaleTransform", PGLScaleUpFrame.self)!
+        let panBackgroundDescriptor = PGLFilterDescriptor("CIMaximumScaleTransform", PGLPanZoomFilter.self)!
             // on UI select of a linear attribute then 2 subcells of 2 values
 
             //        dissolveFilter = dissolveDescriptor.pglSourceFilter() as! PGLTransitionFilter
-        panImageFilter = panImageDescriptor.pglSourceFilter() as! PGLScaleUpFrame
-        panTargetFilter =  panBackgroundDescriptor.pglSourceFilter() as! PGLScaleUpFrame
+        panImageFilter = panImageDescriptor.pglSourceFilter() as! PGLPanZoomFilter
+        panTargetFilter =  panBackgroundDescriptor.pglSourceFilter() as! PGLPanZoomFilter
+
         panImageFilter.setDefaults()
         panTargetFilter.setDefaults()
             // let framesPerSec: Float = 60.0 // later read actual framerate from UI
@@ -127,8 +128,8 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
             //            case kCIInputImageKey
             //            case kCIInputTargetImageKey
             //        }
-        var currentPanZoom: PGLScaleUpFrame?
-        var nextPanZoom: PGLScaleUpFrame?
+        var currentPanZoom: PGLPanZoomFilter?
+        var nextPanZoom: PGLPanZoomFilter?
         var dissolveNextAttribute = attribute(nameKey: kCIInputTargetImageKey)
             // initially kCIInputTargetImageKey is offscreen
             // initially the kCIInputImageKey is the currentDisplay
@@ -207,7 +208,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
     func incrementOnAttribute(attribute: PGLFilterAttribute) {
         // set the next image as the input to the matching panFilter
         // is it target or input attribute of the dissolve
-        var changeTarget: PGLScaleUpFrame
+        var changeTarget: PGLPanZoomFilter
 
         let isInputTarget = (attribute.attributeName == kCIInputImageKey)
         if isInputTarget {
@@ -220,6 +221,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
         if let nextImage = dissolveImageList?.increment() {
              changeTarget.setImageValue(newValue: nextImage, keyName: kCIInputImageKey)
             changeTarget.setInputImageParmState(newState: .inputPhoto)
+            changeTarget.setPanZoomDefault()
 //            NSLog(#function + String(describing: self) + "changing image " + String(describing: attribute.attributeName ))
 
             //  setImageValue puts the image directly into the filter

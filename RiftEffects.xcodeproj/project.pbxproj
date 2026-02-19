@@ -48,6 +48,7 @@
 		A3552BEA29463170002FBC72 /* PGLColorVectorNumeric.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3552BE929463170002FBC72 /* PGLColorVectorNumeric.swift */; };
 		A3552BEC29463C10002FBC72 /* PGLAttributeVectorNumericUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3552BEB29463C10002FBC72 /* PGLAttributeVectorNumericUI.swift */; };
 		A3552BEE2946AA7D002FBC72 /* PGLAttributeVectorNumeric.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3552BED2946AA7D002FBC72 /* PGLAttributeVectorNumeric.swift */; };
+		A3562D7D2F4669DC001833C3 /* PGLPanZoomFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3562D7C2F4669DC001833C3 /* PGLPanZoomFilter.swift */; };
 		A357B17C2950F60D00331980 /* CGAffineTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = A357B17B2950F60D00331980 /* CGAffineTransform.swift */; };
 		A35BADAC2614C8FF00C8B2AA /* PGLPopUpFilterInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35BADAB2614C8FF00C8B2AA /* PGLPopUpFilterInfo.swift */; };
 		A35D412D294B678B00EDEB4E /* PGLVectorBasedFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35D412C294B678B00EDEB4E /* PGLVectorBasedFilter.swift */; };
@@ -264,6 +265,7 @@
 		A3552BE929463170002FBC72 /* PGLColorVectorNumeric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLColorVectorNumeric.swift; sourceTree = "<group>"; };
 		A3552BEB29463C10002FBC72 /* PGLAttributeVectorNumericUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAttributeVectorNumericUI.swift; sourceTree = "<group>"; };
 		A3552BED2946AA7D002FBC72 /* PGLAttributeVectorNumeric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAttributeVectorNumeric.swift; sourceTree = "<group>"; };
+		A3562D7C2F4669DC001833C3 /* PGLPanZoomFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLPanZoomFilter.swift; sourceTree = "<group>"; };
 		A357B17B2950F60D00331980 /* CGAffineTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGAffineTransform.swift; sourceTree = "<group>"; };
 		A35BADAB2614C8FF00C8B2AA /* PGLPopUpFilterInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLPopUpFilterInfo.swift; sourceTree = "<group>"; };
 		A35D412C294B678B00EDEB4E /* PGLVectorBasedFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLVectorBasedFilter.swift; sourceTree = "<group>"; };
@@ -793,6 +795,7 @@
 				A3CA2BFE295A01FD00502A8A /* PGLConvolutionFilter.swift */,
 				A3D68B302D1DC895007FD92E /* PGLMaskFilter.swift */,
 				A37D84F32F4226D70058669F /* PGLKenBurnsFilter.swift */,
+				A3562D7C2F4669DC001833C3 /* PGLPanZoomFilter.swift */,
 			);
 			path = Filters;
 			sourceTree = "<group>";
@@ -1078,6 +1081,7 @@
 				A3DD328725CC999C00ABEE61 /* PGLHelpPageController.swift in Sources */,
 				A3728BBD2BB4DEAE0019761A /* PGLGradientVectorAttribute.swift in Sources */,
 				A3DC3DE227B17EF500E4C111 /* PGLCompactImageController.swift in Sources */,
+				A3562D7D2F4669DC001833C3 /* PGLPanZoomFilter.swift in Sources */,
 				A3CBB6282E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift in Sources */,
 				A3BF513124D32A3400CD5114 /* Renderer.swift in Sources */,
 				A3BF511424D32A3400CD5114 /* CIFilterExtensions.swift in Sources */,

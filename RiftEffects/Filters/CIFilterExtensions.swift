@@ -34,6 +34,7 @@ let k4SidedGradient = "4 Sided Gradient"
 let kPMaskFilter = "MaskFilter"
 let kUIImagePasteFilter = "Clipboard"
 let kKenBurnsDissolve = "Ken Burns Dissolve"
+let kPanZoom = "Pan Zoom"
 
 // MOVED in  121.05  to CIFilterToPGLFilter.Map
 
