@@ -44,25 +44,31 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
 
         if let scaleInputParm = attribute(nameKey: "inputScale") {
             startAnimation(attributeTarget: scaleInputParm)
-            scaleInputParm.setAnimationTimerDt(lengthSeconds: 30.0)
+            scaleInputParm.sliderMaxValue = 1.2
+            scaleInputParm.setAnimationTimerDt(lengthSeconds: 50.0)
+            // shorter values make faster motion
+
         }
 
-        if let centerPointParm = attribute(nameKey: kCIInputCenterKey) {
+        if let centerPointParm = attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector {
 
                 // change the filter's centerPoint to one of the random points
-
+            setRandomParms()
+            centerPointParm.setRandomVectorEndPoint()
+            centerPointParm.performAction(nil)
             startAnimation(attributeTarget: centerPointParm)
-            centerPointParm.setAnimationTimerDt(lengthSeconds: 30.0)
+            centerPointParm.setAnimationTimerDt(lengthSeconds: 60.0)
         }
 
-        setRandomParms()
+
 
     }
 
     override func setDefaults() {
         super.setDefaults()
         setPanZoomDefault()
-        
+
+
 
     }
 
@@ -75,11 +81,17 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
         let x: CGFloat = CGFloat.random(in: 0.0...1.0)
         let y: CGFloat = CGFloat.random(in: 0.0...1.0)
         let normalizedCenter = CGPoint(x: x, y: y)
-        if let myInputImage = inputImage() {
-             center = CGPoint(x: normalizedCenter.x * myInputImage.extent.size.width,
-                                 y: normalizedCenter.y * myInputImage.extent.size.height)
-        }
 
+        if let myInputImage = inputImage() {
+            let inputWidthReduced = (myInputImage.extent.size.width) - 50
+            let inputHeightReduced = (myInputImage.extent.height) - 50
+             center = CGPoint(x: normalizedCenter.x * inputWidthReduced,
+                                 y: normalizedCenter.y * inputHeightReduced)
+        } else {
+            center = CGPoint( x: (TargetSize.width / 2 ), y: (TargetSize.height / 2)  )
+
+        }
+        NSLog(#function + String(describing: self) + " center = \(center) ")
         return center
     }
 
