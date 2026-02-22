@@ -60,6 +60,7 @@
       enableGPUValidationMode = "1"
       allowLocationSimulation = "YES"
       queueDebuggingEnabled = "No"
+      memoryGraphOnResourceException = "Yes"
       disablePerformanceAntipatternChecker = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">

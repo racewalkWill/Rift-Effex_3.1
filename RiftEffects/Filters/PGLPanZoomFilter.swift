@@ -63,7 +63,7 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
     // for setAnimationTimerDt
     // shorter is faster movement
     var panAnimation: Float = 100.0
-    var zoomAnimation: Float = 50.0
+    var zoomAnimation: Float = 60.0
     var panFactor: Double = 1.15     // change to tuple of min,max
     var zoomFactor: Float = 1.40  // change to tuple of min,max
 
@@ -95,9 +95,13 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
 
     func setPanZoomDefault(pan: PanDirection = .panNone, zoom: ZoomDirection = .zoomNone) {
 //        setNumberValue(newValue:1.940563 , keyName:"inputScale")
+        setDefaults() // back to start
+        guard let scaleInputParm = attribute(nameKey: "inputScale")
+            else    { return }
 
+        scaleInputParm.set(1.5)
         if zoom != .zoomNone {
-            if let scaleInputParm = attribute(nameKey: "inputScale") {
+
              //   startAnimation(attributeTarget: scaleInputParm)
                 startAnimationBasic(attributeTarget: scaleInputParm)
                 scaleInputParm.sliderMaxValue = zoomMaxFactor
@@ -110,11 +114,13 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
                         // zoom.rawValue is -1, 0 , or +1
                         scaleInputParm.attributeValueDelta =  (delta * zoom.rawValue) / 2
                     }
-            }
-        }
 
+        }
+        guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector
+            else    { return }
         if   pan != .panNone  {
-            if let centerPointParm = attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector {
+            // starting from frame center
+            centerPoint = CGPoint( x: (TargetSize.width / 2 ), y: (TargetSize.height / 2) )
 
                     // change the filter's centerPoint to one of the random points
                     // setRandomParms()
@@ -129,11 +135,17 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
                 centerPointParm.setVectorStartPoint()
                 centerPointParm.setRandomVectorEndPoint()
                 centerPointParm.varyState = .VaryPt1Pt2 // move to next state for both
-
+                centerPointParm.varyStepCounter = 0
+                if centerPointParm.incrementDirection < 0 {
+                    // make it count up from zero
+                    centerPointParm.incrementDirection = centerPointParm.incrementDirection * -1
+                    }
+                centerPointParm.incrementDirection = centerPointParm.incrementDirection * -1
                 startAnimationBasic(attributeTarget: centerPointParm)
                 centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation)
+
             }
-        }
+
     }
 
     func setPanOffset(pan: PanDirection) {
@@ -157,13 +169,13 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
 //        setNumberValue(newValue: newScale, keyName:"inputScale")    
     }
 
-    override func setDefaults() {
-        super.setDefaults()
-        setPanZoomDefault()
-
-
-
-    }
+//    override func setDefaults() {
+//        super.setDefaults()
+//        setPanZoomDefault()
+//
+//
+//
+//    }
 
     override func setRandomParms() {
         centerPoint = randomCenterPoint()
