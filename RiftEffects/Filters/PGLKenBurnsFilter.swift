@@ -219,15 +219,17 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
         let dissolveImageList = attribute.inputCollection
 
         if let nextImage = dissolveImageList?.increment() {
-             changeTarget.setImageValue(newValue: nextImage, keyName: kCIInputImageKey)
+            changeTarget.setImageValue(newValue: nextImage, keyName: kCIInputImageKey)
             changeTarget.setInputImageParmState(newState: .inputPhoto)
-            changeTarget.setPanZoomDefault()
-//            NSLog(#function + String(describing: self) + "changing image " + String(describing: attribute.attributeName ))
 
-
+            let panDirection = PanDirection.random()
+            let zoomDirection  = ZoomDirection.random()
+            changeTarget.setPanZoomDefault(pan: panDirection ,  zoom: zoomDirection)
         }
 
-    }
+//            NSLog(#function + String(describing: self) + "changing image " + String(describing: attribute.attributeName ))
+        }
+
 
 //
 //    override func setRandomTimerDt() {

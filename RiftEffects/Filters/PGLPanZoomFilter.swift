@@ -12,8 +12,62 @@ import simd
 import UIKit
 import os
 
+enum ZoomDirection: Float, CaseIterable  {
+    case   zoomOut = -1
+    case   zoomIn = 1
+    case   zoomNone = 0
+
+    static func random<G: RandomNumberGenerator>(using generator: inout G) -> ZoomDirection {
+        return ZoomDirection.allCases.randomElement(using: &generator)!
+        }
+    static func random() -> ZoomDirection {
+           var g = SystemRandomNumberGenerator()
+           return ZoomDirection.random(using: &g)
+       }
+    }
+
+enum PanDirection: Double, CaseIterable {
+    case   panLeft = -1
+    case   panRight = 1
+    case   panNone = 0
+
+    static func random<G: RandomNumberGenerator>(using generator: inout G) -> PanDirection {
+        return PanDirection.allCases.randomElement(using: &generator)!
+        }
+    static func random() -> PanDirection {
+           var g = SystemRandomNumberGenerator()
+           return PanDirection.random(using: &g)
+       }
+}
     /// automatic  pan vary and zoom vary on the center and scale parms
 class PGLPanZoomFilter: PGLScaleUpFrame {
+
+
+    enum Weekday: CaseIterable {
+        case sunday, monday, tuesday, wednesday, thursday, friday, saturday
+
+
+        static func random<G: RandomNumberGenerator>(using generator: inout G) -> Weekday {
+            return Weekday.allCases.randomElement(using: &generator)!
+        }
+
+
+        static func random() -> Weekday {
+            var g = SystemRandomNumberGenerator()
+            return Weekday.random(using: &g)
+        }
+    }
+
+    let zoomMaxFactor: Float = 1.2
+
+    // for setAnimationTimerDt
+    // shorter is faster movement
+    var panAnimation: Float = 100.0
+    var zoomAnimation: Float = 50.0
+    var panFactor: Double = 1.15     // change to tuple of min,max
+    var zoomFactor: Float = 1.40  // change to tuple of min,max
+
+
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override
        return "Pans and Zooms the image in continous vary loops"
@@ -39,29 +93,68 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
     //    startAnimationBasic(attributeTarget: attributeTarget)
     //    attributeTarget.setAnimationTimerDt(lengthSeconds: (Float(defaultDt) * 1000))
 
-    func setPanZoomDefault() {
+    func setPanZoomDefault(pan: PanDirection = .panNone, zoom: ZoomDirection = .zoomNone) {
 //        setNumberValue(newValue:1.940563 , keyName:"inputScale")
 
-        if let scaleInputParm = attribute(nameKey: "inputScale") {
-            startAnimation(attributeTarget: scaleInputParm)
-            scaleInputParm.sliderMaxValue = 1.2
-            scaleInputParm.setAnimationTimerDt(lengthSeconds: 50.0)
-            // shorter values make faster motion
+        if zoom != .zoomNone {
+            if let scaleInputParm = attribute(nameKey: "inputScale") {
+             //   startAnimation(attributeTarget: scaleInputParm)
+                startAnimationBasic(attributeTarget: scaleInputParm)
+                scaleInputParm.sliderMaxValue = zoomMaxFactor
+                scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
+                // shorter values make faster motion
 
+                //zoomaAnimation sets an initial attributeValueDelta
+                // slow it down even more
+                if let delta = (scaleInputParm.attributeValueDelta) {
+                        // zoom.rawValue is -1, 0 , or +1
+                        scaleInputParm.attributeValueDelta =  (delta * zoom.rawValue) / 2
+                    }
+            }
         }
 
-        if let centerPointParm = attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector {
+        if   pan != .panNone  {
+            if let centerPointParm = attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector {
 
-                // change the filter's centerPoint to one of the random points
-            setRandomParms()
-            centerPointParm.setRandomVectorEndPoint()
-            centerPointParm.performAction(nil)
-            startAnimation(attributeTarget: centerPointParm)
-            centerPointParm.setAnimationTimerDt(lengthSeconds: 60.0)
+                    // change the filter's centerPoint to one of the random points
+                    // setRandomParms()
+                    //            centerPointParm.setRandomVectorEndPoint()
+
+                    // centerPointParm.performAction(nil)
+                    //  vectorPerformAction callse setRandomVectorEndPoint
+
+                    // startAnimation(attributeTarget: centerPointParm)
+                //setPanOffset(pan: pan)
+//                setRandomParms() // only the centerPoint
+                centerPointParm.setVectorStartPoint()
+                centerPointParm.setRandomVectorEndPoint()
+                centerPointParm.varyState = .VaryPt1Pt2 // move to next state for both
+
+                startAnimationBasic(attributeTarget: centerPointParm)
+                centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation)
+            }
+        }
+    }
+
+    func setPanOffset(pan: PanDirection) {
+        // center point moves from default
+        let centerCurrentX: Double = Double (centerPoint.x)
+        let centerCurrentY  =  (centerPoint.y)
+
+        if pan != .panNone {
+            // pan is -1, or +1
+            let newCenterX = centerCurrentX * panFactor * pan.rawValue
+            centerPoint = CGPoint(x: newCenterX, y: centerCurrentY)
         }
 
+    }
 
-
+    func setZoomInStart() {
+//        let scaleCurrent: CGFloat = inputScale
+//        
+//        let newScale: CGFloat = scaleCurrent * zoomFactor
+//        
+//        setNumberValue(newValue: newScale, keyName:"inputScale")    
     }
 
     override func setDefaults() {
@@ -77,19 +170,18 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
     }
 
     func randomCenterPoint() -> CGPoint {
-        var center: CGPoint = .zero
+        // default to center
+        var center: CGPoint = CGPoint( x: (TargetSize.width / 2 ), y: (TargetSize.height / 2) )
+
         let x: CGFloat = CGFloat.random(in: 0.0...1.0)
         let y: CGFloat = CGFloat.random(in: 0.0...1.0)
-        let normalizedCenter = CGPoint(x: x, y: y)
+        let normalizedRandomPoint = CGPoint(x: x, y: y)
 
         if let myInputImage = inputImage() {
-            let inputWidthReduced = (myInputImage.extent.size.width) - 50
-            let inputHeightReduced = (myInputImage.extent.height) - 50
-             center = CGPoint(x: normalizedCenter.x * inputWidthReduced,
-                                 y: normalizedCenter.y * inputHeightReduced)
-        } else {
-            center = CGPoint( x: (TargetSize.width / 2 ), y: (TargetSize.height / 2)  )
-
+            let inputWidthReduced = (myInputImage.extent.size.width) / 2
+            let inputHeightReduced = (myInputImage.extent.height) / 2
+             center = CGPoint(x: normalizedRandomPoint.x * inputWidthReduced,
+                                 y: normalizedRandomPoint.y * inputHeightReduced)
         }
         NSLog(#function + String(describing: self) + " center = \(center) ")
         return center

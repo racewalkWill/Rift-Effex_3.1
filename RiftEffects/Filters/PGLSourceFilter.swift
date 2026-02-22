@@ -839,7 +839,8 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 //        }
     }
 
-    func startAnimationBasic(attributeTarget: PGLFilterAttribute) {
+    func
+    startAnimationBasic(attributeTarget: PGLFilterAttribute) {
         // assumes the animation vars are set either from the UI
         // or on a read from the db
 
