@@ -105,7 +105,9 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
              //   startAnimation(attributeTarget: scaleInputParm)
                 startAnimationBasic(attributeTarget: scaleInputParm)
                 scaleInputParm.sliderMaxValue = zoomMaxFactor
-                scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
+
+            // use startMovement to set the lengthSeconds at the time it comes on screen
+               // scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
                 // shorter values make faster motion
 
                 //zoomaAnimation sets an initial attributeValueDelta
@@ -140,12 +142,35 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
                     // make it count up from zero
                     centerPointParm.incrementDirection = centerPointParm.incrementDirection * -1
                     }
-                centerPointParm.incrementDirection = centerPointParm.incrementDirection * -1
+                // start the animation when the dissolve is starting to bring it on screen
                 startAnimationBasic(attributeTarget: centerPointParm)
-                centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation)
+
+                // use startMovement to set the lengthSeconds at the time it comes on screen
+               // centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation)
 
             }
 
+    }
+
+    func startMovement() {
+        guard let scaleInputParm = attribute(nameKey: "inputScale")
+            else    { return }
+        scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
+
+        guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector
+            else    { return }
+        centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation)
+
+    }
+
+    func stopMovement() {
+        guard let scaleInputParm = attribute(nameKey: "inputScale")
+            else    { return }
+        scaleInputParm.setAnimationTimerDt(lengthSeconds: 0)
+
+        guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector
+            else    { return }
+        centerPointParm.setAnimationTimerDt(lengthSeconds: 0)
     }
 
     func setPanOffset(pan: PanDirection) {

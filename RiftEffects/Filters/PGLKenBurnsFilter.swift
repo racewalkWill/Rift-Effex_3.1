@@ -31,11 +31,13 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
     var currentFrame: Int = 0
     var effectFrames: Int = 0
     var dissolveRunning = false
-    let dissolveSeconds: Double = 0.5
+    let dissolveSeconds: Double = 0.8
     let framesPerSecond: Double = 60.0
 
     var dissolveFrames: Int!  //dissolveSeconds * framesPerSecond // 60 fps
     var dissolveDeltaPerFrame: Double! // dissolveSeconds / dissolveFrames
+
+
 
     required init?(filter: String, position: PGLFilterCategoryIndex) {
             //        let dissolveDescriptor = PGLFilterDescriptor("CIDissolveTransition" , PGLTransitionFilter.self)!
@@ -128,11 +130,12 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
             //            case kCIInputImageKey
             //            case kCIInputTargetImageKey
             //        }
-        var currentPanZoom: PGLPanZoomFilter?
-        var nextPanZoom: PGLPanZoomFilter?
+
         var dissolveNextAttribute = attribute(nameKey: kCIInputTargetImageKey)
             // initially kCIInputTargetImageKey is offscreen
             // initially the kCIInputImageKey is the currentDisplay
+        var currentPanZoom: PGLPanZoomFilter?
+        var nextPanZoom: PGLPanZoomFilter?
 
         if (effectFrames == 0) {
                 // no dissolve set
@@ -146,6 +149,12 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
             dissolveRunning = true
 //            NSLog(#function + String(describing: self) + " dissolveRunning to TRUE")
         }
+//        if currentFrame >= (effectFrames - 5) {
+//            // getting close to starting the dissolve
+//            // start the movement
+//            // currentPanZoom?.startMovement()
+//            nextPanZoom?.startMovement()
+//        }
 
         if dissolveRunning {
             if transitionFilterStepTime < 0.0 {
@@ -180,6 +189,9 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
 //                    NSLog(#function + String(describing: self) + " kCIInputImageKey increment")
                 }
             }
+
+            currentPanZoom?.startMovement()
+            nextPanZoom?.stopMovement()
                 // move the dissolve ahead
             transitionFilterStepTime += dissolveDeltaPerFrame
             let inputTime = simd_smoothstep(0, 1, transitionFilterStepTime)
@@ -224,6 +236,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
 
             let panDirection = PanDirection.random()
             let zoomDirection  = ZoomDirection.random()
+//            let zoomDirection = ZoomDirection.zoomNone
             changeTarget.setPanZoomDefault(pan: panDirection ,  zoom: zoomDirection)
         }
 
