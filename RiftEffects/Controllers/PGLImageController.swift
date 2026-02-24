@@ -258,10 +258,16 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             // go to full screen to render the save image
             // preferredStatusBarStyle left to user action
 
-
+        showSpinner() // if there is video save
         self.appStack.saveStack(metalRender: self.metalController!.metalRender)
         saveToPhotoLibrary()
         self.incrementCountForAppReview()
+        if appStack.runTimeSeconds == 0 {
+            // if saving video (runTime >0) then the video completion will hide the spinnger
+            // see PGLVideoHasSavedNotification update handler in PGLImageController
+            hideSpinner()
+        }
+
     }
 
     func saveToPhotoLibrary() {
@@ -287,6 +293,28 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         confirmTrashDisplayStack(sender)
 
     }
+
+
+    // MARK: Wait Spinner
+    lazy var spinner: UIActivityIndicatorView = {
+       let indicator = UIActivityIndicatorView(style: .large)
+       indicator.color = .gray
+       indicator.hidesWhenStopped = true
+       return indicator
+   }()
+
+   func showSpinner() {
+       spinner.center = view.center
+       view.addSubview(spinner)
+       view.bringSubviewToFront(spinner)
+//       spinner.center = CGPoint(x: view.frame.size.width / 2, y: view.frame.size.height / 2)
+       spinner.startAnimating()
+   }
+
+   func hideSpinner() {
+       spinner.stopAnimating()
+       spinner.removeFromSuperview()
+   }
 
         //MARK: App Review save count
     func incrementCountForAppReview() {
@@ -975,6 +1003,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         cancellable = myCenter.publisher(for: PGLVideoHasSavedNotification)
             .sink() { [weak self]
             myUpdate in
+                // turn off the spinner first
+                self?.hideSpinner()
                 let alert = UIAlertController(title: "Save Completed", message: "Video has been saved to Photos", preferredStyle: .alert)
 
                 alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default) )
