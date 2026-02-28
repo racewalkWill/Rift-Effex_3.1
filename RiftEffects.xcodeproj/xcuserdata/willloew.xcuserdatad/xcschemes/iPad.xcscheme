@@ -54,13 +54,13 @@
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
-      debugDocumentVersioning = "YES"
+      debugDocumentVersioning = "NO"
       debugXPCServices = "NO"
       debugServiceExtension = "internal"
       enableGPUValidationMode = "1"
-      allowLocationSimulation = "YES"
+      allowLocationSimulation = "NO"
+      viewDebuggingEnabled = "No"
       queueDebuggingEnabled = "No"
-      memoryGraphOnResourceException = "Yes"
       disablePerformanceAntipatternChecker = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
@@ -96,7 +96,7 @@
          <EnvironmentVariable
             key = "CG_NUMERICS_SHOW_BACKTRACE"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
