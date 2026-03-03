@@ -143,7 +143,7 @@
                         <viewControllerLayoutGuide type="top" id="EJI-ec-Z2e"/>
                         <viewControllerLayoutGuide type="bottom" id="CVu-JS-I30"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="FIa-oA-7jC">
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="FIa-oA-7jC">
                         <rect key="frame" x="0.0" y="0.0" width="1180" height="820"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -403,7 +403,6 @@
                             <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" id="OEz-3T-9Rf">
                                 <rect key="frame" x="-4" y="687" width="318" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <items>
                                     <barButtonItem title="Item" id="c9Y-Ed-ZeW" userLabel="filterShiftLabel">
                                         <connections>
@@ -640,7 +639,7 @@
                         <viewControllerLayoutGuide type="bottom" id="LCb-0n-p2P"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ufz-uZ-e8H">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="742"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1180" height="742"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
@@ -815,7 +814,7 @@
             <objects>
                 <navigationController storyboardIdentifier="SupplementNavController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="8fb-qg-1Kn" customClass="PGLSupplementNavController" customModule="RiftEffects" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="2xo-Qn-0Om">
+                    <navigationBar key="navigationBar" opaque="NO" contentMode="scaleToFill" id="2xo-Qn-0Om">
                         <rect key="frame" x="0.0" y="24" width="320" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -835,7 +834,7 @@
                 <navigationController storyboardIdentifier="PGLNavSecondaryController" automaticallyAdjustsScrollViewInsets="NO" id="sz9-Js-XAp" customClass="PGLNavSecondaryController" customModule="RiftEffects" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="kFL-fi-S8n">
+                    <navigationBar key="navigationBar" opaque="NO" contentMode="scaleToFill" id="kFL-fi-S8n">
                         <rect key="frame" x="0.0" y="24" width="1180" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -872,7 +871,7 @@
             <objects>
                 <navigationController storyboardIdentifier="PGLNavPrimaryController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r9v-Qy-C7F" customClass="PGLNavPrimaryController" customModule="RiftEffects" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hIS-0d-fCX">
+                    <navigationBar key="navigationBar" opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hIS-0d-fCX">
                         <rect key="frame" x="0.0" y="24" width="280" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -931,8 +930,6 @@
                             </barButtonItem>
                             <barButtonItem title="More Btn" image="rectangle.stack.badge.plus" catalog="system" id="X6h-Dm-yVE"/>
                             <barButtonItem title="Random" image="plus.viewfinder" catalog="system" id="0Zt-QC-w2E"/>
-                        </leftBarButtonItems>
-                        <rightBarButtonItems>
                             <barButtonItem title="toggleAnimationPause" hidden="YES" id="qG0-1L-lmY">
                                 <imageReference key="image" image="playpause" catalog="system" symbolScale="default"/>
                                 <connections>
@@ -955,7 +952,7 @@
                                     <action selector="openParmsAction:" destination="z1U-K0-aGb" id="pYc-nR-04j"/>
                                 </connections>
                             </barButtonItem>
-                        </rightBarButtonItems>
+                        </leftBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="editBtn" destination="fnJ-Gf-KO3" id="Enm-0e-Qhw"/>
@@ -976,8 +973,8 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="4FJ-we-3bf"/>
-        <segue reference="Zrd-6b-Z8z"/>
-        <segue reference="Xyz-2Z-Q4q"/>
+        <segue reference="Stf-Ip-3lm"/>
+        <segue reference="q90-Vk-s0q"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="chevron.down" catalog="system" width="128" height="70"/>
@@ -994,13 +991,13 @@
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

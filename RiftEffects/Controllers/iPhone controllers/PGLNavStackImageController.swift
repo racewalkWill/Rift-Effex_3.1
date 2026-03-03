@@ -12,9 +12,10 @@ class PGLNavStackImageController: UINavigationController, UINavigationController
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         // Do any additional setup after loading the view.
+        setNavigationBarHidden(false, animated: false)
         delegate = self
         
     }

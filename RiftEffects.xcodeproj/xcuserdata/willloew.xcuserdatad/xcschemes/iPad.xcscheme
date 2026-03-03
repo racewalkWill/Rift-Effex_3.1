@@ -59,7 +59,6 @@
       debugServiceExtension = "internal"
       enableGPUValidationMode = "1"
       allowLocationSimulation = "NO"
-      viewDebuggingEnabled = "No"
       queueDebuggingEnabled = "No"
       disablePerformanceAntipatternChecker = "YES">
       <BuildableProductRunnable

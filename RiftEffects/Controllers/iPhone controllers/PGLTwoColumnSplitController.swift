@@ -27,14 +27,14 @@ class PGLTwoColumnSplitController: UIViewController {
         let iPhoneCompact =  splitViewController?.isCollapsed ?? false
         var imageWidthFactor: Double = 5/3
         if iPhoneCompact {
-            imageWidthFactor = 1.2
+            imageWidthFactor = 5/3 // was 1.2
         }
             // imageWidthFactor adjustment needed for FilterImageContainerController?
         
         NSLayoutConstraint.activate([
-            imageView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            imageView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            imageView.topAnchor.constraint(equalTo: view.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             imageView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: imageWidthFactor),
             // width to height 4:3 ratio
             controlView.rightAnchor.constraint(equalTo: imageView.leftAnchor, constant:  -30.0),
