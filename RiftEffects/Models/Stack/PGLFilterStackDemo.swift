@@ -112,8 +112,8 @@ extension PGLFilterStack {
     func demoCreateFilter(ciFilterString: String) -> PGLSourceFilter? {
             // an Fatal Error if filter is not created
         let aMappedClass = CIFilterToPGLFilter.Map[ciFilterString]
-        if (aMappedClass?.count ?? 0) > 1
-        { fatalError("This demo filter has multiple descriptors - coding error")}                    // normally will be nil - then PGLFilterDescriptor defaults to PGLSourceFilter.self
+//        if (aMappedClass?.count ?? 0) > 1
+//        { fatalError("This demo filter has multiple descriptors - coding error")}                    // normally will be nil - then PGLFilterDescriptor defaults to PGLSourceFilter.self
         guard let thisDescriptor = PGLFilterDescriptor(ciFilterString, aMappedClass?.first )
         else { fatalError("Demo Load Filter Error ") }
         let thisFilter = thisDescriptor.pglSourceFilter()
