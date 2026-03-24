@@ -100,7 +100,6 @@
 		A39F880B2A4CA38B000AE342 /* PGLSectionBackgroundDecorationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39F880A2A4CA38B000AE342 /* PGLSectionBackgroundDecorationView.swift */; };
 		A3A123322BF55FAD001A756D /* PGLCenterScaler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A123312BF55FAD001A756D /* PGLCenterScaler.swift */; };
 		A3A5119B2CE39371006C010E /* PGLMenuLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A5119A2CE39371006C010E /* PGLMenuLabel.swift */; };
-		A3A90BEC2F6E099A00BB9B57 /* PGLStackDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A90BE82F6E099A00BB9B57 /* PGLStackDataProvider.swift */; };
 		A3A90BED2F6E099A00BB9B57 /* PGLImageListOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A90BE72F6E099A00BB9B57 /* PGLImageListOverlayView.swift */; };
 		A3A90BEE2F6E099A00BB9B57 /* PGLStackRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A90BEA2F6E099A00BB9B57 /* PGLStackRow.swift */; };
 		A3A90BEF2F6E099A00BB9B57 /* PGLStackItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A90BE92F6E099A00BB9B57 /* PGLStackItem.swift */; };
@@ -324,7 +323,6 @@
 		A3A123312BF55FAD001A756D /* PGLCenterScaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCenterScaler.swift; sourceTree = "<group>"; };
 		A3A5119A2CE39371006C010E /* PGLMenuLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMenuLabel.swift; sourceTree = "<group>"; };
 		A3A90BE72F6E099A00BB9B57 /* PGLImageListOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLImageListOverlayView.swift; sourceTree = "<group>"; };
-		A3A90BE82F6E099A00BB9B57 /* PGLStackDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackDataProvider.swift; sourceTree = "<group>"; };
 		A3A90BE92F6E099A00BB9B57 /* PGLStackItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackItem.swift; sourceTree = "<group>"; };
 		A3A90BEA2F6E099A00BB9B57 /* PGLStackRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackRow.swift; sourceTree = "<group>"; };
 		A3ABF28D2B194DD3006286B2 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
@@ -565,7 +563,6 @@
 			isa = PBXGroup;
 			children = (
 				A3A90BE72F6E099A00BB9B57 /* PGLImageListOverlayView.swift */,
-				A3A90BE82F6E099A00BB9B57 /* PGLStackDataProvider.swift */,
 				A3A90BE92F6E099A00BB9B57 /* PGLStackItem.swift */,
 				A3A90BEA2F6E099A00BB9B57 /* PGLStackRow.swift */,
 			);
@@ -1128,7 +1125,6 @@
 				A33E82032B15458D008F79B3 /* PGLScaleFrame.swift in Sources */,
 				A3BF512B24D32A3400CD5114 /* PGLSelectParmController.swift in Sources */,
 				A3BF512D24D32A3400CD5114 /* PGLAsset.swift in Sources */,
-				A3A90BEC2F6E099A00BB9B57 /* PGLStackDataProvider.swift in Sources */,
 				A3A90BED2F6E099A00BB9B57 /* PGLImageListOverlayView.swift in Sources */,
 				A3A90BEE2F6E099A00BB9B57 /* PGLStackRow.swift in Sources */,
 				A3A90BEF2F6E099A00BB9B57 /* PGLStackItem.swift in Sources */,

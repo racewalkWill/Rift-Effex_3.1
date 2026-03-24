@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Photos
+import CoreImage
 
 
 // MARK: - View Model
@@ -20,25 +21,30 @@ class PGLImageListViewModel: ObservableObject {
         let attributeName: String
         let imageList: PGLImageList
         var assets: [PGLAsset]
+        var cachedImages: [Int: PGLImageScaler]
     }
 
     @Published var sections: [AssetSection] = []
 
     func loadFromFilter(_ filter: PGLSourceFilter) {
-        sections = filter.imageAttributes().compactMap { attr in
+        sections = filter.imageAttributes().compactMap { attr -> AssetSection? in
             guard let list = attr.inputCollection, !list.isEmpty() else { return nil }
             let name = attr.attributeDisplayName ?? attr.attributeName ?? "Images"
-            return AssetSection(attributeName: name, imageList: list, assets: list.imageAssets)
+            return AssetSection(attributeName: name, imageList: list, assets: list.imageAssets,
+                cachedImages: list.cachedImages)
+//            return PGLStackItem
         }
     }
 
     func removeAsset(in sectionIndex: Int, at offsets: IndexSet) {
         sections[sectionIndex].assets.remove(atOffsets: offsets)
+        // need to ask the imageList to do the remove
         sections[sectionIndex].imageList.imageAssets = sections[sectionIndex].assets
     }
 
     func moveAsset(in sectionIndex: Int, from offsets: IndexSet, to destination: Int) {
         sections[sectionIndex].assets.move(fromOffsets: offsets, toOffset: destination)
+            // need to ask the imageList to do the move
         sections[sectionIndex].imageList.imageAssets = sections[sectionIndex].assets
     }
 }
@@ -47,6 +53,8 @@ class PGLImageListViewModel: ObservableObject {
 
 struct PGLAssetRowView: View {
     let pglAsset: PGLAsset
+    let cachedImage: CIImage?
+    
     @State private var thumbnail: UIImage? = nil
 
     var body: some View {
@@ -90,24 +98,32 @@ struct PGLAssetRowView: View {
     }
 
     private func loadThumbnail() {
-        guard thumbnail == nil else { return }
-        let options = PHImageRequestOptions()
-        options.deliveryMode = .fastFormat
-        options.isNetworkAccessAllowed = false
-        options.isSynchronous = false
-        let size = CGSize(width: 120, height: 120)
-        PHImageManager.default().requestImage(
-            for: pglAsset.asset,
-            targetSize: size,
-            contentMode: .aspectFill,
-            options: options
-        ) { image, _ in
-            if let image {
-                DispatchQueue.main.async {
-                    self.thumbnail = image
-                }
-            }
+        guard thumbnail == nil, let ciImage = cachedImage else { return }
+        let context = CIContext()
+        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+            thumbnail = UIImage(cgImage: cgImage)
         }
+
+
+//        guard thumbnail == nil else { return }
+//        let options = PHImageRequestOptions()
+//        options.deliveryMode = .fastFormat
+//        options.isNetworkAccessAllowed = false
+//        options.isSynchronous = false
+//        let size = CGSize(width: 120, height: 120)
+//        PHImageManager.default().requestImage(
+//            for: pglAsset.asset,
+//            targetSize: size,
+//            contentMode: .aspectFill,
+//            options: options
+//        ) { image, _ in
+//            if let image {
+//                DispatchQueue.main.async {
+//                    self.thumbnail = image
+//                }
+//            }
+//        }
+//    }
     }
 }
 
@@ -155,8 +171,8 @@ struct PGLImageListOverlayView: View {
                     ForEach(viewModel.sections.indices, id: \.self) { sectionIndex in
                         let section = viewModel.sections[sectionIndex]
                         Section {
-                            ForEach(section.assets, id: \.localIdentifier) { pglAsset in
-                                PGLAssetRowView(pglAsset: pglAsset)
+                            ForEach(Array(section.assets.enumerated()), id: \.element.localIdentifier) { index, pglAsset in
+                                PGLAssetRowView(pglAsset: pglAsset, cachedImage: section.cachedImages[index]?.image)
                                     .listRowBackground(Color.black.opacity(0.35))
                             }
                             .onDelete { offsets in
@@ -186,7 +202,7 @@ struct PGLImageListOverlayView: View {
             Image(systemName: "photo.stack")
                 .font(.system(size: 44))
                 .foregroundColor(.white.opacity(0.4))
-            Text("No images assigned to this filter")
+            Text("Empty")
                 .font(.subheadline)
                 .foregroundColor(.white.opacity(0.6))
             Spacer()

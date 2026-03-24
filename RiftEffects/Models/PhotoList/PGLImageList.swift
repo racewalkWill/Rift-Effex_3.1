@@ -69,7 +69,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
             // when all the images are cached in images then isAssetList is false.
         }
     }
-    private var cachedImages = [Int:PGLImageScaler]()
+    var cachedImages = [Int:PGLImageScaler]()
     var userSelection: PGLUserAssetSelection?
 
 

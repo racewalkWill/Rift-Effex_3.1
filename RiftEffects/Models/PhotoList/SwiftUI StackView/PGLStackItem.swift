@@ -8,27 +8,27 @@
 
 import SwiftUI
 
-struct PGLStackItem: View {
-    var cdStackItem: CDFilterStack
-
-//    @EnvironmentObject var stacks: [CDFilterStack] = PGLStackDataUIProvider.
-    var body: some View {
-        let thumbnailImage: UIImage = if let data = cdStackItem.thumbnail, let image = UIImage(data: data) {
-            image
-        } else {
-            UIImage(systemName: "airplane.circle.fill")!
-        }
-
-        Image(uiImage: thumbnailImage)
-            .resizable()
-            .aspectRatio(3 / 2, contentMode: .fit)
-            .overlay {
-                PGLTextOverlay(cdStackItem: cdStackItem)
-            }
-    }
-
-
-}
+//struct PGLStackItem: View {
+//    var cdStackItem: CDFilterStack
+//
+////    @EnvironmentObject var stacks: [CDFilterStack] = PGLStackDataUIProvider.
+//    var body: some View {
+//        let thumbnailImage: UIImage = if let data = cdStackItem.thumbnail, let image = UIImage(data: data) {
+//            image
+//        } else {
+//            UIImage(systemName: "airplane.circle.fill")!
+//        }
+//
+//        Image(uiImage: thumbnailImage)
+//            .resizable()
+//            .aspectRatio(3 / 2, contentMode: .fit)
+//            .overlay {
+//                PGLTextOverlay(cdStackItem: cdStackItem)
+//            }
+//    }
+//
+//
+//}
 
 struct PGLTextOverlay: View {
     var cdStackItem: CDFilterStack
