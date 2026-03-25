@@ -20,7 +20,7 @@ struct PGLDevicePosition {
 }
 
 @MainActor
-class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable  {
+class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiable {
     // a wrapper object around PHAsset
        // holds the sourceInfo so it can be displayed
        // does this cause any caching memory problems??
@@ -43,9 +43,16 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable  {
     // video
     var assetVideo: PGLAssetVideoPlayer?
 
+    let localIdentifier: String
+
+    nonisolated var id: String { return localIdentifier }
+        // return ObjectIdentifier(self) }
+
+
+
     // MARK: Hash, Equatable
     static func == (lhs: PGLAsset, rhs: PGLAsset) -> Bool {
-       return lhs.asset.localIdentifier == rhs.asset.localIdentifier
+       return lhs.localIdentifier == rhs.localIdentifier
     }
 
     func hash(into hasher: inout Hasher) {
@@ -61,6 +68,7 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable  {
           {  albumId = "" }
         else { albumId = collectionId! }
         asset = sourceAsset
+        localIdentifier = asset.localIdentifier
 
         // image mode
         options = PHImageRequestOptions()
@@ -91,10 +99,10 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable  {
         }
 
 
-    var localIdentifier: String { get {
-        return asset.localIdentifier
-        }
-    }
+//    var localIdentifier: String { get {
+//        return asset.localIdentifier
+//        }
+//    }
 
     func isNull() -> Bool {
         return  asset.localIdentifier.hasPrefix("(null)/")

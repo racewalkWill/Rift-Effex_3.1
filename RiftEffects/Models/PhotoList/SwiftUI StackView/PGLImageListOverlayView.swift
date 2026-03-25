@@ -36,16 +36,16 @@ class PGLImageListViewModel: ObservableObject {
         }
     }
 
-    func removeAsset(in sectionIndex: Int, at offsets: IndexSet) {
-        sections[sectionIndex].assets.remove(atOffsets: offsets)
-        // need to ask the imageList to do the remove
-        sections[sectionIndex].imageList.imageAssets = sections[sectionIndex].assets
+    func removeAsset(in sectionID: UUID, at offsets: IndexSet) {
+        guard let idx = sections.firstIndex(where: { $0.id == sectionID }) else { return }
+        sections[idx].assets.remove(atOffsets: offsets)
+        sections[idx].imageList.imageAssets = sections[idx].assets
     }
 
-    func moveAsset(in sectionIndex: Int, from offsets: IndexSet, to destination: Int) {
-        sections[sectionIndex].assets.move(fromOffsets: offsets, toOffset: destination)
-            // need to ask the imageList to do the move
-        sections[sectionIndex].imageList.imageAssets = sections[sectionIndex].assets
+    func moveAsset(in sectionID: UUID, from offsets: IndexSet, to destination: Int) {
+        guard let idx = sections.firstIndex(where: { $0.id == sectionID }) else { return }
+        sections[idx].assets.move(fromOffsets: offsets, toOffset: destination)
+        sections[idx].imageList.imageAssets = sections[idx].assets
     }
 }
 
@@ -101,7 +101,12 @@ struct PGLAssetRowView: View {
         guard thumbnail == nil, let ciImage = cachedImage else { return }
         let context = CIContext()
         if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
-            thumbnail = UIImage(cgImage: cgImage)
+            let smallSize = CGSize(width: 120, height: 120)
+            let source = UIImage(cgImage: cgImage)
+            Task {
+                let prepared = await source.byPreparingThumbnail(ofSize: smallSize)
+                await MainActor.run { thumbnail = prepared }
+            }
         }
 
 
@@ -168,18 +173,18 @@ struct PGLImageListOverlayView: View {
                 emptyState
             } else {
                 List {
-                    ForEach(viewModel.sections.indices, id: \.self) { sectionIndex in
-                        let section = viewModel.sections[sectionIndex]
+                    ForEach(viewModel.sections) { section in
                         Section {
-                            ForEach(Array(section.assets.enumerated()), id: \.element.localIdentifier) { index, pglAsset in
-                                PGLAssetRowView(pglAsset: pglAsset, cachedImage: section.cachedImages[index]?.image)
+                            ForEach(section.assets) { pglAsset in
+                                let assetIndex = section.assets.firstIndex(of: pglAsset)
+                                PGLAssetRowView(pglAsset: pglAsset, cachedImage: assetIndex.flatMap { section.cachedImages[$0]?.image })
                                     .listRowBackground(Color.black.opacity(0.35))
                             }
                             .onDelete { offsets in
-                                viewModel.removeAsset(in: sectionIndex, at: offsets)
+                                viewModel.removeAsset(in: section.id, at: offsets)
                             }
                             .onMove { from, to in
-                                viewModel.moveAsset(in: sectionIndex, from: from, to: to)
+                                viewModel.moveAsset(in: section.id, from: from, to: to)
                             }
                         } header: {
                             Text(section.attributeName)
