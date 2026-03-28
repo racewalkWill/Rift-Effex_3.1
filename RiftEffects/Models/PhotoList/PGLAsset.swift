@@ -36,6 +36,7 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiabl
 
     var albumId: String  // must have an albumId
     var collectionTitle = String()
+    var isSelected = false
 //       var hasDepthData = false  // set in PGLImageList #imageFrom(target)
 
     let options: PHImageRequestOptions?
@@ -98,11 +99,6 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiabl
 
         }
 
-
-//    var localIdentifier: String { get {
-//        return asset.localIdentifier
-//        }
-//    }
 
     func isNull() -> Bool {
         return  asset.localIdentifier.hasPrefix("(null)/")

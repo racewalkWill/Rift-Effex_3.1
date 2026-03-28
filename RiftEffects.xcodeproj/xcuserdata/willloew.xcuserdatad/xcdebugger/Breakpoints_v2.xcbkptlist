@@ -30,38 +30,116 @@
             filePath = "RiftEffects/Models/PhotoList/SwiftUI StackView/PGLImageListOverlayView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
             landmarkName = "contentList"
             landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1EC7C564-4500-4CEF-956A-DD38AA467AF9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Controllers/PGLImageController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "890"
+            endingLineNumber = "890"
+            landmarkName = "addImageListBarButton()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DBF13819-6A5B-4140-B19F-7CD236575647"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Models/PhotoList/SwiftUI StackView/PGLImageListOverlayView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "removeAsset(in:at:)"
+            landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "F601E49F-148F-45CA-8F3B-D0E09045D9E6 - 41e66835710971e1"
+                  uuid = "DBF13819-6A5B-4140-B19F-7CD236575647 - 59deedce07d0b546"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Foundation.IndexSet) -&gt; () in closure #1 () -&gt; &lt;&lt;opaque return type of SwiftUI.DynamicViewContent.onMove(perform: Swift.Optional&lt;(Foundation.IndexSet, Swift.Int) -&gt; ()&gt;) -&gt; some&gt;&gt;.0 in closure #1 (Swift.Int, RiftEffects.PGLImageListViewModel.AssetSection) -&gt; SwiftUI.Section&lt;&lt;&lt;opaque return type of SwiftUI.View.textCase(Swift.Optional&lt;SwiftUI.Text.Case&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.DynamicViewContent.onMove(perform: Swift.Optional&lt;(Foundation.IndexSet, Swift.Int) -&gt; ()&gt;) -&gt; some&gt;&gt;.0, SwiftUI.EmptyView&gt; in closure #1 () -&gt; SwiftUI.ForEach&lt;Swift.Array&lt;(offset: Swift.Int, element: RiftEffects.PGLImageListViewModel.AssetSection)&gt;, Foundation.UUID, SwiftUI.Section&lt;&lt;&lt;opaque return type of SwiftUI.View.textCase(Swift.Optional&lt;SwiftUI.Text.Case&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.DynamicViewContent.onMove(perform: Swift.Optional&lt;(Foundation.IndexSet, Swift.Int) -&gt; ()&gt;) -&gt; some&gt;&gt;.0, SwiftUI.EmptyView&gt;&gt; in closure #1 () -&gt; SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of RiftEffects.PGLImageListOverlayView.emptyState : some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.environment&lt;&#x3c4;_0_0&gt;(Swift.WritableKeyPath&lt;SwiftUI.EnvironmentValues, &#x3c4;_1_0&gt;, &#x3c4;_1_0) -&gt; some&gt;&gt;.0&gt; in RiftEffects.PGLImageListOverlayView.contentList.getter : some"
+                  symbolName = "RiftEffects.PGLImageListViewModel.removeAsset(in: Foundation.UUID, at: Foundation.IndexSet) -&gt; ()"
                   moduleName = "RiftEffects.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/willloew/Developer/Rift-Effex_3.8/RiftEffects/Models/PhotoList/SwiftUI%20StackView/PGLImageListOverlayView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "184"
-                  endingLineNumber = "184">
+                  startingLineNumber = "41"
+                  endingLineNumber = "41">
                </Location>
                <Location
-                  uuid = "F601E49F-148F-45CA-8F3B-D0E09045D9E6 - cf65ad91d1ccbee5"
+                  uuid = "DBF13819-6A5B-4140-B19F-7CD236575647 - 510a674bd80e5471"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Foundation.IndexSet) -&gt; () in closure #1 () -&gt; &lt;&lt;opaque return type of SwiftUI.DynamicViewContent.onMove(perform: Swift.Optional&lt;(Foundation.IndexSet, Swift.Int) -&gt; ()&gt;) -&gt; some&gt;&gt;.0 in closure #1 (RiftEffects.PGLImageListViewModel.AssetSection) -&gt; SwiftUI.Section&lt;&lt;&lt;opaque return type of SwiftUI.View.textCase(Swift.Optional&lt;SwiftUI.Text.Case&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.DynamicViewContent.onMove(perform: Swift.Optional&lt;(Foundation.IndexSet, Swift.Int) -&gt; ()&gt;) -&gt; some&gt;&gt;.0, SwiftUI.EmptyView&gt; in closure #1 () -&gt; SwiftUI.ForEach&lt;Swift.Array&lt;RiftEffects.PGLImageListViewModel.AssetSection&gt;, Foundation.UUID, SwiftUI.Section&lt;&lt;&lt;opaque return type of SwiftUI.View.textCase(Swift.Optional&lt;SwiftUI.Text.Case&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.DynamicViewContent.onMove(perform: Swift.Optional&lt;(Foundation.IndexSet, Swift.Int) -&gt; ()&gt;) -&gt; some&gt;&gt;.0, SwiftUI.EmptyView&gt;&gt; in closure #1 () -&gt; SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of RiftEffects.PGLImageListOverlayView.emptyState : some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.environment&lt;&#x3c4;_0_0&gt;(Swift.WritableKeyPath&lt;SwiftUI.EnvironmentValues, &#x3c4;_1_0&gt;, &#x3c4;_1_0) -&gt; some&gt;&gt;.0&gt; in RiftEffects.PGLImageListOverlayView.contentList.getter : some"
+                  symbolName = "closure #1 (RiftEffects.PGLImageListViewModel.AssetSection) -&gt; Swift.Bool in RiftEffects.PGLImageListViewModel.removeAsset(in: Foundation.UUID, at: Foundation.IndexSet) -&gt; ()"
                   moduleName = "RiftEffects.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/willloew/Developer/Rift-Effex_3.8/RiftEffects/Models/PhotoList/SwiftUI%20StackView/PGLImageListOverlayView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "184"
-                  endingLineNumber = "184">
+                  startingLineNumber = "41"
+                  endingLineNumber = "41">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "380B7199-7E33-42D0-A8F4-3117092F116D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Models/PhotoList/SwiftUI StackView/PGLImageListOverlayView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "moveAsset(in:from:to:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "380B7199-7E33-42D0-A8F4-3117092F116D - 51700e150ef5d84a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RiftEffects.PGLImageListViewModel.moveAsset(in: Foundation.UUID, from: Foundation.IndexSet, to: Swift.Int) -&gt; ()"
+                  moduleName = "RiftEffects.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex_3.8/RiftEffects/Models/PhotoList/SwiftUI%20StackView/PGLImageListOverlayView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "47"
+                  endingLineNumber = "47">
+               </Location>
+               <Location
+                  uuid = "380B7199-7E33-42D0-A8F4-3117092F116D - 53c603f7f275b9f2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (RiftEffects.PGLImageListViewModel.AssetSection) -&gt; Swift.Bool in RiftEffects.PGLImageListViewModel.moveAsset(in: Foundation.UUID, from: Foundation.IndexSet, to: Swift.Int) -&gt; ()"
+                  moduleName = "RiftEffects.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex_3.8/RiftEffects/Models/PhotoList/SwiftUI%20StackView/PGLImageListOverlayView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "47"
+                  endingLineNumber = "47">
                </Location>
             </Locations>
          </BreakpointContent>

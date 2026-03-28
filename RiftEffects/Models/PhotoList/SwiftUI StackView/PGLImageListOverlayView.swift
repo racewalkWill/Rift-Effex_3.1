@@ -25,6 +25,7 @@ class PGLImageListViewModel: ObservableObject {
     }
 
     @Published var sections: [AssetSection] = []
+//    @Published var selection: Set<String> = []
 
     func loadFromFilter(_ filter: PGLSourceFilter) {
         sections = filter.imageAttributes().compactMap { attr -> AssetSection? in
@@ -47,6 +48,12 @@ class PGLImageListViewModel: ObservableObject {
         sections[idx].assets.move(fromOffsets: offsets, toOffset: destination)
         sections[idx].imageList.imageAssets = sections[idx].assets
     }
+
+//    func selectAsset(in sectionID: UUID, at index: Int) {
+//        guard let idx = sections.firstIndex(where: { $0.id == sectionID }) else { return }
+//        sections[idx].assets[index].isSelected.toggle()
+//        sections[idx].imageList.imageAssets = sections[idx].assets
+//    }
 }
 
 // MARK: - Asset Thumbnail Row
@@ -58,9 +65,9 @@ struct PGLAssetRowView: View {
     @State private var thumbnail: UIImage? = nil
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             thumbnailView
-                .frame(width: 60, height: 60)
+                .frame(width: 80, height: 60)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 4) {
@@ -95,6 +102,19 @@ struct PGLAssetRowView: View {
                         .foregroundColor(.secondary)
                 }
         }
+//        Button {
+//            // call removeAsset(in sectionID;, at offsets: )
+////            guard let index = symbols.firstIndex(of: symbol) else { return }
+////            withAnimation {
+////                _ = symbols.remove(at: index)
+////            }
+//        } label: {
+//            Image(systemName: "xmark.square.fill")
+//                        .font(.title)
+//                        .symbolRenderingMode(.palette)
+//                        .foregroundStyle(.white, Color.red)
+//        }
+//        .offset(x: 7, y: -7)
     }
 
     private func loadThumbnail() {
@@ -108,27 +128,6 @@ struct PGLAssetRowView: View {
                 await MainActor.run { thumbnail = prepared }
             }
         }
-
-
-//        guard thumbnail == nil else { return }
-//        let options = PHImageRequestOptions()
-//        options.deliveryMode = .fastFormat
-//        options.isNetworkAccessAllowed = false
-//        options.isSynchronous = false
-//        let size = CGSize(width: 120, height: 120)
-//        PHImageManager.default().requestImage(
-//            for: pglAsset.asset,
-//            targetSize: size,
-//            contentMode: .aspectFill,
-//            options: options
-//        ) { image, _ in
-//            if let image {
-//                DispatchQueue.main.async {
-//                    self.thumbnail = image
-//                }
-//            }
-//        }
-//    }
     }
 }
 
@@ -137,6 +136,7 @@ struct PGLAssetRowView: View {
 struct PGLImageListOverlayView: View {
     @ObservedObject var viewModel: PGLImageListViewModel
     var onDismiss: () -> Void
+    @State private var editMode: EditMode = .active
 
     var body: some View {
         ZStack {
@@ -172,6 +172,7 @@ struct PGLImageListOverlayView: View {
             if viewModel.sections.isEmpty {
                 emptyState
             } else {
+//                List(selection: $viewModel.selection) {
                 List {
                     ForEach(viewModel.sections) { section in
                         Section {
@@ -179,6 +180,20 @@ struct PGLImageListOverlayView: View {
                                 let assetIndex = section.assets.firstIndex(of: pglAsset)
                                 PGLAssetRowView(pglAsset: pglAsset, cachedImage: assetIndex.flatMap { section.cachedImages[$0]?.image })
                                     .listRowBackground(Color.black.opacity(0.35))
+//                                Button {
+//                                    if let index = assetIndex {
+//                                        withAnimation {
+//                                            viewModel.removeAsset(in: section.id, at: IndexSet(integer: index))
+//                                        }
+//                                    }
+//                                }
+//                                label: {
+//                                    Image(systemName: "xmark.square.fill")
+//                                                .font(.title)
+//                                                .symbolRenderingMode(.palette)
+//                                                .foregroundStyle(.white, Color.red)
+//                                }
+//                                .offset(x: 7, y: -7)
                             }
                             .onDelete { offsets in
                                 viewModel.removeAsset(in: section.id, at: offsets)
@@ -191,12 +206,15 @@ struct PGLImageListOverlayView: View {
                                 .foregroundColor(.white.opacity(0.7))
                                 .textCase(nil)
                         }
+
+
                     }
+                    
                 }
                 .listStyle(.insetGrouped)
                 .scrollContentBackground(.hidden)
                 .background(Color.clear)
-                .environment(\.editMode, .constant(.active))
+                .environment(\.editMode, $editMode)
             }
         }
     }
