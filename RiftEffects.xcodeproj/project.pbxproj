@@ -1305,7 +1305,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "RiftEffects/Metal Render/AAPLShaderTypes.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = NO;
 			};
 			name = Debug;
@@ -1371,7 +1371,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "RiftEffects/Metal Render/AAPLShaderTypes.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = complete;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

@@ -155,7 +155,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     // MARK: Image List Overlay
     var imageListViewModel = PGLImageListViewModel()
-    var imageListHostingController: UIHostingController<PGLImageListOverlayView>?
+    var imageListHostingController: UIViewController?
 
     @IBAction func templateBtnAction(_ sender: UIBarButtonItem) {
         NSLog("PGLImageController addRandom button click")
@@ -904,9 +904,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         guard let currentStack = filterStack(), !currentStack.isEmptyStack() else { return }
         imageListViewModel.loadFromFilter(currentStack.currentFilter())
 
-        let overlayView = PGLImageListOverlayView(viewModel: imageListViewModel) { [weak self] in
+        let overlayView = PGLImageListOverlayView { [weak self] in
             self?.hideImageListOverlay()
         }
+        .environmentObject(imageListViewModel)
         let hostingController = UIHostingController(rootView: overlayView)
         hostingController.view.backgroundColor = .clear
 

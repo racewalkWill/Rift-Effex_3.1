@@ -23,22 +23,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F601E49F-148F-45CA-8F3B-D0E09045D9E6"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/PhotoList/SwiftUI StackView/PGLImageListOverlayView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "199"
-            endingLineNumber = "199"
-            landmarkName = "contentList"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "1EC7C564-4500-4CEF-956A-DD38AA467AF9"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -62,13 +46,13 @@
             filePath = "RiftEffects/Models/PhotoList/SwiftUI StackView/PGLImageListOverlayView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
             landmarkName = "removeAsset(in:at:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "DBF13819-6A5B-4140-B19F-7CD236575647 - 59deedce07d0b546"
+                  uuid = "DBF13819-6A5B-4140-B19F-7CD236575647 - 59deedce07d0b4db"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -78,11 +62,11 @@
                   urlString = "file:///Users/willloew/Developer/Rift-Effex_3.8/RiftEffects/Models/PhotoList/SwiftUI%20StackView/PGLImageListOverlayView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "41"
-                  endingLineNumber = "41">
+                  startingLineNumber = "44"
+                  endingLineNumber = "44">
                </Location>
                <Location
-                  uuid = "DBF13819-6A5B-4140-B19F-7CD236575647 - 510a674bd80e5471"
+                  uuid = "DBF13819-6A5B-4140-B19F-7CD236575647 - 510a674bd80e55ec"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -92,8 +76,8 @@
                   urlString = "file:///Users/willloew/Developer/Rift-Effex_3.8/RiftEffects/Models/PhotoList/SwiftUI%20StackView/PGLImageListOverlayView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "41"
-                  endingLineNumber = "41">
+                  startingLineNumber = "44"
+                  endingLineNumber = "44">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -108,13 +92,13 @@
             filePath = "RiftEffects/Models/PhotoList/SwiftUI StackView/PGLImageListOverlayView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
             landmarkName = "moveAsset(in:from:to:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "380B7199-7E33-42D0-A8F4-3117092F116D - 51700e150ef5d84a"
+                  uuid = "380B7199-7E33-42D0-A8F4-3117092F116D - 51700e150ef5dfef"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -124,11 +108,11 @@
                   urlString = "file:///Users/willloew/Developer/Rift-Effex_3.8/RiftEffects/Models/PhotoList/SwiftUI%20StackView/PGLImageListOverlayView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "47"
-                  endingLineNumber = "47">
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
                </Location>
                <Location
-                  uuid = "380B7199-7E33-42D0-A8F4-3117092F116D - 53c603f7f275b9f2"
+                  uuid = "380B7199-7E33-42D0-A8F4-3117092F116D - 53c603f7f275be57"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -138,8 +122,8 @@
                   urlString = "file:///Users/willloew/Developer/Rift-Effex_3.8/RiftEffects/Models/PhotoList/SwiftUI%20StackView/PGLImageListOverlayView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "47"
-                  endingLineNumber = "47">
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
                </Location>
             </Locations>
          </BreakpointContent>

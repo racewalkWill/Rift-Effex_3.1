@@ -19,20 +19,23 @@ class PGLImageListViewModel: ObservableObject {
     struct AssetSection: Identifiable {
         let id = UUID()
         let attributeName: String
-        let imageList: PGLImageList
+        var imageList: PGLImageList
         var assets: [PGLAsset]
-        var cachedImages: [Int: PGLImageScaler]
+//        var cachedImages: [Int: PGLImageScaler]
     }
 
     @Published var sections: [AssetSection] = []
 //    @Published var selection: Set<String> = []
 
     func loadFromFilter(_ filter: PGLSourceFilter) {
+        // PGLImageController loads from selected filter
+        // then opens PGLImageListOverlayView with this model
         sections = filter.imageAttributes().compactMap { attr -> AssetSection? in
             guard let list = attr.inputCollection, !list.isEmpty() else { return nil }
             let name = attr.attributeDisplayName ?? attr.attributeName ?? "Images"
             return AssetSection(attributeName: name, imageList: list, assets: list.imageAssets,
-                cachedImages: list.cachedImages)
+//                cachedImages: list.cachedImages
+            )
 //            return PGLStackItem
         }
     }
@@ -60,15 +63,16 @@ class PGLImageListViewModel: ObservableObject {
 
 struct PGLAssetRowView: View {
     let pglAsset: PGLAsset
-    let cachedImage: CIImage?
-    
+//    let cachedImage: CIImage?
+    let id = UUID()
+
     @State private var thumbnail: UIImage? = nil
 
     var body: some View {
         HStack(spacing: 10) {
-            thumbnailView
-                .frame(width: 80, height: 60)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+//            thumbnailView
+//                .frame(width: 80, height: 60)
+//                .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 4) {
                 if pglAsset.asset.mediaType == .video {
@@ -86,7 +90,7 @@ struct PGLAssetRowView: View {
             Spacer()
         }
         .padding(.vertical, 4)
-        .onAppear { loadThumbnail() }
+//        .onAppear { loadThumbnail() }
     }
 
     @ViewBuilder
@@ -117,26 +121,27 @@ struct PGLAssetRowView: View {
 //        .offset(x: 7, y: -7)
     }
 
-    private func loadThumbnail() {
-        guard thumbnail == nil, let ciImage = cachedImage else { return }
-        let context = CIContext()
-        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
-            let smallSize = CGSize(width: 120, height: 120)
-            let source = UIImage(cgImage: cgImage)
-            Task {
-                let prepared = await source.byPreparingThumbnail(ofSize: smallSize)
-                await MainActor.run { thumbnail = prepared }
-            }
-        }
-    }
+//    private func loadThumbnail() {
+//        guard thumbnail == nil, let ciImage = cachedImage else { return }
+//        let context = CIContext()
+//        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+//            let smallSize = CGSize(width: 120, height: 120)
+//            let source = UIImage(cgImage: cgImage)
+//            Task {
+//                let prepared = await source.byPreparingThumbnail(ofSize: smallSize)
+//                await MainActor.run { thumbnail = prepared }
+//            }
+//        }
+//    }
 }
 
 // MARK: - Overlay View
 
 struct PGLImageListOverlayView: View {
-    @ObservedObject var viewModel: PGLImageListViewModel
+    // @ObservedObject var viewModel: PGLImageListViewModel
+    @EnvironmentObject var viewModel: PGLImageListViewModel
     var onDismiss: () -> Void
-    @State private var editMode: EditMode = .active
+
 
     var body: some View {
         ZStack {
@@ -172,53 +177,38 @@ struct PGLImageListOverlayView: View {
             if viewModel.sections.isEmpty {
                 emptyState
             } else {
-//                List(selection: $viewModel.selection) {
                 List {
                     ForEach(viewModel.sections) { section in
                         Section {
                             ForEach(section.assets) { pglAsset in
-                                let assetIndex = section.assets.firstIndex(of: pglAsset)
-                                PGLAssetRowView(pglAsset: pglAsset, cachedImage: assetIndex.flatMap { section.cachedImages[$0]?.image })
-                                    .listRowBackground(Color.black.opacity(0.35))
-//                                Button {
-//                                    if let index = assetIndex {
-//                                        withAnimation {
-//                                            viewModel.removeAsset(in: section.id, at: IndexSet(integer: index))
-//                                        }
-//                                    }
-//                                }
-//                                label: {
-//                                    Image(systemName: "xmark.square.fill")
-//                                                .font(.title)
-//                                                .symbolRenderingMode(.palette)
-//                                                .foregroundStyle(.white, Color.red)
-//                                }
-//                                .offset(x: 7, y: -7)
+                                PGLAssetRowView(pglAsset: pglAsset)
+                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                        Button(role: .destructive) {
+                                            if let index = section.assets.firstIndex(where: { $0.id == pglAsset.id }) {
+                                                withAnimation {
+                                                    viewModel.removeAsset(in: section.id, at: IndexSet(integer: index))
+                                                }
+                                            }
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    }
                             }
-                            .onDelete { offsets in
-                                viewModel.removeAsset(in: section.id, at: offsets)
-                            }
-                            .onMove { from, to in
-                                viewModel.moveAsset(in: section.id, from: from, to: to)
-                            }
+                            .listRowBackground(Color.black.opacity(0.35))
                         } header: {
                             Text(section.attributeName)
                                 .foregroundColor(.white.opacity(0.7))
                                 .textCase(nil)
                         }
-
-
                     }
-                    
                 }
                 .listStyle(.insetGrouped)
                 .scrollContentBackground(.hidden)
                 .background(Color.clear)
-                .environment(\.editMode, $editMode)
-            }
+
+                }
         }
     }
-
     private var emptyState: some View {
         VStack(spacing: 12) {
             Spacer()
