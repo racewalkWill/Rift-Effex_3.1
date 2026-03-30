@@ -141,6 +141,8 @@ struct PGLImageListOverlayView: View {
     // @ObservedObject var viewModel: PGLImageListViewModel
     @EnvironmentObject var viewModel: PGLImageListViewModel
     var onDismiss: () -> Void
+    @State private var editMode: EditMode = .active
+//    @State private var editMode: EditMode = .active
 
 
     var body: some View {
@@ -194,7 +196,13 @@ struct PGLImageListOverlayView: View {
                                         }
                                     }
                             }
+                            .onMove { from, to in
+                                withAnimation {
+                                    viewModel.moveAsset(in: section.id, from: from, to: to)
+                                }
+                            }
                             .listRowBackground(Color.black.opacity(0.35))
+
                         } header: {
                             Text(section.attributeName)
                                 .foregroundColor(.white.opacity(0.7))
@@ -205,7 +213,7 @@ struct PGLImageListOverlayView: View {
                 .listStyle(.insetGrouped)
                 .scrollContentBackground(.hidden)
                 .background(Color.clear)
-
+                .environment(\.editMode, $editMode)
                 }
         }
     }
