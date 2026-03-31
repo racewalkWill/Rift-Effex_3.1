@@ -21,7 +21,7 @@ class PGLImageListViewModel: ObservableObject {
         let attributeName: String
         var imageList: PGLImageList
         var assets: [PGLAsset]
-//        var cachedImages: [Int: PGLImageScaler]
+        var cachedImages: [Int: PGLImageScaler]
     }
 
     @Published var sections: [AssetSection] = []
@@ -34,15 +34,15 @@ class PGLImageListViewModel: ObservableObject {
             guard let list = attr.inputCollection, !list.isEmpty() else { return nil }
             let name = attr.attributeDisplayName ?? attr.attributeName ?? "Images"
             return AssetSection(attributeName: name, imageList: list, assets: list.imageAssets,
-//                cachedImages: list.cachedImages
+                cachedImages: list.cachedImages
             )
 //            return PGLStackItem
         }
     }
 
-    func removeAsset(in sectionID: UUID, at offsets: IndexSet) {
+    func removeAsset(in sectionID: UUID, assetID: String) {
         guard let idx = sections.firstIndex(where: { $0.id == sectionID }) else { return }
-        sections[idx].assets.remove(atOffsets: offsets)
+        sections[idx].assets.removeAll(where: { $0.id == assetID })
         sections[idx].imageList.imageAssets = sections[idx].assets
     }
 
@@ -63,16 +63,16 @@ class PGLImageListViewModel: ObservableObject {
 
 struct PGLAssetRowView: View {
     let pglAsset: PGLAsset
-//    let cachedImage: CIImage?
+    let cachedImage: CIImage?
     let id = UUID()
 
     @State private var thumbnail: UIImage? = nil
 
     var body: some View {
         HStack(spacing: 10) {
-//            thumbnailView
-//                .frame(width: 80, height: 60)
-//                .clipShape(RoundedRectangle(cornerRadius: 8))
+            thumbnailView
+                .frame(width: 80, height: 60)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 4) {
                 if pglAsset.asset.mediaType == .video {
@@ -90,7 +90,7 @@ struct PGLAssetRowView: View {
             Spacer()
         }
         .padding(.vertical, 4)
-//        .onAppear { loadThumbnail() }
+        .onAppear { loadThumbnail() }
     }
 
     @ViewBuilder
@@ -121,18 +121,18 @@ struct PGLAssetRowView: View {
 //        .offset(x: 7, y: -7)
     }
 
-//    private func loadThumbnail() {
-//        guard thumbnail == nil, let ciImage = cachedImage else { return }
-//        let context = CIContext()
-//        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
-//            let smallSize = CGSize(width: 120, height: 120)
-//            let source = UIImage(cgImage: cgImage)
-//            Task {
-//                let prepared = await source.byPreparingThumbnail(ofSize: smallSize)
-//                await MainActor.run { thumbnail = prepared }
-//            }
-//        }
-//    }
+    private func loadThumbnail() {
+        guard thumbnail == nil, let ciImage = cachedImage else { return }
+        let context = CIContext()
+        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+            let smallSize = CGSize(width: 120, height: 120)
+            let source = UIImage(cgImage: cgImage)
+            Task {
+                let prepared = await source.byPreparingThumbnail(ofSize: smallSize)
+                await MainActor.run { thumbnail = prepared }
+            }
+        }
+    }
 }
 
 // MARK: - Overlay View
@@ -141,8 +141,7 @@ struct PGLImageListOverlayView: View {
     // @ObservedObject var viewModel: PGLImageListViewModel
     @EnvironmentObject var viewModel: PGLImageListViewModel
     var onDismiss: () -> Void
-    @State private var editMode: EditMode = .active
-//    @State private var editMode: EditMode = .active
+    @State private var editMode: EditMode = .inactive
 
 
     var body: some View {
@@ -182,14 +181,14 @@ struct PGLImageListOverlayView: View {
                 List {
                     ForEach(viewModel.sections) { section in
                         Section {
-                            ForEach(section.assets) { pglAsset in
-                                PGLAssetRowView(pglAsset: pglAsset)
+                            ForEach(section.assets.indices, id: \.self) { assetIndex in
+                                let pglAsset = section.assets[assetIndex]
+                                let cachedImage = section.imageList.cachedImages[assetIndex]?.image
+                                PGLAssetRowView(pglAsset: pglAsset, cachedImage: cachedImage)
                                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                         Button(role: .destructive) {
-                                            if let index = section.assets.firstIndex(where: { $0.id == pglAsset.id }) {
-                                                withAnimation {
-                                                    viewModel.removeAsset(in: section.id, at: IndexSet(integer: index))
-                                                }
+                                            withAnimation {
+                                                viewModel.removeAsset(in: section.id, assetID: pglAsset.id)
                                             }
                                         } label: {
                                             Label("Delete", systemImage: "trash")
