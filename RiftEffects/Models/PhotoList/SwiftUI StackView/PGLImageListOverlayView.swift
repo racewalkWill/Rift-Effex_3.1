@@ -16,40 +16,43 @@ import CoreImage
 @MainActor
 class PGLImageListViewModel: ObservableObject {
 
-    struct AssetSection: Identifiable {
+    struct ParmSection: Identifiable {
         let id = UUID()
         let attributeName: String
         var imageList: PGLImageList
+        // assets and cachedImages are internal vars of the imageList
         var assets: [PGLAsset]
         var cachedImages: [Int: PGLImageScaler]
     }
 
-    @Published var sections: [AssetSection] = []
+    @Published var filterParms: [ParmSection] = []
 //    @Published var selection: Set<String> = []
 
     func loadFromFilter(_ filter: PGLSourceFilter) {
         // PGLImageController loads from selected filter
         // then opens PGLImageListOverlayView with this model
-        sections = filter.imageAttributes().compactMap { attr -> AssetSection? in
+        filterParms = filter.imageAttributes().compactMap { attr -> ParmSection? in
             guard let list = attr.inputCollection, !list.isEmpty() else { return nil }
             let name = attr.attributeDisplayName ?? attr.attributeName ?? "Images"
-            return AssetSection(attributeName: name, imageList: list, assets: list.imageAssets,
+            return ParmSection(attributeName: name, imageList: list, assets: list.imageAssets,
                 cachedImages: list.cachedImages
             )
 //            return PGLStackItem
         }
     }
 
-    func removeAsset(in sectionID: UUID, assetID: String) {
-        guard let idx = sections.firstIndex(where: { $0.id == sectionID }) else { return }
-        sections[idx].assets.removeAll(where: { $0.id == assetID })
-        sections[idx].imageList.imageAssets = sections[idx].assets
+    func removeAsset(in parmId: UUID, at imageListIndex: Int) {
+        guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
+
+        // perform remove on the imageList
+        filterParms[parmIndex].imageList.removeImage(at: imageListIndex)
+
     }
 
     func moveAsset(in sectionID: UUID, from offsets: IndexSet, to destination: Int) {
-        guard let idx = sections.firstIndex(where: { $0.id == sectionID }) else { return }
-        sections[idx].assets.move(fromOffsets: offsets, toOffset: destination)
-        sections[idx].imageList.imageAssets = sections[idx].assets
+        guard let idx = filterParms.firstIndex(where: { $0.id == sectionID }) else { return }
+        filterParms[idx].assets.move(fromOffsets: offsets, toOffset: destination)
+        filterParms[idx].imageList.imageAssets = filterParms[idx].assets
     }
 
 //    func selectAsset(in sectionID: UUID, at index: Int) {
@@ -175,20 +178,20 @@ struct PGLImageListOverlayView: View {
 
     private var contentList: some View {
         Group {
-            if viewModel.sections.isEmpty {
+            if viewModel.filterParms.isEmpty {
                 emptyState
             } else {
                 List {
-                    ForEach(viewModel.sections) { section in
+                    ForEach(viewModel.filterParms) { imageAttributeSection in
                         Section {
-                            ForEach(section.assets.indices, id: \.self) { assetIndex in
-                                let pglAsset = section.assets[assetIndex]
-                                let cachedImage = section.imageList.cachedImages[assetIndex]?.image
+                            ForEach(imageAttributeSection.assets.indices, id: \.self) { assetIndex in
+                                let pglAsset = imageAttributeSection.assets[assetIndex]
+                                let cachedImage = imageAttributeSection.imageList.cachedImages[assetIndex]?.image
                                 PGLAssetRowView(pglAsset: pglAsset, cachedImage: cachedImage)
                                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                         Button(role: .destructive) {
                                             withAnimation {
-                                                viewModel.removeAsset(in: section.id, assetID: pglAsset.id)
+                                                viewModel.removeAsset(in: imageAttributeSection.id,  at: assetIndex)
                                             }
                                         } label: {
                                             Label("Delete", systemImage: "trash")
@@ -197,13 +200,13 @@ struct PGLImageListOverlayView: View {
                             }
                             .onMove { from, to in
                                 withAnimation {
-                                    viewModel.moveAsset(in: section.id, from: from, to: to)
+                                    viewModel.moveAsset(in: imageAttributeSection.id, from: from, to: to)
                                 }
                             }
                             .listRowBackground(Color.black.opacity(0.35))
 
                         } header: {
-                            Text(section.attributeName)
+                            Text(imageAttributeSection.attributeName)
                                 .foregroundColor(.white.opacity(0.7))
                                 .textCase(nil)
                         }

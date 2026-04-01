@@ -44,11 +44,13 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     var inputStack: PGLFilterStack? // remove this var? imageParms will have an inputStack.. not the imageList
 
 
-    var position = 0 {
-        didSet {
-            if PGLSourceFilter.LogParmValues { NSLog("PGLImageList position set to  \(position)") }
-        }
-    }
+    var position = 0
+//    {
+//        didSet {
+//            if PGLSourceFilter.LogParmValues { NSLog("PGLImageList position set to  \(position)") }
+//        }
+//    }
+
     var targetSize: CGSize { get {
         return TargetSize
         }
@@ -70,6 +72,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         }
     }
     var cachedImages = [Int:PGLImageScaler]()
+            // dictionary by index Int
     var userSelection: PGLUserAssetSelection?
 
 
@@ -601,53 +604,39 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         if hasImageStack() { return inputStack?.stackOutputImage(false)} // needs scaleToFrame??
         if isEmpty() {return nil } // guard
         if maxAssetsOrImagesCount()  == 1 { return first() } // guard - nothing to increment
+             // at zero assumes first object already shown
 
 //      NSLog("PGLImageList nextType = \(nextType) #increment start position = \(position)")
 
-
-        // at zero assumes first object already shown
         if nextType == NextElement.each {
             position = position + 1 }
         else { position = position + 2 } // skip by 2 }
 
         if position >= maxAssetsOrImagesCount()  {
             // start over
-
             switch nextType {
                 case  NextElement.each :
                     position = 0
-                    
+
                 case  NextElement.odd :
                     position = 1
-//                    if position.isEven() {
-//                        position = 0
-//                    } else { position = 1 }
 
                 case NextElement.even :
                     position = 0
-//                    if !position.isEven() {
-//                        position = 0
-//                    } else { position = 1 }
-
-
             }
         }
-
+//        if position >= imageAssets.count { position = 0 }
         let answerImage =  image(atIndex: position)
 //         NSLog("PGLImageList nextType = \(nextType) #increment end position = \(position)")
         return answerImage
     }
 
-        func setImages(ciImageArray: [CIImage]) {
-            for (thisIndex, anImage) in ciImageArray.enumerated() {
-                cachedImages[thisIndex] = PGLImageScaler(image: anImage)
-            }
+    func setImages(ciImageArray: [CIImage]) {
+        for (thisIndex, anImage) in ciImageArray.enumerated() {
+            cachedImages[thisIndex] = PGLImageScaler(image: anImage)
         }
+    }
 
-//    func setImage(aCiImage : CIImage, position: Int ) {
-//        images.insert( aCiImage, at: position)  // this adjusts the arrary size as needed.
-//
-//    }
 
     func cacheImage(baseImage: CIImage, index: Int) {
 
@@ -686,10 +675,35 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         return nil // nothing found
     }
 
+    // MARK: Editing - remove, reorder
+    /// three parallel vars to update   the dictionary of cachedImages, the imageAssets [PGLAsset]  array and the assetIDs array of localIdentifiers
+    func removeImage(at index: Int) {
+        imageAssets.remove(at: index)
+
+        _ = cachedImages.removeValue(forKey: index)
+            // cachedImages may be smaller than imageAssets - not all images are cached
+            // keep in sync
+                // adjusts position - max size is changed
+
+//            if cachedImages.count != imageAssets.count {
+//                NSLog("PGLImageList.removeImage: count mismatch: cachedImages.count: \(cachedImages.count) != imageAssets.count: \(imageAssets.count)")
+//            }
+
+        // assetIDs are reset in didSet of the imageAssets
+                //  don't need to call assetIDs.remove(at: index)
+        // adjusts position - max size is changed
+    }
+
+
+
     // MARK: Video
     func currentImageIsVideo() -> Bool {
         // position in zero based array needs offset
         var thisImageAsset: PGLAsset
+        if !(position < imageAssets.count) {
+            //  bail out position should be incremented in another pass.
+            return false
+        }
         switch imageAssets.count {
             case 0:
                 return false
