@@ -49,10 +49,13 @@ class PGLImageListViewModel: ObservableObject {
 
     }
 
-    func moveAsset(in sectionID: UUID, from offsets: IndexSet, to destination: Int) {
-        guard let idx = filterParms.firstIndex(where: { $0.id == sectionID }) else { return }
-        filterParms[idx].assets.move(fromOffsets: offsets, toOffset: destination)
-        filterParms[idx].imageList.imageAssets = filterParms[idx].assets
+    func moveAsset(in parmId: UUID, from offsets: IndexSet, to destination: Int) {
+        guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
+//        filterParms[parmIndex].assets.move(fromOffsets: offsets, toOffset: destination)
+        filterParms[parmIndex].imageList.moveContentsFrom(fromOffsets: offsets, toOffset: destination )
+
+
+        // filterParms[idx].imageList.imageAssets = filterParms[idx].assets
     }
 
 //    func selectAsset(in sectionID: UUID, at index: Int) {

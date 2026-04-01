@@ -695,6 +695,13 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     }
 
 
+    func moveContentsFrom(fromOffsets: IndexSet, toOffset destination: Int) {
+        imageAssets.move(fromOffsets: fromOffsets, toOffset: destination)
+        // make cachedImages reset
+        cachedImages.removeAll()
+        // assetIDs are reset in the didSet block of the imageAssets var
+    }
+
 
     // MARK: Video
     func currentImageIsVideo() -> Bool {
