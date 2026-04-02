@@ -68,6 +68,8 @@
 		A3728BBD2BB4DEAE0019761A /* PGLGradientVectorAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3728BBC2BB4DEAE0019761A /* PGLGradientVectorAttribute.swift */; };
 		A37426BB2B7FD5AB001A5EC7 /* PGLViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37426BA2B7FD5AB001A5EC7 /* PGLViewControllerExtension.swift */; };
 		A375F25F26DFE47E00721D3A /* PGLStackProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A375F25E26DFE47E00721D3A /* PGLStackProvider.swift */; };
+		A37B189B2F7DAF8800B81437 /* PGLPhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37B189A2F7DAF8800B81437 /* PGLPhotoPicker.swift */; };
+		A37B189D2F7DB0A000B81437 /* Image Gallery License.txt in Resources */ = {isa = PBXBuildFile; fileRef = A37B189C2F7DB0A000B81437 /* Image Gallery License.txt */; };
 		A37D23AE2825C27D00EE3723 /* PGLParmImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37D23AD2825C27D00EE3723 /* PGLParmImageController.swift */; };
 		A37D84F42F4226D70058669F /* PGLKenBurnsFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37D84F32F4226D70058669F /* PGLKenBurnsFilter.swift */; };
 		A37D91512D5CEFC1006E1426 /* PGLRectangleFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37D91502D5CEFC1006E1426 /* PGLRectangleFilter.swift */; };
@@ -288,6 +290,8 @@
 		A3728BBC2BB4DEAE0019761A /* PGLGradientVectorAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLGradientVectorAttribute.swift; sourceTree = "<group>"; };
 		A37426BA2B7FD5AB001A5EC7 /* PGLViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLViewControllerExtension.swift; sourceTree = "<group>"; };
 		A375F25E26DFE47E00721D3A /* PGLStackProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackProvider.swift; sourceTree = "<group>"; };
+		A37B189A2F7DAF8800B81437 /* PGLPhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLPhotoPicker.swift; sourceTree = "<group>"; };
+		A37B189C2F7DB0A000B81437 /* Image Gallery License.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Image Gallery License.txt"; sourceTree = "<group>"; };
 		A37D23AD2825C27D00EE3723 /* PGLParmImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLParmImageController.swift; sourceTree = "<group>"; };
 		A37D84F32F4226D70058669F /* PGLKenBurnsFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLKenBurnsFilter.swift; sourceTree = "<group>"; };
 		A37D91502D5CEFC1006E1426 /* PGLRectangleFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLRectangleFilter.swift; sourceTree = "<group>"; };
@@ -504,6 +508,7 @@
 		A35FF77A26DC320400D78252 /* License */ = {
 			isa = PBXGroup;
 			children = (
+				A37B189C2F7DB0A000B81437 /* Image Gallery License.txt */,
 				A35FF77B26DC324E00D78252 /* CoreDataSampleLicense.txt */,
 			);
 			path = License;
@@ -562,6 +567,7 @@
 		A3A90BEB2F6E099A00BB9B57 /* SwiftUI StackView */ = {
 			isa = PBXGroup;
 			children = (
+				A37B189A2F7DAF8800B81437 /* PGLPhotoPicker.swift */,
 				A3A90BE72F6E099A00BB9B57 /* PGLImageListOverlayView.swift */,
 				A3A90BE92F6E099A00BB9B57 /* PGLStackItem.swift */,
 				A3A90BEA2F6E099A00BB9B57 /* PGLStackRow.swift */,
@@ -1000,6 +1006,7 @@
 				A320F62A26699FA8008F6090 /* PrivacyPolicy.rtf in Resources */,
 				A3D04B152A8444A300E6DB16 /* PGLStackInfoHeader.xib in Resources */,
 				A389C2C02F22A180007B2ABA /* PGLStackRunSeconds.xib in Resources */,
+				A37B189D2F7DB0A000B81437 /* Image Gallery License.txt in Resources */,
 				A38D76AB2DBAF42B00318585 /* Swift TestPlan.xctestplan in Resources */,
 				A3C49BF32E16ED4D001AC150 /* AirPlay.storyboard in Resources */,
 				A37D91622D5CF166006E1426 /* Root.strings in Resources */,
@@ -1200,6 +1207,7 @@
 				A3DBD2D12BEC1D66009A6317 /* PGLVideoFrameQueue.swift in Sources */,
 				A3AF92DD2D40093A001E4785 /* PGLFilterAttributeAffine.swift in Sources */,
 				58165C1E2DEE55C400A45425 /* PGLRenderOnAirPlay.swift in Sources */,
+				A37B189B2F7DAF8800B81437 /* PGLPhotoPicker.swift in Sources */,
 				A3811C032DC57CE100A1A178 /* PGLRectangleGenerator.swift in Sources */,
 				A39B220E2B558E7C0026C7FE /* PGLImageListPicker.swift in Sources */,
 				A3BF50EC24D32A3400CD5114 /* PGLVisionProtocol.swift in Sources */,

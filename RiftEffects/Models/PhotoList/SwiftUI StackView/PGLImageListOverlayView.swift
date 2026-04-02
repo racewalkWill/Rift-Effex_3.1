@@ -16,14 +16,6 @@ import CoreImage
 @MainActor
 class PGLImageListViewModel: ObservableObject {
 
-    struct ParmSection: Identifiable {
-        let id = UUID()
-        let attributeName: String
-        var imageList: PGLImageList
-        // assets and cachedImages are internal vars of the imageList
-        var assets: [PGLAsset]
-        var cachedImages: [Int: PGLImageScaler]
-    }
 
     @Published var filterParms: [ParmSection] = []
 //    @Published var selection: Set<String> = []
@@ -65,12 +57,30 @@ class PGLImageListViewModel: ObservableObject {
 //    }
 }
 
+// MARK:  Parm Section
+ struct ParmSection: Identifiable, Hashable {
+    let id = UUID()
+    let attributeName: String
+    var imageList: PGLImageList
+    // assets and cachedImages are internal vars of the imageList
+    var assets: [PGLAsset]
+    var cachedImages: [Int: PGLImageScaler]
+
+    static func == (lhs: ParmSection, rhs: ParmSection) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
 // MARK: - Asset Thumbnail Row
 
 struct PGLAssetRowView: View {
     let pglAsset: PGLAsset
     let cachedImage: CIImage?
-    let id = UUID()
+    let parentSection: ParmSection
 
     @State private var thumbnail: UIImage? = nil
 
@@ -148,7 +158,13 @@ struct PGLImageListOverlayView: View {
     @EnvironmentObject var viewModel: PGLImageListViewModel
     var onDismiss: () -> Void
     @State private var editMode: EditMode = .inactive
+    @State private var isAddingPhoto = false
+    @State private var selectedRow: RowID?
 
+    private struct RowID: Hashable {
+        let sectionID: UUID
+        let assetIndex: Int
+    }
 
     var body: some View {
         ZStack {
@@ -164,9 +180,15 @@ struct PGLImageListOverlayView: View {
 
     private var headerBar: some View {
         HStack {
-            Text("Filter Images")
+            Text("Edit Images")
                 .font(.headline)
                 .foregroundColor(.white)
+            Spacer()
+            Button {
+                isAddingPhoto = true
+            } label: {
+                Image(systemName: "plus")
+            }
             Spacer()
             Button(action: onDismiss) {
                 Image(systemName: "xmark.circle.fill")
@@ -186,42 +208,63 @@ struct PGLImageListOverlayView: View {
             } else {
                 List {
                     ForEach(viewModel.filterParms) { imageAttributeSection in
-                        Section {
-                            ForEach(imageAttributeSection.assets.indices, id: \.self) { assetIndex in
-                                let pglAsset = imageAttributeSection.assets[assetIndex]
-                                let cachedImage = imageAttributeSection.imageList.cachedImages[assetIndex]?.image
-                                PGLAssetRowView(pglAsset: pglAsset, cachedImage: cachedImage)
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                        Button(role: .destructive) {
-                                            withAnimation {
-                                                viewModel.removeAsset(in: imageAttributeSection.id,  at: assetIndex)
-                                            }
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                    }
-                            }
-                            .onMove { from, to in
-                                withAnimation {
-                                    viewModel.moveAsset(in: imageAttributeSection.id, from: from, to: to)
-                                }
-                            }
-                            .listRowBackground(Color.black.opacity(0.35))
-
-                        } header: {
-                            Text(imageAttributeSection.attributeName)
-                                .foregroundColor(.white.opacity(0.7))
-                                .textCase(nil)
-                        }
+                        sectionView(for: imageAttributeSection)
                     }
                 }
                 .listStyle(.insetGrouped)
-                .scrollContentBackground(.hidden)
+                .scrollContentBackground(.hidden) // .automatic covers the imageController view
                 .background(Color.clear)
                 .environment(\.editMode, $editMode)
+                .sheet(isPresented: $isAddingPhoto) {
+                    if let selectedRow,
+                       let section = viewModel.filterParms.first(where: { $0.id == selectedRow.sectionID }) {
+                        PGLPhotoPicker(parmModel: section)
+                    }
                 }
+            }
         }
     }
+    private func sectionView(for imageAttributeSection: ParmSection) -> some View {
+        Section {
+            ForEach(imageAttributeSection.assets.indices, id: \.self) { assetIndex in
+                let pglAsset = imageAttributeSection.assets[assetIndex]
+                let cachedImage = imageAttributeSection.imageList.cachedImages[assetIndex]?.image
+                let rowID = RowID(sectionID: imageAttributeSection.id, assetIndex: assetIndex)
+                PGLAssetRowView(pglAsset: pglAsset, cachedImage: cachedImage, parentSection: imageAttributeSection)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        withAnimation {
+                            selectedRow = (selectedRow == rowID) ? nil : rowID
+                        }
+                    }
+                    .listRowBackground(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(selectedRow == rowID
+                                  ? Color.accentColor.opacity(0.35)
+                                  : Color.black.opacity(0.35))
+                    )
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button(role: .destructive) {
+                            withAnimation {
+                                viewModel.removeAsset(in: imageAttributeSection.id, at: assetIndex)
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+            }
+            .onMove { from, to in
+                withAnimation {
+                    viewModel.moveAsset(in: imageAttributeSection.id, from: from, to: to)
+                }
+            }
+        } header: {
+            Text(imageAttributeSection.attributeName)
+                .foregroundColor(.white.opacity(0.7))
+                .textCase(nil)
+        }
+    }
+
     private var emptyState: some View {
         VStack(spacing: 12) {
             Spacer()
