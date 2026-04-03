@@ -591,6 +591,14 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 //        }
     }
 
+    func append(assets: [PGLAsset]) {
+        for thisAsset in assets {
+            append(newImage: thisAsset)
+        }
+    }
+
+
+
     func getCurrentImage() -> CIImage {
         if let myCurrentImage =  image(atIndex: position) {
             return myCurrentImage

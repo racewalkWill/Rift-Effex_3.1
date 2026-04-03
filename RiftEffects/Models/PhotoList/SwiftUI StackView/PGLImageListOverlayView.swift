@@ -41,6 +41,11 @@ class PGLImageListViewModel: ObservableObject {
 
     }
 
+    func addAssets(in parmId: UUID, assets: [PGLAsset]) {
+        guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
+        filterParms[parmIndex].add(assets: assets)
+    }
+
     func moveAsset(in parmId: UUID, from offsets: IndexSet, to destination: Int) {
         guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
 //        filterParms[parmIndex].assets.move(fromOffsets: offsets, toOffset: destination)
@@ -73,6 +78,19 @@ class PGLImageListViewModel: ObservableObject {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+
+     @MainActor mutating func add(assets list: [PGLAsset]) {
+         let oldLastIndex = assets.count - 1 // zero based index
+         imageList.append(assets:  list)
+         assets.append(contentsOf: list)
+         let newImages = list.map { $0.imageFrom() }
+         for i in 1...newImages.count  {
+             let thisImage = newImages[i - 1] ?? CIImage.empty()
+             let scaler = PGLImageScaler(image: thisImage)
+             cachedImages[oldLastIndex + i] = scaler
+         }
+
+     }
 }
 
 // MARK: - Asset Thumbnail Row
@@ -189,6 +207,7 @@ struct PGLImageListOverlayView: View {
             } label: {
                 Image(systemName: "plus")
             }
+            .disabled(selectedRow == nil)
             Spacer()
             Button(action: onDismiss) {
                 Image(systemName: "xmark.circle.fill")
@@ -216,9 +235,8 @@ struct PGLImageListOverlayView: View {
                 .background(Color.clear)
                 .environment(\.editMode, $editMode)
                 .sheet(isPresented: $isAddingPhoto) {
-                    if let selectedRow,
-                       let section = viewModel.filterParms.first(where: { $0.id == selectedRow.sectionID }) {
-                        PGLPhotoPicker(parmModel: section)
+                    if let selectedRow {
+                        PGLPhotoPicker(viewModel: viewModel, sectionID: selectedRow.sectionID)
                     }
                 }
             }

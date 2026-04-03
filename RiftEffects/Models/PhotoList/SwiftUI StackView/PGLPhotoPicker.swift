@@ -6,8 +6,10 @@ See the sample app 'Image Gallery License.txt' file for this sample’s licensin
 import SwiftUI
 import PhotosUI
 
+/// SwiftUI photo picker for the PGLImageListOverlayView
 struct PGLPhotoPicker: UIViewControllerRepresentable {
-    @State var parmModel: ParmSection
+    @ObservedObject var viewModel: PGLImageListViewModel
+    let sectionID: UUID
 
     /// A dismiss action provided by the environment. This may be called to dismiss this view controller.
     @Environment(\.dismiss) var dismiss
@@ -51,24 +53,44 @@ class Coordinator: NSObject, UINavigationControllerDelegate, PHPickerViewControl
             let result = results.first,
             result.itemProvider.hasItemConformingToTypeIdentifier(UTType.image.identifier)
         else { return }
-        
-        // Load a file representation of the picked item.
-        // This creates a temporary file which is then copied to the app’s document directory for persistent storage.
-//        result.itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, error in
-//            if let error = error {
-//                print("Error loading file representation: \(error.localizedDescription)")
-//            } else if let url = url {
-//                if let savedUrl = FileManager.default.copyItemToDocumentDirectory(from: url) {
-//                    // Add the new item to the data model.
-//                    Task { @MainActor [dataModel = self.parent.dataModel] in
-//                        withAnimation {
-//                            let item = Item(url: savedUrl)
-//                            dataModel.addItem(item)
-//                        }
-//                    }
-//                }
-//            }
-//        }
+
+        // insert the picked image(s) into the target image list
+        // patterned on PGLImageListPicker #loadImageListFromPicker(..)
+            // refactor to share the code?
+
+        var newSelection = [String: PHPickerResult]()
+        var assets = [PGLAsset]()
+
+        for result in results {
+            // localIdentifier is the key for the newSelection dict
+            let identifier = result.assetIdentifier!
+            newSelection[identifier] = result
+        }
+
+        var identifiers:[String] = newSelection.keys.map(\.description)
+        let fetchAssetResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: nil)
+        // in limited access mode an identifier may not fetch the asset
+
+        for fetchAsset in fetchAssetResult.objects {
+            let anNewPGLAsset = PGLAsset(sourceAsset: fetchAsset)
+            assets.append(anNewPGLAsset)
+            identifiers.append(fetchAsset.localIdentifier)
+            // if video then cache into local file and assign localURL to asset
+            if let thisResultProvider = newSelection[fetchAsset.localIdentifier] {
+                if thisResultProvider.itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
+//                    let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
+//                    myAppDelegate.showWaiting(onController: theController)
+
+//                    loadLocalVideoURL(thisAsset: anNewPGLAsset, pickerResult: selection[fetchAsset.localIdentifier]!)
+                    anNewPGLAsset.requestVideo()
+                }
+                }
+
+        }
+        parent.viewModel.addAssets(in: parent.sectionID, assets: assets)
+
+        // add the newPGLAssets to the targetParm
+
     }
     
     init(_ parent: PGLPhotoPicker) {
