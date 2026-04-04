@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -40,6 +40,12 @@
                             <action selector="editFiltersBtn:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="1LL-u9-bGC"/>
                         </connections>
                     </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ZM6-zp-VDI" userLabel="imagelistBtn">
+                        <rect key="frame" x="211" y="4" width="52" height="35"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="tinted" image="photo.stack" catalog="system"/>
+                    </button>
                 </subviews>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
@@ -47,6 +53,7 @@
                 <outlet property="addFilterBtn" destination="JKt-Ge-i8F" id="hMN-Gv-ra4"/>
                 <outlet property="arrowBtn" destination="yya-cM-mWi" id="BGm-a1-741"/>
                 <outlet property="editFiltersBtn" destination="ZJt-Ua-UL7" id="1Jd-Aw-yTG"/>
+                <outlet property="imageListBtn" destination="ZM6-zp-VDI" id="Z2O-Vi-MJf"/>
             </connections>
             <point key="canvasLocation" x="94.656488549618317" y="20.422535211267608"/>
         </tableViewCell>
@@ -54,6 +61,7 @@
     <resources>
         <image name="arrow.up.and.down.text.horizontal" catalog="system" width="128" height="85"/>
         <image name="hand.point.right.fill" catalog="system" width="128" height="97"/>
+        <image name="photo.stack" catalog="system" width="126" height="128"/>
         <image name="plus.square.on.square" catalog="system" width="128" height="116"/>
     </resources>
 </document>

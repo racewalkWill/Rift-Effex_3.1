@@ -23,6 +23,10 @@ struct PGLPhotoPicker: UIViewControllerRepresentable {
         configuration.filter = .images
         // Avoid transcoding, if possible.
         configuration.preferredAssetRepresentationMode = .current
+        // assume only transition filters with multiple inputs are used
+        // allow many selection
+        configuration.selectionLimit = 0
+
 
         let photoPickerViewController = PHPickerViewController(configuration: configuration)
         photoPickerViewController.delegate = context.coordinator

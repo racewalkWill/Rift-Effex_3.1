@@ -265,6 +265,8 @@ struct PGLImageListOverlayView: View {
                         Button(role: .destructive) {
                             withAnimation {
                                 viewModel.removeAsset(in: imageAttributeSection.id, at: assetIndex)
+                                    // assetIndex can shift when user drags or deletes form the list
+                                // this assumes that assetIndex at creation time does not change
                             }
                         } label: {
                             Label("Delete", systemImage: "trash")

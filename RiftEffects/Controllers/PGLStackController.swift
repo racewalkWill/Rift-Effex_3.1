@@ -10,6 +10,7 @@ import UIKit
 import Photos
 import os
 import Combine
+import SwiftUI
 
 let PGLUpdateSplitView = NSNotification.Name(rawValue: "PGLUpdateSplitView")
 let PGLSaveStackAction = NSNotification.Name(rawValue: "PGLSaveStackAction")
@@ -574,7 +575,13 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
         NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
     }
-    
+
+    fileprivate func postshowImageList() {
+        let notificationRedrawFilter = Notification(name: PGLShowImageListOverLay)
+        NotificationCenter.default.post(notificationRedrawFilter)
+//        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+    }
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         if indexPath.section == StackSections.header.rawValue {
@@ -689,6 +696,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
                 myButtonHeader.addFilterBtn.addTarget(self, action: #selector(addFilterToStack ), for: .touchUpInside)
                 myButtonHeader.editFiltersBtn.addTarget(self, action: #selector(toggleEditing ), for: .touchUpInside)
+                myButtonHeader.imageListBtn.addTarget(self, action: #selector(showImageList ), for: .touchUpInside)
 
                 if PGLDemo.GuideMode {
                     myButtonHeader.arrowBtn.isHidden = false // always on during GuideMode
@@ -1184,13 +1192,16 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         updateDisplay()  // or just reloadData?
     }
 
-        // MARK: - Edit Btn
-
-
+        // MARK: - Edit Image Btns
 
     @objc func toggleEditing() {
         tableView.setEditing(!tableView.isEditing, animated: true)
 
+    }
+
+    @objc func showImageList() {
+        // trigger notification to the parent SplitViewController
+        postshowImageList()
     }
 
 }

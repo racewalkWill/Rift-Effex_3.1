@@ -11,14 +11,18 @@ import os
 import Photos
 import CoreData
 import Combine
+import SwiftUI
 
-
+let  PGLShowImageListOverLay = NSNotification.Name(rawValue: "PGLShowImageListOverLay")
 
 class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerDelegate {
 
     private let splitDelegate = PGLSplitViewDelegate()
     private var firstStartUpImageRun = false
     private var didConfigureColumns = false
+
+    var imageListViewModel = PGLImageListViewModel()
+    var imageListHostingController: UIViewController?
 
     var publishers = [any Cancellable]()
     var cancellable: (any Cancellable)?
@@ -53,10 +57,19 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         super.viewDidLoad()
         delegate = splitDelegate
-
-
-
         presentsWithGesture = true
+
+        let myCenter =  NotificationCenter.default
+        cancellable = myCenter.publisher(for:  PGLShowImageListOverLay)
+            .sink() { [weak self]
+                myUpdate in
+                guard let self = self else { return } // a released object sometimes receives the
+
+                Logger(subsystem: LogSubsystem, category: LogNavigation).info( "PGLShowImageListOverLay  notificationBlock")
+
+                self.showImageList()
+            }
+        publishers.append(cancellable!)
 
     }  // viewDidLoad
 
@@ -299,8 +312,62 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
             appStack.outputOrViewFilterStack().pasteCIImage(ciImage)
         }
 
+// MARK: ImageListOverlay
 
-     
+    func showImageList() {
+        if imageListHostingController != nil {
+            hideImageListOverlay()
+        } else {
+            showImageListOverlay()
+        }
+    }
+
+    func showImageListOverlay() {
+
+        let currentStack = appStack.viewerStack
+        if currentStack.isEmptyStack()  { return }
+
+        // must have current filter and must be a transtion filter with multiple images
+        imageListViewModel.loadFromFilter(currentStack.currentFilter())
+
+        let overlayView = PGLImageListOverlayView { [weak self] in
+            self?.hideImageListOverlay()
+        }
+        .environmentObject(imageListViewModel)
+        let hostingController = UIHostingController(rootView: overlayView)
+        hostingController.view.backgroundColor = .clear
+
+        addChild(hostingController)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(hostingController.view)
+        view.bringSubviewToFront(hostingController.view)
+
+        // can this attach over the imageController view area?
+        // otherwise move all this to the splitViewController to set it over the imageController
+
+        let insetFraction = 1.0 / 5.0
+        let horizontalInset = view.bounds.width * insetFraction
+        let verticalInset = view.bounds.height * insetFraction
+
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor, constant: verticalInset),
+            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -verticalInset),
+            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalInset),
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalInset)
+        ])
+
+        hostingController.didMove(toParent: self)
+        imageListHostingController = hostingController
+    }
+
+    func hideImageListOverlay() {
+        imageListHostingController?.willMove(toParent: nil)
+        imageListHostingController?.view.removeFromSuperview()
+        imageListHostingController?.removeFromParent()
+        imageListHostingController = nil
+    }
+
+
 
 }
 

@@ -880,25 +880,25 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     // MARK: Image List Overlay
 
-    func addImageListBarButton() {
-        let imageListBtn = UIBarButtonItem(
-            image: UIImage(systemName: "photo.stack"),
-            style: .plain,
-            target: self,
-            action: #selector(imageListBtnAction(_:))
-        )
-        var items = navigationItem.rightBarButtonItems ?? []
-        items.append(imageListBtn)
-        navigationItem.rightBarButtonItems = items
-    }
-
-    @objc func imageListBtnAction(_ sender: UIBarButtonItem) {
-        if imageListHostingController != nil {
-            hideImageListOverlay()
-        } else {
-            showImageListOverlay()
-        }
-    }
+//    func addImageListBarButton() {
+//        let imageListBtn = UIBarButtonItem(
+//            image: UIImage(systemName: "photo.stack"),
+//            style: .plain,
+//            target: self,
+//            action: #selector(imageListBtnAction(_:))
+//        )
+//        var items = navigationItem.rightBarButtonItems ?? []
+//        items.append(imageListBtn)
+//        navigationItem.rightBarButtonItems = items
+//    }
+//
+//    @objc func imageListBtnAction(_ sender: UIBarButtonItem) {
+//        if imageListHostingController != nil {
+//            hideImageListOverlay()
+//        } else {
+//            showImageListOverlay()
+//        }
+//    }
 
     func showImageListOverlay() {
         guard let currentStack = filterStack(), !currentStack.isEmptyStack() else { return }
@@ -1171,7 +1171,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         setMoreBtnMenu()
         setHelpBtnMenu()
-        addImageListBarButton()
+//        addImageListBarButton()
         var iPad: Bool
 
         if splitViewController != nil  {
