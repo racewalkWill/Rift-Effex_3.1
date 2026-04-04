@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24512" systemVersion="25C56" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="1.5">
-    <entity name="CDAttributeAffine" representedClassName="CDAttributeAffine" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+    <entity name="CDAttributeAffine" representedClassName="CDAttributeAffine" parentEntity="CDParmValue" syncable="YES">
         <attribute name="vectorAngle" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="vectorLength" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="vectorX" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>

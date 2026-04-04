@@ -878,62 +878,6 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         appStack.createDemoStack(view: view)
     }
 
-    // MARK: Image List Overlay
-
-//    func addImageListBarButton() {
-//        let imageListBtn = UIBarButtonItem(
-//            image: UIImage(systemName: "photo.stack"),
-//            style: .plain,
-//            target: self,
-//            action: #selector(imageListBtnAction(_:))
-//        )
-//        var items = navigationItem.rightBarButtonItems ?? []
-//        items.append(imageListBtn)
-//        navigationItem.rightBarButtonItems = items
-//    }
-//
-//    @objc func imageListBtnAction(_ sender: UIBarButtonItem) {
-//        if imageListHostingController != nil {
-//            hideImageListOverlay()
-//        } else {
-//            showImageListOverlay()
-//        }
-//    }
-
-    func showImageListOverlay() {
-        guard let currentStack = filterStack(), !currentStack.isEmptyStack() else { return }
-        imageListViewModel.loadFromFilter(currentStack.currentFilter())
-
-        let overlayView = PGLImageListOverlayView { [weak self] in
-            self?.hideImageListOverlay()
-        }
-        .environmentObject(imageListViewModel)
-        let hostingController = UIHostingController(rootView: overlayView)
-        hostingController.view.backgroundColor = .clear
-
-        addChild(hostingController)
-        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(hostingController.view)
-        view.bringSubviewToFront(hostingController.view)
-
-        NSLayoutConstraint.activate([
-            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-
-        hostingController.didMove(toParent: self)
-        imageListHostingController = hostingController
-    }
-
-    func hideImageListOverlay() {
-        imageListHostingController?.willMove(toParent: nil)
-        imageListHostingController?.view.removeFromSuperview()
-        imageListHostingController?.removeFromParent()
-        imageListHostingController = nil
-    }
-
 
     // MARK: Notifications
     fileprivate func registerImageControllerNotifications() {
@@ -1235,8 +1179,6 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
         selectedParmControlView = nil
         releaseNotifications() // reset
-
-        hideImageListOverlay()
 
         /// do not remove the views.. they show during navigaton
 //        metalController?.view.removeFromSuperview()
