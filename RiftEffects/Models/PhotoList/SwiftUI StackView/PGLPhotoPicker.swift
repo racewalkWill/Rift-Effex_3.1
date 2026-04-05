@@ -25,7 +25,14 @@ struct PGLPhotoPicker: UIViewControllerRepresentable {
         configuration.preferredAssetRepresentationMode = .current
         // assume only transition filters with multiple inputs are used
         // allow many selection
-        configuration.selectionLimit = 0
+        if viewModel.isTransitionFilter {
+            configuration.selectionLimit = 0
+            // many image inputs - no limit on the selection
+        } else {
+            configuration.selectionLimit = 1
+            // only takes one image input
+        }
+
 
 
         let photoPickerViewController = PHPickerViewController(configuration: configuration)

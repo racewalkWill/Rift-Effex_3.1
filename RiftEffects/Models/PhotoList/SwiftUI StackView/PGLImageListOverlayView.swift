@@ -18,11 +18,14 @@ class PGLImageListViewModel: ObservableObject {
 
 
     @Published var filterParms: [ParmSection] = []
+    @Published var isTransitionFilter = false
+
 //    @Published var selection: Set<String> = []
 
     func loadFromFilter(_ filter: PGLSourceFilter) {
         // PGLImageController loads from selected filter
         // then opens PGLImageListOverlayView with this model
+        isTransitionFilter = filter.isTransitionCategoryFilter()
         filterParms = filter.imageAttributes().compactMap { attr -> ParmSection? in
             guard let list = attr.inputCollection, !list.isEmpty() else { return nil }
             let name = attr.attributeDisplayName ?? attr.attributeName ?? "Images"
@@ -43,7 +46,13 @@ class PGLImageListViewModel: ObservableObject {
 
     func addAssets(in parmId: UUID, assets: [PGLAsset]) {
         guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
-        filterParms[parmIndex].add(assets: assets)
+        if isTransitionFilter {
+            filterParms[parmIndex].add(assets: assets)
+        } else {
+            // remove the old asset and replace with the new selected image
+            filterParms[parmIndex].replace(assets: assets)
+        }
+
     }
 
     func moveAsset(in parmId: UUID, from offsets: IndexSet, to destination: Int) {
@@ -91,6 +100,17 @@ class PGLImageListViewModel: ObservableObject {
          }
 
      }
+
+     @MainActor mutating func replace(assets list: [PGLAsset]) {
+         // usually just replacing the single image with another single image
+         imageList.removeAll()
+         assets.removeAll()
+         cachedImages.removeAll()
+
+         add(assets: list)
+     }
+
+
 }
 
 // MARK: - Asset Thumbnail Row
@@ -140,19 +160,7 @@ struct PGLAssetRowView: View {
                         .foregroundColor(.secondary)
                 }
         }
-//        Button {
-//            // call removeAsset(in sectionID;, at offsets: )
-////            guard let index = symbols.firstIndex(of: symbol) else { return }
-////            withAnimation {
-////                _ = symbols.remove(at: index)
-////            }
-//        } label: {
-//            Image(systemName: "xmark.square.fill")
-//                        .font(.title)
-//                        .symbolRenderingMode(.palette)
-//                        .foregroundStyle(.white, Color.red)
-//        }
-//        .offset(x: 7, y: -7)
+
     }
 
     private func loadThumbnail() {
@@ -205,7 +213,9 @@ struct PGLImageListOverlayView: View {
             Button {
                 isAddingPhoto = true
             } label: {
-                Image(systemName: "plus")
+                Image(systemName: "photo.badge.plus")
+                    .font(.title2)
+
             }
             .disabled(selectedRow == nil)
             Spacer()
@@ -216,7 +226,7 @@ struct PGLImageListOverlayView: View {
             }
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.vertical, 18)
         .background(Color.black.opacity(0.4))
     }
 

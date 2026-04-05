@@ -585,7 +585,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     // MARK: Updates
     func append(newImage: PGLAsset) {
         imageAssets.append(newImage)
-        assetIDs.append(newImage.localIdentifier)
+            //assetIDs are updated in the didSet of var imageAssets
 //        if newImage.isVideo() {
 //            postVideoAnimationToggleOn(imageAsset: newImage)
 //        }
@@ -687,7 +687,8 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     /// three parallel vars to update   the dictionary of cachedImages, the imageAssets [PGLAsset]  array and the assetIDs array of localIdentifiers
     func removeImage(at index: Int) {
         imageAssets.remove(at: index)
-
+            // assetIDs are reset in didSet of the imageAssets
+                //  don't need to call assetIDs.remove(at: index)
         _ = cachedImages.removeValue(forKey: index)
             // cachedImages may be smaller than imageAssets - not all images are cached
             // keep in sync
@@ -697,11 +698,15 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 //                NSLog("PGLImageList.removeImage: count mismatch: cachedImages.count: \(cachedImages.count) != imageAssets.count: \(imageAssets.count)")
 //            }
 
-        // assetIDs are reset in didSet of the imageAssets
-                //  don't need to call assetIDs.remove(at: index)
+
         // adjusts position - max size is changed
     }
 
+    func removeAll() {
+        imageAssets.removeAll()
+        cachedImages.removeAll()
+
+    }
 
     func moveContentsFrom(fromOffsets: IndexSet, toOffset destination: Int) {
         imageAssets.move(fromOffsets: fromOffsets, toOffset: destination)
