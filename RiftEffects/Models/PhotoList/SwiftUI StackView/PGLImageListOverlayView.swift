@@ -39,9 +39,7 @@ class PGLImageListViewModel: ObservableObject {
     func removeAsset(in parmId: UUID, at imageListIndex: Int) {
         guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
 
-        // perform remove on the imageList
-        filterParms[parmIndex].imageList.removeImage(at: imageListIndex)
-
+        filterParms[parmIndex].remove(at: imageListIndex)
     }
 
     func addAssets(in parmId: UUID, assets: [PGLAsset]) {
@@ -55,20 +53,12 @@ class PGLImageListViewModel: ObservableObject {
 
     }
 
-    func moveAsset(in parmId: UUID, from offsets: IndexSet, to destination: Int) {
+    func moveAsset(in parmId: UUID, from offsets: IndexSet, to destination: Int){
         guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
-//        filterParms[parmIndex].assets.move(fromOffsets: offsets, toOffset: destination)
-        filterParms[parmIndex].imageList.moveContentsFrom(fromOffsets: offsets, toOffset: destination )
 
-
-        // filterParms[idx].imageList.imageAssets = filterParms[idx].assets
+        filterParms[parmIndex].move(fromOffsets: offsets, toOffset: destination)
     }
 
-//    func selectAsset(in sectionID: UUID, at index: Int) {
-//        guard let idx = sections.firstIndex(where: { $0.id == sectionID }) else { return }
-//        sections[idx].assets[index].isSelected.toggle()
-//        sections[idx].imageList.imageAssets = sections[idx].assets
-//    }
 }
 
 // MARK:  Parm Section
@@ -101,6 +91,27 @@ class PGLImageListViewModel: ObservableObject {
              imageList.cachedImages[cacheIndex] = scaler
          }
 
+     }
+
+     @MainActor mutating func remove(at index: Int) {
+         imageList.removeImage(at: index)
+         assets.remove(at: index)
+         // Rebuild cachedImages to match new indices after removal
+         var newCached = [Int: PGLImageScaler]()
+         for i in assets.indices {
+             let oldIndex = i < index ? i : i + 1
+             if let scaler = cachedImages[oldIndex] {
+                 newCached[i] = scaler
+             }
+         }
+         cachedImages = newCached
+     }
+
+     @MainActor mutating func move(fromOffsets offsets: IndexSet, toOffset destination: Int) {
+         imageList.moveContentsFrom(fromOffsets: offsets, toOffset: destination)
+         assets.move(fromOffsets: offsets, toOffset: destination)
+         // Cached images are index-keyed; clear and let them re-cache on access
+         cachedImages.removeAll()
      }
 
      @MainActor mutating func replace(assets list: [PGLAsset]) {
