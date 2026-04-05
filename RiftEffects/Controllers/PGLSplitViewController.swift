@@ -71,6 +71,17 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
             }
         publishers.append(cancellable!)
 
+        cancellable = myCenter.publisher(for:  PGLRedrawFilterChange)
+            .sink() { [weak self]
+                myUpdate in
+                guard let self = self else { return } // a released object sometimes receives the
+
+                Logger(subsystem: LogSubsystem, category: LogNavigation).info( "SplitViewController notificationBlock for PGLRedrawFilterChange")
+
+                self.updateImageListForFilter()
+            }
+        publishers.append(cancellable!)
+
     }  // viewDidLoad
 
     override func releaseNotifications() {
@@ -319,6 +330,17 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
             hideImageListOverlay()
         } else {
             showImageListOverlay()
+        }
+    }
+
+    func updateImageListForFilter() {
+        if imageListHostingController != nil {
+            // its open - show the new filter
+            let currentStack = appStack.viewerStack
+            if currentStack.isEmptyStack()  { return }
+
+            // must have current filter and must be a transtion filter with multiple images
+            imageListViewModel.loadFromFilter(currentStack.currentFilter())
         }
     }
 

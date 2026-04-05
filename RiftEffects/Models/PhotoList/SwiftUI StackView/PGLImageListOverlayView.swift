@@ -246,6 +246,7 @@ struct PGLImageListOverlayView: View {
     private var contentList: some View {
         Group {
             if viewModel.filterParms.isEmpty {
+                // filterParms is imageAttributes only
                 emptyState
             } else {
                 List {
