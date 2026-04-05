@@ -96,7 +96,9 @@ class PGLImageListViewModel: ObservableObject {
          for i in 1...newImages.count  {
              let thisImage = newImages[i - 1] ?? CIImage.empty()
              let scaler = PGLImageScaler(image: thisImage)
-             cachedImages[oldLastIndex + i] = scaler
+             let cacheIndex = oldLastIndex + i
+             cachedImages[cacheIndex] = scaler
+             imageList.cachedImages[cacheIndex] = scaler
          }
 
      }
@@ -254,9 +256,8 @@ struct PGLImageListOverlayView: View {
     }
     private func sectionView(for imageAttributeSection: ParmSection) -> some View {
         Section {
-            ForEach(imageAttributeSection.assets.indices, id: \.self) { assetIndex in
-                let pglAsset = imageAttributeSection.assets[assetIndex]
-                let cachedImage = imageAttributeSection.imageList.cachedImages[assetIndex]?.image
+            ForEach(Array(imageAttributeSection.assets.enumerated()), id: \.element.id) { assetIndex, pglAsset in
+                let cachedImage = imageAttributeSection.cachedImages[assetIndex]?.image
                 let rowID = RowID(sectionID: imageAttributeSection.id, assetIndex: assetIndex)
                 PGLAssetRowView(pglAsset: pglAsset, cachedImage: cachedImage, parentSection: imageAttributeSection)
                     .contentShape(Rectangle())

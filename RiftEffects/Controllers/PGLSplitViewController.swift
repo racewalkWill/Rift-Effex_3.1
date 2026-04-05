@@ -361,6 +361,22 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
     }
 
     func hideImageListOverlay() {
+        // Update filter inputs from the modified image lists
+        let currentStack = appStack.viewerStack
+        if !currentStack.isEmptyStack() {
+            let filter = currentStack.currentFilter()
+            for attr in filter.imageAttributes() {
+                guard let imageList = attr.inputCollection,
+                      let attrName = attr.attributeName
+                else { continue }
+                // Clear cached images so the filter re-loads and centers from updated assets
+                imageList.cachedImages.removeAll()
+                filter.setImageValuesAndClone(inputList: imageList, attributeName: attrName)
+            }
+            let updateNotification = Notification(name: PGLRedrawFilterChange)
+            NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["filterHasChanged": true as AnyObject])
+        }
+
         imageListHostingController?.willMove(toParent: nil)
         imageListHostingController?.view.removeFromSuperview()
         imageListHostingController?.removeFromParent()
