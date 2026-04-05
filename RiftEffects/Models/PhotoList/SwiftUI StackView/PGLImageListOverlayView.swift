@@ -155,6 +155,10 @@ struct PGLAssetRowView: View {
             }
 
             Spacer()
+            // add a swipe indicator low value opacity
+            Image(systemName: "chevron.left")
+                .font(.caption)
+                .foregroundColor(.white.opacity(0.3))
         }
         .padding(.vertical, 4)
         .onAppear { loadThumbnail() }
