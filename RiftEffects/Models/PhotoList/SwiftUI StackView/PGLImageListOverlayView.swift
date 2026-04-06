@@ -19,6 +19,7 @@ class PGLImageListViewModel: ObservableObject {
 
     @Published var filterParms: [ParmSection] = []
     @Published var isTransitionFilter = false
+    @Published var filterName: String = ""
 
 //    @Published var selection: Set<String> = []
 
@@ -26,6 +27,8 @@ class PGLImageListViewModel: ObservableObject {
         // PGLImageController loads from selected filter
         // then opens PGLImageListOverlayView with this model
         isTransitionFilter = filter.isTransitionCategoryFilter()
+        filterName = filter.descriptorDisplayName ?? "Filter"
+
         filterParms = filter.imageAttributes().compactMap { attr -> ParmSection? in
             guard let list = attr.inputCollection, !list.isEmpty() else { return nil }
             let name = attr.attributeDisplayName ?? attr.attributeName ?? "Images"
@@ -200,7 +203,7 @@ struct PGLImageListOverlayView: View {
     // @ObservedObject var viewModel: PGLImageListViewModel
     @EnvironmentObject var viewModel: PGLImageListViewModel
     var onDismiss: () -> Void
-    @State private var editMode: EditMode = .inactive
+    @State private var editMode: EditMode = .inactive //.active
     @State private var isAddingPhoto = false
     @State private var selectedRow: RowID?
 
@@ -223,7 +226,7 @@ struct PGLImageListOverlayView: View {
 
     private var headerBar: some View {
         HStack {
-            Text("Edit Images")
+            Text(viewModel.filterName)
                 .font(.headline)
                 .foregroundColor(.white)
             Spacer()
@@ -232,7 +235,7 @@ struct PGLImageListOverlayView: View {
             } label: {
                 Image(systemName: "photo.badge.plus")
                     .font(.title2)
-
+                    .foregroundColor(.white)
             }
             .disabled(selectedRow == nil)
             Spacer()
@@ -253,14 +256,20 @@ struct PGLImageListOverlayView: View {
                 // filterParms is imageAttributes only
                 emptyState
             } else {
-                List {
-                    ForEach(viewModel.filterParms) { imageAttributeSection in
-                        sectionView(for: imageAttributeSection)
+                GeometryReader { geo in
+                    let columnCount = max(viewModel.filterParms.count, 1)
+                    let spacing: CGFloat = 12
+                    let totalSpacing = spacing * CGFloat(columnCount - 1) + 24 // 12 padding each side
+                    let columnWidth = (geo.size.width - totalSpacing) / CGFloat(columnCount)
+
+                    HStack(alignment: .top, spacing: spacing) {
+                        ForEach(viewModel.filterParms) { imageAttributeSection in
+                            sectionColumn(for: imageAttributeSection)
+                                .frame(width: max(columnWidth, 160))
+                        }
                     }
+                    .padding(.horizontal, 12)
                 }
-                .listStyle(.insetGrouped)
-                .scrollContentBackground(.hidden) // .automatic covers the imageController view
-                .background(Color.clear)
                 .environment(\.editMode, $editMode)
                 .sheet(isPresented: $isAddingPhoto) {
                     if let selectedRow {
@@ -270,18 +279,28 @@ struct PGLImageListOverlayView: View {
             }
         }
     }
-    private func sectionView(for imageAttributeSection: ParmSection) -> some View {
-        Section {
-            ForEach(Array(imageAttributeSection.assets.enumerated()), id: \.element.id) { assetIndex, pglAsset in
-                let cachedImage = imageAttributeSection.cachedImages[assetIndex]?.image
-                let rowID = RowID(sectionID: imageAttributeSection.id, assetIndex: assetIndex)
-                PGLAssetRowView(pglAsset: pglAsset, cachedImage: cachedImage, parentSection: imageAttributeSection)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        withAnimation {
-                            selectedRow = (selectedRow == rowID) ? nil : rowID
+
+    private func sectionColumn(for imageAttributeSection: ParmSection) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(imageAttributeSection.attributeName)
+                .font(.subheadline.weight(.semibold))
+                .foregroundColor(.white.opacity(0.7))
+                .textCase(nil)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+
+            List {
+                ForEach(Array(imageAttributeSection.assets.enumerated()), id: \.element.id) { assetIndex, pglAsset in
+                    let cachedImage = imageAttributeSection.cachedImages[assetIndex]?.image
+                    let rowID = RowID(sectionID: imageAttributeSection.id, assetIndex: assetIndex)
+                    PGLAssetRowView(pglAsset: pglAsset, cachedImage: cachedImage, parentSection: imageAttributeSection)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            withAnimation {
+                                selectedRow = (selectedRow == rowID) ? nil : rowID
+                            }
                         }
-                    }
+
                     .listRowBackground(
                         RoundedRectangle(cornerRadius: 8)
                             .fill(selectedRow == rowID
@@ -292,23 +311,22 @@ struct PGLImageListOverlayView: View {
                         Button(role: .destructive) {
                             withAnimation {
                                 viewModel.removeAsset(in: imageAttributeSection.id, at: assetIndex)
-                                    // assetIndex can shift when user drags or deletes form the list
-                                // this assumes that assetIndex at creation time does not change
                             }
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }
                     }
-            }
-            .onMove { from, to in
-                withAnimation {
-                    viewModel.moveAsset(in: imageAttributeSection.id, from: from, to: to)
+                }
+                .onMove { from, to in
+                    withAnimation {
+                        viewModel.moveAsset(in: imageAttributeSection.id, from: from, to: to)
+                    }
                 }
             }
-        } header: {
-            Text(imageAttributeSection.attributeName)
-                .foregroundColor(.white.opacity(0.7))
-                .textCase(nil)
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(Color.black.opacity(0.25))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
 
