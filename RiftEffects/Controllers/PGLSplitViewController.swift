@@ -367,15 +367,20 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         // can this attach over the imageController view area?
         // otherwise move all this to the splitViewController to set it over the imageController
 
-        let insetFraction = 1.0 / 5.0
+        let insetFraction = 1.0 / 5.0  // 20%
         let horizontalInset = view.bounds.width * insetFraction
         let verticalInset = view.bounds.height * insetFraction
-
+        let trailingInset = -horizontalInset * 0.25
+//        NSLog(#function + "horizontalInset: \(horizontalInset)")
+//        NSLog( "   verticalInset: \(verticalInset)")
+//        NSLog ("   trailingInset: \(trailingInset)")
+//        NSLog("view frame: \(view.frame)")
         NSLayoutConstraint.activate([
             hostingController.view.topAnchor.constraint(equalTo: view.topAnchor, constant: verticalInset),
             hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -verticalInset),
             hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalInset),
-            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalInset)
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: trailingInset)
+            // move the right trailing side over a little more
         ])
 
         hostingController.didMove(toParent: self)

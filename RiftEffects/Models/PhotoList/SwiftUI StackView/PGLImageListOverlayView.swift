@@ -235,7 +235,7 @@ struct PGLImageListOverlayView: View {
             } label: {
                 Image(systemName: "photo.badge.plus")
                     .font(.title2)
-                    .foregroundColor(.white)
+                    .foregroundColor(selectedRow == nil ? .white.opacity(0.3) : .white)
             }
             .disabled(selectedRow == nil)
             Spacer()
