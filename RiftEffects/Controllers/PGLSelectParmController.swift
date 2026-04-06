@@ -1401,6 +1401,22 @@ class PGLSelectParmController: PGLCommonController,
         dismiss(animated: false, completion: nil)
         postCurrentFilterChange()
     }
+
+    // MARK: - open PGLImageListOverview
+
+    @IBOutlet weak var imageListBtn: UIBarButtonItem!
+
+    @IBAction func imageListBtnAction(_ sender: UIBarButtonItem) {
+        postshowImageList()
+    }
+    
+
+    fileprivate func postshowImageList() {
+        let notificationRedrawFilter = Notification(name: PGLShowImageListOverLay)
+        NotificationCenter.default.post(notificationRedrawFilter)
+//        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+    }
+
 }
 
 // these extensions from the CGImagePropertyOrientation documentation

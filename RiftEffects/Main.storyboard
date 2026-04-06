@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vbC-U8-P9f">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vbC-U8-P9f">
     <device id="ipad10_9rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -404,6 +404,11 @@
                                 <rect key="frame" x="-4" y="687" width="318" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
+                                    <barButtonItem title="Item" image="photo.stack" catalog="system" id="yqS-fU-NEA" userLabel="ImageListOverviewBtn">
+                                        <connections>
+                                            <action selector="imageListBtnAction:" destination="VjG-Q1-3mN" id="fqB-6T-Ma9"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem title="Item" id="c9Y-Ed-ZeW" userLabel="filterShiftLabel">
                                         <connections>
                                             <action selector="filterShiftLabelAction:" destination="VjG-Q1-3mN" id="gpE-0t-UX8"/>
@@ -622,6 +627,7 @@
                         <outlet property="downChevron" destination="arH-zW-cxm" id="Pnm-kK-yk2"/>
                         <outlet property="filterLabel" destination="sEW-y3-MfP" id="mTz-Ab-b1Y"/>
                         <outlet property="filterShiftLabel" destination="c9Y-Ed-ZeW" id="jK5-m2-B5b"/>
+                        <outlet property="imageListBtn" destination="yqS-fU-NEA" id="SLP-jw-AQ9"/>
                         <outlet property="parmsTableView" destination="qzX-VM-dr8" id="J9S-87-VTd"/>
                         <outlet property="upChevron" destination="A6h-K5-gwp" id="gCa-S8-4Fc"/>
                     </connections>
@@ -980,6 +986,7 @@
         <image name="chevron.down" catalog="system" width="128" height="70"/>
         <image name="chevron.up" catalog="system" width="128" height="70"/>
         <image name="hand.point.left.fill" catalog="system" width="128" height="97"/>
+        <image name="photo.stack" catalog="system" width="126" height="128"/>
         <image name="playpause" catalog="system" width="128" height="75"/>
         <image name="plus.viewfinder" catalog="system" width="128" height="115"/>
         <image name="questionmark.square.dashed" catalog="system" width="128" height="114"/>
