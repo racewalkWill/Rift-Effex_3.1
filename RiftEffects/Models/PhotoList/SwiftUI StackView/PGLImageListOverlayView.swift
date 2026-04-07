@@ -45,10 +45,12 @@ class PGLImageListViewModel: ObservableObject {
         filterParms[parmIndex].remove(at: imageListIndex)
     }
 
-    func addAssets(in parmId: UUID, assets: [PGLAsset]) {
+    func addAssets(in rowID: RowID, assets: [PGLAsset]) {
+        let parmId = rowID.sectionID
+
         guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
         if isTransitionFilter {
-            filterParms[parmIndex].add(assets: assets)
+            filterParms[parmIndex].add(assets: assets, afterRow: rowID.assetIndex)
         } else {
             // remove the old asset and replace with the new selected image
             filterParms[parmIndex].replace(assets: assets)
@@ -81,18 +83,29 @@ class PGLImageListViewModel: ObservableObject {
         hasher.combine(id)
     }
 
-     @MainActor mutating func add(assets list: [PGLAsset]) {
-         let oldLastIndex = assets.count - 1 // zero based index
+     @MainActor mutating func add(newAssets list: [PGLAsset]) {
+         // first update the imageList and its assetIDs, assets and cachedImages
+         let oldLastIndex = assets.count - 1
+         imageList.addToCachedImages(newAssets: list, oldEndingIndex: oldLastIndex)
          imageList.append(assets:  list)
+
+         // now update these parmSection vars
          assets.append(contentsOf: list)
-         let newImages = list.map { $0.imageFrom() }
-         for i in 1...newImages.count  {
-             let thisImage = newImages[i - 1] ?? CIImage.empty()
-             let scaler = PGLImageScaler(image: thisImage)
-             let cacheIndex = oldLastIndex + i
-             cachedImages[cacheIndex] = scaler
-             imageList.cachedImages[cacheIndex] = scaler
-         }
+         cachedImages = imageList.cachedImages
+
+     }
+
+     @MainActor mutating func add(assets list: [PGLAsset], afterRow: Int) {
+        // let oldLastIndex = assets.count - 1 // zero based index
+//         let insertStartRow = afterRow
+
+         imageList.insert(newAssets:  list, startingIndex: afterRow)
+         // updates imageList.cachedImages to match
+
+         assets.insert(contentsOf: list, at: afterRow)
+
+         cachedImages = imageList.cachedImages
+
 
      }
 
@@ -123,7 +136,8 @@ class PGLImageListViewModel: ObservableObject {
          assets.removeAll()
          cachedImages.removeAll()
 
-         add(assets: list)
+         //add(assets: list,afterRow: 0)
+         add(newAssets: list)
      }
 
 
@@ -199,6 +213,11 @@ struct PGLAssetRowView: View {
 
 // MARK: - Overlay View
 
+struct RowID: Hashable {
+    let sectionID: UUID
+    let assetIndex: Int
+}
+
 struct PGLImageListOverlayView: View {
     // @ObservedObject var viewModel: PGLImageListViewModel
     @EnvironmentObject var viewModel: PGLImageListViewModel
@@ -206,11 +225,6 @@ struct PGLImageListOverlayView: View {
     @State private var editMode: EditMode = .inactive //.active
     @State private var isAddingPhoto = false
     @State private var selectedRow: RowID?
-
-    private struct RowID: Hashable {
-        let sectionID: UUID
-        let assetIndex: Int
-    }
 
     var body: some View {
         ZStack {
@@ -273,7 +287,7 @@ struct PGLImageListOverlayView: View {
                 .environment(\.editMode, $editMode)
                 .sheet(isPresented: $isAddingPhoto) {
                     if let selectedRow {
-                        PGLPhotoPicker(viewModel: viewModel, sectionID: selectedRow.sectionID)
+                        PGLPhotoPicker(viewModel: viewModel, rowId: selectedRow)
                     }
                 }
             }

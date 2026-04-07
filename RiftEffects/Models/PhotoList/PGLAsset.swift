@@ -152,16 +152,10 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiabl
                     return answerFrame
                 } // else continue to read the PHImageManager still frame
             }
-
-//            else {
-//                assetVideo = PGLAssetVideoPlayer.init(parentAsset: self)
-//                /// continues to get the normal image while videoPlayer is setup
-//            }
         }
 
           var pickedCIImage: CIImage?
-//         let matchingSize = CGSize(width: selectedAsset.asset.pixelWidth, height: selectedAsset.asset.pixelHeight)
-        // commented out pixelWidth is zero
+
            let matchingSize = TargetSize  //global
 
 //         options.progressHandler = {  (progress, error, stop, info) in

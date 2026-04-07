@@ -9,7 +9,8 @@ import PhotosUI
 /// SwiftUI photo picker for the PGLImageListOverlayView
 struct PGLPhotoPicker: UIViewControllerRepresentable {
     @ObservedObject var viewModel: PGLImageListViewModel
-    let sectionID: UUID
+    let rowId: RowID
+//    let sectionID: UUID
 
     /// A dismiss action provided by the environment. This may be called to dismiss this view controller.
     @Environment(\.dismiss) var dismiss
@@ -98,7 +99,7 @@ class Coordinator: NSObject, UINavigationControllerDelegate, PHPickerViewControl
                 }
 
         }
-        parent.viewModel.addAssets(in: parent.sectionID, assets: assets)
+        parent.viewModel.addAssets(in: parent.rowId, assets: assets)
 
         // add the newPGLAssets to the targetParm
 

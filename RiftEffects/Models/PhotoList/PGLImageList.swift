@@ -25,16 +25,19 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     // increment will move forward and on the end reverse in opposite direction
     // holds the source of each image in the photoLibrary
 
+    fileprivate func recacheAssetIDs() {
+            // objects are assets, they are the metadata from the photolibrary.. not the image
+        assetIDs = [String]()
+        for anAsset in imageAssets {
+            assetIDs.append(anAsset.localIdentifier)
+
+        }
+        NSLog(#function + "assetIDS count = \(assetIDs.count)")
+    }
+    
     var imageAssets = [PGLAsset]() {
         didSet {
-            // objects are assets, they are the metadata from the photolibrary.. not the image
-            assetIDs = [String]()
-            for anAsset in imageAssets {
-                assetIDs.append(anAsset.localIdentifier)
-//                if anAsset.isVideo() {
-//                    postVideoAnimationToggleOn(imageAsset: anAsset)
-//                }
-            }
+            recacheAssetIDs()
         }
     }
 
@@ -585,16 +588,59 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     // MARK: Updates
     func append(newImage: PGLAsset) {
         imageAssets.append(newImage)
-            //assetIDs are updated in the didSet of var imageAssets
-//        if newImage.isVideo() {
-//            postVideoAnimationToggleOn(imageAsset: newImage)
-//        }
+        // this will add to the cachedImages as it gets to the
+        // missing cache point
+
     }
 
     func append(assets: [PGLAsset]) {
-        for thisAsset in assets {
-            append(newImage: thisAsset)
+        imageAssets.append(contentsOf: assets)
+        recacheAssetIDs()
+            // this will add to the cachedImages as it gets to the
+            // missing cache point
+    }
+
+    func insert(newAssets: [PGLAsset], startingIndex: Int) {
+
+        let oldEndingIndex = imageAssets.count - 1
+        imageAssets.insert(contentsOf: newAssets, at: startingIndex)
+        recacheAssetIDs()
+        // now cachedImages indexes will be wrong
+
+        // copy out the cache starting at the index
+        var oldCachedImages = [PGLImageScaler?]()
+
+        for i in startingIndex..<cachedImages.count {
+            oldCachedImages.append(cachedImages[i])
+            cachedImages.removeValue(forKey: i)
         }
+        // now add the newones to the cache starting at the current end point
+        addToCachedImages(newAssets: newAssets, oldEndingIndex: oldEndingIndex)
+        // now update the rest of the cache that was saved out
+        // the old PGLAssets associated with the saved out images are still in imageAssets
+        for i in startingIndex..<newAssets.count {
+            // only for the size of the newly inserted assets
+            let newIndex = i + startingIndex
+            cachedImages[newIndex] = oldCachedImages[i]
+        }
+
+
+    }
+
+    /// assumes  adding to the end of the current cached image values
+    func addToCachedImages(newAssets list: [PGLAsset], oldEndingIndex: Int) {
+//        let oldLastIndex = assets.count - 1 // zero based index
+             // this is the imagaList assets before adding the list
+
+        let newImages = list.map { $0.imageFrom() }
+        for i in 1...newImages.count  {
+            let thisImage = newImages[i - 1] ?? CIImage.empty()
+            let scaler = PGLImageScaler(image: thisImage)
+            let cacheIndex = oldEndingIndex + i
+
+            cachedImages[cacheIndex] = scaler
+        }
+
     }
 
 
