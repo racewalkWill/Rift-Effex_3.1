@@ -13,7 +13,8 @@ import CoreImage
 struct PGLImageScaler {
     var image: CIImage
     var centerScaler: PGLCenterScaler?
-        // may be nil !! if the image was already scaled
+    
+
 
     @MainActor func useAspectFill() {
         centerScaler?.setAspectFillTransform(imageExtent: image.extent)
@@ -32,6 +33,12 @@ class PGLCenterScaler {
     var aspectFillSize: CGAffineTransform?
 
     var displayTransform: CGAffineTransform?
+
+        // may be nil !! if the image was already scaled
+        //    let centerScaler = PGLCenterScaler(centerCIImage: baseImage)
+        //    let centeredImage = centerScaler.displayTransform(image: baseImage)
+        //    let myScaler = PGLImageScaler(image: centeredImage, centerScaler: centerScaler)
+
 
     init(centerCIImage: CIImage) {
         let imageExtent = centerCIImage.extent // can be infinite

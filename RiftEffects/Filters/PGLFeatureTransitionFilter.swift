@@ -64,7 +64,7 @@ class PGLFeatureTransitionFilter: PGLTransitionFilter {
         }
 
             // these images are scaled already
-               imageList.setImages(ciImageArray: theImages)
+//               imageList.setImages(ciImageArray: theImages)
 
             // sets all of the images from the  getImage call
 

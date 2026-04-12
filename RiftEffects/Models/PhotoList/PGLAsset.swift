@@ -53,8 +53,11 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 
     var cache: PGLCachedImageMgr?
     private var imageRequestID: PHImageRequestID?
-    private var image: UIImage?
+     var thumbnail: UIImage?
+     var ciImage: CIImage?
+    var imageScaler: PGLCenterScaler?
 
+    let thumbnailSize: CGSize = CGSize(width: 100, height: 100)
 
     // MARK: Hash, Equatable
     nonisolated static func == (lhs: PGLAsset, rhs: PGLAsset) -> Bool {
@@ -177,8 +180,8 @@ class PGLAsset: Hashable, Equatable, Identifiable {
             }
         }
 
-        if let cachedImage = image {
-            return convert2CIImage(aUIImage: cachedImage)
+        if let myCIImage = ciImage {
+            return myCIImage
         }
 
         Task {
@@ -186,13 +189,15 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 //            NSLog(#function, #line)
             imageRequestID = await cache.requestImage(for: self, targetSize: TargetSize) { @Sendable result in
                 Task { @MainActor in
-//                    NSLog(#function, #line)
+
                     if let result = result {
-                        self.image = result.image
-//                        NSLog("Inside task result.image assigne")
-                        let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
-                        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
-//                        NSLog("PGLRedrawFilterChange notification posted")
+                        if let returnUIImage = result.image {
+                            self.thumbnail = returnUIImage.preparingThumbnail(of: self.thumbnailSize)
+                            self.ciImage = self.convert2CIImage(aUIImage: returnUIImage)
+                            self.imageScaler = PGLCenterScaler(centerCIImage: self.ciImage!)
+
+
+                        }
                     }
                 }
             }
@@ -217,8 +222,18 @@ class PGLAsset: Hashable, Equatable, Identifiable {
             return pickedCIImage
         }
 
+    func transformedImage() -> CIImage?
+    {
+        if let myCI = self.ciImage {
+            return self.imageScaler?.displayTransform(image: myCI)
+        } else {
+            return nil
+        }
+
+    }
+
     func uiImage() -> UIImage? {
-        return image
+        return thumbnail
 //        if let myCI = imageFrom()  {
 //            return UIImage(ciImage:myCI )
 //

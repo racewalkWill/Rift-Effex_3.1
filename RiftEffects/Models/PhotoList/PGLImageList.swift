@@ -68,15 +68,10 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 //    var isAssetList = true // hold PGLAssets.. or holds CIImages
     var hasUncachedAssets: Bool {
         get{
-//            return images.isEmpty && !imageAssets.isEmpty
-            // iPhone picker loads one image but still call this an assetList
-
-            return (cachedImages.count < imageAssets.count) && !imageAssets.isEmpty
-            // when all the images are cached in images then isAssetList is false.
+           return imageAssets.contains(where: { $0.ciImage  == nil })
         }
     }
-    var cachedImages = [Int:PGLImageScaler]()
-            // dictionary by index Int
+
     var userSelection: PGLUserAssetSelection?
         // REMOVE - userAssetSelection was to support 3 view controllers to sequence photos..  Now replaced by PGLImageListOverlayView
     var appStack: PGLAppStack?
@@ -138,26 +133,30 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
     }
 ///  assumes images are scaled and center for the current TargetSize
-    convenience init(scaledImages: [PGLImageScaler] ) {
-        self.init()
-        for (thisIndex, aImageScaler) in scaledImages.enumerated() {
-            cachedImages[thisIndex] = aImageScaler
-        }
-
-    }
+//    convenience init(scaledImages: [PGLImageScaler] ) {
+//        self.init()
+//        for (thisIndex, aImageScaler) in scaledImages.enumerated() {
+//            cachedImages[thisIndex] = aImageScaler
+//        }
+//
+//    }
 
     /// demo init for images in the build Assets.xcassets - not in the user photos library
     convenience init(imageFileNames: [String]) {
         self .init()
-       let uiImages = UIImage.uiImages(imageFileNames)
-        var counter = 0
-        for anUIImage in uiImages {
-                // convert2CIImage will correct orientation to downMirrored
-            if let convertedImage = convert2CIImage(aUIImage: anUIImage){
-                cacheImage(baseImage: convertedImage, index: counter)
-                counter += 1
-            }
-        }
+        fatalError("PGLImageList imageFileNames not yet implemented")
+        // need to construct a standin for the PGLAsset
+
+//       let uiImages = UIImage.uiImages(imageFileNames)
+//        var counter = 0
+//        for anUIImage in uiImages {
+//                // convert2CIImage will correct orientation to downMirrored
+//            if let convertedImage = convert2CIImage(aUIImage: anUIImage){
+//                //
+////                cacheImage(baseImage: convertedImage, index: counter)
+//                counter += 1
+//            }
+//        }
     }
 
 
@@ -166,7 +165,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         for anAsset in imageAssets {
             anAsset.releaseVars()
         }
-        cachedImages = [Int:PGLImageScaler]()
+
         userSelection?.releaseVars()
 
         inputStack?.releaseVars()
@@ -190,7 +189,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     }
  // MARK: CustomStringConvertible
     var description: String {
-           return "\(assetIDs), \(cachedImages)"
+           return "PGLImageList assetIDs: \(assetIDs)"
        }
 
     // MARK: setSelection
@@ -221,21 +220,17 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 // MARK: State
 
     func estimateRunSeconds() -> Double {
-        let imageCount: Double = Double(cachedImages.count)
+        let imageCount: Double = Double(assetIDs.count)
         return imageCount * 0.010
         
     }
 
     func validateLoad() {
-        // raise user message if the identifier and image count is not equal
+        // raise user message if the asset exists and but no ciImage
         // in limitedLibrary mode the image may not be obtained but the identifier is set
-        if !hasUncachedAssets {
 
-            // no images but imageAssets exist - should load okay
-            let imageCount = cachedImages.count
-            let identifierCount = assetIDs.count
 
-            if imageCount != identifierCount {
+            if hasUncachedAssets {
                 // raise user message.. some images will be blank
                 DispatchQueue.main.async {
                     guard let window = UIApplication.shared.delegate?.window,
@@ -257,7 +252,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
                    viewController.present(alert, animated: true)
                 }
             }
-        }
+//        }
     }
 
     func hasImageStack() -> Bool {
@@ -275,22 +270,18 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     }
 
     func maxAssetsOrImagesCount() -> Int {
-          if hasUncachedAssets {
               return imageAssets.count
-          }
-          else {
-              return cachedImages.count
-          }
+
       }
 
       func isEmpty() -> Bool {
-           return (imageAssets.isEmpty) && (cachedImages.isEmpty)
+           return (imageAssets.isEmpty)
       }
 
     func isDemoList() -> Bool {
         // if only images in the cache then it is a demo
         // images have been loaded from  build Assets.xcassets - not in the user photos library
-        return (imageAssets.isEmpty) && (!cachedImages.isEmpty)
+        return (imageAssets.isEmpty)
 
     }
 
@@ -305,7 +296,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         if isMultiple() {
             newList.position = 1 }
 
-        newList.cachedImages = self.cachedImages
+//        newList.cachedImages = self.cachedImages
 //        newList.isAssetList = self.isAssetList
 
         self.nextType = NextElement.even
@@ -330,7 +321,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         newList.nextType = NextElement.each
 //        newList.collectionTitle = "Odd-" + self.collectionTitle  // O for Odd
         newList.position = 0
-        newList.cachedImages = self.cachedImages
+//        newList.cachedImages = self.cachedImages
 //        newList.isAssetList = self.isAssetList
 
 
@@ -350,7 +341,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         source.assetIDs.removeAll()
         source.userSelection = nil
         source.position = -1
-        source.cachedImages.removeAll()
+//        source.cachedImages.removeAll()
 
     }
 
@@ -429,14 +420,12 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
     func image(atIndex: Int) -> CIImage? {
         var answerImage: CIImage?
-
-        if let thisImageScaler = cachedImages[atIndex] {
-                // has image in the private cache
-                // NO asset to load
-           return thisImageScaler.image
+        let imageAsset = imageAssets[atIndex]
+        answerImage = imageAsset.transformedImage()
+        if answerImage != nil {
+            return answerImage
         }
-        else { 
-            let imageAsset = imageAssets[atIndex]
+        else {
             if imageAsset.isVideo() {
                 answerImage =  imageAsset.imageFrom()
                 if answerImage != nil {
@@ -444,38 +433,11 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
                 }
                 else {
                     return CIImage.empty()
-//                    return nil  // force a retry on the next loop
+                        //                    return nil  // force a retry on the next loop
                 }
             }
-            let imageFromAsset = imageAsset.imageFrom()
-//            if imageFromAsset == nil {
-//                // Show spinner while waiting for async image fetch
-//                let myAppDelegate = UIApplication.shared.delegate as? AppDelegate
-//                if let window = UIApplication.shared.delegate?.window,
-//                   let viewController = window?.rootViewController {
-//                    myAppDelegate?.showWaiting(onController: viewController)
-//                }
-//                // Retry with delay, give up after 2 seconds
-//                let startTime = CFAbsoluteTimeGetCurrent()
-//                while imageFromAsset == nil && (CFAbsoluteTimeGetCurrent() - startTime) < 2.0 {
-//                    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-//                    imageFromAsset = imageAsset.imageFrom()
-//                }
-//                myAppDelegate?.closeWaitingIndicator()
-//            }
-            if let loadedImage = imageFromAsset {
-                NSLog(#function , "loaded image from asset")
-                cacheImage(baseImage: loadedImage, index: atIndex)
-            }
-            else {
-                NSLog(#function , "imageFrom task NOT completed")
-                return CIImage.empty()
-
-//                return nil
-            }
+            return nil
         }
-        return cachedImages[atIndex]?.image
-            // imageScaler.image
     }
 
 
@@ -645,43 +607,10 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         let oldEndingIndex = imageAssets.count - 1
         imageAssets.insert(contentsOf: newAssets, at: startingIndex)
         recacheAssetIDs()
-        // now cachedImages indexes will be wrong
-
-        // copy out the cache starting at the index
-        var oldCachedImages = [PGLImageScaler?]()
-
-        for i in startingIndex..<cachedImages.count {
-            oldCachedImages.append(cachedImages[i])
-            cachedImages.removeValue(forKey: i)
-        }
-        // now add the newones to the cache starting at the current end point
-        addToCachedImages(newAssets: newAssets, oldEndingIndex: oldEndingIndex)
-        // now update the rest of the cache that was saved out
-        // the old PGLAssets associated with the saved out images are still in imageAssets
-        for i in startingIndex..<newAssets.count {
-            // only for the size of the newly inserted assets
-            let newIndex = i + startingIndex
-            cachedImages[newIndex] = oldCachedImages[i]
-        }
-
-
     }
 
     /// assumes  adding to the end of the current cached image values
-    func addToCachedImages(newAssets list: [PGLAsset], oldEndingIndex: Int) {
-//        let oldLastIndex = assets.count - 1 // zero based index
-             // this is the imagaList assets before adding the list
 
-        let newImages = list.map { $0.imageFrom() }
-        for i in 1...newImages.count  {
-            let thisImage = newImages[i - 1] ?? CIImage.empty()
-            let scaler = PGLImageScaler(image: thisImage)
-            let cacheIndex = oldEndingIndex + i
-
-            cachedImages[cacheIndex] = scaler
-        }
-
-    }
 
 
 
@@ -727,7 +656,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
     func setImages(ciImageArray: [CIImage]) {
         for (thisIndex, anImage) in ciImageArray.enumerated() {
-            cachedImages[thisIndex] = PGLImageScaler(image: anImage)
+
         }
     }
 
@@ -738,7 +667,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         let centeredImage = centerScaler.displayTransform(image: baseImage)
         let myScaler = PGLImageScaler(image: centeredImage, centerScaler: centerScaler)
 //        cachedImages.insert(myScaler, at: index)
-        cachedImages[index] = myScaler
+//        cachedImages[index] = myScaler
         // should have added at the end of the array
         // array size matches index
 
@@ -755,19 +684,20 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
             // so don't clear the cache
             return false
         }
-        cachedImages = [Int:PGLImageScaler]()
+//        cachedImages = [Int:PGLImageScaler]()
+        // ISSUE does it recenter
         return true
 
     }
 
-    func firstScaleTransform() -> CGAffineTransform? {
-        // images of list may have different sizes..
-        // this is just the first one !!!
-        if let firstCenterScaler =  cachedImages.first {
-            return firstCenterScaler.value.centerScaler?.displayTransform
-        }
-        return nil // nothing found
-    }
+//    func firstScaleTransform() -> CGAffineTransform? {
+//        // images of list may have different sizes..
+//        // this is just the first one !!!
+//        if let firstCenterScaler =  cachedImages.first {
+//            return firstCenterScaler.value.centerScaler?.displayTransform
+//        }
+//        return nil // nothing found
+//    }
 
     // MARK: Editing - remove, reorder
     /// three parallel vars to update   the dictionary of cachedImages, the imageAssets [PGLAsset]  array and the assetIDs array of localIdentifiers
@@ -775,7 +705,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         imageAssets.remove(at: index)
             // assetIDs are reset in didSet of the imageAssets
                 //  don't need to call assetIDs.remove(at: index)
-        _ = cachedImages.removeValue(forKey: index)
+//        _ = cachedImages.removeValue(forKey: index)
             // cachedImages may be smaller than imageAssets - not all images are cached
             // keep in sync
                 // adjusts position - max size is changed
@@ -790,14 +720,14 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
     func removeAll() {
         imageAssets.removeAll()
-        cachedImages.removeAll()
+//        cachedImages.removeAll()
 
     }
 
     func moveContentsFrom(fromOffsets: IndexSet, toOffset destination: Int) {
         imageAssets.move(fromOffsets: fromOffsets, toOffset: destination)
         // make cachedImages reset
-        cachedImages.removeAll()
+      // cachedImages.removeAll()
         // assetIDs are reset in the didSet block of the imageAssets var
     }
 

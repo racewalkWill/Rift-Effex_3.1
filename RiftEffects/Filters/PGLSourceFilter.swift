@@ -557,8 +557,10 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         //  superclass implementation to dispatch into the attribute
         // special filters that need aux data to function should override
         // PGLDisparityFilter implements
-
-        setImageValue(newValue: (inputList.first()!), keyName: attributeName)
+        guard let newImage = inputList.first() else {
+            return // cache may not have returned yet from the PHPhoto librar
+        }
+        setImageValue(newValue: (newImage), keyName: attributeName)
         setImageListClone(imageList: inputList, sourceKey: attributeName)
        
     }

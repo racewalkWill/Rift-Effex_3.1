@@ -32,8 +32,8 @@ class PGLImageListViewModel: ObservableObject {
         filterParms = filter.imageAttributes().compactMap { attr -> ParmSection? in
             guard let list = attr.inputCollection, !list.isEmpty() else { return nil }
             let name = attr.attributeDisplayName ?? attr.attributeName ?? "Images"
-            return ParmSection(attributeName: name, imageList: list, assets: list.imageAssets,
-                cachedImages: list.cachedImages
+            return ParmSection(attributeName: name, imageList: list, assets: list.imageAssets
+//                               ,cachedImages: list.cachedImages
             )
 //            return PGLStackItem
         }
@@ -73,7 +73,7 @@ class PGLImageListViewModel: ObservableObject {
     var imageList: PGLImageList
     // assets and cachedImages are internal vars of the imageList
     var assets: [PGLAsset]
-    var cachedImages: [Int: PGLImageScaler]
+//    var cachedImages: [Int: PGLImageScaler]
 
     static func == (lhs: ParmSection, rhs: ParmSection) -> Bool {
         lhs.id == rhs.id
@@ -85,13 +85,13 @@ class PGLImageListViewModel: ObservableObject {
 
      @MainActor mutating func add(newAssets list: [PGLAsset]) {
          // first update the imageList and its assetIDs, assets and cachedImages
-         let oldLastIndex = assets.count - 1
-         imageList.addToCachedImages(newAssets: list, oldEndingIndex: oldLastIndex)
+//         let oldLastIndex = assets.count - 1
+//         imageList.addToCachedImages(newAssets: list, oldEndingIndex: oldLastIndex)
          imageList.append(assets:  list)
 
          // now update these parmSection vars
          assets.append(contentsOf: list)
-         cachedImages = imageList.cachedImages
+//         cachedImages = imageList.cachedImages
 
      }
 
@@ -104,7 +104,7 @@ class PGLImageListViewModel: ObservableObject {
 
          assets.insert(contentsOf: list, at: afterRow)
 
-         cachedImages = imageList.cachedImages
+//         cachedImages = imageList.cachedImages
 
 
      }
@@ -113,28 +113,28 @@ class PGLImageListViewModel: ObservableObject {
          imageList.removeImage(at: index)
          assets.remove(at: index)
          // Rebuild cachedImages to match new indices after removal
-         var newCached = [Int: PGLImageScaler]()
-         for i in assets.indices {
-             let oldIndex = i < index ? i : i + 1
-             if let scaler = cachedImages[oldIndex] {
-                 newCached[i] = scaler
-             }
-         }
-         cachedImages = newCached
+//         var newCached = [Int: PGLImageScaler]()
+//         for i in assets.indices {
+//             let oldIndex = i < index ? i : i + 1
+//             if let scaler = cachedImages[oldIndex] {
+//                 newCached[i] = scaler
+//             }
+//         }
+//         cachedImages = newCached
      }
 
      @MainActor mutating func move(fromOffsets offsets: IndexSet, toOffset destination: Int) {
          imageList.moveContentsFrom(fromOffsets: offsets, toOffset: destination)
          assets.move(fromOffsets: offsets, toOffset: destination)
          // Cached images are index-keyed; clear and let them re-cache on access
-         cachedImages.removeAll()
+//         cachedImages.removeAll()
      }
 
      @MainActor mutating func replace(assets list: [PGLAsset]) {
          // usually just replacing the single image with another single image
          imageList.removeAll()
          assets.removeAll()
-         cachedImages.removeAll()
+//         cachedImages.removeAll()
 
          //add(assets: list,afterRow: 0)
          add(newAssets: list)
@@ -147,7 +147,7 @@ class PGLImageListViewModel: ObservableObject {
 
 struct PGLAssetRowView: View {
     let pglAsset: PGLAsset
-    let cachedImage: CIImage?
+    let cachedImage: UIImage?
     let parentSection: ParmSection
 
     @State private var thumbnail: UIImage? = nil
@@ -155,7 +155,7 @@ struct PGLAssetRowView: View {
     var body: some View {
         HStack(spacing: 10) {
             thumbnailView
-                .frame(width: 80, height: 60)
+                .frame(width: 100, height: 100)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 4) {
@@ -198,16 +198,18 @@ struct PGLAssetRowView: View {
     }
 
     private func loadThumbnail() {
-        guard thumbnail == nil, let ciImage = cachedImage else { return }
-        let context = CIContext()
-        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
-            let smallSize = CGSize(width: 120, height: 120)
-            let source = UIImage(cgImage: cgImage)
-            Task {
-                let prepared = await source.byPreparingThumbnail(ofSize: smallSize)
-                await MainActor.run { thumbnail = prepared }
-            }
-        }
+        guard thumbnail == nil  else { return }
+        thumbnail = pglAsset.thumbnail
+
+//        let context = CIContext()
+//        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+//            let smallSize = CGSize(width: 120, height: 120)
+//            let source = UIImage(cgImage: cgImage)
+//            Task {
+//                let prepared = await source.byPreparingThumbnail(ofSize: smallSize)
+//                await MainActor.run { thumbnail = prepared }
+//            }
+//        }
     }
 }
 
@@ -305,7 +307,7 @@ struct PGLImageListOverlayView: View {
 
             List {
                 ForEach(Array(imageAttributeSection.assets.enumerated()), id: \.element.id) { assetIndex, pglAsset in
-                    let cachedImage = imageAttributeSection.cachedImages[assetIndex]?.image
+                    let cachedImage = pglAsset.thumbnail
                     let rowID = RowID(sectionID: imageAttributeSection.id, assetIndex: assetIndex)
                     PGLAssetRowView(pglAsset: pglAsset, cachedImage: cachedImage, parentSection: imageAttributeSection)
                         .contentShape(Rectangle())

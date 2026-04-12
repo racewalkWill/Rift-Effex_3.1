@@ -397,7 +397,7 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
                       let attrName = attr.attributeName
                 else { continue }
                 // Clear cached images so the filter re-loads and centers from updated assets
-                imageList.cachedImages.removeAll()
+//                imageList.cachedImages.removeAll()
                 filter.setImageValuesAndClone(inputList: imageList, attributeName: attrName)
             }
             let updateNotification = Notification(name: PGLRedrawFilterChange)
