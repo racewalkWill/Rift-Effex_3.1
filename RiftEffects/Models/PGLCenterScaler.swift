@@ -80,7 +80,7 @@ class PGLCenterScaler {
     }
 
     func displayTransform(image: CIImage) -> CIImage {
-//        NSLog("PGLCenterScaler  displayTransform \(String(describing: displayTransform))")
+        NSLog("PGLCenterScaler  displayTransform \(String(describing: displayTransform))")
         return image.transformed(by: displayTransform ?? CGAffineTransform.identity)
     }
 

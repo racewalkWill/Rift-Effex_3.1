@@ -133,6 +133,8 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 //        let phAssets = PHAsset.fetchAssets(withLocalIdentifiers: assetIDs, options: nil)
         //set up imageAssets
         imageAssets = getAssets(localIds: assetIDs, albums: [String]())
+        // need to add to the cache
+        
 
     }
 ///  assumes images are scaled and center for the current TargetSize
@@ -442,32 +444,38 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
                 }
                 else {
                     return CIImage.empty()
+//                    return nil  // force a retry on the next loop
                 }
             }
-            var imageFromAsset = imageAsset.imageFrom()
-            if imageFromAsset == nil {
-                // Show spinner while waiting for async image fetch
-                let myAppDelegate = UIApplication.shared.delegate as? AppDelegate
-                if let window = UIApplication.shared.delegate?.window,
-                   let viewController = window?.rootViewController {
-                    myAppDelegate?.showWaiting(onController: viewController)
-                }
-                // Retry with delay, give up after 2 seconds
-                let startTime = CFAbsoluteTimeGetCurrent()
-                while imageFromAsset == nil && (CFAbsoluteTimeGetCurrent() - startTime) < 2.0 {
-                    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-                    imageFromAsset = imageAsset.imageFrom()
-                }
-                myAppDelegate?.closeWaitingIndicator()
-            }
-            if let imageFromAsset = imageFromAsset {
-                cacheImage(baseImage: imageFromAsset, index: atIndex)
+            let imageFromAsset = imageAsset.imageFrom()
+//            if imageFromAsset == nil {
+//                // Show spinner while waiting for async image fetch
+//                let myAppDelegate = UIApplication.shared.delegate as? AppDelegate
+//                if let window = UIApplication.shared.delegate?.window,
+//                   let viewController = window?.rootViewController {
+//                    myAppDelegate?.showWaiting(onController: viewController)
+//                }
+//                // Retry with delay, give up after 2 seconds
+//                let startTime = CFAbsoluteTimeGetCurrent()
+//                while imageFromAsset == nil && (CFAbsoluteTimeGetCurrent() - startTime) < 2.0 {
+//                    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+//                    imageFromAsset = imageAsset.imageFrom()
+//                }
+//                myAppDelegate?.closeWaitingIndicator()
+//            }
+            if let loadedImage = imageFromAsset {
+                NSLog(#function , "loaded image from asset")
+                cacheImage(baseImage: loadedImage, index: atIndex)
             }
             else {
+                NSLog(#function , "imageFrom task NOT completed")
                 return CIImage.empty()
+
+//                return nil
             }
         }
         return cachedImages[atIndex]?.image
+            // imageScaler.image
     }
 
 

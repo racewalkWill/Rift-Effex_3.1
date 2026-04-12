@@ -138,7 +138,8 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
         // here assign the  identifiers into the imageList
         selectedImageList.assetIDs = identifiers
         // PGLImageList will load actual image in imageFrom()
-
+         // ISSUE need to be sure that PGLImageList #getAssets(localIds: [String],albums: [String])  -> [PGLAsset] is called and caches images
+        
         pickingImageList =  selectedImageList
         
         if let myTargetParm = parmAttribute {

@@ -186,9 +186,13 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 //            NSLog(#function, #line)
             imageRequestID = await cache.requestImage(for: self, targetSize: TargetSize) { @Sendable result in
                 Task { @MainActor in
-                    NSLog(#function, #line)
+//                    NSLog(#function, #line)
                     if let result = result {
                         self.image = result.image
+//                        NSLog("Inside task result.image assigne")
+                        let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
+                        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+//                        NSLog("PGLRedrawFilterChange notification posted")
                     }
                 }
             }
