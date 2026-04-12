@@ -73,6 +73,8 @@ class PGLAppStack {
         return provider
     }()
 
+    var photoMgr: PGLCachedImageMgr = PGLCachedImageMgr()
+
    
 
     // controls displaying the current intermediate viewer data stack image or the final output

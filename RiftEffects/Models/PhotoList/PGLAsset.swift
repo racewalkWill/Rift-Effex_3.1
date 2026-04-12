@@ -20,13 +20,15 @@ struct PGLDevicePosition {
 }
 
 @MainActor
-class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiable {
+class PGLAsset: Hashable, Equatable, Identifiable {
     // a wrapper object around PHAsset
        // holds the sourceInfo so it can be displayed
        // does this cause any caching memory problems??
        // because the assetCollection is held??
        // other option is to capture localIdentifier & title only
-    var asset: PHAsset
+    nonisolated(unsafe) var asset: PHAsset
+
+    // sourceInfo not needed.. PHAsset.fetchAssets(withLocalIdentifiers already set
     lazy var sourceInfo: PHAssetCollection? =
         { let fetchResult = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [albumId], options: nil)
             return fetchResult.firstObject
@@ -49,15 +51,18 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiabl
     nonisolated var id: String { return localIdentifier }
         // return ObjectIdentifier(self) }
 
+    var cache: PGLCachedImageMgr?
+    private var imageRequestID: PHImageRequestID?
+    private var image: UIImage?
 
 
     // MARK: Hash, Equatable
-    static func == (lhs: PGLAsset, rhs: PGLAsset) -> Bool {
+    nonisolated static func == (lhs: PGLAsset, rhs: PGLAsset) -> Bool {
        return lhs.localIdentifier == rhs.localIdentifier
     }
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(asset.localIdentifier)
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(localIdentifier)
     }
 
 
@@ -80,6 +85,12 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiabl
         options?.resizeMode = PHImageRequestOptionsResizeMode.exact
             // was .exact
             // app is resizing in other code
+
+        guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
+                        else { Logger(subsystem: LogSubsystem, category: LogCategory).fault ("PGLFilterTableController viewDidLoad fatalError AppDelegate not loaded")
+                            return
+                    }
+        cache = myAppDelegate.appStack.photoMgr
 
     }
 
@@ -119,21 +130,21 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiabl
 
     }
 
-    func asPGLAlbumSource(onAttribute: PGLFilterAttribute) -> PGLAlbumSource {
-        if let resultFetch = getAssetFetchResult()
-        {
-            if let mySourceInfo = sourceInfo {
-                let newbie = PGLAlbumSource(targetAttribute: onAttribute, mySourceInfo, resultFetch)
-                return newbie}
-            else { // missing album source info
-               let emptyAlbum = PGLAlbumSource(forAttribute: onAttribute)
-                return emptyAlbum
-            }
-        } else { // missing resultFetch
-            let emptyAlbum = PGLAlbumSource(forAttribute: onAttribute)
-             return emptyAlbum
-             }
-    }
+//    func asPGLAlbumSource(onAttribute: PGLFilterAttribute) -> PGLAlbumSource {
+//        if let resultFetch = getAssetFetchResult()
+//        {
+//            if let mySourceInfo = sourceInfo {
+//                let newbie = PGLAlbumSource(targetAttribute: onAttribute, mySourceInfo, resultFetch)
+//                return newbie}
+//            else { // missing album source info
+//               let emptyAlbum = PGLAlbumSource(forAttribute: onAttribute)
+//                return emptyAlbum
+//            }
+//        } else { // missing resultFetch
+//            let emptyAlbum = PGLAlbumSource(forAttribute: onAttribute)
+//             return emptyAlbum
+//             }
+//    }
 
     static let ImageLogger = OSLog(subsystem: "com.apple.Photos", category: "PGLAsset")
     // MARK: Image
@@ -141,10 +152,14 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiabl
     /// moved from the PGLImageList
     @MainActor
     func imageFrom() -> CIImage? {
-        os_signpost(.begin, log: PGLAsset.ImageLogger, name: "imageFrom")
-        defer {
-            os_signpost(.end, log: PGLAsset.ImageLogger, name: "imageFrom")
-        }
+        // • When self​.image is already cached (from a previous request), it's immediately converted via convert2​CIImage() and returned as a CIImage
+//        • The Task to fetch from the cache only fires when image is nil (first call)
+//        • On the first call it still returns nil, but once the async fetch completes and sets self​.image, subsequent calls will return the converted CIImage
+
+//        os_signpost(.begin, log: PGLAsset.ImageLogger, name: "imageFrom")
+//        defer {
+//            os_signpost(.end, log: PGLAsset.ImageLogger, name: "imageFrom")
+//        }
         if isVideo() {
             if assetVideo != nil {
 
@@ -154,14 +169,6 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiabl
             }
         }
 
-          var pickedCIImage: CIImage?
-
-           let matchingSize = TargetSize  //global
-
-//         options.progressHandler = {  (progress, error, stop, info) in
-//             NSLog("PGLImageList imageFrom: progressHandler  \(progress) info = \(String(describing: info))")
-//            }
-
         if PrintDebugPhotoLocation {
             let thePHAsset = self.asset
             if let resource = PHAssetResource.assetResources(for: thePHAsset).first
@@ -169,22 +176,26 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiabl
                 NSLog("\(resource.originalFilename)  \(String(describing: thePHAsset.location))")
             }
         }
-            /// see PHImageManager docs on callback behavior
-          PHImageManager.default().requestImage(for: self.asset, targetSize: matchingSize, contentMode: .aspectFit, options: options, resultHandler: { image, info in
-              if let error =  info?[PHImageErrorKey]
-               { NSLog( "PGLImageList imageFrom error = \(error)")
-              }
-              else {
-               guard let theImage = image else { return  }
-               pickedCIImage = self.convert2CIImage(aUIImage: theImage)
-//                  Logger(subsystem: LogSubsystem, category: LogCategory).debug("pickedCIImage \(pickedCIImage!.debugDescription)")
-              }
-           }
-          )
 
-        return pickedCIImage
-               // may be nil if not set in the result handler block
-      }
+        if let cachedImage = image {
+            return convert2CIImage(aUIImage: cachedImage)
+        }
+
+        Task {
+            guard let cache = cache else { return }
+//            NSLog(#function, #line)
+            imageRequestID = await cache.requestImage(for: self, targetSize: TargetSize) { @Sendable result in
+                Task { @MainActor in
+                    NSLog(#function, #line)
+                    if let result = result {
+                        self.image = result.image
+                    }
+                }
+            }
+        }
+        return nil
+               // nil on first call; image will be available on subsequent calls
+      } // end imageFrom()
 
         /// convert UIImage to CIImage and correct orientation to downMirrored
     @MainActor func convert2CIImage(aUIImage: UIImage) -> CIImage? {
@@ -203,12 +214,13 @@ class PGLAsset: @preconcurrency Hashable, @preconcurrency Equatable, Identifiabl
         }
 
     func uiImage() -> UIImage? {
-        if let myCI = imageFrom()  {
-            return UIImage(ciImage:myCI )
-
-        } else {
-            return nil
-        }
+        return image
+//        if let myCI = imageFrom()  {
+//            return UIImage(ciImage:myCI )
+//
+//        } else {
+//            return nil
+//        }
 
     }
 

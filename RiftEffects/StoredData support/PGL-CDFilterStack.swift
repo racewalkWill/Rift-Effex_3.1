@@ -516,7 +516,7 @@ extension PGLFilterAttributeImage {
 
 
         } else {
-            // normal branch for all filters except sequencedFilters
+            // NORMAL branch for all filters except sequencedFilters
             // load relation inputAssets and attach an ImageList as input
             // handles childStacks that are not sequence stacks
             loadInputAssets(cdImageParm: cdImageParm)
@@ -781,7 +781,7 @@ extension PGLFilterAttributeImage {
 // ================ start extension PGLImageList  =========================
 extension PGLImageList {
     func on(imageParm: PGLFilterAttributeImage) {
-        self.setUserSelection(toAttribute: imageParm)
+//        self.setUserSelection(toAttribute: imageParm)
         imageParm.setImageCollectionInput(cycleStack: self)
     }
 }

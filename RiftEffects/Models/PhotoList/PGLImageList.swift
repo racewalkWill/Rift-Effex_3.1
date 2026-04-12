@@ -58,7 +58,8 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         return TargetSize
         }
     }
-    
+    var contentMode: UIView.ContentMode = UIView.ContentMode.scaleAspectFit
+
     // storable var
     var assetIDs = [String]()
     var collectionTitle = String()  // imageAssets may have multiple albums
@@ -77,10 +78,17 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     var cachedImages = [Int:PGLImageScaler]()
             // dictionary by index Int
     var userSelection: PGLUserAssetSelection?
-
+        // REMOVE - userAssetSelection was to support 3 view controllers to sequence photos..  Now replaced by PGLImageListOverlayView
+    var appStack: PGLAppStack?
 
     // MARK: Init
-    init(){ }
+    init(){
+        guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
+                        else { Logger(subsystem: LogSubsystem, category: LogCategory).fault ("PGLFilterTableController viewDidLoad fatalError AppDelegate not loaded")
+                            return
+                    }
+        appStack = myAppDelegate.appStack
+    }
 
 //    deinit {
 //        releaseVars()
@@ -189,19 +197,19 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         // the imageAssets
 //        var newbie: PGLUserAssetSelection
 
-        if let firstAsset = imageAssets.first {
-            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLImageList #setUserSelection set firstAsset")
-            let thisAlbumSource = firstAsset.asPGLAlbumSource(onAttribute: toAttribute)
-
-            let newbie = PGLUserAssetSelection(assetSources: thisAlbumSource)
-
-
-     for nextAsset in imageAssets {
-//            for nextAsset in imageAssets.suffix(from: 1) {
-               newbie.append(nextAsset)
-            }
-            userSelection = newbie
-        }
+// if let firstAsset = imageAssets.first {
+//            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLImageList #setUserSelection set firstAsset")
+//            let thisAlbumSource = firstAsset.asPGLAlbumSource(onAttribute: toAttribute)
+//
+//            let newbie = PGLUserAssetSelection(assetSources: thisAlbumSource)
+//
+//
+//     for nextAsset in imageAssets {
+////            for nextAsset in imageAssets.suffix(from: 1) {
+//               newbie.append(nextAsset)
+//            }
+//            userSelection = newbie
+//        }
     }
 
     func firstAsset() -> PGLAsset? {
@@ -387,8 +395,16 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
                     // PGLAsset will read collectionTitle
             }
         }
+        // start caching the assets ??
+        let itemsToCache = pglAssetItems
+        // The nonisolated(unsafe) annotation tells the compiler that items​To​Cache is safe to send across the concurrency boundary, which is true here since it's a freshly created local array that isn't accessed again after being captured by the Task.
+        Task {
+            await appStack?.photoMgr.startCaching(for: itemsToCache, targetSize: targetSize)
+        }
         return pglAssetItems
     }
+
+
 
     func sourceImageAlbums() -> [String]? {
         var albumIds = [String]()
@@ -428,7 +444,23 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
                     return CIImage.empty()
                 }
             }
-            if let imageFromAsset = imageAsset.imageFrom() {
+            var imageFromAsset = imageAsset.imageFrom()
+            if imageFromAsset == nil {
+                // Show spinner while waiting for async image fetch
+                let myAppDelegate = UIApplication.shared.delegate as? AppDelegate
+                if let window = UIApplication.shared.delegate?.window,
+                   let viewController = window?.rootViewController {
+                    myAppDelegate?.showWaiting(onController: viewController)
+                }
+                // Retry with delay, give up after 2 seconds
+                let startTime = CFAbsoluteTimeGetCurrent()
+                while imageFromAsset == nil && (CFAbsoluteTimeGetCurrent() - startTime) < 2.0 {
+                    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+                    imageFromAsset = imageAsset.imageFrom()
+                }
+                myAppDelegate?.closeWaitingIndicator()
+            }
+            if let imageFromAsset = imageFromAsset {
                 cacheImage(baseImage: imageFromAsset, index: atIndex)
             }
             else {

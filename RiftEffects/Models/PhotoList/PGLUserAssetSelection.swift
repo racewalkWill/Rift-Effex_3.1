@@ -241,13 +241,13 @@ class PGLUserAssetSelection {
         if userAsset.isNull() { return }
         selectedAssets.append(userAsset)
 
-        let newAlbumId = userAsset.albumId
+//        let newAlbumId = userAsset.albumId
 
-        if sections[newAlbumId] == nil {
-                                 // add the album and the fetchResult
-                                // add assetSourceCollection & fetchResult
-            self.sections[newAlbumId] = userAsset.asPGLAlbumSource(onAttribute:myTargetFilterAttribute!)
-                }
+//        if sections[newAlbumId] == nil {
+//                                 // add the album and the fetchResult
+//                                // add assetSourceCollection & fetchResult
+//            self.sections[newAlbumId] = userAsset.asPGLAlbumSource(onAttribute:myTargetFilterAttribute!)
+//                }
      }
 
 
