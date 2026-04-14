@@ -114,34 +114,38 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
 
         NSLog("didFinish identifiers = \(identifiers) in fetchResult \(fetchAssetResult)")
 
-        var assets = [PGLAsset]()
+//        var assets = [PGLAsset]()
         identifiers = [String]()
             // reset - not all identifiers are fetched in limited Photos mode
 
         for fetchAsset in fetchAssetResult.objects {
-            let anNewPGLAsset = PGLAsset(sourceAsset: fetchAsset)
-            assets.append(anNewPGLAsset)
+                //            let anNewPGLAsset = PGLAsset(sourceAsset: fetchAsset)
+                //            assets.append(anNewPGLAsset)
             identifiers.append(fetchAsset.localIdentifier)
-            // if video then cache into local file and assign localURL to asset
-            if let thisResultProvider = selection[fetchAsset.localIdentifier] {
-                if thisResultProvider.itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
-//                    let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
-//                    myAppDelegate.showWaiting(onController: theController)
+                // if video then cache into local file and assign localURL to asset
+                //            if let thisResultProvider = selection[fetchAsset.localIdentifier] {
+                //                if thisResultProvider.itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
+                ////                    let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
+                ////                    myAppDelegate.showWaiting(onController: theController)
+                //
+                ////                    loadLocalVideoURL(thisAsset: anNewPGLAsset, pickerResult: selection[fetchAsset.localIdentifier]!)
+                //                    anNewPGLAsset.requestVideo()
+                //                }
+                //                }
+                //            }
 
-//                    loadLocalVideoURL(thisAsset: anNewPGLAsset, pickerResult: selection[fetchAsset.localIdentifier]!)
-                    anNewPGLAsset.requestVideo()
-                }
-                }
-            }
+                //        let selectedImageList = PGLImageList(localPGLAssets: assets)
+                // here assign the  identifiers into the imageList
+                //        selectedImageList.assetIDs = identifiers
+                // PGLImageList will load actual image in imageFrom()
+                // ISSUE need to be sure that PGLImageList #getAssets(localIds: [String],albums: [String])  -> [PGLAsset] is called and caches image
+        }
 
-        let selectedImageList = PGLImageList(localPGLAssets: assets)
-        // here assign the  identifiers into the imageList
-        selectedImageList.assetIDs = identifiers
-        // PGLImageList will load actual image in imageFrom()
-         // ISSUE need to be sure that PGLImageList #getAssets(localIds: [String],albums: [String])  -> [PGLAsset] is called and caches images
-        
+        let selectedImageList = PGLImageList(localAssetIDs: identifiers, albumIds: [String]())
+
         pickingImageList =  selectedImageList
-        
+        // 
+
         if let myTargetParm = parmAttribute {
             // when setting inputs to the parm controller
             // not used for the PGLSplitViewController case

@@ -56,6 +56,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
      var thumbnail: UIImage?
      var ciImage: CIImage?
     var imageScaler: PGLCenterScaler?
+    var onImageReady: ((CIImage) -> Void)?
 
     let thumbnailSize: CGSize = CGSize(width: 100, height: 100)
 
@@ -184,27 +185,12 @@ class PGLAsset: Hashable, Equatable, Identifiable {
             return myCIImage
         }
 
-        Task {
-            guard let cache = cache else { return }
-//            NSLog(#function, #line)
-            imageRequestID = await cache.requestImage(for: self, targetSize: TargetSize) { @Sendable result in
-                Task { @MainActor in
 
-                    if let result = result {
-                        if let returnUIImage = result.image {
-                            self.thumbnail = returnUIImage.preparingThumbnail(of: self.thumbnailSize)
-                            self.ciImage = self.convert2CIImage(aUIImage: returnUIImage)
-                            self.imageScaler = PGLCenterScaler(centerCIImage: self.ciImage!)
-
-
-                        }
-                    }
-                }
-            }
-        }
         return nil
                // nil on first call; image will be available on subsequent calls
       } // end imageFrom()
+
+   
 
         /// convert UIImage to CIImage and correct orientation to downMirrored
     @MainActor func convert2CIImage(aUIImage: UIImage) -> CIImage? {
@@ -223,7 +209,9 @@ class PGLAsset: Hashable, Equatable, Identifiable {
         }
 
     func transformedImage() -> CIImage?
-    {
+    {    guard self.imageFrom() != nil else
+            { return  nil }
+
         if let myCI = self.ciImage {
             return self.imageScaler?.displayTransform(image: myCI)
         } else {
@@ -231,6 +219,32 @@ class PGLAsset: Hashable, Equatable, Identifiable {
         }
 
     }
+
+    func startImageRequestTask()  {
+        Task {
+            guard let cache = cache else { return }
+            NSLog(#function, #line)
+            imageRequestID = await cache.requestImage(for: self, targetSize: TargetSize) { @Sendable result in
+                Task { @MainActor in
+                    NSLog("\(#function) process: \(ProcessInfo.processInfo.processName) time: \(Date()) result: \(String(describing: result))")
+                    if let result = result {
+                        if let returnUIImage = result.image {
+                            NSLog("\(#function) image recevied for \(self.asset.localIdentifier)")
+                            self.thumbnail = returnUIImage.preparingThumbnail(of: self.thumbnailSize)
+                            self.ciImage = self.convert2CIImage(aUIImage: returnUIImage)
+                            self.imageScaler = PGLCenterScaler(centerCIImage: self.ciImage!)
+                            if let ciImage = self.ciImage {
+                                self.onImageReady?(ciImage)
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+//    func setImageLoad(attribute: PGLFilterAttribute, completionHandler: { }()->Void )
 
     func uiImage() -> UIImage? {
         return thumbnail

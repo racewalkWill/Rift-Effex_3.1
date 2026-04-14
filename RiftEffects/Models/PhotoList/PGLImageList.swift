@@ -92,7 +92,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
     /// not used?
     convenience init(localAssetIDs: [String],albumIds: [String]) {
-        //  Remove
+
         // this init assumes two matching arrays of same size localId and albumid
         if (localAssetIDs.count != albumIds.count) && (!albumIds.isEmpty) {
             // empty albumIds is possible and okay
@@ -106,10 +106,12 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         }
 
 
+
     }
 
     ///   PHPicker created image selection from #loadImageListFromPicker(results: [PHPickerResult])
     ///   load the selected image assets
+    ///    Used by the clone.. the PGLAssets are fully instantiated with images
     convenience init(localPGLAssets: [PGLAsset]) {
         self.init()
         imageAssets = localPGLAssets
@@ -391,8 +393,13 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         // start caching the assets ??
         let itemsToCache = pglAssetItems
         // The nonisolated(unsafe) annotation tells the compiler that items​To​Cache is safe to send across the concurrency boundary, which is true here since it's a freshly created local array that isn't accessed again after being captured by the Task.
+        NSLog(#function, "start caching \(itemsToCache.count) assets")
         Task {
             await appStack?.photoMgr.startCaching(for: itemsToCache, targetSize: targetSize)
+            for item in itemsToCache {
+                NSLog(#function , "startImageRequestTask for localIdentifer \(item.localIdentifier)")
+                item.startImageRequestTask()
+            }
         }
         return pglAssetItems
     }
@@ -419,9 +426,12 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
 
     func image(atIndex: Int) -> CIImage? {
+        NSLog("\(String(describing: self)) image(atIndex: \(atIndex)")
         var answerImage: CIImage?
+        if atIndex >= imageAssets.count { return nil }
         let imageAsset = imageAssets[atIndex]
         answerImage = imageAsset.transformedImage()
+        NSLog("\(String(describing:  answerImage)) answers for \(imageAsset.localIdentifier)")
         if answerImage != nil {
             return answerImage
         }
@@ -443,21 +453,22 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
 
 
-    /// convert UIImage to CIImage and correct orientation to downMirrored
-    func convert2CIImage(aUIImage: UIImage) -> CIImage? {
-        var pickedCIImage: CIImage?
-
-        if let convertedImage = CoreImage.CIImage(image: aUIImage ) {
-
-         let theOrientation = CGImagePropertyOrientation(aUIImage.imageOrientation)
-         if PGLImageList.isDeviceASimulator() {
-                 pickedCIImage = convertedImage.oriented(CGImagePropertyOrientation.downMirrored)
-             } else {
-
-                 pickedCIImage = convertedImage.oriented(theOrientation) }
-         }
-        return pickedCIImage
-    }
+//    /// convert UIImage to CIImage and correct orientation to downMirrored
+    // moved to PGLAsset
+//    func convert2CIImage(aUIImage: UIImage) -> CIImage? {
+//        var pickedCIImage: CIImage?
+//
+//        if let convertedImage = CoreImage.CIImage(image: aUIImage ) {
+//
+//         let theOrientation = CGImagePropertyOrientation(aUIImage.imageOrientation)
+//         if PGLImageList.isDeviceASimulator() {
+//                 pickedCIImage = convertedImage.oriented(CGImagePropertyOrientation.downMirrored)
+//             } else {
+//
+//                 pickedCIImage = convertedImage.oriented(theOrientation) }
+//         }
+//        return pickedCIImage
+//    }
 
 
     func normalize3(scaledCIDisparity: CIImage?) -> CIImage? {
@@ -604,7 +615,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
     func insert(newAssets: [PGLAsset], startingIndex: Int) {
 
-        let oldEndingIndex = imageAssets.count - 1
+//        let oldEndingIndex = imageAssets.count - 1
         imageAssets.insert(contentsOf: newAssets, at: startingIndex)
         recacheAssetIDs()
     }
@@ -654,11 +665,11 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         return answerImage
     }
 
-    func setImages(ciImageArray: [CIImage]) {
-        for (thisIndex, anImage) in ciImageArray.enumerated() {
-
-        }
-    }
+//    func setImages(ciImageArray: [CIImage]) {
+//        for (thisIndex, anImage) in ciImageArray.enumerated() {
+//
+//        }
+//    }
 
 
     func cacheImage(baseImage: CIImage, index: Int) {

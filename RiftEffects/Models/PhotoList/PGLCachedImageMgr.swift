@@ -73,7 +73,7 @@ actor PGLCachedImageMgr {
 //                completion(nil)
 //                return nil
 //            }
-        NSLog("requestImage: \(phAsset.localIdentifier)")
+        NSLog("PGLCachedImageMgr requestImage: \(phAsset.localIdentifier)")
         let requestID = imageManager.requestImage(for: phAsset, targetSize: targetSize, contentMode: imageContentMode, options: requestOptions) { image, info in
             if let error = info?[PHImageErrorKey] as? (any Error) {
                 logger.error("CachedImageManager requestImage error: \(error.localizedDescription)")

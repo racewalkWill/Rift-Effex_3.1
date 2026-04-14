@@ -347,6 +347,7 @@ class PGLFilterAttribute {
     // MARK: image Collection input
 
     func setImageCollectionInput(cycleStack: PGLImageList) {
+
         let firstAsset = cycleStack.imageAssets.first
         setImageCollectionInput(cycleStack: cycleStack, firstAssetData: firstAsset)
         
@@ -415,11 +416,11 @@ class PGLFilterAttribute {
             return
         }
 
-        // MARK: to do
-        // aSourceFilter is unowned var..
-        // guard for early deallocation
-
-        aSourceFilter.setImageValuesAndClone(inputList: cycleStack, attributeName: myAttributeName )
+        firstAssetData?.onImageReady = { [weak self] ciImage in
+            guard let self = self else { return }
+            self.aSourceFilter.setImageValue(newValue: ciImage, keyName: myAttributeName)
+            postRedrawFilterChange()
+        }
 
         if cycleStack.isEmpty() {
             setImageParmState(newState: ParmInputState.missingImageInput)
@@ -553,6 +554,12 @@ class PGLFilterAttribute {
         return false
     }
     // MARK: value change
+
+    fileprivate func postRedrawFilterChange() {
+        let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
+        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+    }
+
     func set(_ value: Any ) {
         // use a system of double dispatch to address typing
         //
