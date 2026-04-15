@@ -411,14 +411,17 @@ class PGLFilterAttribute {
 
         inputCollection?.inputStack = inputStack // keep these aligned
         inputSourceDescription = cycleStack.collectionTitle
-        guard let myAttributeName = attributeName else
+        guard attributeName != nil else
         { setImageParmState(newState: ParmInputState.missingImageInput)
             return
         }
-
+        // while waiting for the real image set an empty default
+        self.set(CIImage.empty)
         firstAssetData?.onImageReady = { [weak self] ciImage in
             guard let self = self else { return }
-            self.aSourceFilter.setImageValue(newValue: ciImage, keyName: myAttributeName)
+//            self.aSourceFilter.setImageValue(newValue: ciImage, keyName: myAttributeName)
+            self.set(ciImage)
+            NSLog(#function + " set imageInput: \(ciImage)" )
             postRedrawFilterChange()
         }
 

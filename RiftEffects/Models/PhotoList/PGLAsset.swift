@@ -223,10 +223,10 @@ class PGLAsset: Hashable, Equatable, Identifiable {
     func startImageRequestTask()  {
         Task {
             guard let cache = cache else { return }
-            NSLog(#function, #line)
+//            NSLog(#function, #line)
             imageRequestID = await cache.requestImage(for: self, targetSize: TargetSize) { @Sendable result in
                 Task { @MainActor in
-                    NSLog("\(#function) process: \(ProcessInfo.processInfo.processName) time: \(Date()) result: \(String(describing: result))")
+//                    NSLog("\(#function) process: \(ProcessInfo.processInfo.processName) time: \(Date()) result: \(String(describing: result))")
                     if let result = result {
                         if let returnUIImage = result.image {
                             NSLog("\(#function) image recevied for \(self.asset.localIdentifier)")

@@ -38,6 +38,8 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String : Any], inputKey: String) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
         parmInputState = ParmInputState.missingImageInput
+        // give the filter a value but the pglImageList still is not set and parmInputState is missingImageInput
+        self.set(CIImage.empty())
     }
     
     override func releaseVars() {
