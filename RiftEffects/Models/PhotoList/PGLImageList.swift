@@ -58,7 +58,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         return TargetSize
         }
     }
-    var contentMode: UIView.ContentMode = UIView.ContentMode.scaleAspectFit
+//    var contentMode: UIView.ContentMode = UIView.ContentMode.scaleAspectFit
 
     // storable var
     var assetIDs = [String]()
@@ -134,31 +134,13 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         
 
     }
-///  assumes images are scaled and center for the current TargetSize
-//    convenience init(scaledImages: [PGLImageScaler] ) {
-//        self.init()
-//        for (thisIndex, aImageScaler) in scaledImages.enumerated() {
-//            cachedImages[thisIndex] = aImageScaler
-//        }
-//
-//    }
+
 
     /// demo init for images in the build Assets.xcassets - not in the user photos library
     convenience init(imageFileNames: [String]) {
         self .init()
         fatalError("PGLImageList imageFileNames not yet implemented")
-        // need to construct a standin for the PGLAsset
 
-//       let uiImages = UIImage.uiImages(imageFileNames)
-//        var counter = 0
-//        for anUIImage in uiImages {
-//                // convert2CIImage will correct orientation to downMirrored
-//            if let convertedImage = convert2CIImage(aUIImage: anUIImage){
-//                //
-////                cacheImage(baseImage: convertedImage, index: counter)
-//                counter += 1
-//            }
-//        }
     }
 
 
@@ -195,25 +177,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
        }
 
     // MARK: setSelection
-    func setUserSelection(toAttribute: PGLFilterAttribute  ){
-        // create a PGLUserSelection object from
-        // the imageAssets
-//        var newbie: PGLUserAssetSelection
 
-// if let firstAsset = imageAssets.first {
-//            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLImageList #setUserSelection set firstAsset")
-//            let thisAlbumSource = firstAsset.asPGLAlbumSource(onAttribute: toAttribute)
-//
-//            let newbie = PGLUserAssetSelection(assetSources: thisAlbumSource)
-//
-//
-//     for nextAsset in imageAssets {
-////            for nextAsset in imageAssets.suffix(from: 1) {
-//               newbie.append(nextAsset)
-//            }
-//            userSelection = newbie
-//        }
-    }
 
     func firstAsset() -> PGLAsset? {
         return imageAssets.first
@@ -360,7 +324,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
             imageAssets.remove(at: randomIndex)
             // update userSelection too !
         }
-        setUserSelection(toAttribute: imageParm)
+//        setUserSelection(toAttribute: imageParm)
     }
     
     // MARK:  Accessors
@@ -449,26 +413,6 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
             return nil
         }
     }
-
-
-
-
-//    /// convert UIImage to CIImage and correct orientation to downMirrored
-    // moved to PGLAsset
-//    func convert2CIImage(aUIImage: UIImage) -> CIImage? {
-//        var pickedCIImage: CIImage?
-//
-//        if let convertedImage = CoreImage.CIImage(image: aUIImage ) {
-//
-//         let theOrientation = CGImagePropertyOrientation(aUIImage.imageOrientation)
-//         if PGLImageList.isDeviceASimulator() {
-//                 pickedCIImage = convertedImage.oriented(CGImagePropertyOrientation.downMirrored)
-//             } else {
-//
-//                 pickedCIImage = convertedImage.oriented(theOrientation) }
-//         }
-//        return pickedCIImage
-//    }
 
 
     func normalize3(scaledCIDisparity: CIImage?) -> CIImage? {
@@ -570,9 +514,6 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
        fileprivate func scaleToFrame(ciImage: CIImage, newSize: CGSize) -> CIImage {
            // make all the images scale to the same size and origin
 
-//           if !doResize {
-//               return ciImage }
-//           NSLog("PGLImageList #scaleToFrame ")
            let xTransform:CGFloat = 0.0 - ciImage.extent.origin.x
            let yTransform:CGFloat = 0.0  - ciImage.extent.origin.y
            //move to zero
@@ -584,16 +525,6 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
            let scaleTransform = CGAffineTransform.init(scaleX: xScale, y: yScale)
 
            return ciImage.transformed(by: translateToZeroOrigin.concatenating(scaleTransform))
-
-           // the CILanczosScaleTransform crops a little too much..
-           // it just uses the yScale only
-//           let sourceSize = ciImage.extent
-//           let scaleBy =  newSize.height / sourceSize.height
-//           let aspectRatio = Double(newSize.width) / Double(newSize.height)
-//
-//           let resizedImage  = ciImage.applyingFilter("CILanczosScaleTransform", parameters: [kCIInputAspectRatioKey: aspectRatio ,
-//                       kCIInputScaleKey: scaleBy])
-//           return resizedImage
 
        }
 
@@ -622,9 +553,6 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
     /// assumes  adding to the end of the current cached image values
 
-
-
-
     func getCurrentImage() -> CIImage {
         if let myCurrentImage =  image(atIndex: position) {
             return myCurrentImage
@@ -632,7 +560,6 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
             return CIImage.empty()
         }
     }
-
 
     func increment() -> CIImage? {
         if hasImageStack() { return inputStack?.stackOutputImage(false)} // needs scaleToFrame??
@@ -665,68 +592,32 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         return answerImage
     }
 
-//    func setImages(ciImageArray: [CIImage]) {
-//        for (thisIndex, anImage) in ciImageArray.enumerated() {
-//
-//        }
-//    }
 
-
-    func cacheImage(baseImage: CIImage, index: Int) {
-
-        let centerScaler = PGLCenterScaler(centerCIImage: baseImage)
-        let centeredImage = centerScaler.displayTransform(image: baseImage)
-        let myScaler = PGLImageScaler(image: centeredImage, centerScaler: centerScaler)
-//        cachedImages.insert(myScaler, at: index)
-//        cachedImages[index] = myScaler
-        // should have added at the end of the array
-        // array size matches index
-
-    }
 /// answer true if imageCache is reset
 /// answers false if the there is nothing to cache i.e. demo images
     func resetCenteredImageCache() -> Bool {
 
-        // global TargetSize has changed
-        // images should be resized/centered again
-        // set cachedImages to  empty and they will resize as accessed
+            // global TargetSize has changed
+            // images should be resized/centered again
+            // set cachedImages to  empty and they will resize as accessed
         if (isDemoList() || isEmpty() ) {
-            // no imageAssets exist only the cachedImages..
-            // so don't clear the cache
+                // no imageAssets exist only the cachedImages..
+                // so don't clear the cache
             return false
-        }
-//        cachedImages = [Int:PGLImageScaler]()
-        // ISSUE does it recenter
-        return true
+        } else {
+            for thisAsset in imageAssets {
+                thisAsset.resetCenterScaler()
+            }
 
+            return true
+        }
     }
 
-//    func firstScaleTransform() -> CGAffineTransform? {
-//        // images of list may have different sizes..
-//        // this is just the first one !!!
-//        if let firstCenterScaler =  cachedImages.first {
-//            return firstCenterScaler.value.centerScaler?.displayTransform
-//        }
-//        return nil // nothing found
-//    }
 
     // MARK: Editing - remove, reorder
     /// three parallel vars to update   the dictionary of cachedImages, the imageAssets [PGLAsset]  array and the assetIDs array of localIdentifiers
     func removeImage(at index: Int) {
         imageAssets.remove(at: index)
-            // assetIDs are reset in didSet of the imageAssets
-                //  don't need to call assetIDs.remove(at: index)
-//        _ = cachedImages.removeValue(forKey: index)
-            // cachedImages may be smaller than imageAssets - not all images are cached
-            // keep in sync
-                // adjusts position - max size is changed
-
-//            if cachedImages.count != imageAssets.count {
-//                NSLog("PGLImageList.removeImage: count mismatch: cachedImages.count: \(cachedImages.count) != imageAssets.count: \(imageAssets.count)")
-//            }
-
-
-        // adjusts position - max size is changed
     }
 
     func removeAll() {
@@ -737,9 +628,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
     func moveContentsFrom(fromOffsets: IndexSet, toOffset destination: Int) {
         imageAssets.move(fromOffsets: fromOffsets, toOffset: destination)
-        // make cachedImages reset
-      // cachedImages.removeAll()
-        // assetIDs are reset in the didSet block of the imageAssets var
+
     }
 
 
@@ -765,14 +654,6 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         return thisImageAsset.isVideo()
 
     }
-
-    
-//     does not toggle off.. a whole new imageList is created
-//    func postVideoAnimationToggleOff(imageAsset: PGLAsset) {
-//        let updateNotification = Notification(name:PGLVideoAnimationToggle)
-//        NotificationCenter.default.post(name: updateNotification.name, object: imageAsset, userInfo: ["VideoImageSource" : -1 ])
-//    }
-
 
 }
 

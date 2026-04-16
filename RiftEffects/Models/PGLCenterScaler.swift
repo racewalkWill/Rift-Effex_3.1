@@ -33,6 +33,11 @@ class PGLCenterScaler {
     var aspectFillSize: CGAffineTransform?
 
     var displayTransform: CGAffineTransform?
+//    {
+//        didSet {
+//            NSLog("centerScaler.displayTransform: \(String(describing: displayTransform))")
+//        }
+//    }
 
         // may be nil !! if the image was already scaled
         //    let centerScaler = PGLCenterScaler(centerCIImage: baseImage)
@@ -87,7 +92,7 @@ class PGLCenterScaler {
     }
 
     func displayTransform(image: CIImage) -> CIImage {
-        NSLog("PGLCenterScaler  displayTransform \(String(describing: displayTransform))")
+//        NSLog("PGLCenterScaler  displayTransform \(String(describing: displayTransform))")
         return image.transformed(by: displayTransform ?? CGAffineTransform.identity)
     }
 

@@ -30,25 +30,9 @@
             filePath = "RiftEffects/Models/PhotoList/PGLImageList.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "610"
-            endingLineNumber = "610"
+            startingLineNumber = "541"
+            endingLineNumber = "541"
             landmarkName = "append(assets:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "693A41A9-1413-4C05-88DF-A4CBD9D83A79"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/PhotoList/PGLImageList.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "677"
-            endingLineNumber = "677"
-            landmarkName = "cacheImage(baseImage:index:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -62,25 +46,9 @@
             filePath = "RiftEffects/Models/PhotoList/PGLAsset.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
+            startingLineNumber = "180"
+            endingLineNumber = "180"
             landmarkName = "transformedImage()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "56839614-1453-4E3C-9678-29D83E131B10"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/PhotoList/PGLImageList.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "396"
-            endingLineNumber = "396"
-            landmarkName = "getAssets(localIds:albums:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -206,8 +174,8 @@
             filePath = "RiftEffects/Models/PhotoList/PGLImageList.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "436"
-            endingLineNumber = "436"
+            startingLineNumber = "400"
+            endingLineNumber = "400"
             landmarkName = "image(atIndex:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,8 +190,8 @@
             filePath = "RiftEffects/Models/PhotoList/PGLAsset.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
             landmarkName = "imageFrom()"
             landmarkType = "7">
          </BreakpointContent>
@@ -334,8 +302,8 @@
             filePath = "RiftEffects/Models/PhotoList/PGLImageList.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "376"
-            endingLineNumber = "376"
+            startingLineNumber = "340"
+            endingLineNumber = "340"
             landmarkName = "getAssets(localIds:albums:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -343,32 +311,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B855E407-861C-4823-994C-86E4673552D5"
-            shouldBeEnabled = "Yes"
+            uuid = "97B6D688-BA42-4332-B26E-00E3463EB86F"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RiftEffects/StoredData support/PGL-CDFilterStack.swift"
+            filePath = "RiftEffects/Models/PGLCenterScaler.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "496"
-            endingLineNumber = "496"
-            landmarkName = "readCDParmImage(cdImageParm:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6210ADFE-D746-4471-9E9B-A48EFD6CE241"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/PhotoList/PGLImageList.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "400"
-            endingLineNumber = "400"
-            landmarkName = "getAssets(localIds:albums:)"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "init(centerCIImage:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

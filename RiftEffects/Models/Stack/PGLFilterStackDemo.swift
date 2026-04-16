@@ -47,8 +47,8 @@ extension PGLFilterStack {
         let demoMaskInput = PGLImageList(imageFileNames: [
             "morningMeadow",
             "winterScene" ] )
-//        let demoPersonSegmentImage = PGLImageList(imageFileNames: [
-//            "WL-B" ] )
+        let demoPersonSegmentImage = PGLImageList(imageFileNames: [
+            "WL-B" ] )
 
 
 //        if let startingFilter =  demoLoadFilter(ciFilterString: topFilterName) {
