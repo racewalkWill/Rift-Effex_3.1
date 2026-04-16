@@ -39,9 +39,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
     var albumId: String  // must have an albumId
     var collectionTitle = String()
     var isSelected = false
-//       var hasDepthData = false  // set in PGLImageList #imageFrom(target)
 
-    let options: PHImageRequestOptions?
 
     // video
     var assetVideo: PGLAssetVideoPlayer?
@@ -80,16 +78,6 @@ class PGLAsset: Hashable, Equatable, Identifiable {
         asset = sourceAsset
         localIdentifier = asset.localIdentifier
 
-        // image mode
-        options = PHImageRequestOptions()
-        options?.deliveryMode = .highQualityFormat
-        options?.isNetworkAccessAllowed = true
-        options?.isSynchronous = true
-        options?.version = .current
-        options?.resizeMode = PHImageRequestOptionsResizeMode.exact
-            // was .exact
-            // app is resizing in other code
-
         guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
                         else { Logger(subsystem: LogSubsystem, category: LogCategory).fault ("PGLFilterTableController viewDidLoad fatalError AppDelegate not loaded")
                             return
@@ -124,31 +112,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
         return (assetId: localIdentifier, albumId: albumId)
     }
 
-    func getAssetFetchResult() -> PHFetchResult<PHAsset>? {
-        if let theCollection = self.sourceInfo {
-        let results = PHAsset.fetchAssets(in: theCollection, options: nil)
-            // empty results if limited access
-            return results }
 
-        else { return nil }
-
-    }
-
-//    func asPGLAlbumSource(onAttribute: PGLFilterAttribute) -> PGLAlbumSource {
-//        if let resultFetch = getAssetFetchResult()
-//        {
-//            if let mySourceInfo = sourceInfo {
-//                let newbie = PGLAlbumSource(targetAttribute: onAttribute, mySourceInfo, resultFetch)
-//                return newbie}
-//            else { // missing album source info
-//               let emptyAlbum = PGLAlbumSource(forAttribute: onAttribute)
-//                return emptyAlbum
-//            }
-//        } else { // missing resultFetch
-//            let emptyAlbum = PGLAlbumSource(forAttribute: onAttribute)
-//             return emptyAlbum
-//             }
-//    }
 
     static let ImageLogger = OSLog(subsystem: "com.apple.Photos", category: "PGLAsset")
     // MARK: Image
@@ -173,13 +137,13 @@ class PGLAsset: Hashable, Equatable, Identifiable {
             }
         }
 
-        if PrintDebugPhotoLocation {
-            let thePHAsset = self.asset
-            if let resource = PHAssetResource.assetResources(for: thePHAsset).first
-            {
-                NSLog("\(resource.originalFilename)  \(String(describing: thePHAsset.location))")
-            }
-        }
+//        if PrintDebugPhotoLocation {
+//            let thePHAsset = self.asset
+//            if let resource = PHAssetResource.assetResources(for: thePHAsset).first
+//            {
+//                NSLog("\(resource.originalFilename)  \(String(describing: thePHAsset.location))")
+//            }
+//        }
 
         if let myCIImage = ciImage {
             return myCIImage
@@ -248,12 +212,6 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 
     func uiImage() -> UIImage? {
         return thumbnail
-//        if let myCI = imageFrom()  {
-//            return UIImage(ciImage:myCI )
-//
-//        } else {
-//            return nil
-//        }
 
     }
 
@@ -264,11 +222,6 @@ class PGLAsset: Hashable, Equatable, Identifiable {
         return asset.mediaType == .video
     }
 
-//    @MainActor  func requestVideo(videoURL: URL) {
-//        assetVideo = PGLAssetVideoPlayer(parentAsset: self)
-//        assetVideo?.setUpVideoPlayAssets(videoURL: videoURL)
-//
-//    }
 
     @MainActor  func requestVideo() {
         assetVideo = PGLAssetVideoPlayer(parentAsset: self)

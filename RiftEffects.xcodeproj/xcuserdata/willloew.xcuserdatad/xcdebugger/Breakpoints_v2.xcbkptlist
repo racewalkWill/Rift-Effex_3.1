@@ -62,8 +62,8 @@
             filePath = "RiftEffects/Models/PhotoList/PGLAsset.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "215"
-            endingLineNumber = "215"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
             landmarkName = "transformedImage()"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,8 +222,8 @@
             filePath = "RiftEffects/Models/PhotoList/PGLAsset.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
             landmarkName = "imageFrom()"
             landmarkType = "7">
          </BreakpointContent>
@@ -370,36 +370,6 @@
             endingLineNumber = "400"
             landmarkName = "getAssets(localIds:albums:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "6210ADFE-D746-4471-9E9B-A48EFD6CE241 - 318f114502e93e0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for closure #1 () async -&gt; () in RiftEffects.PGLImageList.getAssets(localIds: Swift.Array&lt;Swift.String&gt;, albums: Swift.Array&lt;Swift.String&gt;) -&gt; Swift.Array&lt;RiftEffects.PGLAsset&gt;"
-                  moduleName = "RiftEffects.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/willloew/Developer/Rift-Effex_3.8/RiftEffects/Models/PhotoList/PGLImageList.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "400"
-                  endingLineNumber = "400">
-               </Location>
-               <Location
-                  uuid = "6210ADFE-D746-4471-9E9B-A48EFD6CE241 - 199a50854ae85fe2"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for closure #1 () async -&gt; () in RiftEffects.PGLImageList.getAssets(localIds: Swift.Array&lt;Swift.String&gt;, albums: Swift.Array&lt;Swift.String&gt;) -&gt; Swift.Array&lt;RiftEffects.PGLAsset&gt;"
-                  moduleName = "RiftEffects.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/willloew/Developer/Rift-Effex_3.8/RiftEffects/Models/PhotoList/PGLImageList.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "400"
-                  endingLineNumber = "400">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
