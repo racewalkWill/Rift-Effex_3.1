@@ -390,12 +390,12 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 
 
     func image(atIndex: Int) -> CIImage? {
-        NSLog("\(String(describing: self)) image(atIndex: \(atIndex)")
+//        NSLog("\(String(describing: self)) image(atIndex: \(atIndex)")
         var answerImage: CIImage?
         if atIndex >= imageAssets.count { return nil }
         let imageAsset = imageAssets[atIndex]
         answerImage = imageAsset.transformedImage()
-        NSLog("\(String(describing:  answerImage)) answers for \(imageAsset.localIdentifier)")
+//        NSLog("\(String(describing:  answerImage)) answers for \(imageAsset.localIdentifier)")
         if answerImage != nil {
             return answerImage
         }

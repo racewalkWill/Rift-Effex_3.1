@@ -80,9 +80,11 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
 
         metalRender.isFullScreen = isFullScreen
-
-            // toggles to redraw 2 times
-        metalRender.drawBasicCentered(in: metalView)
+            // toggleViewWillAppear triggers the draw on the next display link callback
+            // do not call drawBasicCentered directly — it can reuse a presented drawable
+        // drawBasicCentered removed by Claude to fix doubleTap
+        // see R227.7.1
+//        metalRender.drawBasicCentered(in: metalView)
             // draw once so that the view has the current stack output image
             // then normal 60 fps drawing is controlled by the PGLNeedsRedraw
 

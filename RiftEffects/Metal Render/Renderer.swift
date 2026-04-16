@@ -82,6 +82,8 @@ class Renderer: NSObject, MTKViewDelegate {
     // metalView is temp set for measuringLuminance
     // normally nil
     var metalView: MTKView?
+    var lastRenderedImage: CIImage?
+    var lastStackOutputImage: CIImage?
 
 
     @MainActor
@@ -131,10 +133,10 @@ class Renderer: NSObject, MTKViewDelegate {
     }
 
     func isAverageLuminanceNearZero(threshold : CGFloat = 0.0) -> Bool {
-        // should just capture the current rendered ciImage from drawBasicCentered
+        // Use lastStackOutputImage (before compositing over black background)
+        // to avoid infinite extent from CIImage.black compositing
         NSLog (#function, String(describing: self))
-        guard let theMetalView = self.metalView else { return false }
-        if let ciOutput = currentDrawableAsCIImage(from: theMetalView) {
+        if let ciOutput = lastStackOutputImage, ciOutput.extent != .infinite {
             let extent = ciOutput.extent
                 // CIAreaAverage returns a 1x1 image with RGBA average
             // need to render the ciOutput
@@ -180,22 +182,22 @@ class Renderer: NSObject, MTKViewDelegate {
         
     }
 
-    func currentDrawableAsCIImage(from view: MTKView) -> CIImage? {
-        // Safely get the current drawable from the MTKView
-        guard let drawable = view.currentDrawable else { return nil }
-        let texture = drawable.texture
-
-        // Layer colorspace from set(metalView:) setup code
-        let colorSpace = CGColorSpace(name: CGColorSpace.extendedLinearDisplayP3)
-
-        // Try to construct from the texture
-        if let imageFromTexture = CIImage(mtlTexture: texture, options: [.colorSpace: colorSpace as Any]) {
-            // Adjust orientation if needed
-            return imageFromTexture.oriented(.downMirrored)
-        } else {
-            return nil
-        }
-    }
+//    func currentDrawableAsCIImage(from view: MTKView) -> CIImage? {
+//        // Safely get the current drawable from the MTKView
+//        guard let drawable = view.currentDrawable else { return nil }
+//        let texture = drawable.texture
+//
+//        // Layer colorspace from set(metalView:) setup code
+//        let colorSpace = CGColorSpace(name: CGColorSpace.extendedLinearDisplayP3)
+//
+//        // Try to construct from the texture
+//        if let imageFromTexture = CIImage(mtlTexture: texture, options: [.colorSpace: colorSpace as Any]) {
+//            // Adjust orientation if needed
+//            return imageFromTexture.oriented(.downMirrored)
+//        } else {
+//            return nil
+//        }
+//    }
     // MARK: Save support
     func captureImage() throws -> UIImage? {
             // capture the current image in the context
@@ -484,6 +486,7 @@ class Renderer: NSObject, MTKViewDelegate {
                 else { return }
                 let backBounds = CGRect(x: 0, y: 0, width: dSize.width, height: dSize.height)
                 var ciOutputImage = currentStack.stackOutputImage((appStack.showFilterImage))
+                lastStackOutputImage = ciOutputImage
                 // if external device running - show the outputImage
                 childDeviceRenderer?.thisFrame = ciOutputImage
                 childDeviceRenderer?.drawInAirPlay()
@@ -518,6 +521,8 @@ class Renderer: NSObject, MTKViewDelegate {
                     ciOutputImage = ciOutputImage.composited(over: self.opaqueBackground)
                 }
 
+
+                lastRenderedImage = ciOutputImage
 
                     // Start a task that renders to the texture destination.
                 _ = try? self.ciMetalContext.startTask(toRender: ciOutputImage, from: backBounds,

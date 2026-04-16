@@ -121,7 +121,7 @@ class PGLCaptureOutput {
         guard let documentDirectory = urls.first else {
             fatalError("documentDir Error")
         }
-        NSLog(#function , " frameaToSave.count = \(framesToSave.count)" )
+//        NSLog(#function , " frameaToSave.count = \(framesToSave.count)" )
 
         let videoOutputURL = documentDirectory.appendingPathComponent("OutputVideo.mov")
 
@@ -183,7 +183,7 @@ class PGLCaptureOutput {
                     let lastFrameTime = CMTimeMake(value: frameCount, timescale: fps)
                     let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
 
-                    NSLog("saveVideo lastFrameTime = \(lastFrameTime) ")
+//                    NSLog("saveVideo lastFrameTime = \(lastFrameTime) ")
 //                    NSLog("saveVideo presentationTime = \(presentationTime)")
 
                     var pixelBuffer: CVPixelBuffer? = nil
@@ -201,7 +201,7 @@ class PGLCaptureOutput {
                         appendSucceeded = pixelBufferAdaptor.append(pixelBuffer, withPresentationTime: presentationTime)
                         if appendSucceeded {
                             frameCount += 1
-                            NSLog (" appendSucceeded - incrememt frameCount to \(frameCount)")
+//                            NSLog (" appendSucceeded - incrememt frameCount to \(frameCount)")
 //                            NSLog (" appendSucceeded presentationTime = \(presentationTime)")
                         }
                         // what if appendSucceeded is never true for some append step?? how to break
