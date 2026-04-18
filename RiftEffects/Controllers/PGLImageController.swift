@@ -846,6 +846,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             action in
             self.musicButtonTapped(controllerMusicBtn: self.moreBtn)
         } ,
+                     // use this menu command on the iPad to work on the optimize stack debugging
 //         UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) {
 //            action in
 //            self.optimizeStack(controllerMusicBtn: self.moreBtn)

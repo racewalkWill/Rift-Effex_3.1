@@ -174,13 +174,12 @@ class PGLDemo {
             whileLoopCount += 1
         }
 
-        let userSelectionInfo = PGLUserAssetSelection(assetSources: favoriteAlbumSource)
-        for anAsset in selectedAssets {
-            Logger(subsystem: LogSubsystem, category: LogCategory).debug("parm = \(String(describing: imageParm.attributeName)) added local id = \(anAsset.localIdentifier)")
-            userSelectionInfo.addSourceToSelection(asset: anAsset)
-        }
+        let randomAssetIDs = selectedAssets.map(\.localIdentifier)
 
-        userSelectionInfo.setUserPick()
+
+        let newImageList = PGLImageList(localAssetIDs: randomAssetIDs, albumIds: [String]() )
+        imageParm.setImageCollectionInput(cycleStack: newImageList)
+
     }
 
 

@@ -91,7 +91,7 @@ class PGLAppStack {
             .sink() { [weak self]
                 myUpdate in
                 guard let self = self else { return }
-                NSLog("PGLAppStak: received PGLRunLuminanceMeasureFlag")
+                NSLog("PGLAppStack: received PGLRunLuminanceMeasureFlag")
                 //  call this at the end
                 if activeFilterIsLastRow() {
                     // stop the lumninanceMeasurs

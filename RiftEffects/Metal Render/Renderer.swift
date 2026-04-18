@@ -82,7 +82,8 @@ class Renderer: NSObject, MTKViewDelegate {
     // metalView is temp set for measuringLuminance
     // normally nil
     var metalView: MTKView?
-    var lastRenderedImage: CIImage?
+//    var lastRenderedImage: CIImage? added by Claude, not used
+
     var lastStackOutputImage: CIImage?
 
 
@@ -132,11 +133,11 @@ class Renderer: NSObject, MTKViewDelegate {
 
     }
 
-    func isAverageLuminanceNearZero(threshold : CGFloat = 0.0) -> Bool {
+    func isAverageLuminanceNearZero(threshold : CGFloat = 0.0, viewSize: CGSize) -> Bool {
         // Use lastStackOutputImage (before compositing over black background)
         // to avoid infinite extent from CIImage.black compositing
         NSLog (#function, String(describing: self))
-        if let ciOutput = lastStackOutputImage, ciOutput.extent != .infinite {
+        if let ciOutput = lastStackOutputImage?.cropForInfiniteExtent(cropSize:(viewSize)) {
             let extent = ciOutput.extent
                 // CIAreaAverage returns a 1x1 image with RGBA average
             // need to render the ciOutput
@@ -508,8 +509,8 @@ class Renderer: NSObject, MTKViewDelegate {
                 if isFullScreen { 
                     // perform zoom/pan from gestures
                     // let cropSize = TargetSize
-                    let cropSize = backBounds.size
-                    ciOutputImage = ciOutputImage.cropForInfiniteExtent(cropSize: cropSize)
+//                    let cropSize = backBounds.size
+                    ciOutputImage = ciOutputImage.cropForInfiniteExtent(cropSize: dSize)
                     outputZoomPanFilter?.setInput(image: ciOutputImage, source: nil)
                     outputZoomPanFilter?.setInputImageParmState(newState: ParmInputState.inputPhoto)
 
@@ -522,7 +523,7 @@ class Renderer: NSObject, MTKViewDelegate {
                 }
 
 
-                lastRenderedImage = ciOutputImage
+//                lastRenderedImage = ciOutputImage
 
                     // Start a task that renders to the texture destination.
                 _ = try? self.ciMetalContext.startTask(toRender: ciOutputImage, from: backBounds,
@@ -558,7 +559,7 @@ class Renderer: NSObject, MTKViewDelegate {
                         metalView = nil // end this measure loop -- no stack
                         return
                     }
-                    let luminanceIsNearZero = self.isAverageLuminanceNearZero()
+                    let luminanceIsNearZero = self.isAverageLuminanceNearZero(threshold: 0.0, viewSize: dSize)
                     currentStack.currentFilter().isAverageLuminanceNearZero = luminanceIsNearZero
                     NSLog(#function + " luminanceIsNearZero: \(luminanceIsNearZero)")
                     self.postRunLuminanceNotification()
