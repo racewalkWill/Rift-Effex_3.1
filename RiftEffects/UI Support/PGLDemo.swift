@@ -110,7 +110,7 @@ class PGLDemo {
             // creates an imageList for the targetAttribute
             //use up to PGLDemo.MaxListSize images if a transition filter
             // otherwise just one image
-
+            // see also PGLSourceFilter.setDemoImageInputs()
         if PGLDemo.RandomImageList == nil {
             setRandomImagesFromFavorites(imageParm: imageParm)
         }

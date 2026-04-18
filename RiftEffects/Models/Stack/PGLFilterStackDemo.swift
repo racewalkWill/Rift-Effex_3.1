@@ -197,6 +197,23 @@ extension PGLSourceFilter {
 
     }
 
+    func setDemoImageInputs() {
+        // see also PGLDemo setDemoImageInputs(imageParm: PGLFilterAttribute)
+        NSLog("\(String(describing: self)) - \(#function)")
+        if PGLDemo.RandomImageList == nil {return }
+        for imageParm in imageAttributes() {
+                    // use images from the global PGLDemo.RandomImageList
+                if imageParm.inputParmType() == ParmInputState.missingImageInput {
+                    guard let newbieList = PGLDemo.RandomImageList?.clone(toParm: imageParm)
+                    else {return }
+                        // now prune down  the newbie list if needed
+                    newbieList.randomPrune(imageParm: imageParm)
+                    imageParm.setImageCollectionInput(cycleStack: newbieList)
+                }
+
+        }
+    }
+
     func demoKaleidoscopeParms() {
         setVectorValue(newValue: CIVector(x: 780, y: 477), keyName: "inputCenter")
         setNumberValue(newValue: 0.7306029, keyName: "inputAngle")

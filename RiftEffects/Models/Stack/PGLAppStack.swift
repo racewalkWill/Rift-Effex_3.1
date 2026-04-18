@@ -104,9 +104,23 @@ class PGLAppStack {
                     let filterIsBlack = currentDisplayFilter().isAverageLuminanceNearZero
                     if filterIsBlack
                     {
-                        NSLog ("PGLAppStack - removing black filter \(currentDisplayFilter())")
+                        NSLog (" removing filter from stack because- filterIsBlack")
                         DispatchQueue.main.async {
-                            _ = self.viewerStack.removeFilter(position: self.viewerStack.activeFilterIndex)
+                            let removeFilterIndex = self.viewerStack.activeFilterIndex
+                            _ = self.viewerStack.removeFilter(position: removeFilterIndex)
+                            // this will also advance the activeFilterIndex to the next filter
+                            // the next filter luminance will thus be checked on the next drawBasicCenter(in..)
+                            // now add imageInputs to the next filter in case some are missing from the
+                            // removeFilter(position:) action
+                            if self.viewerStack.activeFilterIndex < 0 {
+                                // minus 1 index = empty stack
+                                return
+                            } else {
+                                self.viewerStack.currentFilter().setDemoImageInputs()
+                            }
+
+
+
                         }
                     } else {
                             // if the current filter passes Lumanance test - it's not back
