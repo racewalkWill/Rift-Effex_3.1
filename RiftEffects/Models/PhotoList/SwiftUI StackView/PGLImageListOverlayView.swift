@@ -238,6 +238,10 @@ struct PGLImageListOverlayView: View {
                 contentList
             }
         }
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.white.opacity(0.3), lineWidth: 2)
+        )
     }
 
     private var headerBar: some View {
@@ -343,6 +347,10 @@ struct PGLImageListOverlayView: View {
             .scrollContentBackground(.hidden)
             .background(Color.black.opacity(0.25))
             .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+            )
         }
     }
 
