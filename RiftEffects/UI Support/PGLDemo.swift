@@ -26,7 +26,9 @@ class PGLDemo {
     static let NoRandomChildStackPercentage = 70  // integer 0 to 100
                                                   // percentage to control how often a child stack is added in the Random function
                                                   // 100 means child stack is never added
-    static var RandomImageList: PGLImageList?
+   static var RandomImageList: PGLImageList = PGLDemo.getRandomImagesFromFavorites()
+
+
         // interacts with PGLRandomFilter to hold user images for random consturction
     static let MaxListSize = 6
     let NumOfFilters = 5
@@ -111,23 +113,15 @@ class PGLDemo {
             //use up to PGLDemo.MaxListSize images if a transition filter
             // otherwise just one image
             // see also PGLSourceFilter.setDemoImageInputs()
-        if PGLDemo.RandomImageList == nil {
-            setRandomImagesFromFavorites(imageParm: imageParm)
-        }
-        else {
+
+
                 // use images from the global PGLDemo.RandomImageList
             if imageParm.inputParmType() == ParmInputState.missingImageInput {
-                guard let newbieList = PGLDemo.RandomImageList?.clone(toParm: imageParm)
-                else {return }
-                    // now prune down  the newbie list if needed
+                let newbieList = PGLDemo.RandomImageList.clone(toParm: imageParm)
+
                 newbieList.randomPrune(imageParm: imageParm)
                 imageParm.setImageCollectionInput(cycleStack: newbieList)
             }
-
-        }
-
-
-
     }
 
     func setRandomImagesFromFavorites(imageParm: PGLFilterAttribute) {
@@ -182,6 +176,81 @@ class PGLDemo {
 
     }
 
+    static func fetchFavoritesList() ->  PGLAlbumSource? {
+
+        if PGLDemo.FavoritesAlbumList == nil {
+            let userFavorites = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumFavorites , options: nil)
+
+
+            if let theFavoriteAlbum = userFavorites.firstObject {
+                let fetchResultAssets = PHAsset.fetchAssets(in: theFavoriteAlbum , options: nil)
+                let theInfo =  PGLAlbumSource( theFavoriteAlbum,fetchResultAssets)
+                    //                                          init(_ assetAlbum: PHAssetCollection, _ result: PHFetchResult<PHAsset>? ))
+                    // init(_ assetAlbum: PHAssetCollection, _ result: PHFetchResult<PHAsset>? )
+                PGLDemo.FavoritesAlbumList = theInfo
+            } else {
+                alertFavoritesError() 
+            }
+        }
+        return PGLDemo.FavoritesAlbumList
+
+    }
+
+    static func getRandomImagesFromFavorites() -> PGLImageList {
+
+        guard let favoriteAlbumSource = PGLDemo.fetchFavoritesList()
+        else { alertFavoritesError()
+            return PGLImageList()
+        }
+        let favoriteAssets = favoriteAlbumSource.assets() // converts to PGLAsset
+        // mix it up with photo
+        var selectedAssets = [PGLAsset]()
+        var allowedAssetCount = 1
+        allowedAssetCount = PGLDemo.MaxListSize
+        let maxIndex = favoriteAssets!.count
+        if maxIndex == 0 {
+                // may be limited access to photo lib
+            return PGLImageList()
+        }
+
+            // ensure an image is only picked once.
+        var pickedIndexes = [Int]()
+        let maxLoopCount = allowedAssetCount * 2
+            // stop at some point
+        var whileLoopCount = 0
+        while (selectedAssets.count <= allowedAssetCount) && (whileLoopCount <= maxLoopCount) {
+            let randomIndex = Int.random(in: 0 ..< maxIndex)
+            if pickedIndexes.contains(randomIndex) {
+                    // skip to next  loop for new random
+                continue }
+            pickedIndexes.append(randomIndex)
+            selectedAssets.append(favoriteAssets![randomIndex])
+            whileLoopCount += 1
+        }
+
+        let randomAssetIDs = selectedAssets.map(\.localIdentifier)
+
+
+        let newImageList = PGLImageList(localAssetIDs: randomAssetIDs, albumIds: [String]() )
+
+        return newImageList
+//        imageParm.setImageCollectionInput(cycleStack: newImageList)
+
+    }
+
+    static func alertFavoritesError() {
+        DispatchQueue.main.async {
+                // put back on the main UI loop for the user alert
+            let alert = UIAlertController(title: "Favorites Album", message: "Favorites is empty. Add or select images for random filter inputs.", preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
+                Logger(subsystem: LogSubsystem, category: LogCategory).error("PGLDemo #setInputTo Favorites album is empty")
+            }))
+            let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
+            myAppDelegate.displayUser(alert: alert)
+        }
+        return
+    }
 
     func mightAddChildStack(attribute: PGLFilterAttribute) -> Bool {
             // use childStack infrequently..
@@ -258,7 +327,13 @@ class PGLDemo {
             PGLDemo.Category1Index = 0 // reset
         }
         templateDemoCompletion(startingDemoFilter: firstRandomFilter)
-        thisAppStack.optimizeStack()
+//        thisAppStack.optimizeStack()
+        // 4/22/26  just run the optimize later using the menu command
+        
+//        let updateFilterNotification = Notification(name:PGLHideParmControlsOnFilterChange)
+//        NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
+//            // triggers PGLImageController to set view.isHidden to false
+//            // show the new results !
     }
 
        

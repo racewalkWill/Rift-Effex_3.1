@@ -36,7 +36,14 @@ class PGLAlbumSource: @preconcurrency Hashable {
         identifier = assetAlbum.localIdentifier
     }
 
-    init(forAttribute: PGLFilterAttribute) {
+    convenience init( _ assetAlbum: PHAssetCollection, _ result: PHFetchResult<PHAsset>? ) {
+        self.init(forAttribute: nil )
+        sectionSource = assetAlbum
+        assetFetch = result
+        identifier = assetAlbum.localIdentifier
+    }
+
+    init(forAttribute: PGLFilterAttribute?) {
         // empty nil vars are
         //  sectionSource & assetFetch
         filterParm = forAttribute

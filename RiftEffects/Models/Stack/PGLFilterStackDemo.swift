@@ -47,8 +47,8 @@ extension PGLFilterStack {
         let demoMaskInput = PGLImageList(imageFileNames: [
             "morningMeadow",
             "winterScene" ] )
-        let demoPersonSegmentImage = PGLImageList(imageFileNames: [
-            "WL-B" ] )
+//        let demoPersonSegmentImage = PGLImageList(imageFileNames: [
+//            "WL-B" ] )
 
 
 //        if let startingFilter =  demoLoadFilter(ciFilterString: topFilterName) {
@@ -200,12 +200,13 @@ extension PGLSourceFilter {
     func setDemoImageInputs() {
         // see also PGLDemo setDemoImageInputs(imageParm: PGLFilterAttribute)
         NSLog("\(String(describing: self)) - \(#function)")
-        if PGLDemo.RandomImageList == nil {return }
+
         for imageParm in imageAttributes() {
                     // use images from the global PGLDemo.RandomImageList
                 if imageParm.inputParmType() == ParmInputState.missingImageInput {
-                    guard let newbieList = PGLDemo.RandomImageList?.clone(toParm: imageParm)
-                    else {return }
+                    NSLog("\(#function) - setting missing image input")
+                    let newbieList = PGLDemo.RandomImageList.clone(toParm: imageParm)
+
                         // now prune down  the newbie list if needed
                     newbieList.randomPrune(imageParm: imageParm)
                     imageParm.setImageCollectionInput(cycleStack: newbieList)
