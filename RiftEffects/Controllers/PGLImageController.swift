@@ -1389,6 +1389,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                    textInputField.resignFirstResponder()
                     }
                 }
+                parmView?.gestureRecognizers?.forEach { parmView?.removeGestureRecognizer($0) }
                 parmView?.removeFromSuperview()
                 appStack.parmControls.removeValue(forKey: nameAttribute.key)
                 }
@@ -1453,12 +1454,43 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             newView.isUserInteractionEnabled = true
 
             view.addSubview(newView)
-
+            setPositionTapRecognizer(view: newView)
+            
             appStack.parmControls[attribute.attributeName!] = newView
             newView.isHidden = true
         }
         else {
             Logger(subsystem: LogSubsystem, category: LogCategory).error("PGLImageController #addPositionControl fails on no vector value ")}
+    }
+
+    func setPositionTapRecognizer(view: UIView) {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(positionControlTapped(_:)))
+        tapRecognizer.numberOfTapsRequired = 1
+        view.addGestureRecognizer(tapRecognizer)
+    }
+
+    @objc func positionControlTapped(_ sender: UITapGestureRecognizer) {
+        guard let tappedView = sender.view else { return }
+
+        // Reverse-lookup the attribute name from the tapped position control view
+        guard let attributeName = appStack.parmControls.first(where: { $0.value === tappedView })?.key
+        else { return }
+
+        // Highlight the tapped control and dim all others
+        highlight(viewNamed: attributeName)
+
+        // Select the corresponding row in the parm controller table
+        if let parmController = parmController {
+            for (section, sectionAttributes) in parmController.filterParms.enumerated() {
+                for (row, attribute) in sectionAttributes.enumerated() {
+                    if attribute.attributeName == attributeName {
+                        let indexPath = IndexPath(row: row, section: section)
+                        parmController.activateEmptyRow(parmRow: indexPath)
+                        return
+                    }
+                }
+            }
+        }
     }
 
     func addTextInputControl(attribute: PGLFilterAttribute) {
