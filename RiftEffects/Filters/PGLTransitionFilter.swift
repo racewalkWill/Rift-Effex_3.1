@@ -33,7 +33,9 @@ class PGLTransitionFilter: PGLRectangleFilter {
 
     required init?(filter: String, position: PGLFilterCategoryIndex) {
         super.init(filter: filter, position: position)
-        hasAnimation = true }
+            //        hasAnimation = true
+        // set animation to true when there are multiple inputs or parms are animated
+    }
 
     override func scaleOutput(ciOutput: CIImage, stackCropRect: CGRect) -> CIImage {
             // empty implementation answers the input

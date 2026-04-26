@@ -35,9 +35,17 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
 
             // now increment value
             if  (attributeValueDelta != nil ){
-                let newValue = curentNumericValue + attributeValueDelta!
-//                NSLog("PGLFilterAttributeNumber incrementValueDelta didSet to newValue = \(newValue)")
-               
+                var newValue = curentNumericValue + attributeValueDelta!
+                if newValue.isNaN {return }
+                if newValue.isInfinite {return }
+                if newValue > sliderMaxValue ?? 100.0 { newValue = sliderMaxValue ?? 100.0
+                    flipAnimationDirectionAtEnd() }
+                if newValue < sliderMinValue ?? 0.0 { newValue = sliderMinValue ?? 0.0
+                    flipAnimationDirectionAtEnd()}
+                // this will make the change stop until the frame count reaches a point to flip direction
+                NSLog("PGLFilterAttributeNumber incrementValueDelta curentNumericValue \(curentNumericValue)")
+                NSLog("PGLFilterAttributeNumber incrementValueDelta attributeValueDelta = \(String(describing: attributeValueDelta))")
+                NSLog("PGLFilterAttributeNumber incrementValueDelta newValue \(newValue)")
                 aSourceFilter.setNumberValue(newValue: newValue as NSNumber, keyName: attributeName!)
                 postUIChange(attribute: self)
             }

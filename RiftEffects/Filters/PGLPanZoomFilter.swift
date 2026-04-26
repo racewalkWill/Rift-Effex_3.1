@@ -43,22 +43,8 @@ enum PanDirection: Double, CaseIterable {
 class PGLPanZoomFilter: PGLScaleUpFrame {
 
 
-    enum Weekday: CaseIterable {
-        case sunday, monday, tuesday, wednesday, thursday, friday, saturday
-
-
-        static func random<G: RandomNumberGenerator>(using generator: inout G) -> Weekday {
-            return Weekday.allCases.randomElement(using: &generator)!
-        }
-
-
-        static func random() -> Weekday {
-            var g = SystemRandomNumberGenerator()
-            return Weekday.random(using: &g)
-        }
-    }
-
     let zoomMaxFactor: Float = 1.2
+    let zoomMinFactor: Float = 0.8
 
     // for setAnimationTimerDt
     // shorter is faster movement
@@ -96,6 +82,7 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
     func setPanZoomDefault(pan: PanDirection = .panNone, zoom: ZoomDirection = .zoomNone) {
 //        setNumberValue(newValue:1.940563 , keyName:"inputScale")
         setDefaults() // back to start
+        NSLog(#function + String(describing: self))
         guard let scaleInputParm = attribute(nameKey: "inputScale")
             else    { return }
 
@@ -103,8 +90,9 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
         if zoom != .zoomNone {
 
              //   startAnimation(attributeTarget: scaleInputParm)
+//            scaleInputParm.attributeValueDelta = 2.0
                 startAnimationBasic(attributeTarget: scaleInputParm)
-                scaleInputParm.sliderMaxValue = zoomMaxFactor
+                scaleInputParm.sliderMaxValue = zoomMaxFactor //allowed range is 0.1 - 10.0
 
             // use startMovement to set the lengthSeconds at the time it comes on screen
                // scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
@@ -114,7 +102,10 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
                 // slow it down even more
                 if let delta = (scaleInputParm.attributeValueDelta) {
                         // zoom.rawValue is -1, 0 , or +1
-                        scaleInputParm.attributeValueDelta =  (delta * zoom.rawValue) / 2
+                    NSLog(#function + String(describing: self) + " delta \(String(describing: delta))")
+                        let newDelta = (delta * zoom.rawValue) / 2
+                    NSLog(#function + String(describing: self) + " new delta \(String(describing: newDelta))")
+                        scaleInputParm.attributeValueDelta =  newDelta
                     }
 
         }
@@ -153,8 +144,15 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
     }
 
     func startMovement() {
+            // use startMovement to set the lengthSeconds at the time it comes on screen
+               // scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
+                // shorter values make faster motion
+
+                //zoomAnimation sets an initial attributeValueDelta
+
         guard let scaleInputParm = attribute(nameKey: "inputScale")
             else    { return }
+
         scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
 
         guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector

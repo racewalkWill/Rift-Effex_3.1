@@ -165,7 +165,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
                 currentPanZoom = panImageFilter
                 nextPanZoom = panTargetFilter
                 dissolveDeltaPerFrame = abs( dissolveDeltaPerFrame) // make it positive
-//                NSLog(#function + String(describing: self) + " change dissolveDeltaPerFrame \(dissolveDeltaPerFrame)")
+                NSLog(#function + String(describing: self) + " change dissolveDeltaPerFrame \(String(describing: dissolveDeltaPerFrame))")
                     // set to positive to increment
                     // increment image of offscreen effect
                 dissolveNextAttribute = attribute(nameKey: kCIInputTargetImageKey)
@@ -181,7 +181,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
                 currentPanZoom = panTargetFilter
                 nextPanZoom = panImageFilter
                 dissolveDeltaPerFrame = -1 * dissolveDeltaPerFrame
-//                NSLog(#function + String(describing: self) + " change dissolveDeltaPerFrame \(dissolveDeltaPerFrame)")
+                NSLog(#function + String(describing: self) + " change dissolveDeltaPerFrame \(String(describing: dissolveDeltaPerFrame))")
                     // set negative to decrement
                 dissolveNextAttribute = attribute(nameKey: kCIInputImageKey)
                 if (dissolveNextAttribute != nil) {
@@ -190,8 +190,8 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
                 }
             }
 
-            currentPanZoom?.startMovement()
-            nextPanZoom?.stopMovement()
+//            currentPanZoom?.startMovement()
+//            nextPanZoom?.stopMovement()
                 // move the dissolve ahead
             transitionFilterStepTime += dissolveDeltaPerFrame
             let inputTime = simd_smoothstep(0, 1, transitionFilterStepTime)
@@ -239,6 +239,9 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
 //            let zoomDirection = ZoomDirection.zoomNone
             changeTarget.setPanZoomDefault(pan: panDirection ,  zoom: zoomDirection)
         }
+        else {
+            NSLog("incrementOnAttribute NO next Image assigned for next panZoom")
+        }
 
 //            NSLog(#function + String(describing: self) + "changing image " + String(describing: attribute.attributeName ))
         }
@@ -251,6 +254,9 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
 
   override  func setUserPick(attribute: PGLFilterAttribute, imageList: PGLImageList) {
       // put the first images into the panZoom for initial display
+
+//      panImageFilter.stopMovement()
+//      panTargetFilter.stopMovement( )
 
       super.setUserPick(attribute: attribute, imageList: imageList)
 
@@ -265,6 +271,9 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
       if (dissolveNextAttribute != nil) {
           incrementOnAttribute(attribute: dissolveNextAttribute!)
       }
+
+//      panImageFilter.startMovement()
+//      panTargetFilter.startMovement( )
 
 
     }

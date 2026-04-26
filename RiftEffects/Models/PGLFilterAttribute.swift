@@ -780,24 +780,26 @@ class PGLFilterAttribute {
 
         if !hasAnimation() { return }  // animationTime is Float
 
-
         // adjust animationTime by the current dt
         if (varyStepCounter > varyTotalFrames)  {
 //            NSLog("PGLFilterAttribute addStepTime resetting from varyStepCounter = \(varyStepCounter)")
-            varyStepCounter = 0
-
-            if attributeValueDelta != nil
-                { attributeValueDelta = attributeValueDelta! * -1 }
-            }
+            flipAnimationDirectionAtEnd()
+        }
         // now add the step
 
         varyStepCounter += 1
             // variationSteo not nil see hasAnimation() guard above
         incrementValueDelta()
-
-
     }
-    
+
+    func flipAnimationDirectionAtEnd() {
+        // if the animation has reached  max value before the varyStepCounter
+        // trigger the direction change
+        varyStepCounter = 0
+        if attributeValueDelta != nil
+            { attributeValueDelta = attributeValueDelta! * -1 }
+    }
+
 
     func setAnimationTimerDt(lengthSeconds: Float){
         // user has moved the rate of change control

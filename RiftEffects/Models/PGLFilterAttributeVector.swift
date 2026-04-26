@@ -55,7 +55,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
 
             var cornerPoint: CGPoint?
 //            NSLog("PGLFilterAttributeVector does not have default")
-            let insetRect = CGRect(x: 30, y: 30, width: TargetSize.width, height: TargetSize.height).insetBy(dx: 200.0, dy: 200.0)
+            let insetRect = CGRect(x: 30, y: 30, width: TargetSize.width, height: TargetSize.height).insetBy(dx: 100.0, dy: 100.0)
             // assuming LLO here... Lower Left Origin coordinates
             switch attributeName {
                 case "inputTopLeft":
@@ -125,20 +125,21 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         }
 
         // at least 20% change from startPoint
-
-        let newXPointChange:CGFloat = CGFloat.random(in: 20...(TargetSize.width - 50))
-        let newYPointChange:CGFloat = CGFloat.random(in: 20...(TargetSize.height - 50) )
+        let maxWidthChange = (TargetSize.width / 2) - 20
+        let maxHeightChange = (TargetSize.height / 2) - 20
+        let newXPointChange:CGFloat = CGFloat.random(in: 20...maxWidthChange)
+        let newYPointChange:CGFloat = CGFloat.random(in: 20...maxHeightChange )
 
 
         if endPoint == nil {
             endPoint = startPoint
         }
 
-//        NSLog("setRandomVectorEndPoint old value \(String(describing: endPoint))")
+        NSLog("\(String(describing:self)) setRandomVectorEndPoint old value \(String(describing: endPoint))")
         endPoint = CIVector(x: newXPointChange, y: newYPointChange)
         // this also changes the vectorLength
         // see the didSet block of the var endPoint
-//        NSLog("setRandomVectorEndPoint new value \(String(describing: endPoint))")
+        NSLog("\(String(describing:self)) setRandomVectorEndPoint new value \(String(describing: endPoint))")
     }
 
  // MARK: set
@@ -208,12 +209,19 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         if !hasAnimation() { return }  // animationTime is Float
 
         if (varyStepCounter > varyTotalFrames) || (varyStepCounter < 0) {
+            // the (varyStepCounter < 0) is the wrong condition
+            // where is the varyStepCounter going to -1 ?
+            // because varyTotalFrames is zero
 
             // attributeValueDelta is not used for the vector increment
             incrementDirection = incrementDirection * -1
+            NSLog("\(String(describing:self)) addAnimationStepTime incrementDirection flipped \(String(describing: incrementDirection))")
+            NSLog("varyStepCounter \(String(describing: varyStepCounter))")
+            NSLog("varyTotalFrames \(String(describing: varyTotalFrames))")
+
             if incrementDirection >= 0 {
                 // on the start point switch
-//                NSLog("PGLFilterAttributeVector switch endPoint")
+                NSLog("\(String(describing:self)) PGLFilterAttributeVector set endPoint")
                 setRandomVectorEndPoint()
             }
             if attributeValueDelta != nil

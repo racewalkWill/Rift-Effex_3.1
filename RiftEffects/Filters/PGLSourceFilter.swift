@@ -38,7 +38,7 @@ class PGLSourceFilter :  PGLAnimation  {
         //
 
         /// in the debugger execute expression PGLSourceFilter.LogParmValues = true
-static let LogParmValues = false
+static let LogParmValues = false //false
         // set to true to capture parm  set value messages & values
         // enter in the debug
         //      po PGLSourceFilter.LogParmValues = true
@@ -81,7 +81,12 @@ static let LogParmValues = false
     var imageInputCache: [String :CIImage?] = [:]
 
     // animation vars
-    var hasAnimation = false
+    var hasAnimation = false {
+        didSet {
+            NSLog("hasAnimation = \(hasAnimation)")
+        }
+    }
+    
     var animationAttributes = [PGLFilterAttribute]()
     var userLengthSeconds: Float = 0.0
     var stepTime = 0.0 {

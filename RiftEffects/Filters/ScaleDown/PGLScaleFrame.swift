@@ -42,7 +42,8 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
     required init?(filter: String, position: PGLFilterCategoryIndex) {
         super.init(filter: filter, position: position)
         attributes.append(self.centerPointAttribute())
-        hasAnimation = true }
+        //  hasAnimation = true
+    }
 
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override

@@ -12,7 +12,7 @@ class PGLDetectorFilter: PGLSourceFilter {
     // move down the detector[] array here?
     required init?(filter: String, position: PGLFilterCategoryIndex) {
       super.init(filter: filter, position: position)
-     hasAnimation = true
+//     hasAnimation = true
 //        detectors.append( DetectorFramework.Active.init(ciFilter: PGLFaceCIFilter()))
 
     }
