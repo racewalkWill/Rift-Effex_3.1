@@ -7,22 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "34D4BFA7-638B-442F-91DE-D302E4BE52E6"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Models/PGLFilterAttributeVector.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
-            landmarkName = "setRandomVectorEndPoint()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "2AEE48C1-305C-4C86-971F-E4E32779AF23"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -55,25 +39,8 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "FC3BB519-9A65-4977-983C-136AB92E9DF1"
-            shouldBeEnabled = "Yes"
-            condition = "zoomAnimation = 0"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Filters/PGLPanZoomFilter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
-            landmarkName = "startMovement()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "BF39D1EF-EB30-407A-B4DD-FDFE9CF080E2"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RiftEffects/Filters/PGLKenBurnsFilter.swift"
@@ -97,71 +64,55 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "108"
             endingLineNumber = "108"
-            landmarkName = "setPanZoomDefault(pan:zoom:)"
+            landmarkName = "setPanZoomDefault(panDirection:zoomDirection:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D8197285-FA78-4511-8773-33490D068886"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Controllers/PGLSelectParmController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "840"
-            endingLineNumber = "840"
-            landmarkName = "tableView(_:didHighlightRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "28E13854-B4E9-493E-8E25-087FD2D3F5A3"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RiftEffects/Controllers/PGLSelectParmController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1073"
-            endingLineNumber = "1073"
-            landmarkName = "tableView(_:trailingSwipeActionsConfigurationForRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "05DBB5FA-DD74-4934-B44E-6D18CB0FFE29"
+            uuid = "2906B867-2E59-49BD-9FBD-4539C20D8366"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RiftEffects/Filters/PGLSourceFilter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "hasAnimation"
-            landmarkType = "24">
+            startingLineNumber = "957"
+            endingLineNumber = "957"
+            landmarkName = "addFilterStepTime()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "04194B42-B3C3-4722-ABF8-7C88CDE9F357"
+            uuid = "AC198AE6-A475-4FA6-86B5-0A7762322B58"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RiftEffects/Models/PGLFilterAttributeNumber.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
             landmarkName = "incrementValueDelta()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C72A55A6-8BB6-4401-A9A9-4EACDF192F9B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Models/PGLFilterAttribute.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "818"
+            endingLineNumber = "818"
+            landmarkName = "setAnimationTimerDt(lengthSeconds:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -48,8 +48,8 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
 
     // for setAnimationTimerDt
     // shorter is faster movement
-    var panAnimation: Float = 100.0
-    var zoomAnimation: Float = 60.0
+    let panAnimation: Float = 20 // 100.0
+    let zoomAnimation: Float = 300 // 60.0
     var panFactor: Double = 1.15     // change to tuple of min,max
     var zoomFactor: Float = 1.40  // change to tuple of min,max
 
@@ -79,19 +79,19 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
     //    startAnimationBasic(attributeTarget: attributeTarget)
     //    attributeTarget.setAnimationTimerDt(lengthSeconds: (Float(defaultDt) * 1000))
 
-    func setPanZoomDefault(pan: PanDirection = .panNone, zoom: ZoomDirection = .zoomNone) {
+    func setPanZoomDefault(panDirection: PanDirection = .panNone, zoomDirection: ZoomDirection = .zoomNone) {
 //        setNumberValue(newValue:1.940563 , keyName:"inputScale")
         setDefaults() // back to start
         NSLog(#function + String(describing: self))
         guard let scaleInputParm = attribute(nameKey: "inputScale")
             else    { return }
 
-        scaleInputParm.set(1.5)
-        if zoom != .zoomNone {
+        scaleInputParm.set(1.3)
+        if zoomDirection != .zoomNone {
 
-             //   startAnimation(attributeTarget: scaleInputParm)
-//            scaleInputParm.attributeValueDelta = 2.0
-                startAnimationBasic(attributeTarget: scaleInputParm)
+                startAnimation(attributeTarget: scaleInputParm)
+
+//                startAnimationBasic(attributeTarget: scaleInputParm)
                 scaleInputParm.sliderMaxValue = zoomMaxFactor //allowed range is 0.1 - 10.0
 
             // use startMovement to set the lengthSeconds at the time it comes on screen
@@ -103,7 +103,7 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
                 if let delta = (scaleInputParm.attributeValueDelta) {
                         // zoom.rawValue is -1, 0 , or +1
                     NSLog(#function + String(describing: self) + " delta \(String(describing: delta))")
-                        let newDelta = (delta * zoom.rawValue) / 2
+                        let newDelta = (delta * zoomDirection.rawValue) / 2
                     NSLog(#function + String(describing: self) + " new delta \(String(describing: newDelta))")
                         scaleInputParm.attributeValueDelta =  newDelta
                     }
@@ -111,7 +111,7 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
         }
         guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector
             else    { return }
-        if   pan != .panNone  {
+        if   panDirection != .panNone  {
             // starting from frame center
             centerPoint = CGPoint( x: (TargetSize.width / 2 ), y: (TargetSize.height / 2) )
 

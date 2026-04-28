@@ -31,8 +31,9 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
     }
 
     override func incrementValueDelta() {
-        if let curentNumericValue =  self.getNumberValue() as? Float {
-
+        let curentNumericValue =  Float(truncating: self.getNumberValue() ?? 1.3)
+                // as? Float {
+            // value is type Double 1.3
             // now increment value
             if  (attributeValueDelta != nil ){
                 var newValue = curentNumericValue + attributeValueDelta!
@@ -49,7 +50,7 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
                 aSourceFilter.setNumberValue(newValue: newValue as NSNumber, keyName: attributeName!)
                 postUIChange(attribute: self)
             }
-        }
+
     }
     override func valueString() -> String {
         let parmNumber = getValue() as! Double

@@ -824,7 +824,7 @@ class PGLFilterAttribute {
                 // keeps animation logic going but no changes in the attribute values
         }
 
-//        Logger(subsystem: LogSubsystem, category: LogCategory).notice( "#setAnimationTimerDt attributeValueDelta = \(String(describing: self.attributeValueDelta))")
+        Logger(subsystem: LogSubsystem, category: LogCategory).notice( "#setAnimationTimerDt attributeValueDelta = \(String(describing: self.attributeValueDelta))")
     }
 
 

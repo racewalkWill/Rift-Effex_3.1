@@ -237,7 +237,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
             let panDirection = PanDirection.random()
             let zoomDirection  = ZoomDirection.random()
 //            let zoomDirection = ZoomDirection.zoomNone
-            changeTarget.setPanZoomDefault(pan: panDirection ,  zoom: zoomDirection)
+            changeTarget.setPanZoomDefault(panDirection: panDirection ,  zoomDirection: zoomDirection)
         }
         else {
             NSLog("incrementOnAttribute NO next Image assigned for next panZoom")
@@ -272,8 +272,8 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
           incrementOnAttribute(attribute: dissolveNextAttribute!)
       }
 
-//      panImageFilter.startMovement()
-//      panTargetFilter.startMovement( )
+      panImageFilter.startMovement()
+      panTargetFilter.startMovement( )
 
 
     }
