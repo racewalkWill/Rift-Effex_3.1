@@ -201,6 +201,8 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
         } // end dissolveRunning = true
 
         currentPanZoom?.addFilterStepTime()
+            // if dissolve is not running then the off screen panZoom is not
+            // stepped forward !
         if dissolveRunning {
                 // both filters need to animate during dissolve
             nextPanZoom?.addFilterStepTime()
@@ -272,8 +274,8 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
           incrementOnAttribute(attribute: dissolveNextAttribute!)
       }
 
-      panImageFilter.startMovement()
-      panTargetFilter.startMovement( )
+//      panImageFilter.startMovement()
+//      panTargetFilter.startMovement( )
 
 
     }

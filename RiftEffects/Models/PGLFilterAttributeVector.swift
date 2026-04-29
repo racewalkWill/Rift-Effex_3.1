@@ -120,25 +120,35 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     }
 
     func setRandomVectorEndPoint() {
-        if startPoint == nil  {
-            return
-        }
+        guard let startPoint = startPoint else { return }
 
-        // at least 20% change from startPoint
-        let maxWidthChange = (TargetSize.width / 2) - 20
-        let maxHeightChange = (TargetSize.height / 2) - 20
-        let newXPointChange:CGFloat = CGFloat.random(in: 20...maxWidthChange)
-        let newYPointChange:CGFloat = CGFloat.random(in: 20...maxHeightChange )
+        let startPointX = startPoint.x
+        let startPointY = startPoint.y
 
+        // Valid range is inset 20% from TargetSize edges
+        let insetFraction: CGFloat = 0.2
+        let minX = TargetSize.width * insetFraction
+        let maxX = TargetSize.width * (1.0 - insetFraction)
+        let minY = TargetSize.height * insetFraction
+        let maxY = TargetSize.height * (1.0 - insetFraction)
 
-        if endPoint == nil {
-            endPoint = startPoint
-        }
+        // Maximum change is 50% of the dimension from startPoint
+        let maxChangeX = TargetSize.width * 0.5
+        let maxChangeY = TargetSize.height * 0.5
+
+        // Intersect both constraints to get safe bounds
+        let lowerX = max(minX, startPointX - maxChangeX)
+        let upperX = min(maxX, startPointX + maxChangeX)
+        let lowerY = max(minY, startPointY - maxChangeY)
+        let upperY = min(maxY, startPointY + maxChangeY)
+
+        let newX: CGFloat = lowerX < upperX ? CGFloat.random(in: lowerX...upperX) : lowerX
+        let newY: CGFloat = lowerY < upperY ? CGFloat.random(in: lowerY...upperY) : lowerY
 
         NSLog("\(String(describing:self)) setRandomVectorEndPoint old value \(String(describing: endPoint))")
-        endPoint = CIVector(x: newXPointChange, y: newYPointChange)
-        // this also changes the vectorLength
-        // see the didSet block of the var endPoint
+
+        endPoint = CIVector(x: newX, y: newY)
+
         NSLog("\(String(describing:self)) setRandomVectorEndPoint new value \(String(describing: endPoint))")
     }
 

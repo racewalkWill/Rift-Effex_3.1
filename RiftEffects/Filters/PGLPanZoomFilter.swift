@@ -49,7 +49,7 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
     // for setAnimationTimerDt
     // shorter is faster movement
     let panAnimation: Float = 20 // 100.0
-    let zoomAnimation: Float = 300 // 60.0
+//    let zoomAnimation: Float = 300 // 60.0
     var panFactor: Double = 1.15     // change to tuple of min,max
     var zoomFactor: Float = 1.40  // change to tuple of min,max
 
@@ -71,6 +71,14 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
       return kPanZoom
     }
 
+    override func setDefaults() {
+        super.setDefaults()
+        let defaultPoint = defaultCenterPoint()
+        let defaultVector = CIVector(x: defaultPoint.x, y: defaultPoint.y)
+        setVectorValue(newValue: defaultVector, keyName: kCIInputCenterKey)
+        zoomFactor = 1.40
+        panFactor = 1.15
+    }
     // for the two parms
     // #setAnimationTimerDt
     // aSourceFilter.animate(attributeTarget: self)
@@ -82,15 +90,20 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
     func setPanZoomDefault(panDirection: PanDirection = .panNone, zoomDirection: ZoomDirection = .zoomNone) {
 //        setNumberValue(newValue:1.940563 , keyName:"inputScale")
         setDefaults() // back to start
+        let defaultZoomDivisor: Float = 30.0
+            // used to divide (slow down) the rate of zoom change
+
         NSLog(#function + String(describing: self))
         guard let scaleInputParm = attribute(nameKey: "inputScale")
             else    { return }
 
-        scaleInputParm.set(1.3)
+//        scaleInputParm.set(1.3)
+        let startingScale = CGFloat.random(in: 0.8...3.0)
+        scaleInputParm.set(startingScale)
         if zoomDirection != .zoomNone {
-
+            if !hasAnimation {
                 startAnimation(attributeTarget: scaleInputParm)
-
+            }
 //                startAnimationBasic(attributeTarget: scaleInputParm)
                 scaleInputParm.sliderMaxValue = zoomMaxFactor //allowed range is 0.1 - 10.0
 
@@ -103,7 +116,7 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
                 if let delta = (scaleInputParm.attributeValueDelta) {
                         // zoom.rawValue is -1, 0 , or +1
                     NSLog(#function + String(describing: self) + " delta \(String(describing: delta))")
-                        let newDelta = (delta * zoomDirection.rawValue) / 2
+                        let newDelta = (delta * zoomDirection.rawValue) / defaultZoomDivisor
                     NSLog(#function + String(describing: self) + " new delta \(String(describing: newDelta))")
                         scaleInputParm.attributeValueDelta =  newDelta
                     }
@@ -134,6 +147,10 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
                     centerPointParm.incrementDirection = centerPointParm.incrementDirection * -1
                     }
                 // start the animation when the dissolve is starting to bring it on screen
+//                startAnimation(attributeTarget: scaleInputParm)
+                centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation)
+                // do not use the superclass animationTimerDt lenghtSeconcs
+
                 startAnimationBasic(attributeTarget: centerPointParm)
 
                 // use startMovement to set the lengthSeconds at the time it comes on screen
@@ -143,54 +160,54 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
 
     }
 
-    func startMovement() {
-            // use startMovement to set the lengthSeconds at the time it comes on screen
-               // scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
-                // shorter values make faster motion
+//    func startMovement() {
+//            // use startMovement to set the lengthSeconds at the time it comes on screen
+//               // scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
+//                // shorter values make faster motion
+//
+//                //zoomAnimation sets an initial attributeValueDelta
+//
+//        guard let scaleInputParm = attribute(nameKey: "inputScale")
+//            else    { return }
+//
+//        scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
+//
+//        guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector
+//            else    { return }
+//        centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation)
+//
+//    }
+//
+//    func stopMovement() {
+//        guard let scaleInputParm = attribute(nameKey: "inputScale")
+//            else    { return }
+//        scaleInputParm.setAnimationTimerDt(lengthSeconds: 0)
+//
+//        guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector
+//            else    { return }
+//        centerPointParm.setAnimationTimerDt(lengthSeconds: 0)
+//    }
 
-                //zoomAnimation sets an initial attributeValueDelta
+//    func setPanOffset(pan: PanDirection) {
+//        // center point moves from default
+//        let centerCurrentX: Double = Double (centerPoint.x)
+//        let centerCurrentY  =  (centerPoint.y)
+//
+//        if pan != .panNone {
+//            // pan is -1, or +1
+//            let newCenterX = centerCurrentX * panFactor * pan.rawValue
+//            centerPoint = CGPoint(x: newCenterX, y: centerCurrentY)
+//        }
+//
+//    }
 
-        guard let scaleInputParm = attribute(nameKey: "inputScale")
-            else    { return }
-
-        scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
-
-        guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector
-            else    { return }
-        centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation)
-
-    }
-
-    func stopMovement() {
-        guard let scaleInputParm = attribute(nameKey: "inputScale")
-            else    { return }
-        scaleInputParm.setAnimationTimerDt(lengthSeconds: 0)
-
-        guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector
-            else    { return }
-        centerPointParm.setAnimationTimerDt(lengthSeconds: 0)
-    }
-
-    func setPanOffset(pan: PanDirection) {
-        // center point moves from default
-        let centerCurrentX: Double = Double (centerPoint.x)
-        let centerCurrentY  =  (centerPoint.y)
-
-        if pan != .panNone {
-            // pan is -1, or +1
-            let newCenterX = centerCurrentX * panFactor * pan.rawValue
-            centerPoint = CGPoint(x: newCenterX, y: centerCurrentY)
-        }
-
-    }
-
-    func setZoomInStart() {
+//    func setZoomInStart() {
 //        let scaleCurrent: CGFloat = inputScale
 //        
 //        let newScale: CGFloat = scaleCurrent * zoomFactor
 //        
 //        setNumberValue(newValue: newScale, keyName:"inputScale")    
-    }
+//    }
 
 //    override func setDefaults() {
 //        super.setDefaults()

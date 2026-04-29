@@ -57,6 +57,10 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
         return zoomFilter
     }
 
+    func defaultCenterPoint() -> CGPoint {
+        CGPoint(x: TargetSize.width/2, y: TargetSize.height/2)
+    }
+
     /// defines centerPoint for the LanczosScale rendering
     func centerPointAttribute() -> PGLFilterAttributeVector {
         let inputDict: [String:Any] = [
