@@ -145,9 +145,10 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         let newX: CGFloat = lowerX < upperX ? CGFloat.random(in: lowerX...upperX) : lowerX
         let newY: CGFloat = lowerY < upperY ? CGFloat.random(in: lowerY...upperY) : lowerY
 
-        NSLog("\(String(describing:self)) setRandomVectorEndPoint old value \(String(describing: endPoint))")
+//        NSLog("\(String(describing:self)) setRandomVectorEndPoint old value \(String(describing: endPoint))")
 
         endPoint = CIVector(x: newX, y: newY)
+        varyStepCounter = 0 // reset for new endPoint
 
         NSLog("\(String(describing:self)) setRandomVectorEndPoint new value \(String(describing: endPoint))")
     }

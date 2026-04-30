@@ -87,12 +87,21 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
             anAttribute.updateFromInputStack()
         }
         if hasImageParmMissingInput() {
+//            NSLog("\(#function): KenBurnsFilter parm missing input")
             return CIImage.empty()
 
         }
 
-        let imagePan = panImageFilter.outputImageBasic() ?? CIImage.empty()
-        let backgroundPan = panTargetFilter.outputImageBasic() ?? CIImage.empty()
+       guard let imagePan = panImageFilter.outputImageBasic()
+        else {
+           NSLog("\(#function): no imagePan")
+           return CIImage.empty()}
+        guard let backgroundPan = panTargetFilter.outputImageBasic()
+        else {
+            NSLog("\(#function): no imagePan")
+            return CIImage.empty()
+        }
+
 
             // put the panZoom images into the dissolv filter
         self.setImageValue(newValue: imagePan, keyName: kCIInputImageKey)
@@ -238,7 +247,8 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
 
             let panDirection = PanDirection.random()
             let zoomDirection  = ZoomDirection.random()
-//            let zoomDirection = ZoomDirection.zoomNone
+                // zoom is either .none or .zoomIn..
+                // .zoomOut is commented out
             changeTarget.setPanZoomDefault(panDirection: panDirection ,  zoomDirection: zoomDirection)
         }
         else {
@@ -249,33 +259,29 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
         }
 
 
-//
-//    override func setRandomTimerDt() {
-//
-//    }
+    fileprivate func setImageInPanZoom(panZoom: PGLPanZoomFilter,aPickedImage: CIImage) {
+        panZoom.setImageValue(newValue: aPickedImage, keyName: kCIInputImageKey)
+        panZoom.setInputImageParmState(newState: .inputPhoto)
 
-  override  func setUserPick(attribute: PGLFilterAttribute, imageList: PGLImageList) {
+        let panDirection = PanDirection.random()
+        let zoomDirection  = ZoomDirection.random()
+
+        panZoom.setPanZoomDefault(panDirection: panDirection ,  zoomDirection: zoomDirection)
+    }
+    
+    override  func setUserPick(attribute: PGLFilterAttribute, imageList: PGLImageList) {
       // put the first images into the panZoom for initial display
-
-//      panImageFilter.stopMovement()
-//      panTargetFilter.stopMovement( )
 
       super.setUserPick(attribute: attribute, imageList: imageList)
 
-      var dissolveNextAttribute = self.attribute(nameKey: kCIInputImageKey) as? PGLFilterAttributeImage
+      let dissolveImageList = imageList
 
-      if (dissolveNextAttribute != nil) {
-          incrementOnAttribute(attribute: dissolveNextAttribute!)
-      }
+      let startImage = dissolveImageList.getCurrentImage()
+      setImageInPanZoom(panZoom: panImageFilter, aPickedImage: startImage)
 
-       dissolveNextAttribute = self.attribute(nameKey: kCIInputTargetImageKey) as? PGLFilterAttributeImage
-
-      if (dissolveNextAttribute != nil) {
-          incrementOnAttribute(attribute: dissolveNextAttribute!)
-      }
-
-//      panImageFilter.startMovement()
-//      panTargetFilter.startMovement( )
+      if let nextImage = dissolveImageList.increment() {
+          setImageInPanZoom(panZoom: panTargetFilter, aPickedImage: nextImage)
+          }
 
 
     }

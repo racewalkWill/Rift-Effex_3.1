@@ -31,7 +31,7 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
     }
 
     override func incrementValueDelta() {
-        NSLog("\(String(describing: self)) incrementValueDelta \(Unmanaged.passUnretained(self).toOpaque()) attributeName: \(attributeName ?? "nil")")
+//        NSLog("\(String(describing: self)) incrementValueDelta \(Unmanaged.passUnretained(self).toOpaque()) attributeName: \(attributeName ?? "nil")")
         let curentNumericValue =  Float(truncating: self.getNumberValue() ?? 1.3)
                 // as? Float {
             // value is type Double 1.3
@@ -46,9 +46,9 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
                     flipAnimationDirectionAtEnd()}
                 // this will make the change stop until the frame count reaches a point to flip direction
                 
-                NSLog("PGLFilterAttributeNumber incrementValueDelta curentNumericValue \(curentNumericValue)")
-                NSLog("PGLFilterAttributeNumber incrementValueDelta attributeValueDelta = \(String(describing: attributeValueDelta))")
-                NSLog("PGLFilterAttributeNumber incrementValueDelta newValue \(newValue)")
+//                NSLog("PGLFilterAttributeNumber incrementValueDelta curentNumericValue \(curentNumericValue)")
+//                NSLog("PGLFilterAttributeNumber incrementValueDelta attributeValueDelta = \(String(describing: attributeValueDelta))")
+//                NSLog("PGLFilterAttributeNumber incrementValueDelta newValue \(newValue)")
 
                 aSourceFilter.setNumberValue(newValue: newValue as NSNumber, keyName: attributeName!)
                 postUIChange(attribute: self)
