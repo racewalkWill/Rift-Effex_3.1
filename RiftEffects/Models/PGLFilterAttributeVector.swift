@@ -33,9 +33,12 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             vectorCos = cos(vectorAngle)
             vectorSin = sin(vectorAngle)
             xDelta = Float(newPoint.x - startPoint!.x)
-            if xDelta < 0.0 { xSign = -1.0 } // avoid NAN error from sign function if xDelta is zero
-            }
-            else { startPoint = nil}
+            if xDelta < 0.0 {
+                xSign = -1.0 } // avoid NAN error from sign function if xDelta is zero
+            } else  {
+                xSign = 1.0
+                    // startPoint = nil  ?? why is this !!
+                }
 
             // reset the attributeValueDelta for the vectorLength
             // other classes use attributeValueDelta based on range of the slider
@@ -153,6 +156,35 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         NSLog("\(String(describing:self)) setRandomVectorEndPoint new value \(String(describing: endPoint))")
     }
 
+    func setRandomVectorStartPoint() {
+       // guard let startPoint = startPoint else { return }
+
+//        let startPointX = startPoint.x
+//        let startPointY = startPoint.y
+
+        // Valid range is inset 20% from TargetSize edges
+        let insetFraction: CGFloat = 0.2
+        let minX = TargetSize.width * insetFraction
+        let maxX = TargetSize.width * (1.0 - insetFraction)
+        let minY = TargetSize.height * insetFraction
+        let maxY = TargetSize.height * (1.0 - insetFraction)
+
+        // Maximum change is 50% of the dimension from startPoint
+//        let maxChangeX = TargetSize.width * 0.5
+//        let maxChangeY = TargetSize.height * 0.5
+
+
+        let newX: CGFloat =  CGFloat.random(in: minX...maxX)
+        let newY: CGFloat =  CGFloat.random(in: minY...maxY)
+
+//        NSLog("\(String(describing:self)) setRandomVectorEndPoint old value \(String(describing: endPoint))")
+
+        startPoint = CIVector(x: newX, y: newY)
+        varyStepCounter = 0 // reset for new startPoint
+
+        NSLog("\(String(describing:self)) setRandomVectorStartPoint new value \(String(describing: startPoint))")
+    }
+
  // MARK: set
     override func set(_ value: Any) {
         if attributeName != nil {
@@ -219,7 +251,8 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
 
         if !hasAnimation() { return }  // animationTime is Float
 
-        if (varyStepCounter > varyTotalFrames) || (varyStepCounter < 0) {
+        if (varyStepCounter > varyTotalFrames) {
+            // || (varyStepCounter < 0) {
             // the (varyStepCounter < 0) is the wrong condition
             // where is the varyStepCounter going to -1 ?
             // because varyTotalFrames is zero

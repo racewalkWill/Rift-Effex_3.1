@@ -87,11 +87,32 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
     //    startAnimationBasic(attributeTarget: attributeTarget)
     //    attributeTarget.setAnimationTimerDt(lengthSeconds: (Float(defaultDt) * 1000))
 
+    func setZoomDelta(zoomDirection: ZoomDirection = .zoomNone) {
+        // reset value from the setAnimationTimerDt
+        // varyTotalFrames was set by the lengthSeconds
+        // just use a fixed rate of change either zoom out, in or none
+        let defaultZoomDivisor: Float = 5.0
+
+        guard let scaleInputParm = attribute(nameKey: "inputScale")
+            else    { return }
+
+        let attributeValueRange = (scaleInputParm.sliderMaxValue ?? 100.0) - (scaleInputParm.sliderMinValue ?? 0.0)
+            // some filters do not define max or min values..
+
+            // for total frames to increment to value
+        if (scaleInputParm.varyTotalFrames > 0 ) // check for zero division nan
+        {
+            let newDelta = (attributeValueRange / Float(scaleInputParm.varyTotalFrames)) / defaultZoomDivisor
+            scaleInputParm.attributeValueDelta =  newDelta * zoomDirection.rawValue
+                // zoomDirection values -1, 0, or +1
+            // hasAnimation is now true with value in attributeValueDelta
+            NSLog(#function + String(describing: self) + " new delta \(String(describing: scaleInputParm.attributeValueDelta))")
+        }
+
+    }
     func setPanZoomDefault(panDirection: PanDirection = .panNone, zoomDirection: ZoomDirection = .zoomNone) {
 //        setNumberValue(newValue:1.940563 , keyName:"inputScale")
         setDefaults() // back to start
-        let defaultZoomDivisor: Float = 30.0
-            // used to divide (slow down) the rate of zoom change
 
         NSLog(#function + String(describing: self))
         guard let scaleInputParm = attribute(nameKey: "inputScale")
@@ -106,24 +127,9 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
             if !hasAnimation {
                 startAnimation(attributeTarget: scaleInputParm)
             }
-//                startAnimationBasic(attributeTarget: scaleInputParm)
-
-
-            // use startMovement to set the lengthSeconds at the time it comes on screen
-               // scaleInputParm.setAnimationTimerDt(lengthSeconds: zoomAnimation)
-                // shorter values make faster motion
-
-                //zoomaAnimation sets an initial attributeValueDelta
-                // slow it down even more
-                if let delta = (scaleInputParm.attributeValueDelta) {
-                        // zoom.rawValue is -1, 0 , or +1
-                    NSLog(#function + String(describing: self) + " delta \(String(describing: delta))")
-                        let newDelta = (delta * zoomDirection.rawValue) / defaultZoomDivisor
-                    NSLog(#function + String(describing: self) + " new delta \(String(describing: newDelta))")
-                        scaleInputParm.attributeValueDelta =  newDelta
-                    }
-
+            setZoomDelta(zoomDirection: zoomDirection)
         }
+
         guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector
             else    { return }
         if   panDirection != .panNone  {
@@ -140,18 +146,25 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
                     // startAnimation(attributeTarget: centerPointParm)
                 //setPanOffset(pan: pan)
 //                setRandomParms() // only the centerPoint
-                centerPointParm.setVectorStartPoint()
+                centerPointParm.setRandomVectorStartPoint()
                 centerPointParm.setRandomVectorEndPoint()
                 centerPointParm.varyState = .VaryPt1Pt2 // move to next state for both
-                centerPointParm.varyStepCounter = 0
+//                centerPointParm.varyStepCounter = 0
+                // varyStepCounter is reset in the setRandomVectorStartPoint & EndPoint
                 if centerPointParm.incrementDirection < 0 {
                     // make it count up from zero
                     centerPointParm.incrementDirection = centerPointParm.incrementDirection * -1
                     }
                 // start the animation when the dissolve is starting to bring it on screen
 //                startAnimation(attributeTarget: scaleInputParm)
-                centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation)
+                centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation * 2)
                 // do not use the superclass animationTimerDt lenghtSeconcs
+
+
+//                centerPointParm.varyTotalFrames = centerPointParm.varyTotalFrames * 2
+//                    // correct the varyTotalFrames that the setAnimationTimerDt set
+                    // make it bigger so it does not change direction in the middle
+                    // when varyStepCounter goes larger the the varyTotalFrames then the direction flips
 
                 startAnimationBasic(attributeTarget: centerPointParm)
 
