@@ -260,12 +260,13 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             // attributeValueDelta is not used for the vector increment
             incrementDirection = incrementDirection * -1
             NSLog("\(String(describing:self)) addAnimationStepTime incrementDirection flipped \(String(describing: incrementDirection))")
-            NSLog("varyStepCounter \(String(describing: varyStepCounter))")
-            NSLog("varyTotalFrames \(String(describing: varyTotalFrames))")
+//            NSLog("varyStepCounter \(String(describing: varyStepCounter))")
+//            NSLog("varyTotalFrames \(String(describing: varyTotalFrames))")
 
             if incrementDirection >= 0 {
                 // on the start point switch
-                NSLog("\(String(describing:self)) PGLFilterAttributeVector set endPoint")
+//                NSLog("\(String(describing:self)) PGLFilterAttributeVector set startPoint & endPoint")
+                setRandomVectorStartPoint()
                 setRandomVectorEndPoint()
             }
             if attributeValueDelta != nil
@@ -286,7 +287,11 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             // old animationTime is a value moving from -1 to +1
             let changeRatio: Float = Float(varyStepCounter) / Float(varyTotalFrames)
             let distanceOfIncrement = vectorLength * changeRatio
-
+//            NSLog("\(String(describing: self)) incrementValueDelta \(Unmanaged.passUnretained(self).toOpaque()) attributeName: \(attributeName ?? "nil")")
+//            NSLog("PGLFilterAttributeVector #incrementValueDelta changeRatio = \(String(describing: changeRatio) ) ")
+//            NSLog("PGLFilterAttributeVector #incrementValueDelta vectorLength = \(String(describing: vectorLength) ) ")
+//            NSLog("PGLFilterAttributeVector #incrementValueDelta distanceOfIncrement = \(String(describing: distanceOfIncrement) ) ")
+//            NSLog("  ") // put in  a blank line
 
             let newX = Float(startPoint!.x) + (xSign * (vectorCos * distanceOfIncrement))
             let newY = Float(startPoint!.y) + (vectorSin * distanceOfIncrement)
