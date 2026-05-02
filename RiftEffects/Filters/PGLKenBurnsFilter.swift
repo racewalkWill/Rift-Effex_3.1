@@ -277,14 +277,53 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
       let dissolveImageList = imageList
 
       let startImage = dissolveImageList.getCurrentImage()
-      setImageInPanZoom(panZoom: panImageFilter, aPickedImage: startImage)
 
-      if let nextImage = dissolveImageList.increment() {
-          setImageInPanZoom(panZoom: panTargetFilter, aPickedImage: nextImage)
-          }
-
+      if startImage != CIImage.empty() {
+          setImageInPanZoom(panZoom: panImageFilter, aPickedImage: startImage)
+          loadNextImageForPanTarget(dissolveImageList: dissolveImageList)
+        }
+        else {
+            NSLog("setUserPick: startImage not ready, waiting for onImageReady")
+            let currentPosition = dissolveImageList.position
+            guard currentPosition < dissolveImageList.imageAssets.count else { return }
+            let currentAsset = dissolveImageList.imageAssets[currentPosition]
+            currentAsset.onImageReady = { [weak self] _ in
+                guard let self = self else { return }
+                if let scaledImage = currentAsset.transformedImage() {
+                    self.setImageInPanZoom(panZoom: self.panImageFilter, aPickedImage: scaledImage)
+                }
+                self.loadNextImageForPanTarget(dissolveImageList: dissolveImageList)
+            }
+        }
 
     }
+
+    fileprivate func loadNextImageForPanTarget(dissolveImageList: PGLImageList) {
+        if let nextImage = dissolveImageList.increment() {
+            setImageInPanZoom(panZoom: panTargetFilter, aPickedImage: nextImage)
+        } else {
+            let nextPosition = dissolveImageList.position
+            guard nextPosition < dissolveImageList.imageAssets.count else { return }
+            let nextAsset = dissolveImageList.imageAssets[nextPosition]
+            nextAsset.onImageReady = { [weak self] _ in
+                guard let self = self else { return }
+                if let scaledImage = nextAsset.transformedImage() {
+                    self.setImageInPanZoom(panZoom: self.panTargetFilter, aPickedImage: scaledImage)
+                }
+            }
+        }
+    }
+
+//    override func setImageValue(newValue: CIImage, keyName: String) {
+//        // how to know that photo asset just set the list after read from library
+//        // only on the first read  in setUserPick
+//        // after that the normal time cycle will update from the filter list
+//        // to the panZoomfilters
+//        // the panZoomFilters then supply the processed image for the dissolve
+//
+//        super.setImageValue(newValue: newValue, keyName: keyName)
+//
+//    }
 
 
 
