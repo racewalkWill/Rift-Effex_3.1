@@ -53,7 +53,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
     private var imageRequestID: PHImageRequestID?
      var thumbnail: UIImage?
      var ciImage: CIImage?
-    var imageScaler: PGLCenterScaler?
+    var centerScaler: PGLCenterScaler?
 //    var imageScaler: PGLImageScaler?
     var onImageReady: ((CIImage) -> Void)?
 
@@ -138,14 +138,6 @@ class PGLAsset: Hashable, Equatable, Identifiable {
             }
         }
 
-//        if PrintDebugPhotoLocation {
-//            let thePHAsset = self.asset
-//            if let resource = PHAssetResource.assetResources(for: thePHAsset).first
-//            {
-//                NSLog("\(resource.originalFilename)  \(String(describing: thePHAsset.location))")
-//            }
-//        }
-
         if let myCIImage = ciImage {
             return myCIImage
         }
@@ -178,7 +170,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
             { return  nil }
 
         if let myCI = self.ciImage {
-            return self.imageScaler?.displayTransform(image: myCI)
+            return self.centerScaler?.displayTransform(image: myCI)
         } else {
             return nil
         }
@@ -198,7 +190,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
                             self.thumbnail = returnUIImage.preparingThumbnail(of: self.thumbnailSize)
                             self.ciImage = self.convert2CIImage(aUIImage: returnUIImage)
 
-                            self.imageScaler = self.applyImageScaler(to: self.ciImage!)
+                            self.centerScaler = self.setCenterScaler(to: self.ciImage!)
                             if let ciImage = self.ciImage {
                                 self.onImageReady?(ciImage)
                             }
@@ -212,17 +204,19 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 
     func resetCenterScaler() {
         if ciImage == nil { return }
-        imageScaler = applyImageScaler(to: ciImage!)
-        NSLog("\(#function) centerScaler: \(String(describing: imageScaler))")
+        centerScaler = setCenterScaler(to: ciImage!)
+        NSLog("\(#function) centerScaler: \(String(describing: centerScaler))")
+        // now update ciImage with the scaler
+        
     }
 
-    func applyImageScaler(to ciImage: CIImage) -> PGLCenterScaler? {
-        let centerScaler = PGLCenterScaler(centerCIImage: ciImage)
+    func setCenterScaler(to ciImage: CIImage) -> PGLCenterScaler? {
+        let newCenterScaler = PGLCenterScaler(centerCIImage: ciImage)
     // comment PGLImageScaler is just a struct that holds the transformed image
 
 //        let centeredImage = centerScaler.displayTransform(image: ciImage)
 //        let myScaler = PGLImageScaler(image: centeredImage, centerScaler: centerScaler)
-        return centerScaler
+        return newCenterScaler
 
         
     }

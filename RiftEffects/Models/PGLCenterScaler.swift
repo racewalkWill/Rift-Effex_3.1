@@ -10,20 +10,20 @@ import Foundation
 import CoreImage
 
     /// holder of pair of the image and the scaler transform to center
-struct PGLImageScaler {
-    var image: CIImage
-    var centerScaler: PGLCenterScaler?
-    
-
-
-    @MainActor func useAspectFill() {
-        centerScaler?.setAspectFillTransform(imageExtent: image.extent)
-    }
-
-    func useAspectFit() {
-        
-    }
-}
+//struct PGLImageScaler {
+//    var image: CIImage
+//    var centerScaler: PGLCenterScaler?
+//    
+//
+//
+//    @MainActor func useAspectFill() {
+//        centerScaler?.setAspectFillTransform(imageExtent: image.extent)
+//    }
+//
+//    func useAspectFit() {
+//        
+//    }
+//}
 
 ///  one centerScaler for each image - images are different sizes
 ///   uses Global TargetSize for  center and size transform
@@ -92,7 +92,7 @@ class PGLCenterScaler {
     }
 
     func displayTransform(image: CIImage) -> CIImage {
-//        NSLog("PGLCenterScaler  displayTransform \(String(describing: displayTransform))")
+        NSLog("PGLCenterScaler  displayTransform \(String(describing: displayTransform))")
         return image.transformed(by: displayTransform ?? CGAffineTransform.identity)
     }
 
