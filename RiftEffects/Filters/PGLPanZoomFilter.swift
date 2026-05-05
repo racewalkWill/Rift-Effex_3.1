@@ -128,6 +128,8 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
                 startAnimation(attributeTarget: scaleInputParm)
             }
             setZoomDelta(zoomDirection: zoomDirection)
+            scaleInputParm.varyStepCounter = 0
+            scaleInputParm.varyTotalFrames = Int(60.0 * panAnimation * 2)
         }
 
         guard let  centerPointParm =  attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector
@@ -160,12 +162,10 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
                 centerPointParm.setAnimationTimerDt(lengthSeconds: panAnimation * 2)
                 // do not use the superclass animationTimerDt lenghtSeconcs
 
-
-//                centerPointParm.varyTotalFrames = centerPointParm.varyTotalFrames * 2
-//                    // correct the varyTotalFrames that the setAnimationTimerDt set
                     // make it bigger so it does not change direction in the middle
                     // when varyStepCounter goes larger the the varyTotalFrames then the direction flips
 
+                animationAttributes.removeAll { $0 === centerPointParm }
                 startAnimationBasic(attributeTarget: centerPointParm)
 
                 // use startMovement to set the lengthSeconds at the time it comes on screen
