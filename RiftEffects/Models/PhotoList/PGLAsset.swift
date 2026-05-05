@@ -52,7 +52,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
     var cache: PGLCachedImageMgr?
     private var imageRequestID: PHImageRequestID?
      var thumbnail: UIImage?
-     var ciImage: CIImage?
+  private var ciImage: CIImage?
     var centerScaler: PGLCenterScaler?
 //    var imageScaler: PGLImageScaler?
     var onImageReady: ((CIImage) -> Void)?
@@ -165,12 +165,12 @@ class PGLAsset: Hashable, Equatable, Identifiable {
             return pickedCIImage
         }
 
-    func transformedImage() -> CIImage?
+    func imageAtTargetSize() -> CIImage?
     {    guard self.imageFrom() != nil else
             { return  nil }
 
         if let myCI = self.ciImage {
-            return self.centerScaler?.displayTransform(image: myCI)
+            return self.centerScaler?.imageForTargetSize(image: myCI)
         } else {
             return nil
         }
@@ -192,14 +192,23 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 
                             self.centerScaler = self.setCenterScaler(to: self.ciImage!)
                             if let ciImage = self.ciImage {
-                                self.onImageReady?(ciImage)
+                                if let resizedImage = self.imageAtTargetSize() {
+                                    self.onImageReady?(resizedImage) }
+                                else {
+                                    self.onImageReady?(ciImage) }
+
+                                }
                             }
 
                         }
-                    }
+                    }  // child TASK close
                 }
-            }
-        }
+            } // parent TASK close
+    }
+
+    func imageNotAvailable() -> Bool {
+        // ciImage is private just return status 
+       return ciImage == nil
     }
 
     func resetCenterScaler() {

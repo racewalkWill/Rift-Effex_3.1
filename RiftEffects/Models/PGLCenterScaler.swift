@@ -9,22 +9,6 @@
 import Foundation
 import CoreImage
 
-    /// holder of pair of the image and the scaler transform to center
-//struct PGLImageScaler {
-//    var image: CIImage
-//    var centerScaler: PGLCenterScaler?
-//    
-//
-//
-//    @MainActor func useAspectFill() {
-//        centerScaler?.setAspectFillTransform(imageExtent: image.extent)
-//    }
-//
-//    func useAspectFit() {
-//        
-//    }
-//}
-
 ///  one centerScaler for each image - images are different sizes
 ///   uses Global TargetSize for  center and size transform
 @MainActor
@@ -33,16 +17,6 @@ class PGLCenterScaler {
     var aspectFillSize: CGAffineTransform?
 
     var displayTransform: CGAffineTransform?
-//    {
-//        didSet {
-//            NSLog("centerScaler.displayTransform: \(String(describing: displayTransform))")
-//        }
-//    }
-
-        // may be nil !! if the image was already scaled
-        //    let centerScaler = PGLCenterScaler(centerCIImage: baseImage)
-        //    let centeredImage = centerScaler.displayTransform(image: baseImage)
-        //    let myScaler = PGLImageScaler(image: centeredImage, centerScaler: centerScaler)
 
 
     init(centerCIImage: CIImage) {
@@ -56,22 +30,26 @@ class PGLCenterScaler {
     }
 
     func setAspectFitTransform(imageExtent: CGRect) {
-        // based upon the Renderer #drawBasicCentered( in view: MTKView)
+        let dSize = TargetSize
 
-            // let dSize = view.drawableSize
-            let dSize = TargetSize
+        let xTransform = 0.0 - imageExtent.origin.x
+        let yTransform = 0.0 - imageExtent.origin.y
+        let translateToZeroOrigin = CGAffineTransform(translationX: xTransform, y: yTransform)
 
-            let backBounds = CGRect(x: 0, y: 0, width: dSize.width, height: dSize.height)
+        let xScale = dSize.width / imageExtent.size.width
+        let yScale = dSize.height / imageExtent.size.height
+        let uniformScale = min(xScale, yScale)
+        let scaleTransform = CGAffineTransform(scaleX: uniformScale, y: uniformScale)
 
-//            if imageExtent.isInfinite {
-//                iRect = dSize
-//            }
+        let scaledWidth = imageExtent.size.width * uniformScale
+        let scaledHeight = imageExtent.size.height * uniformScale
+        let shiftX = round((dSize.width - scaledWidth) * 0.5)
+        let shiftY = round((dSize.height - scaledHeight) * 0.5)
+        let centerTransform = CGAffineTransform(translationX: shiftX, y: shiftY)
 
-            let shiftX = round((backBounds.size.width + imageExtent.origin.x - imageExtent.size.width) * 0.5)
-            let shiftY = round((backBounds.size.height + imageExtent.origin.y - imageExtent.size.height) * 0.5)
-
-        aspectFitCenter = CGAffineTransform(translationX: shiftX, y: shiftY)
-        displayTransform = aspectFitCenter ?? CGAffineTransform.identity
+        displayTransform = translateToZeroOrigin
+            .concatenating(scaleTransform)
+            .concatenating(centerTransform)
         }
 
     func setAspectFillTransform (imageExtent: CGRect) {
@@ -91,8 +69,8 @@ class PGLCenterScaler {
         displayTransform = translateToZeroOrigin.concatenating(scaleTransform)
     }
 
-    func displayTransform(image: CIImage) -> CIImage {
-        NSLog("PGLCenterScaler  displayTransform \(String(describing: displayTransform))")
+    func imageForTargetSize(image: CIImage) -> CIImage {
+//        NSLog("PGLCenterScaler  displayTransform \(String(describing: displayTransform))")
         return image.transformed(by: displayTransform ?? CGAffineTransform.identity)
     }
 

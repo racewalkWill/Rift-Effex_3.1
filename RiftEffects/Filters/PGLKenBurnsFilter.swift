@@ -289,7 +289,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
             let currentAsset = dissolveImageList.imageAssets[currentPosition]
             currentAsset.onImageReady = { [weak self] _ in
                 guard let self = self else { return }
-                if let scaledImage = currentAsset.transformedImage() {
+                if let scaledImage = currentAsset.imageAtTargetSize() {
                     self.setImageInPanZoom(panZoom: self.panImageFilter, aPickedImage: scaledImage)
                 }
                 self.loadNextImageForPanTarget(dissolveImageList: dissolveImageList)
@@ -307,7 +307,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
             let nextAsset = dissolveImageList.imageAssets[nextPosition]
             nextAsset.onImageReady = { [weak self] _ in
                 guard let self = self else { return }
-                if let scaledImage = nextAsset.transformedImage() {
+                if let scaledImage = nextAsset.imageAtTargetSize() {
                     self.setImageInPanZoom(panZoom: self.panTargetFilter, aPickedImage: scaledImage)
                 }
             }

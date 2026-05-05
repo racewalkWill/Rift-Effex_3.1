@@ -68,7 +68,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 //    var isAssetList = true // hold PGLAssets.. or holds CIImages
     var hasUncachedAssets: Bool {
         get{
-           return imageAssets.contains(where: { $0.ciImage  == nil })
+           return imageAssets.contains(where: { $0.imageNotAvailable() })
         }
     }
 
@@ -394,7 +394,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         var answerImage: CIImage?
         if atIndex >= imageAssets.count { return nil }
         let imageAsset = imageAssets[atIndex]
-        answerImage = imageAsset.transformedImage()
+        answerImage = imageAsset.imageAtTargetSize()
 //        NSLog("\(String(describing:  answerImage)) answers for \(imageAsset.localIdentifier)")
         if answerImage != nil {
             return answerImage
