@@ -20,6 +20,7 @@ class PGLImageListViewModel: ObservableObject {
     @Published var filterParms: [ParmSection] = []
     @Published var isTransitionFilter = false
     @Published var filterName: String = ""
+    @Published var emptySourceDescriptions: [String] = []
 
 //    @Published var selection: Set<String> = []
 
@@ -29,13 +30,18 @@ class PGLImageListViewModel: ObservableObject {
         isTransitionFilter = filter.isTransitionCategoryFilter()
         filterName = filter.descriptorDisplayName ?? "Filter"
 
-        filterParms = filter.imageAttributes().compactMap { attr -> ParmSection? in
+        let allImageAttrs = filter.imageAttributes()
+
+        filterParms = allImageAttrs.compactMap { attr -> ParmSection? in
             guard let list = attr.inputCollection, !list.isEmpty() else { return nil }
             let name = attr.attributeDisplayName ?? attr.attributeName ?? "Images"
-            return ParmSection(attributeName: name, imageList: list, assets: list.imageAssets
-//                               ,cachedImages: list.cachedImages
-            )
-//            return PGLStackItem
+            return ParmSection(attributeName: name, imageList: list, assets: list.imageAssets)
+        }
+
+        emptySourceDescriptions = allImageAttrs.compactMap { attr in
+            guard attr.inputCollection == nil || attr.inputCollection!.isEmpty() else { return nil }
+            guard let desc = attr.inputSourceDescription, !desc.isEmpty else { return nil }
+            return "From-> " + desc
         }
     }
 
@@ -355,14 +361,22 @@ struct PGLImageListOverlayView: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 16) {
             Spacer()
             Image(systemName: "photo.stack")
-                .font(.system(size: 44))
+                .font(.system(size: 72))
                 .foregroundColor(.white.opacity(0.4))
-            Text("Empty")
-                .font(.subheadline)
-                .foregroundColor(.white.opacity(0.6))
+            if viewModel.emptySourceDescriptions.isEmpty {
+                Text("Empty")
+                    .font(.title2)
+                    .foregroundColor(.white.opacity(0.6))
+            } else {
+                ForEach(viewModel.emptySourceDescriptions, id: \.self) { description in
+                    Text(description)
+                        .font(.title2)
+                        .foregroundColor(.white.opacity(0.6))
+                }
+            }
             Spacer()
         }
     }
