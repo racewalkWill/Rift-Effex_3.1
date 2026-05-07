@@ -52,14 +52,15 @@ class PGLImageListViewModel: ObservableObject {
     }
 
     func addAssets(in rowID: RowID, assets: [PGLAsset]) {
+       let cachingAssets = PGLAsset.runCacheLoad(assets)
         let parmId = rowID.sectionID
 
         guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
         if isTransitionFilter {
-            filterParms[parmIndex].add(assets: assets, afterRow: rowID.assetIndex)
+            filterParms[parmIndex].add(assets: cachingAssets, afterRow: rowID.assetIndex)
         } else {
             // remove the old asset and replace with the new selected image
-            filterParms[parmIndex].replace(assets: assets)
+            filterParms[parmIndex].replace(assets: cachingAssets)
         }
 
     }

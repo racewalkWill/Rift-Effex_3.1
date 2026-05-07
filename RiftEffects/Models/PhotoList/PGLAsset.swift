@@ -68,6 +68,23 @@ class PGLAsset: Hashable, Equatable, Identifiable {
         hasher.combine(localIdentifier)
     }
 
+    static  func runCacheLoad(_ pglAssetItems: [PGLAsset]) -> [PGLAsset] {
+            // start caching the assets ??
+        let itemsToCache = pglAssetItems
+            // The nonisolated(unsafe) annotation tells the compiler that items​To​Cache is safe to send across the concurrency boundary, which is true here since it's a freshly created local array that isn't accessed again after being captured by the Task.
+        NSLog("\(#function) start caching \(itemsToCache.count) assets")
+        let appStack = (UIApplication.shared.delegate as? AppDelegate)?.appStack
+        Task {
+            await appStack?.photoMgr.startCaching(for: itemsToCache, targetSize: TargetSize)
+            for item in itemsToCache {
+                NSLog("\(#function) startImageRequestTask for localIdentifer \(item.localIdentifier)")
+                item.startImageRequestTask()
+            }
+        }
+        return pglAssetItems
+    }
+
+
 
 // MARK: init
 
