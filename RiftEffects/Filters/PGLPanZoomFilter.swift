@@ -76,8 +76,8 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
         let defaultPoint = defaultCenterPoint()
         let defaultVector = CIVector(x: defaultPoint.x, y: defaultPoint.y)
         setVectorValue(newValue: defaultVector, keyName: kCIInputCenterKey)
-        zoomFactor = 1.40
-        panFactor = 1.15
+//        zoomFactor = 1.40
+//        panFactor = 1.15
     }
     // for the two parms
     // #setAnimationTimerDt
@@ -91,7 +91,7 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
         // reset value from the setAnimationTimerDt
         // varyTotalFrames was set by the lengthSeconds
         // just use a fixed rate of change either zoom out, in or none
-        let defaultZoomDivisor: Float = 5.0
+        let defaultZoomDivisor: Float = 4.0
 
         guard let scaleInputParm = attribute(nameKey: "inputScale")
             else    { return }
