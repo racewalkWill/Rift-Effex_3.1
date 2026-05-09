@@ -390,22 +390,18 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         let imageAsset = imageAssets[atIndex]
         answerImage = imageAsset.imageAtTargetSize()
 //        NSLog("\(String(describing:  answerImage)) answers for \(imageAsset.localIdentifier)")
-        if answerImage != nil {
-            return answerImage
-        }
-        else {
-            if imageAsset.isVideo() {
-                answerImage =  imageAsset.imageFrom()
-                if answerImage != nil {
-                    return scaleToFrame(ciImage: answerImage!, newSize: TargetSize)
-                }
-                else {
-                    return CIImage.empty()
-                        //                    return nil  // force a retry on the next loop
-                }
+
+        if imageAsset.isVideo() {
+            answerImage =  imageAsset.imageFrom()
+            if answerImage != nil {
+                return scaleToFrame(ciImage: answerImage!, newSize: TargetSize)
             }
-            return nil
+            else {
+                return CIImage.empty()
+                    //                    return nil  // force a retry on the next loop
+            }
         }
+         return answerImage // may be nil
     }
 
 
