@@ -53,6 +53,10 @@ class PGLTransitionFilter: PGLRectangleFilter {
         // see https://developer.apple.com/documentation/coreimage/customizing_image_transitions
 
 //       NSLog("PGLTransitionFilter #addFilterStepTime ")
+        for parm in animationAttributes {
+            parm.addAnimationStepTime()
+            }
+
         var nextAttribute: PGLFilterAttribute?
         var doIncrement = false
         if (transitionFilterStepTime >= 1.0)   {
@@ -90,7 +94,7 @@ class PGLTransitionFilter: PGLRectangleFilter {
         localFilter.setValue(inputTime, forKey: kCIInputTimeKey)
 
         /// call super for other vary attributes
-        
+        updateImageVideoFrames()
 
     }
     func setRandomTimerDt() {

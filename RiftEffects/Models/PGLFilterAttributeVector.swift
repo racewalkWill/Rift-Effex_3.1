@@ -136,8 +136,8 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         let maxY = TargetSize.height * (1.0 - insetFraction)
 
         // Maximum change is 50% of the dimension from startPoint
-        let maxChangeX = TargetSize.width * 0.5
-        let maxChangeY = TargetSize.height * 0.5
+        let maxChangeX = TargetSize.width * 0.8
+        let maxChangeY = TargetSize.height * 0.8
 
         // Intersect both constraints to get safe bounds
         let lowerX = max(minX, startPointX - maxChangeX)
@@ -251,7 +251,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
 
         if !hasAnimation() { return }  // animationTime is Float
 
-        if (varyStepCounter > varyTotalFrames) {
+        if (abs(varyStepCounter) > varyTotalFrames) {
             // || (varyStepCounter < 0) {
             // the (varyStepCounter < 0) is the wrong condition
             // where is the varyStepCounter going to -1 ?
