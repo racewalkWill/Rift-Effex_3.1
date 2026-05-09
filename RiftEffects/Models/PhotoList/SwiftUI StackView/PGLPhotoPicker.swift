@@ -20,8 +20,8 @@ struct PGLPhotoPicker: UIViewControllerRepresentable {
         
         // Configure the picker.
         var configuration = PHPickerConfiguration(photoLibrary: PHPhotoLibrary.shared())
-        // Limit to images.
-        configuration.filter = .images
+       
+//        configuration.filter = .images
         // Avoid transcoding, if possible.
         configuration.preferredAssetRepresentationMode = .current
         // assume only transition filters with multiple inputs are used
@@ -61,10 +61,10 @@ class Coordinator: NSObject, UINavigationControllerDelegate, PHPickerViewControl
         // Dismisss the presented picker.
         self.parent.dismiss()
         
-        guard
-            let result = results.first,
-            result.itemProvider.hasItemConformingToTypeIdentifier(UTType.image.identifier)
-        else { return }
+//        guard
+//            let result = results.first,
+//            result.itemProvider.hasItemConformingToTypeIdentifier(UTType.image.identifier)
+//        else { return }
 
         // insert the picked image(s) into the target image list
         // patterned on PGLImageListPicker #loadImageListFromPicker(..)
