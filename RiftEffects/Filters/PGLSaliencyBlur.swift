@@ -61,6 +61,7 @@ class PGLSaliencyBlurFilter: CIFilter {
         guard let input = inputImage else {
             return CIImage.empty()
         }
+//        NSLog(#function + "inputImage size: \(input.extent.width) x \(input.extent.height)")
         let requestHandler = VNImageRequestHandler(ciImage: input, options: [ : ]) // <#T##[VNImageOption : Any]#>
 
         let request = VNGenerateObjectnessBasedSaliencyImageRequest()
@@ -73,8 +74,11 @@ class PGLSaliencyBlurFilter: CIFilter {
             else { return CIImage.empty() } //VNSaliencyImageObservation
         guard let heatMask =  createHeatMapMask(from: observation) else { return CIImage.empty() }
 //        let fitScale =  min(inputImage!.extent.width / heatMask.extent.width, inputImage!.extent.height / heatMask.extent.height)
+//        NSLog(#function + "heat mask size: \(heatMask.extent.width) x \(heatMask.extent.height)")
         let scaleT = CGAffineTransform(scaleX: inputImage!.extent.width / heatMask.extent.width, y: inputImage!.extent.height / heatMask.extent.height)
+//        NSLog("scaleT: \(scaleT)")
        let scaledUpHeatMask =  heatMask.transformed(by: scaleT)
+//        NSLog("scaledUpHeatMask: \(scaledUpHeatMask)")
         return scaledUpHeatMask
 
     }
@@ -85,13 +89,17 @@ class PGLSaliencyBlurFilter: CIFilter {
 //        let opaqueGreen = CIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0 )
 //        let transparentGreen =  CIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 0.0 )
 
-        var blurredImage = CIFilter(name: "CIGaussianBlur", parameters: ["inputRadius": inputRadius, kCIInputImageKey: inputImage as Any])?.outputImage
-        blurredImage = blurredImage?.cropped(to: (inputImage?.extent)!)
+        let blurredImage = CIFilter(name: "CIGaussianBlur", parameters: ["inputRadius": inputRadius, kCIInputImageKey: inputImage as Any])?.outputImage
+//        blurredImage = blurredImage?.translateNegativeXY()
+//        blurredImage = blurredImage?.cropped(to: (inputImage?.extent)!)
+//        NSLog(#function + "blurredImage size: \(String(describing: blurredImage?.extent.width)) x \(String(describing: blurredImage?.extent.height))")
 
         // capture the saliency transformed to matching coordinates of inputImage
 
-        let maskImage = processSaliency() // of input
-
+        var maskImage = processSaliency() // of input
+//        maskImage = maskImage.translateNegativeXY()
+        maskImage = maskImage.cropped(to: (inputImage?.extent)!)
+//        NSLog(#function + "maskImage size: \(String(describing: maskImage.extent.width)) x \(String(describing: maskImage.extent.height))")
         let blendMask = CIFilter(name: "CIBlendWithMask" )
            blendMask?.setValue(blurredImage, forKey: kCIInputBackgroundImageKey)
            blendMask?.setValue(maskImage, forKey: kCIInputMaskImageKey)
@@ -99,7 +107,7 @@ class PGLSaliencyBlurFilter: CIFilter {
 
 
        let returnImage = blendMask?.outputImage
-
+//        NSLog(#function + "returnImage size: \(String(describing: returnImage?.extent.width)) x \(String(describing: returnImage?.extent.height))")
         return returnImage
 
     }
