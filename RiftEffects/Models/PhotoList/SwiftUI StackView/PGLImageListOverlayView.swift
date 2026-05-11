@@ -49,6 +49,14 @@ class PGLImageListViewModel: ObservableObject {
         guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
 
         filterParms[parmIndex].remove(at: imageListIndex)
+        if isTransitionFilter {
+            filterParms[parmIndex].assets.count <= 0 ? postTransitionFilterRemove() : ()
+            let newTotal = imageCountTotal()
+            if (newTotal >= 0 ) && (newTotal < 2) {
+                postTransitionFilterRemove()
+            }
+
+        }
     }
 
     func addAssets(in rowID: RowID, assets: [PGLAsset]) {
@@ -57,18 +65,41 @@ class PGLImageListViewModel: ObservableObject {
 
         guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
         if isTransitionFilter {
+            let oldTotal = imageCountTotal()
             filterParms[parmIndex].add(assets: cachingAssets, afterRow: rowID.assetIndex)
+           // postTransitionFilterAdd()  '
+            // postTransitionFilterAdd should already be posted from adding second image by regular UI
+            let newTotal = imageCountTotal()
+            if ((oldTotal == 0 || oldTotal == 1) && (newTotal >= 2)) {
+                postTransitionFilterAdd()
+            }
         } else {
             // remove the old asset and replace with the new selected image
             filterParms[parmIndex].replace(assets: cachingAssets)
         }
 
-    }
 
+    }
+    func imageCountTotal() -> Int {
+        // total number of input images
+       let totalCount = filterParms.reduce(0) { $0 + $1.imageList.imageAssets.count }
+        return totalCount
+
+    }
     func moveAsset(in parmId: UUID, from offsets: IndexSet, to destination: Int){
         guard let parmIndex = filterParms.firstIndex(where: { $0.id == parmId }) else { return }
 
         filterParms[parmIndex].move(fromOffsets: offsets, toOffset: destination)
+    }
+
+    func postTransitionFilterAdd() {
+        let updateNotification = Notification(name:PGLTransitionExists)
+        NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["transitionFilterAdd" : +1 ])
+    }
+
+    func postTransitionFilterRemove() {
+        let updateNotification = Notification(name:PGLTransitionExists)
+        NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["transitionFilterAdd" : -1 ])
     }
 
 }
