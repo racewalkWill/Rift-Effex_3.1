@@ -703,6 +703,9 @@ class PGLSelectParmController: PGLCommonController,
     }
 
     func getTappedAttribute(indexPath: IndexPath) -> PGLFilterAttribute? {
+        guard filterParms.indices.contains(indexPath.section),
+              filterParms[indexPath.section].indices.contains(indexPath.row)
+        else { return nil }
         return filterParms[indexPath.section][indexPath.row]
 
     }
