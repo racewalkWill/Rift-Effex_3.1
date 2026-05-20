@@ -402,11 +402,11 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
 
                     let theAppStack = myAppDelegate.appStack
 
-                   
-                    theAppStack.resetToTopStack(newStackId: stackId)
-
                     postStackChange()
                         // trigger the image controller to show the stack
+                    theAppStack.resetToTopStack(newStackId: stackId)
+
+
 
 
                 }

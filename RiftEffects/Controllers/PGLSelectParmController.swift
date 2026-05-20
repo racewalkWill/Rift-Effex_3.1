@@ -705,7 +705,10 @@ class PGLSelectParmController: PGLCommonController,
     func getTappedAttribute(indexPath: IndexPath) -> PGLFilterAttribute? {
         guard filterParms.indices.contains(indexPath.section),
               filterParms[indexPath.section].indices.contains(indexPath.row)
-        else { return nil }
+        else {
+            NSLog(#function + "ERROR indexPath.section: \(indexPath.section) or row: \(indexPath.row) out of range")
+//            fatalError("getTappedAttribute ERROR filterParms & indexPath do not match")
+            return nil }
         return filterParms[indexPath.section][indexPath.row]
 
     }
@@ -864,7 +867,8 @@ class PGLSelectParmController: PGLCommonController,
 
         NSLog("PGLSelectParmController # tableView(..didSelectRowAt tappedAttribute = \(String(describing: tappedAttribute!.attributeName))")
         // or use attributeDisplayName
-        if tappedAttribute == nil { return }
+        if tappedAttribute == nil {
+            return }
 //        if tappedAttribute!.inputParmType() == ImageParm.filter  {
 //            // confirm that user wants to break the connection to an input
 //            confirmReplaceFilterInput()

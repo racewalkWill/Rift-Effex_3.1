@@ -417,6 +417,7 @@ extension PGLLibraryController: UICollectionViewDelegate {
 //                dismiss(animated: true)
             }
             else {
+                postStackChange()
                 theAppStack.resetToTopStack(newStackId: stackId)
                 // do not dismiss  stay open if the user continues to pick
             }
