@@ -55,7 +55,9 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
     var stopVideoToken: (any NSObjectProtocol)?
 
     var imageOrientation = PGLDevicePosition()
-    lazy var videoPropertyOrientation =  propertyOrientation()
+    // Not lazy: imageOrientation is populated asynchronously from getVideoPreferredTransform
+    // after setup, so this must recompute on each access until the async result lands.
+    var videoPropertyOrientation: CGImagePropertyOrientation { propertyOrientation() }
 
     //MARK: Equatable, Hashable
     nonisolated static func == (lhs: PGLAssetVideoPlayer, rhs: PGLAssetVideoPlayer) -> Bool {
@@ -155,11 +157,15 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
 
         /// convert the UIDeviceOrientation to a CGImagePropertyOrientation
     func propertyOrientation()-> CGImagePropertyOrientation {
-        var result = CGImagePropertyOrientation.up
+        //var result = CGImagePropertyOrientation.up  wrong on the iPHone
+        var result = CGImagePropertyOrientation.right
             // default
         switch (imageOrientation.orientation, imageOrientation.device) {
             case (.unknown,.unspecified) :
-                result = CGImagePropertyOrientation.up
+                // imageOrientation is never set from the asset's preferredTransform,
+                // so this default path runs for every video. Use .right to match the
+                // typical iPhone portrait/back-camera capture so the video renders upright.
+                result = CGImagePropertyOrientation.right
 
             case (.portrait, .front) :
                 result = CGImagePropertyOrientation.right
@@ -194,6 +200,12 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
 
         if (avPlayerItem == nil)  {
             return
+        }
+
+        getVideoPreferredTransform { [weak self] devicePosition in
+            MainActor.assumeIsolated {
+                self?.imageOrientation = devicePosition
+            }
         }
         // && (progressResult >= 1.0)  {
         // callback handler will run again..
@@ -335,7 +347,8 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
                     if self?.videoPlayer?.status == .readyToPlay {
                             // one player may be starting while a current one is running
 
-                        self?.videoPlayer?.isMuted = false
+                        self?.videoPlayer?.isMuted = true
+                                // false
                         self?.videoPlayer?.play()
 //                        Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self.debugDescription) + " PLAYING") "))
                         self?.postVideoAdd()
