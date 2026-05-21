@@ -58,12 +58,10 @@ class PGLSelectParmController: PGLCommonController,
             // filterParms[sectionOther] = [PGLFilterAttribute]()
                 // other section is currently not used
 
-            if !(currentFilter === appStack.currentFilter)  {
-                // identity test not value compare
-                parmsListHasChanged()
-                    // this triggers setting of the current filter
-                    // into the appStack model
-            }
+            parmsListHasChanged()
+                // removed the currentFilter identity change check from version R79.20
+                // need to update the parmViews on navigation on second open of the same
+                // filter
 
         }
     }
