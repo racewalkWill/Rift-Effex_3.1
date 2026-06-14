@@ -20,30 +20,77 @@ class PGLTwoColumnSplitController: UIViewController {
     var publishers = [any Cancellable]()
     var cancellable: (any Cancellable)?
 
+    /// Constraints for the side-by-side (landscape) arrangement: control on the
+    /// left, wide image on the right. This is the original/current layout.
+    private var horizontalConstraints: [NSLayoutConstraint] = []
+
+    /// Constraints for the single-column (portrait) arrangement: image on top,
+    /// controls stacked below — used in portrait on iPhone.
+    private var verticalConstraints: [NSLayoutConstraint] = []
+
+    /// Portrait uses the single-column layout. Prefer the live interface
+    /// orientation; fall back to the view bounds before a window exists.
+    private var isPortraitLayout: Bool {
+        if let scene = view.window?.windowScene {
+            return scene.effectiveGeometry.interfaceOrientation.isPortrait
+        }
+        return view.bounds.height > view.bounds.width
+    }
+
     func layoutViews(_ imageView: UIView, _ controlView: UIView) {
             //        let spacer = -5.0
             // for iPad and iPhone Plus.. with three column split view
-        
-        let iPhoneCompact =  splitViewController?.isCollapsed ?? false
-        var imageWidthFactor: Double = 5/3
-        if iPhoneCompact {
-            imageWidthFactor = 5/3 // was 1.2
-        }
-            // imageWidthFactor adjustment needed for FilterImageContainerController?
-        
-        NSLayoutConstraint.activate([
+
+        // Remove any constraints from a prior layout pass before rebuilding.
+        // (FilterImageContainerController re-calls this in viewIsAppearing.)
+        NSLayoutConstraint.deactivate(horizontalConstraints + verticalConstraints)
+
+        let safeArea = view.safeAreaLayoutGuide
+        let imageWidthFactor: Double = 5/3
+
+        // Landscape: control on the left, wide image on the right (4:3-ish).
+        horizontalConstraints = [
             imageView.rightAnchor.constraint(equalTo: view.rightAnchor),
             imageView.topAnchor.constraint(equalTo: view.topAnchor),
             imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            imageView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: imageWidthFactor),
+            imageView.widthAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: imageWidthFactor),
             // width to height 4:3 ratio
             controlView.rightAnchor.constraint(equalTo: imageView.leftAnchor, constant:  -30.0),
-            //            stackContainerView.rightAnchor.constraint(lessThanOrEqualTo: imageContainerView.leftAnchor, constant: -20.0 ),
-            controlView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            controlView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            controlView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-            //            stackContainerView.widthAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 4/3)
-        ] )
+            controlView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            controlView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            controlView.leftAnchor.constraint(equalTo: safeArea.leftAnchor)
+        ]
+
+        // Portrait (iPhone): single column — image on top, controls below.
+        verticalConstraints = [
+            imageView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            imageView.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: 0.55),
+            controlView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8.0),
+            controlView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            controlView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            controlView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+        ]
+
+        NSLayoutConstraint.activate(isPortraitLayout ? verticalConstraints : horizontalConstraints)
+    }
+
+    /// Swap the active constraint set when the device rotates (iPhone portrait
+    /// ↔ landscape). Landscape keeps the original side-by-side layout.
+    override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        let toPortrait = size.height > size.width
+        let newConstraints = toPortrait ? verticalConstraints : horizontalConstraints
+        // Nothing to swap until the columns have been laid out at least once.
+        guard !newConstraints.isEmpty else { return }
+
+        NSLayoutConstraint.deactivate(horizontalConstraints + verticalConstraints)
+        NSLayoutConstraint.activate(newConstraints)
+        coordinator.animate(alongsideTransition: { _ in
+            self.view.layoutIfNeeded()
+        })
     }
 
     override func viewIsAppearing(_ animated: Bool) {

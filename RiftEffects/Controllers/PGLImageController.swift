@@ -1150,8 +1150,6 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         // end video
     }
 
-
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 

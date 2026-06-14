@@ -244,6 +244,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return myConfig
     }
 
+    // MARK: Orientation
+
+    /// iPhone supports landscape (the original side-by-side layout) plus portrait
+    /// (the single-column layout in PGLTwoColumnSplitController). iPad supports all
+    /// orientations.
+    func application(_ application: UIApplication,
+                     supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return .all
+        }
+        return [.landscapeLeft, .landscapeRight, .portrait]
+    }
+
     //MARK: standard lifecycle overrides
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
             //        NSLog("AppDelegate applicationDidReceiveMemoryWarning")
