@@ -170,7 +170,6 @@
 		A3BF513124D32A3400CD5114 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF50A924D32A3400CD5114 /* Renderer.swift */; };
 		A3BF513424D32A3400CD5114 /* PGLPhotoLists.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF50B124D32A3400CD5114 /* PGLPhotoLists.swift */; };
 		A3BF513624D32A3400CD5114 /* PGLAssetCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF50B324D32A3400CD5114 /* PGLAssetCollection.swift */; };
-		A3BF513724D32A3400CD5114 /* PGLDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF50B424D32A3400CD5114 /* PGLDiffableDataSource.swift */; };
 		A3BF513924D32A3400CD5114 /* PGLUserAssetSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF50B624D32A3400CD5114 /* PGLUserAssetSelection.swift */; };
 		A3BF513B24D32A3400CD5114 /* GridViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF50B824D32A3400CD5114 /* GridViewCell.swift */; };
 		A3BF514724D32A3400CD5114 /* PGLFilterCIAbstract.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF50C924D32A3400CD5114 /* PGLFilterCIAbstract.swift */; };
@@ -405,7 +404,6 @@
 		A3BF50A924D32A3400CD5114 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		A3BF50B124D32A3400CD5114 /* PGLPhotoLists.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLPhotoLists.swift; sourceTree = "<group>"; };
 		A3BF50B324D32A3400CD5114 /* PGLAssetCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLAssetCollection.swift; sourceTree = "<group>"; };
-		A3BF50B424D32A3400CD5114 /* PGLDiffableDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLDiffableDataSource.swift; sourceTree = "<group>"; };
 		A3BF50B624D32A3400CD5114 /* PGLUserAssetSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLUserAssetSelection.swift; sourceTree = "<group>"; };
 		A3BF50B824D32A3400CD5114 /* GridViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridViewCell.swift; sourceTree = "<group>"; };
 		A3BF50C924D32A3400CD5114 /* PGLFilterCIAbstract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLFilterCIAbstract.swift; sourceTree = "<group>"; };
@@ -845,7 +843,6 @@
 				A3249AAF25BC728D00F7FAC2 /* PGLDemo.swift */,
 				A3EC31C72DA96EAE00EBDF08 /* PGLGuide.swift */,
 				A3A5119A2CE39371006C010E /* PGLMenuLabel.swift */,
-				A3BF50B424D32A3400CD5114 /* PGLDiffableDataSource.swift */,
 				A3BF50B824D32A3400CD5114 /* GridViewCell.swift */,
 				A3BF507D24D32A3400CD5114 /* CIImage.swift */,
 				A32E1F072C4FE58E0069F27C /* CIVector.swift */,
@@ -969,7 +966,7 @@
 				BuildIndependentTargetsInParallel = YES;
 				CLASSPREFIX = PGL;
 				LastSwiftUpdateCheck = 1160;
-				LastUpgradeCheck = 2620;
+				LastUpgradeCheck = 2700;
 				ORGANIZATIONNAME = "Will Loew-Blosser";
 				TargetAttributes = {
 					A3BF500824D3298F00CD5114 = {
@@ -1099,7 +1096,6 @@
 				A3811BFF2DC56D7100A1A178 /* PGLDetectorFilter.swift in Sources */,
 				A3D04B142A8444A300E6DB16 /* PGLStackInfoHeader.swift in Sources */,
 				A36A10BB2F8199C800D082BC /* CDAttributeAffine+CoreDataProperties.swift in Sources */,
-				A3BF513724D32A3400CD5114 /* PGLDiffableDataSource.swift in Sources */,
 				A3BF50E724D32A3400CD5114 /* PGLMetalController.swift in Sources */,
 				A39193612F1AD223000B6F23 /* UndoSupport.swift in Sources */,
 				A3EC31C82DA96EBE00EBDF08 /* PGLGuide.swift in Sources */,
@@ -1315,7 +1311,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1382,13 +1378,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "RiftEffects/Metal Render/AAPLShaderTypes.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1405,7 +1400,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = RiftEffects/RiftEffects.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 85;
+				CURRENT_PROJECT_VERSION = 86;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEBUG_INFORMATION_VERSION = dwarf5;
@@ -1426,7 +1421,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 3.8;
+				MARKETING_VERSION = 4.0;
 				MTL_COMPILER_FLAGS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "L-BSoftwareArtist.Rift-Effex";
@@ -1462,7 +1457,7 @@
 				CODE_SIGN_ENTITLEMENTS = RiftEffects/RiftEffects.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 85;
+				CURRENT_PROJECT_VERSION = 86;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEBUG_INFORMATION_VERSION = dwarf5;
@@ -1484,13 +1479,12 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 3.8;
+				MARKETING_VERSION = 4.0;
 				MTL_COMPILER_FLAGS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "L-BSoftwareArtist.Rift-Effex";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				STRIP_INSTALLED_PRODUCT = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -1520,7 +1514,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				INFOPLIST_FILE = RiftEffects/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1528,8 +1522,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "L-BSoftwareArtist.RiftEffectsTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 2;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RiftEffects.app/RiftEffects";
 			};
 			name = Debug;
@@ -1541,7 +1535,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				INFOPLIST_FILE = RiftEffects/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1549,8 +1543,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "L-BSoftwareArtist.RiftEffectsTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 2;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RiftEffects.app/RiftEffects";
 			};
 			name = Release;
@@ -1561,7 +1555,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				INFOPLIST_FILE = RiftEfffectsUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1569,7 +1563,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "L-BSoftwareArtist.RiftEffectsUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = RiftEffects;
 			};
@@ -1581,7 +1575,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				INFOPLIST_FILE = RiftEfffectsUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1589,7 +1583,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "L-BSoftwareArtist.RiftEffectsUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = RiftEffects;
 			};
