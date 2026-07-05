@@ -264,7 +264,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             // preferredStatusBarStyle left to user action
 
         showSpinner() // if there is video save
-        self.appStack.saveStack(metalRender: self.metalController!.metalRender)
+        self.appStack.saveStack()
         saveToPhotoLibrary()
         self.incrementCountForAppReview()
         if appStack.runTimeSeconds == 0 {
@@ -276,9 +276,12 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func saveToPhotoLibrary() {
-        guard let myMetalController = self.metalController
-        else { return }
-        self.appStack.saveToPhotoLibrary(metalRender: myMetalController.metalRender)
+        // Use the single shared renderer on the appStack rather than reaching through
+        // this instance's metalController. The save is broadcast via NotificationCenter
+        // to every live PGLImageController, and a stale/off-screen instance may have a
+        // released metalController (metalRender == nil), which crashed here. appRenderer
+        // is the same object every metalController uses and is never nil.
+        self.appStack.saveToPhotoLibrary(metalRender: self.appStack.appRenderer)
     }
 
     func removeFiltersFromStack() {
@@ -1216,22 +1219,22 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
        publishers = [any Cancellable]()
     }
     
-    func viewDidDisappear(animated: Bool) {
-        appStack.isImageControllerOpen = false // selection of new image or image list is started
-        removeGestureRecogniziers()
-        releaseVars()
+//   override func viewDidDisappear(_ animated: Bool) {
+//        appStack.isImageControllerOpen = false // selection of new image or image list is started
+//        removeGestureRecogniziers()
+//        releaseVars()
 //        if traitCollection.userInterfaceIdiom == .phone {
 //            for aControlView in appStack.parmControls {
 //                aControlView.value.removeFromSuperview()
 //            }
 //        }
-        super.viewDidDisappear(animated)
+//        super.viewDidDisappear(animated)
+//
+//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
 
-        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
 
 
-
-    }
+//    }
 
         // MARK: RPPreviewViewControllerDelegate
     func previewControllerDidFinish(_ previewController: RPPreviewViewController) {

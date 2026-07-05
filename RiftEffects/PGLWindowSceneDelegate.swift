@@ -66,7 +66,7 @@
         }
 
         func windowScene(_ windowScene: UIWindowScene,
-                         didUpdate previousCoordinateSpace: UICoordinateSpace,
+                         didUpdate previousCoordinateSpace: any UICoordinateSpace,
                          interfaceOrientation previousInterfaceOrientation: UIInterfaceOrientation,
                          traitCollection previousTraitCollection: UITraitCollection) {
             guard let window = window else { return }

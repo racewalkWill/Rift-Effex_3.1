@@ -856,7 +856,8 @@ extension PGLAppStack {
 //        self.outputOrViewFilterStack().setToNewStack()
     }
 
-    func saveStack(metalRender: Renderer) {
+    func saveStack() {
+        // does not need the metalRender object to save
 
         DoNotDraw = true
         defer {
