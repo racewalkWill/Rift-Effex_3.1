@@ -255,6 +255,20 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func saveStack() {
+        // The save is broadcast via NotificationCenter to every live PGLImageController.
+        // Only the active (visible) controller should perform it, otherwise stale/off-screen
+        // instances also run the save (duplicate work, and previously a nil-metalRender crash).
+        // activeImageController is set in viewDidAppear(); if it is somehow unset, adopt self
+        // so a save still happens.
+        if appStack.activeImageController == nil {
+            appStack.activeImageController = self
+        }
+        guard self === appStack.activeImageController
+        else {
+            Logger(subsystem: LogSubsystem, category: LogNavigation).info("\(String(describing: self)) saveStack skipped - not the active image controller")
+            return
+        }
+
         if isLimitedPhotoLibAccess() {
             self.appStack.viewerStackOrPushedFirstStack()?.exportAlbumName = nil
         }
@@ -1157,6 +1171,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         super.viewDidAppear(animated)
 
          appStack.isImageControllerOpen = true
+         appStack.activeImageController = self // the visible controller is the save target
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
 //        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( self.appStack.parmControls)")
 //        if traitCollection.userInterfaceIdiom == .phone {

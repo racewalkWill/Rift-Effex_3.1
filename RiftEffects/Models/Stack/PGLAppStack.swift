@@ -162,6 +162,12 @@ class PGLAppStack {
         }
     }
 
+    /// The currently visible image controller. The save is broadcast via
+    /// NotificationCenter to every live PGLImageController, but only this one
+    /// should perform it. Set in PGLImageController.viewDidAppear(); weak so a
+    /// released/stale controller auto-nils rather than being saved to.
+    weak var activeImageController: PGLImageController?
+
     /// answer true if demoStack created in the viewerStack
     func createDemoStack(view: UIView) {
         // check if stacks exist.. if not then
