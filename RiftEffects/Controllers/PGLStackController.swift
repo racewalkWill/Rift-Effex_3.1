@@ -77,6 +77,13 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     override func viewDidLoad() {
         super.viewDidLoad()
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+
+        if #available(iOS 26.0, *) {
+            // Keep the top row crisp. The default soft scroll-edge effect blurs
+            // the first table row (the save-form "Title:" field) where it sits
+            // under the translucent navigation bar, dimming it vs. the Album row.
+            tableView.topEdgeEffect.isHidden = true
+        }
         guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
             else {
             Logger(subsystem: LogSubsystem, category: LogCategory).fault ("PGLStackController viewDidLoad fatalError(AppDelegate not loaded")
@@ -727,8 +734,15 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                     else {
                         fatalError("PGLStackController headerCell did not load")
                     }
+                    cell.selectionStyle = .none
+                        // header rows aren't navigable; suppress the blue selection
+                        // highlight that otherwise dims the Title label and text
                     cell.cellLabel.text = "Title:"
+                    cell.cellLabel.textColor = .secondaryLabel
+                        // match the Album cell contrast; avoids the faint/dimmed title look
                     cell.userText.text = myStack.stackName
+                    cell.userText.textColor = .label
+                    cell.userText.isEnabled = true
                     cell.userText.delegate = self
                     cell.userText.tag = StackHeaderCell.title.rawValue
                     cell.userText.returnKeyType = .done
@@ -740,6 +754,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                     else {
                         fatalError("PGLStackController headerCell did not load")
                     }
+                    cell.selectionStyle = .none
                     cell.cellLabel.text = "Album:"
                     cell.userText.text = myStack.stackType
                     cell.userText.delegate = self

@@ -208,11 +208,27 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
     func configureNavigationItem() {
            navigationItem.title = filterOpenTitle
            let editingItem = UIBarButtonItem(title: tableView.isEditing ? "Delete" : "Edit", style: .plain, target: self, action: #selector(toggleEditing))
-           navigationItem.rightBarButtonItems = [editingItem]
+           let sortItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(sortByDateCreated))
+           navigationItem.rightBarButtonItems = [editingItem, sortItem]
         // why does the systme displayMode show on the right of the edit button?
 
 //             navigationController?.setToolbarHidden(false, animated: false)
            }
+
+    @objc func sortByDateCreated() {
+        // Sort all stacks by date created (newest first) into a single
+        // un-sectioned list, mirroring the search query display.
+        guard let allStacks = dataProvider.fetchedStacks else { return }
+        let sortedStacks = allStacks.sorted {
+            ($0.created ?? Date.distantPast) > ($1.created ?? Date.distantPast)
+        }
+        var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(sortedStacks)
+        dataSource.showHeaderText = false
+            // single list.. omit section header titles
+        dataSource.apply(snapshot, animatingDifferences: true)
+    }
 
     @objc func toggleEditing() {
 
