@@ -199,7 +199,10 @@ class PGLMainFilterController:  UIViewController,
                 return
         }
         appStack = myAppDelegate.appStack
-        stackData = { self.appStack.viewerStack }
+        // [weak self]: stackData is a stored closure property, so `{ self... }`
+        // would retain-cycle (self -> stackData -> closure -> self) and leak this
+        // controller. releaseNotifications() does not reset it, so it must be weak.
+        stackData = { [weak self] in self?.appStack.viewerStack }
         // closure is evaluated when referenced
 //        navigationItem.title = "Effex" //thisStack.stackName
 
@@ -298,11 +301,9 @@ class PGLMainFilterController:  UIViewController,
         if let selectedFilter = descriptor.pglSourceFilter() {
             performBasicPick(filter: selectedFilter)
 
-            undoManager?.registerUndo(withTarget: self ) {
-                target in
-                target.undoAddFilter(selectedFilter)
-            }
-            undoManager?.setActionName("Add Filter")
+            // Registers on the persistent appStack (see extension PGLAppStack) so
+            // the shared undo manager does not retain this controller.
+            appStack.registerUndoAddFilter(selectedFilter)
         }
     }
 
@@ -635,7 +636,8 @@ extension PGLMainFilterController {
             cell.contentConfiguration = content
             let disclosureOptions = UICellAccessory.outlineDisclosure(
                 displayed: .always,
-                options: UICellAccessory.OutlineDisclosureOptions() ) {
+                options: UICellAccessory.OutlineDisclosureOptions() ) { [weak self] in
+                    guard let self else { return }
                     if (indexPath.section == Header.AllFilter.rawValue) && (indexPath.row == 0) {
                         /// flip FilterNavigatorMode to opposite
                         if self.mode == FilterNavigatorMode.Grouped {
@@ -669,8 +671,11 @@ extension PGLMainFilterController {
             cell.accessories = [.outlineDisclosure(options: disclosureOptions)]
         }
 
+        // [weak self]: dataSource is a stored property and this provider closure is
+        // held by it, so capturing self strongly cycles (self -> dataSource ->
+        // provider closure -> self) and leaks this controller.
         dataSource = UICollectionViewDiffableDataSource<Int, Item>(collectionView: filterCollectionView) {
-            (collectionView: UICollectionView, indexPath: IndexPath, item: Item) -> UICollectionViewCell? in
+            [weak self] (collectionView: UICollectionView, indexPath: IndexPath, item: Item) -> UICollectionViewCell? in
             var guideStepSelected = false
             if indexPath.row == 0 {
                 if indexPath.section == Header.AllFilter.rawValue {
@@ -684,7 +689,7 @@ extension PGLMainFilterController {
                          let thisStep = PGLGuideStep(controller: "PGLMainFilterController", filter: item.title!, parmName: nil)
                         if let guide = PGLGuide.Steps.contains(thisStep) {
                             guideStepSelected = true
-                            self.guideStepIndex = indexPath
+                            self?.guideStepIndex = indexPath
                             var content = UIListContentConfiguration.extraProminentInsetGroupedHeader()
                             content.text = item.title!
                                 // Configure content.
@@ -708,7 +713,7 @@ extension PGLMainFilterController {
                     let thisStep = PGLGuideStep(controller: "PGLMainFilterController", filter: item.descriptor?.filterName, parmName: nil)
                     if let guide = PGLGuide.Steps.contains(thisStep) {
                         guideStepSelected = true
-                        self.guideStepIndex = indexPath
+                        self?.guideStepIndex = indexPath
                         var content = theFilterCell.defaultContentConfiguration()
                         content.image = UIImage(systemName: guide.label)
                         content.text = item.title!

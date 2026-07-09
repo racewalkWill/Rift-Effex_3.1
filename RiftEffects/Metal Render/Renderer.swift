@@ -304,7 +304,9 @@ class Renderer: NSObject, MTKViewDelegate {
     convenience init(globalAppStack: PGLAppStack) {
         self.init()
         appStack = globalAppStack
-        filterStack = { self.appStack.outputOrViewFilterStack() }
+        // [weak self]: filterStack is a stored closure property; `{ self... }` would
+        // retain-cycle (self -> filterStack -> closure -> self) and leak the renderer.
+        filterStack = { [weak self] in self?.appStack.outputOrViewFilterStack() }
         needsRedraw.appStackVideoMgr = appStack.videoMgr
     }
 

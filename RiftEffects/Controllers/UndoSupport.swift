@@ -19,168 +19,157 @@
 import UIKit
 
 extension PGLStackController {
-    // may have memory capture problems with the method vars passed into the blocks
-    // currentStack and currentActiveIndex are passed to the undo blocks
-
+    // Thin wrapper: the undo is registered on the persistent appStack so the
+    // shared undo manager does not retain this controller. See extension PGLAppStack.
     func registerUndoRemoveFilter(_ removedCell: PGLFilterIndent ) {
-            // need to store this filter and stack position for the undo of the add
-
-//        let currentStack = appStack.getViewerStack()
-//        let currentActiveIndex = currentStack.activeFilterIndex
-
-        if let myUndoManager = undoManager {
-            myUndoManager.registerUndo(withTarget: self) { [weak self] _ in
-                guard let self = self else { return }
-                self.undoRemoveFilterFromStack(removedCell: removedCell)
-            }
-            myUndoManager.setActionName("Delete Filter")
-
-        }
-        UIMenuSystem.main.setNeedsRevalidate()
+        appStack.registerUndoRemoveFilter(removedCell)
     }
-
-
-    func undoRemoveFilterFromStack(removedCell: PGLFilterIndent ) {
-
-        appStack.restore(removedCell)
-        updateDisplay()
-        let flatCells = appStack.flatCellFilters
-        guard let flatArrayPosition = flatCells.firstIndex(where: { $0.stack == removedCell.stack && $0.filter.stackPosition == removedCell.filter.stackPosition && $0.filter.filterName == removedCell.filter.filterName })
-            else {
-                return }
-
-        if let myUndoManager = undoManager {
-            myUndoManager.registerUndo(withTarget: self) { [weak self] _ in
-                    //                self.appStack.setFilterChangeModeToAdd()
-                // reset the viewerStack and index
-                let newIndex = IndexPath(row: flatArrayPosition, section: StackSections.filters.rawValue)
-                self?.removeFilter(indexPath: newIndex)
-            }
-            myUndoManager.setActionName("Delete Filter")
-            UIMenuSystem.main.setNeedsRevalidate()
-        }
-    }
-
-
 }
 
 extension PGLMainFilterController {
-
+    // Thin wrapper — registers the undo on the persistent appStack (no controller retention).
     func registerUndoAddFilter(_ newFilter: PGLSourceFilter) {
-        undoManager?.registerUndo(withTarget: self ) { [weak self] _ in
-            guard let self = self else { return }
-            self.undoAddFilter(newFilter)
-        }
-        undoManager?.setActionName("Add Filter")
-        UIMenuSystem.main.setNeedsRevalidate()
+        appStack.registerUndoAddFilter(newFilter)
     }
-
-    func undoAddFilter(_ oldFilter: PGLSourceFilter) {
-        // tell stackController
-
-        appStack.viewerStack.undoAddFilter(oldFilter: oldFilter)
-        undoManager?.registerUndo(withTarget: self ) { [weak self] _ in
-            guard let self = self else { return }
-            self.appStack.setFilterChangeModeToAdd()
-                // the addfilter set the mode to replace..
-                // just add back not replace
-
-            self.performBasicPick(filter: oldFilter)
-
-        }
-//        NSLog(#function + " \(String(describing: undoManager))" )
-        undoManager?.setActionName("Add Filter")
-    }
-
 }
 
 extension PGLSelectParmController {
-
-
+    // Thin wrapper: registers the image-change undo on the persistent appStack so
+    // this controller is not retained by the shared undo manager. The iPhone guard
+    // is kept here (registration-time) to preserve prior behavior and avoid the
+    // iOS26.3 cast crash noted below.
     func registerUndoImageChange(imageAttribute: PGLFilterAttributeImage,
                                  oldImageList: PGLImageList) {
-
-
         if (traitCollection.userInterfaceIdiom == .phone){
             // in iOS26.3 there is a crash on the iPhone
-            // ERROR Could not cast value of type 'AGXG16GFamilyComputeProgram' (0x1157133d8) to 'RiftEffects.PGLSelectParmController' (0x10264c490).
+            // ERROR Could not cast value of type 'AGXG16GFamilyComputeProgram' to 'RiftEffects.PGLSelectParmController'.
             // iPad is okay - possible Apple iOS bug
             return
         }
-
-        if oldImageList.isEmpty() {
-            return // nothing to revert to
-        }
-        undoManager?.registerUndo(withTarget: self ) { [weak self] _ in
-            guard let self = self else { return }
-            self.undoImageChange(imageAttribute: imageAttribute,
-                                 oldImageList: oldImageList)
-        }
-        undoManager?.setActionName("Change Image")
-        UIMenuSystem.main.setNeedsRevalidate()
-    }
-
-    func undoImageChange(imageAttribute: PGLFilterAttributeImage,
-                         oldImageList: PGLImageList) {
-
-        if (traitCollection.userInterfaceIdiom == .phone){
-            // in iOS26.3 there is a crash on the iPhone
-            // ERROR Could not cast value of type 'AGXG16GFamilyComputeProgram' (0x1157133d8) to 'RiftEffects.PGLSelectParmController' (0x10264c490).
-            // iPad is okay - possible Apple iOS bug
-            return
-        }
-
-        if imageAttribute.inputParmType() == .inputChildStack {
-            return  // needs work
-            // restore a child stack
-            // appStack.addChildStackBasic(childStack: imageAttribute.inputStack!
-        } else {
-            // restore the imageList
-            // imageAttribute.inputParmType() == .inputPhoto
-            if let existingImageList = imageAttribute.inputCollection {
-                    // case of inputStack and input priorfilter
-                registerRedoImageChange(
-                    imageAttribute: imageAttribute,
-                    oldImageList: existingImageList)
-
-                let targetFilter = imageAttribute.aSourceFilter
-                targetFilter.setUserPick(attribute: imageAttribute,
-                                         imageList: oldImageList)
-                    // some filter classes override setUserPick
-        }
-
-        updateAfterImagePick(imageAttribute)
-
-        }
-
-    }
-
-    func registerRedoImageChange(imageAttribute: PGLFilterAttributeImage,
-                                 oldImageList: PGLImageList) {
-
-        if (traitCollection.userInterfaceIdiom == .phone){
-            // in iOS26.3 there is a crash on the iPhone
-            // ERROR Could not cast value of type 'AGXG16GFamilyComputeProgram' (0x1157133d8) to 'RiftEffects.PGLSelectParmController' (0x10264c490).
-            // iPad is okay - possible Apple iOS bug
-            return
-        }
-
-        if oldImageList.isEmpty() {
-            return
-        }
-        undoManager?.registerUndo(withTarget: self ) { [weak self] _ in
-            guard let self = self else { return }
-            self.undoImageChange(imageAttribute: imageAttribute,
-                                 oldImageList: oldImageList)
-        }
-        undoManager?.setActionName("Change Image")
-        UIMenuSystem.main.setNeedsRevalidate()
+        appStack.registerUndoImageChange(imageAttribute: imageAttribute, oldImageList: oldImageList)
     }
 }
 
 
 
 extension PGLAppStack {
+
+    // MARK: - Undo (retargeted to the persistent appStack)
+    // These register on the app-lifetime appStackUndoManager with
+    // `withTarget: self` (the persistent PGLAppStack) so the transient view
+    // controllers are NOT retained by the undo stack. NSUndoManager retains its
+    // target strongly, which previously pinned every controller that registered
+    // an undo. UI refresh now happens through the existing NotificationCenter
+    // posts that the on-screen controllers already observe.
+
+    // Delete Filter ------------------------------------------------------------
+    func registerUndoRemoveFilter(_ removedCell: PGLFilterIndent) {
+        appStackUndoManager.registerUndo(withTarget: self) { appStack in
+            appStack.undoRemoveFilter(removedCell)
+        }
+        appStackUndoManager.setActionName("Delete Filter")
+        UIMenuSystem.main.setNeedsRevalidate()
+    }
+
+    func undoRemoveFilter(_ removedCell: PGLFilterIndent) {
+        // undo of a delete restores the removed filter
+        restore(removedCell)
+        postStackChange()
+
+        let flatCells = flatCellFilters
+        guard let flatArrayPosition = flatCells.firstIndex(where: {
+            $0.stack == removedCell.stack
+            && $0.filter.stackPosition == removedCell.filter.stackPosition
+            && $0.filter.filterName == removedCell.filter.filterName })
+            else { return }
+        appStackUndoManager.registerUndo(withTarget: self) { appStack in
+            appStack.redoRemoveFilter(at: flatArrayPosition)
+        }
+        appStackUndoManager.setActionName("Delete Filter")
+        UIMenuSystem.main.setNeedsRevalidate()
+    }
+
+    func redoRemoveFilter(at flatArrayPosition: Int) {
+        // redo of a delete removes the filter again — the model half of
+        // PGLStackController.removeFilter(indexPath:); UI refresh via postStackChange.
+        let flatCells = flatCellFilters
+        guard flatArrayPosition < flatCells.count else { return }
+        let cellIndent = flatCells[flatArrayPosition]
+        _ = moveTo(filterIndent: cellIndent)
+        _ = cellIndent.stack.removeFilter(position: cellIndent.filterPosition)
+        registerUndoRemoveFilter(cellIndent)
+        resetViewStack()
+        postStackChange()
+        if showFilterImage { postSelectActiveStackRow() }
+    }
+
+    // Add Filter ---------------------------------------------------------------
+    func registerUndoAddFilter(_ newFilter: PGLSourceFilter) {
+        appStackUndoManager.registerUndo(withTarget: self) { appStack in
+            appStack.undoAddFilter(oldFilter: newFilter)
+        }
+        appStackUndoManager.setActionName("Add Filter")
+        UIMenuSystem.main.setNeedsRevalidate()
+    }
+
+    func undoAddFilter(oldFilter: PGLSourceFilter) {
+        // undo of an add removes the just-added filter.
+        // viewerStack.undoAddFilter posts PGLCurrentFilterChange (render only), so
+        // also postStackChange() to refresh the stack table.
+        viewerStack.undoAddFilter(oldFilter: oldFilter)
+        postStackChange()
+        appStackUndoManager.registerUndo(withTarget: self) { appStack in
+            appStack.redoAddFilter(oldFilter)
+        }
+        appStackUndoManager.setActionName("Add Filter")
+        UIMenuSystem.main.setNeedsRevalidate()
+    }
+
+    func redoAddFilter(_ filter: PGLSourceFilter) {
+        // redo of an add re-adds the filter — the model half of
+        // PGLMainFilterController.performBasicPick(filter:).
+        setFilterChangeModeToAdd()
+        viewerStack.performFilterPick(selectedFilter: filter)
+        filter.addChildSequenceStack(appStack: self)
+        resetCellFilters()
+        postStackChange()
+        registerUndoAddFilter(filter)
+    }
+
+    // Change Image -------------------------------------------------------------
+    func registerUndoImageChange(imageAttribute: PGLFilterAttributeImage, oldImageList: PGLImageList) {
+        if oldImageList.isEmpty() { return } // nothing to revert to
+        appStackUndoManager.registerUndo(withTarget: self) { appStack in
+            appStack.undoImageChange(imageAttribute: imageAttribute, oldImageList: oldImageList)
+        }
+        appStackUndoManager.setActionName("Change Image")
+        UIMenuSystem.main.setNeedsRevalidate()
+    }
+
+    func undoImageChange(imageAttribute: PGLFilterAttributeImage, oldImageList: PGLImageList) {
+        if imageAttribute.inputParmType() == .inputChildStack {
+            return // child-stack restore not supported (matches prior behavior)
+        }
+        if let existingImageList = imageAttribute.inputCollection {
+            registerRedoImageChange(imageAttribute: imageAttribute, oldImageList: existingImageList)
+            let targetFilter = imageAttribute.aSourceFilter
+            targetFilter.setUserPick(attribute: imageAttribute, imageList: oldImageList)
+        }
+        // UI refresh (was PGLSelectParmController.updateAfterImagePick):
+        // reload the parm table and redraw the render surface.
+        NotificationCenter.default.post(name: PGLReloadParmTableView, object: nil)
+        postFilterChangeRedraw()
+    }
+
+    func registerRedoImageChange(imageAttribute: PGLFilterAttributeImage, oldImageList: PGLImageList) {
+        if oldImageList.isEmpty() { return }
+        appStackUndoManager.registerUndo(withTarget: self) { appStack in
+            appStack.undoImageChange(imageAttribute: imageAttribute, oldImageList: oldImageList)
+        }
+        appStackUndoManager.setActionName("Change Image")
+        UIMenuSystem.main.setNeedsRevalidate()
+    }
+
     func restore( _ removedCell: PGLFilterIndent ) {
         // filter indent has filter, stack and filterPosition vars
 

@@ -124,11 +124,12 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     var taggedSliders = [Int:UISlider]()
 
-        //    deinit {
-        //        releaseVars()
-        //        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
-        //
-        //    }
+    deinit {
+        // Option 3: confirms off-screen / popped instances are actually released.
+        // AnyCancellable subscriptions and the metal controller are torn down by
+        // ARC as this instance deallocates; no MainActor work is done here.
+        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).info("\( String(describing: self) + " - deinit" )")
+    }
 
     @IBOutlet weak var templateBtn: UIBarButtonItem!
     @IBOutlet weak var helpBtn: UIBarButtonItem!
@@ -625,6 +626,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Subscribe only while on-screen (see viewDidDisappear for the matching
+        // unsubscribe). registerImageControllerNotifications() clears any prior
+        // subscriptions first, so this is safe to call on every appearance.
+        registerImageControllerNotifications()
         if metalController === nil {
             loadMetalController()
         }
@@ -831,8 +836,9 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func setMoreBtnMenu() {
 
-        let libraryMenu = UIAction.init(title: PGLMenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
+        let libraryMenu = UIAction.init(title: PGLMenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) { [weak self]
             action in
+            guard let self else { return }
             self.openStackActionBtn(self.moreBtn)
         }
 
@@ -851,21 +857,25 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let contextMenu = UIMenu(title: "",
          children: [ libraryMenu ,
 
-         UIAction(title: PGLMenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) {
+         UIAction(title: PGLMenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) { [weak self]
            action in
+           guard let self else { return }
            self.saveStackActionBtn(self.moreBtn)
        },
-         UIAction(title: PGLMenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
+         UIAction(title: PGLMenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) { [weak self]
             action in
+            guard let self else { return }
             self.recordButtonTapped(controllerRecordBtn: self.recordBtn)
         },
-         UIAction(title: PGLMenuLabel.Music.rawValue, image:UIImage(systemName: "music.note.list")) {
+         UIAction(title: PGLMenuLabel.Music.rawValue, image:UIImage(systemName: "music.note.list")) { [weak self]
             action in
+            guard let self else { return }
             self.musicButtonTapped(controllerMusicBtn: self.moreBtn)
         } ,
                      // use this menu command on the iPad to work on the optimize stack debugging
-         UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) {
+         UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) { [weak self]
             action in
+            guard let self else { return }
             self.optimizeStack(controllerMusicBtn: self.moreBtn)
         }
             ] )
@@ -874,8 +884,9 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func setHelpBtnMenu() {
 
-        let helpMenu = UIAction.init(title: PGLMenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) {
+        let helpMenu = UIAction.init(title: PGLMenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) { [weak self]
             action in
+                guard let self else { return }
                 self.helpBtnAction(self.helpBtn)
 
         }
@@ -884,8 +895,9 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let contextMenu = UIMenu(title: "",
                                  children: [ helpMenu ,
 
-          UIAction(title: PGLMenuLabel.Privacy.rawValue , image:UIImage(systemName: "info.circle")) {
+          UIAction(title: PGLMenuLabel.Privacy.rawValue , image:UIImage(systemName: "info.circle")) { [weak self]
             action in
+            guard let self else { return }
             self.displayPrivacyPolicy(self.helpBtn)
         }
             ] )
@@ -900,6 +912,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     // MARK: Notifications
     fileprivate func registerImageControllerNotifications() {
         let myCenter =  NotificationCenter.default
+
+        // Called on every viewWillAppear — drop any prior subscriptions so we
+        // never end up double-subscribed for the same notification.
+        releaseNotifications()
 
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         
@@ -1124,10 +1140,15 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 //      view has been typed as MTKView in the PGLView subclass
 //        and the view assigned in the setter of effectView var
 
-        filterStack = { self.appStack.outputOrViewFilterStack() }
+        // [weak self]: filterStack is a stored closure property, so `{ self... }`
+        // is a retain cycle (self -> filterStack -> closure -> self). releaseVars()
+        // resets it, but instances that never hit releaseVars would leak otherwise.
+        filterStack = { [weak self] in self?.appStack.outputOrViewFilterStack() }
 
         loadMetalController()
-        registerImageControllerNotifications()
+        // Notifications are registered in viewWillAppear and cancelled in
+        // viewDidDisappear so that only the on-screen image controller responds
+        // to NotificationCenter broadcasts. Off-screen instances stay silent.
 
 
 
@@ -1234,22 +1255,18 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
        publishers = [any Cancellable]()
     }
     
-//   override func viewDidDisappear(_ animated: Bool) {
-//        appStack.isImageControllerOpen = false // selection of new image or image list is started
-//        removeGestureRecogniziers()
-//        releaseVars()
-//        if traitCollection.userInterfaceIdiom == .phone {
-//            for aControlView in appStack.parmControls {
-//                aControlView.value.removeFromSuperview()
-//            }
-//        }
-//        super.viewDidDisappear(animated)
-//
-//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        appStack.isImageControllerOpen = false // selection of new image or image list is started
 
+        // Option 2: unsubscribe while off-screen so NotificationCenter broadcasts
+        // are not delivered to a controller the user cannot see. viewWillAppear
+        // re-registers when this controller becomes visible again.
+        releaseNotifications()
+        removeGestureRecogniziers()
 
-
-//    }
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+    }
 
         // MARK: RPPreviewViewControllerDelegate
     func previewControllerDidFinish(_ previewController: RPPreviewViewController) {

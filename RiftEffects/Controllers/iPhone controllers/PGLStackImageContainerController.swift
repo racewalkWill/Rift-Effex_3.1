@@ -237,10 +237,14 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
         if traitCollection.userInterfaceIdiom == .phone {
             musicItemState = UIMenuElement.Attributes.hidden
         }
-        guard let imageViewerController = imageController()
+        guard imageController() != nil
             else { return }
-        let libraryMenu = UIAction.init(title: PGLMenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) {
+        // [weak self] + re-fetch imageController() inside each handler. Capturing
+        // self or the image controller strongly here leaks both (self -> moreBtn.menu
+        // -> UIAction -> closure -> self is a retain cycle).
+        let libraryMenu = UIAction.init(title: PGLMenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) { [weak self]
             action in
+           guard let self, let imageViewerController = self.imageController() else { return }
            imageViewerController.openStackActionBtn(self.moreBtn)
 
         }
@@ -258,26 +262,30 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
         let contextMenu = UIMenu(title: "",
                                  children: [ libraryMenu
                                              ,
-         UIAction(title: PGLMenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) {
+         UIAction(title: PGLMenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) { [weak self]
             action in
                 // self.saveStackAlert(self.moreBtn)
+            guard let self, let imageViewerController = self.imageController() else { return }
             imageViewerController.saveStackActionBtn(self.moreBtn)
         },
 
 
-         UIAction(title: PGLMenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) {
+         UIAction(title: PGLMenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) { [weak self]
             action in
+            guard let self, let imageViewerController = self.imageController() else { return }
             imageViewerController.recordButtonTapped(controllerRecordBtn: self.moreBtn)
 
         },
 
-         UIAction(title: PGLMenuLabel.Music.rawValue, image:UIImage(systemName: "music.note.list"),attributes: (musicItemState)) {
+         UIAction(title: PGLMenuLabel.Music.rawValue, image:UIImage(systemName: "music.note.list"),attributes: (musicItemState)) { [weak self]
             action in
+            guard let self, let imageViewerController = self.imageController() else { return }
             imageViewerController.musicButtonTapped(controllerMusicBtn: self.moreBtn)
 
         } ,
-          UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) {
+          UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) { [weak self]
              action in
+            guard let self, let imageViewerController = self.imageController() else { return }
             imageViewerController.optimizeStack(controllerMusicBtn: self.moreBtn)
          }
         ])
@@ -286,12 +294,14 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
     @IBOutlet weak var helpBtn: UIBarButtonItem!
     
     func setHelpBtnMenu() {
-        guard let imageViewerController = imageController()
+        guard imageController() != nil
             else { return }
 
+        // Re-fetch the image controller inside the handler (weakly) — capturing it
+        // strongly here would keep it (and this container) alive via helpBtn.menu.
         let helpMenu = UIAction.init(title: PGLMenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) { [weak self]
             action in
-            guard let theHelpBtn = self?.helpBtn else { return }
+            guard let self, let imageViewerController = self.imageController(), let theHelpBtn = self.helpBtn else { return }
             imageViewerController.helpBtnAction(theHelpBtn)
 
         }
@@ -300,7 +310,7 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
                                  children: [ helpMenu ,
             UIAction(title: PGLMenuLabel.Privacy.rawValue, image:UIImage(systemName: "info.circle")) { [weak self]
             action in
-            guard let theHelpBtn = self?.helpBtn else { return }
+            guard let self, let imageViewerController = self.imageController(), let theHelpBtn = self.helpBtn else { return }
             imageViewerController.displayPrivacyPolicy(theHelpBtn)
         }
             ] )
@@ -308,17 +318,22 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
     }
 
     func setTemplateBtnMenu() {
-        guard let imageViewerController = imageController()
+        guard imageController() != nil
             else { return }
         let imageName = "photo.stack"
+        // The uncached provider re-runs each time the menu opens, so it re-fetches
+        // the image controller (weakly) instead of capturing it strongly — a strong
+        // capture here would keep it alive for the life of templateBtn.menu.
         let contextMenu = UIMenu(title: "",
                                  children: [
                                     UIDeferredMenuElement.uncached { [weak self] completion in
+                                        guard let self, let imageViewerController = self.imageController()
+                                            else { completion([]); return }
                                         let actions = [
                                             UIAction.init(title: PGLMenuLabel.random.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
-                                                [weak self ]
+                                                [weak imageViewerController]
                                                 action in
-                                                guard self != nil else { return }
+                                                guard let imageViewerController else { return }
                                                 imageViewerController.templateBtnAction(imageViewerController.templateBtn)
                                             } ,
                                             UIAction(title: PGLMenuLabel.Guide.rawValue , image: UIImage(systemName: "hourglass"), state: PGLDemo.GuideMode == true ? .on : .off, handler: { (action) in
@@ -327,40 +342,40 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
                                                 NotificationCenter.default.post(stackNotification)
                                                         }),
                                             UIAction(title: PGLMenuLabel.Blend.rawValue, image:UIImage(systemName: imageName)) {
-                                                [weak self ]
+                                                [weak imageViewerController]
                                                 action in
-                                                guard self != nil else { return }
+                                                guard let imageViewerController else { return }
                                                 let demoGenerator = PGLDemo()
                                                 demoGenerator.iPhoneCompact = false  // now on the iPad
                                                 demoGenerator.blendTemplate(appStack: imageViewerController.appStack)
                                             },
                                             UIAction(title: PGLMenuLabel.Sequence.rawValue, image:UIImage(systemName: imageName)) {
-                                                [weak self ]
+                                                [weak imageViewerController]
                                                 action in
-                                                guard self != nil else { return }
+                                                guard let imageViewerController else { return }
                                                 imageViewerController.loadDemoStack(imageViewerController.templateBtn)
                                             },
                                             UIAction(title: PGLMenuLabel.Edge.rawValue, image:UIImage(systemName: imageName)) {
-                                                [weak self ]
+                                                [weak imageViewerController]
                                                 action in
-                                                guard self != nil else { return }
+                                                guard let imageViewerController else { return }
                                                 let demoGenerator = PGLDemo()
                                                 demoGenerator.edgeTemplate(appStack: imageViewerController.appStack)
                                             },
 
                                             // place holder - change to demo methods
                                             UIAction(title: PGLMenuLabel.Tone.rawValue, image:UIImage(systemName: imageName)) {
-                                                [weak self ]
+                                                [weak imageViewerController]
                                                 action in
-                                                guard self != nil else { return }
+                                                guard let imageViewerController else { return }
                                                 let demoGenerator = PGLDemo()
                                                 demoGenerator.toneTemplate(appStack: imageViewerController.appStack)
                                             },
                                             // place holder - change to demo methods
                                             UIAction(title: PGLMenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: imageName)) {
-                                                [weak self ]
+                                                [weak imageViewerController]
                                                 action in
-                                                guard self != nil else { return }
+                                                guard let imageViewerController else { return }
                                                 let demoGenerator = PGLDemo()
                                                 demoGenerator.iPhoneCompact = false  // now on the iPad
                                                 demoGenerator.kaleidoscopeTemplate(appStack: imageViewerController.appStack)
@@ -381,17 +396,21 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
         guard let imageViewerController = imageController()
             else { return nil }
 
+        // All handlers below weak-capture self / the image controller. This menu
+        // is stored on editBtn.menu for the life of the container, so a strong
+        // capture would leak the container and its image controller.
         let copyAction = UIAction(
             title: PGLMenuLabel.Copy.rawValue,
             image: UIImage(systemName: "Copy"),
             identifier: PGLImageController.EditMenuIdentifier,
             discoverabilityTitle: PGLMenuLabel.Copy.rawValue,
             attributes: []
-        ) { action in
+        ) { [weak imageViewerController] action in
+            guard let imageViewerController else { return }
             imageViewerController.copy(imageViewerController.editButtonItem)
         }
 
-        let pasteAction = UIDeferredMenuElement({ completion in
+        let pasteAction = UIDeferredMenuElement({ [weak imageViewerController] completion in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 let hasClipBoardImage = UIPasteboard.general.hasImages
                 let pasteAttribute: UIMenuElement.Attributes = hasClipBoardImage ? [] : [.disabled]
@@ -400,7 +419,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
                     title: PGLMenuLabel.Paste.rawValue,
                     image: UIImage(systemName: "Paste"),
                     attributes: pasteAttribute
-                ) { action in
+                ) { [weak imageViewerController] action in
+                    guard let imageViewerController else { return }
                     imageViewerController.paste(imageViewerController.editButtonItem)
                 }
                 completion([thePasteAction])
@@ -409,8 +429,9 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
         })
 
         let undoAction =
-        UIDeferredMenuElement({ completion in
+        UIDeferredMenuElement({ [weak self] completion in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                guard let self else { completion([]); return }
                 let hasUndo = self.undoManager?.canUndo ?? false
                 let unDoAttribute: UIMenuElement.Attributes = hasUndo ? [] : [.disabled]
 
@@ -420,7 +441,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
                     identifier: PGLImageController.EditMenuIdentifier,
                     discoverabilityTitle: PGLMenuLabel.Undo.rawValue,
                     attributes: unDoAttribute
-                ) { action in
+                ) { [weak self] action in
+                    guard let self else { return }
                     if (self.undoManager?.canUndo ?? false) == false { return }
                         self.undoManager?.undo()
                 }
@@ -429,8 +451,9 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
         })
 
         let redoAction =
-        UIDeferredMenuElement({ completion in
+        UIDeferredMenuElement({ [weak self] completion in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                guard let self else { completion([]); return }
                 let hasRedo = self.undoManager?.canRedo ?? false
                 let unDoAttribute: UIMenuElement.Attributes = hasRedo ? [] : [.disabled]
 
@@ -440,7 +463,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
                     identifier: PGLImageController.EditMenuIdentifier,
                     discoverabilityTitle: PGLMenuLabel.Redo.rawValue,
                     attributes: unDoAttribute
-                ) { action in
+                ) { [weak self] action in
+                    guard let self else { return }
                     if (self.undoManager?.canRedo ?? false) == false { return }
                     self.undoManager?.redo()
                 }

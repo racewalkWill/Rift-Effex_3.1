@@ -552,8 +552,11 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         // open popup menu with existingStackTypes
 //        existingStackTypes
 
+        // [weak self]: this menu is stored on overlayButton.menu, which lives in
+        // this controller's view hierarchy, so a strong self capture would form a
+        // retain cycle (self -> button.menu -> UIAction -> closure -> self).
         let albumItems:[UIAction] = existingStackTypes.map {
-            UIAction( title: $0, handler: { thisAction in self.setStackTo(albumName: thisAction.title )})
+            UIAction( title: $0, handler: { [weak self] thisAction in self?.setStackTo(albumName: thisAction.title )})
         }
 
         let albumMenu = UIMenu(title:"Albums", children: albumItems)
