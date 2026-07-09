@@ -342,6 +342,15 @@ class PGLMainFilterController:  UIViewController,
 
     // MARK: - LongPressGestures
     func setLongPressGesture() {
+        // Called from BOTH viewDidLoad and viewDidAppear. A UIGestureRecognizer keeps a
+        // strong reference to its target, and filterCollectionView keeps a strong reference
+        // to the recognizer, so each new recognizer forms the cycle
+        // self -> view -> filterCollectionView -> recognizer -> self.
+        // These are distinct recognizer objects (not identical target-action pairs, so UIKit
+        // does not dedupe them), so without removing the previous one first every appearance
+        // leaves an orphaned recognizer attached that retains self forever - leaking this
+        // controller and the UISearchController it owns. Remove any existing one first.
+        removeGestureRecogniziers(targetView: filterCollectionView)
 
         longPressGesture = UILongPressGestureRecognizer(target: self , action: #selector(PGLMainFilterController.longPressAction(_:)))
           if longPressGesture != nil {

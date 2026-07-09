@@ -79,8 +79,14 @@ class PGLSelectParmController: PGLCommonController,
 
     @IBOutlet weak var GuideArrowBtn: UIBarButtonItem!
 
-    var imageController: PGLImageController?
-    
+    // weak: imageController is always owned elsewhere (the split-view secondary
+    // nav stack on iPad, or the PGLParmImageController container on iPhone) - this
+    // controller only borrows it. A strong ref cycled with PGLImageController.parmController
+    // (set in setImageController via `imageController!.parmController = self`), so following
+    // imageController -> parmController -> imageController led back to the same instance and
+    // leaked both controllers (and the PGLCompactImageController subclass).
+    weak var imageController: PGLImageController?
+
     var imagePicker: PGLImageListPicker?
 
         // (UITraitCollection.current.userInterfaceIdiom == .pad)
