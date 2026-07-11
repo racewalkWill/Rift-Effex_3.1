@@ -75,7 +75,10 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
 //        containerImageController = nil
 
-        guard let containerFilterController = columns?.imageViewer as? PGLMainFilterController
+        // NOTE: the filter controller is columns.control (columns.imageViewer is the
+        // PGLCompactImageController). Casting imageViewer here always failed, so the
+        // early return skipped `columns = nil` and super.viewDidDisappear entirely.
+        guard let containerFilterController = columns?.control as? PGLMainFilterController
             else { return }
         containerFilterController.removeFromParent()
 //        containerFilterController = nil

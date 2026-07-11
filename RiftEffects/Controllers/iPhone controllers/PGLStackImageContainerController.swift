@@ -15,9 +15,6 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
         // two vars pointed to the same controller - memory issue
 
     var editMenuInteraction: UIEditMenuInteraction?
-    
-    var containerImageController: PGLCompactImageController?
-    var containerStackController: PGLStackController?
 
     override var undoManager: UndoManager? {
            // Return a shared  undo manager
@@ -45,10 +42,14 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
 
 //        navigationItem.title = "Effects"  //viewerStack.stackName
 
+        // Locals only (same as PGLParmImageController / PGLFilterImageContainerController):
+        // ownership lives in columns via loadViewColumns. The stored-property versions
+        // duplicated the strong refs — the 2024-05-22 "memory issue" cleanup that the
+        // class comment describes, finally applied here too.
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        containerStackController = storyboard.instantiateViewController(withIdentifier: "StackController") as? PGLStackController
+        let containerStackController = storyboard.instantiateViewController(withIdentifier: "StackController") as? PGLStackController
 
-        containerImageController = storyboard.instantiateViewController(withIdentifier: "PGLImageController") as? PGLCompactImageController
+        let containerImageController = storyboard.instantiateViewController(withIdentifier: "PGLImageController") as? PGLCompactImageController
         if (containerImageController == nil) || (containerStackController == nil) {
             return // give up no controller
         }
@@ -93,7 +94,8 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
             if let userDataDict = myUpdate.userInfo {
                 // isViewLoaded or isBeingPresented??
                 if let newState = userDataDict["animationState"]  as? PGLAnimationState  {
-                    self?.containerImageController?.setAnimation(newState , self!.toggleAnimationPauseBtn)
+                    guard let self else { return }
+                    self.imageController()?.setAnimation(newState , self.toggleAnimationPauseBtn)
 //                    NSLog(#function + "PGLStackImageContainer PGLAnimationStateChanged toggleAnimationPauseBtn \(String(describing: self?.toggleAnimationPauseBtn))")
 
                 }
