@@ -73,35 +73,4 @@ class PGLSupplementNavController: UINavigationController {
         return false
     }
 
-
-/// remove old method setRoot()
-    func setRoot() {
-        //  root view will be Stack controller
-        // OR the StackImageController in the iPhone compact mode
-        let iPhoneCompact =   (traitCollection.userInterfaceIdiom) == .phone
-                                && (traitCollection.horizontalSizeClass == .compact)
-
-        if iPhoneCompact {
-            if let  stackImageController = storyboard?.instantiateViewController(withIdentifier: "PGLStackImageContainerController") as? PGLStackImageContainerController {
-                pushViewController(stackImageController, animated: true)
-            } else
-            {
-                if let  stackController = storyboard?.instantiateViewController(withIdentifier: "StackController") as? PGLStackController {
-                    pushViewController(stackController, animated: true)
-                }
-            }
-        //else don't change root relation if iPad
-        }
-    }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
