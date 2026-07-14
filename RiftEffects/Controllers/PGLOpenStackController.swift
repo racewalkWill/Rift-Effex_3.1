@@ -22,9 +22,16 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
     // See PGLImageController openStackActionBtn caller
     // PGLOpenStackViewController is a UITableView form working as the UITableViewDelegate
 
+    enum StackSorting {
+        case albumTitle
+        case createdDate
+    }
 
     static let tableViewCellIdentifier = "stackCell"
     private static let nibName = "StackCell"
+    private var stackSort = StackSorting.albumTitle
+    private var sortItem: UIBarButtonItem?
+
     var notifications = [Any]() // an opaque type is returned from addObservor
 
     private lazy var dataProvider: PGLStackProvider = {
@@ -208,12 +215,25 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
     func configureNavigationItem() {
            navigationItem.title = filterOpenTitle
            let editingItem = UIBarButtonItem(title: tableView.isEditing ? "Delete" : "Edit", style: .plain, target: self, action: #selector(toggleEditing))
-           let sortItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(sortByDateCreated))
+           let sortItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(toggleStackSort))
+           sortItem.isSelected = (stackSort == .createdDate)
+               // highlighted while the date-created sort is active
+           self.sortItem = sortItem
            navigationItem.rightBarButtonItems = [editingItem, sortItem]
         // why does the systme displayMode show on the right of the edit button?
 
 //             navigationController?.setToolbarHidden(false, animated: false)
            }
+
+    @objc func toggleStackSort() {
+        if stackSort == .createdDate {
+            sortByAlbumDefault()
+            // this resets the stackSort to the new value
+        } else {
+             sortByDateCreated()
+            // this resets the stackSort to the new value
+        }
+    }
 
     @objc func sortByDateCreated() {
         // Sort all stacks by date created (newest first) into a single
@@ -228,6 +248,19 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
         dataSource.showHeaderText = false
             // single list.. omit section header titles
         dataSource.apply(snapshot, animatingDifferences: true)
+        stackSort = StackSorting.createdDate
+        sortItem?.isSelected = true
+    }
+
+    @objc func sortByAlbumDefault() {
+        // Sort order set by PGLStackProvider - type & created
+
+        let snapshot =  initialSnapShot()
+        dataSource.showHeaderText = true
+            // single list.. omit section header titles
+        dataSource.apply(snapshot, animatingDifferences: true)
+        stackSort = StackSorting.albumTitle
+        sortItem?.isSelected = false
     }
 
     @objc func toggleEditing() {
