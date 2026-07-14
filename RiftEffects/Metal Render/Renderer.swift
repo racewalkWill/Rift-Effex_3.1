@@ -383,6 +383,21 @@ class Renderer: NSObject, MTKViewDelegate {
                 // and notification PGLImageCollectionOpen
 
             return }
+
+        // Re-sync when this view's drawable does not match the last reported size.
+        // A covered MTKView is resized by rotation (viewWillTransition runs
+        // layoutIfNeeded on off-screen views) while another MTKView is on screen;
+        // the interleaved drawableSizeWillChange callbacks from the two views can
+        // leave TargetSize and the scaled image caches stale for the view that is
+        // drawing now - image too small or offset in the view after rotations.
+        let currentDrawableSize = view.drawableSize
+        if currentDrawableSize.width > 0, currentDrawableSize.height > 0,
+            mtkViewSize != currentDrawableSize {
+            mtkView(view, drawableSizeWillChange: currentDrawableSize)
+            needsRedraw.filterChanged = true
+                // force render of fresh frames at the new size
+        }
+
         if !needsRedraw.redrawNow() {
             return
         }

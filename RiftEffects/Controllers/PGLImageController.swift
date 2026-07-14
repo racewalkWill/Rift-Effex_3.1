@@ -53,7 +53,7 @@ let ShowHelpPageAtStartupKey = "DisplayStartHelp"
 let kBtnVideoPlay = "VideoPlayBtn"
 
 @MainActor
-class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavigationBarDelegate,  RPScreenRecorderDelegate, @preconcurrency RPPreviewViewControllerDelegate, MPMediaPickerControllerDelegate {
+class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavigationBarDelegate,  RPScreenRecorderDelegate, @MainActor RPPreviewViewControllerDelegate, MPMediaPickerControllerDelegate {
 
 
         // controller in detail view - shows the image as filtered - knows the current filter
@@ -1097,30 +1097,17 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 view.addSubview(theMetalView)
                 view.bringSubviewToFront(theMetalView)
                 metalController = myMetalControllerView  // hold the ref
-                let iPhoneCompact =  splitViewController?.isCollapsed ?? false
-                
-                if iPhoneCompact {  // iPhone case
-                    NSLayoutConstraint.activate([
-                        theMetalView.topAnchor.constraint(equalTo: view.topAnchor),
-                        theMetalView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                        theMetalView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                        theMetalView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                        
-                        //theMetalView.widthAnchor.constraint(equalTo: view.heightAnchor , multiplier: 4/3),
-                        theMetalView.widthAnchor.constraint(equalTo: view.widthAnchor ),
-                        // iphone width constraint
-                    ]) }
-                else {  // iPad case
-                    NSLayoutConstraint.activate([
-                        theMetalView.topAnchor.constraint(equalTo: view.topAnchor),
-                        theMetalView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                        theMetalView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                        theMetalView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                        
-                        theMetalView.widthAnchor.constraint(equalTo: view.widthAnchor ),
-                        // iPad width constraint
-                    ])
-                }
+
+                NSLayoutConstraint.activate([
+                    theMetalView.topAnchor.constraint(equalTo: view.topAnchor),
+                    theMetalView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                    theMetalView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                    theMetalView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+
+                    theMetalView.widthAnchor.constraint(equalTo: view.widthAnchor ),
+
+                ])
+
                 myScaleFactor = theMetalView.contentScaleFactor
                 myScaleTransform = CGAffineTransform(scaleX: myScaleFactor, y: myScaleFactor )
                 myMetalControllerView.didMove(toParent: self)
@@ -1218,24 +1205,31 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         selectedParmControlView = nil
         releaseNotifications() // reset
 
-        /// do not remove the views.. they show during navigaton
-//        metalController?.view.removeFromSuperview()
-//        metalController?.removeFromParent()
-
-        /// control memory growth by setting metalController  to nil  Build a new one as needed
-           metalController = nil
+        removeMetalController()
         moreBtn.menu = nil // reset in the load.
         helpBtn.menu = nil
 
 
     }
 
+    /// detach the metal controller child and its MTKView.
+    /// Setting metalController = nil without removing the view left the old
+    /// MTKView (and its constraint set) inside this controller's view;
+    /// each viewWillAppear #loadMetalController then stacked another MTKView
+    /// on top - offset image area after rotations and filter changes.
+    /// Safe to call from viewDidDisappear - the navigation transition has completed.
+    func removeMetalController() {
+        metalController?.willMove(toParent: nil)
+        metalController?.view.removeFromSuperview()
+        metalController?.removeFromParent()
+        metalController = nil
+    }
+
     override func resetVars()
     {
         filterStack = { PGLFilterStack() }
-       // set to nil in the releaseVars  metalController = nil
         parmController = nil
-        metalController = nil
+        removeMetalController()
         tappedControl = nil
         panner = nil
         tapGesture = nil
