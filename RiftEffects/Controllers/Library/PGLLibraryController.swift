@@ -39,9 +39,16 @@ class PGLLibraryController:  UIViewController, NSFetchedResultsControllerDelegat
         }
     }
 
+    enum StackSorting {
+        case albumTitle
+        case createdDate
+    }
+
     fileprivate let sectionHeaderElementKind = "SectionHeader"
     let searchBar = UISearchBar(frame: .zero)
     var rightCompletionBtn: UIBarButtonItem?
+    private var stackSort = StackSorting.albumTitle
+    private var sortItem: UIBarButtonItem?
     var selectedStackIds = [NSManagedObjectID]()
     var singleMode = true  // select only one stack at a time
 
@@ -81,18 +88,22 @@ extension PGLLibraryController {
         view.addSubview(collectionView)
         view.addSubview(searchBar)
 
-         rightCompletionBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
-        navigationItem.rightBarButtonItem = rightCompletionBtn
+        let completionBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+        rightCompletionBtn = completionBtn
+        let sortItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(toggleStackSort))
+        sortItem.isSelected = (stackSort == .createdDate)
+            // highlighted while the date-created sort is active
+        self.sortItem = sortItem
+        navigationItem.rightBarButtonItems = [completionBtn, sortItem]
         
 //        // Fallback: if not embedded in a UINavigationController, add a local navigation bar so the Done button shows
         if self.navigationController == nil {
             let navBar = UINavigationBar(frame: .zero)
             navBar.translatesAutoresizingMaskIntoConstraints = false
             let navItem = UINavigationItem(title: self.navigationItem.title ?? "")
-            navItem.rightBarButtonItem = rightCompletionBtn
+            navItem.rightBarButtonItems = [completionBtn, sortItem]
             navBar.items = [navItem]
             view.addSubview(navBar)
-            rightCompletionBtn?.isEnabled = false
             // Adjust constraints: place navBar above the searchBar
             NSLayoutConstraint.activate([
                 navBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -218,6 +229,42 @@ extension PGLLibraryController {
 
     }
 
+// MARK: Sort
+    @objc func toggleStackSort() {
+        if stackSort == .createdDate {
+            sortByAlbumDefault()
+            // this resets the stackSort to the new value
+        } else {
+             sortByDateCreated()
+            // this resets the stackSort to the new value
+        }
+    }
+
+    @objc func sortByDateCreated() {
+        // Sort all stacks by date created (newest first) into a single
+        // un-sectioned list, mirroring the PGLOpenStackController sort.
+        guard let allStacks = dataProvider.fetchedStacks else { return }
+        let sortedStacks = allStacks.sorted {
+            ($0.created ?? Date.distantPast) > ($1.created ?? Date.distantPast)
+        }
+        var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(sortedStacks)
+        stackSort = StackSorting.createdDate
+            // set before apply so the layout builds the vertical section
+        dataSource.apply(snapshot, animatingDifferences: true)
+        collectionView.collectionViewLayout.invalidateLayout()
+        sortItem?.isSelected = true
+    }
+
+    @objc func sortByAlbumDefault() {
+        // Sort order set by PGLStackProvider - type & created
+        stackSort = StackSorting.albumTitle
+        setCategoryData()
+        collectionView.collectionViewLayout.invalidateLayout()
+        sortItem?.isSelected = false
+    }
+
 
 // MARK: Delete Menu
 
@@ -300,7 +347,10 @@ extension PGLLibraryController {
                 contentConfiguration.textProperties.font = PGLAppearance.sectionHeaderFont
                 contentConfiguration.textProperties.color = UIColor.label
 
-                if let firstInSectionItem = currentSnapshot.itemIdentifiers(inSection: sectionID).first {
+                if self.stackSort == .createdDate {
+                    contentConfiguration.text = ""
+                        // single date-sorted list.. omit section header titles
+                } else if let firstInSectionItem = currentSnapshot.itemIdentifiers(inSection: sectionID).first {
                     contentConfiguration.text = firstInSectionItem.type
                 } else {
                     contentConfiguration.text = ""
@@ -318,8 +368,24 @@ extension PGLLibraryController {
     private func createLayout() -> UICollectionViewLayout {
         let myTraitIdiom = traitCollection.userInterfaceIdiom
         let preferredHeight = if (myTraitIdiom == .phone) {  ThumbnailiPhonePreferredHeight } else {  ThumbnailPreferredHeight  }
-        let sectionProvider = { (sectionIndex: Int,
+        let sectionProvider = { [weak self] (sectionIndex: Int,
                                  layoutEnvironment: (any NSCollectionLayoutEnvironment)) -> NSCollectionLayoutSection? in
+            guard let self = self else { return nil }
+            if self.stackSort == .createdDate {
+                // date sort shows a single column of full width rows
+                // no orthogonal scrolling, no section header
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                      heightDimension: .estimated(preferredHeight))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 5
+                section.decorationItems = [
+                    .background(elementKind: "SectionBackground")
+                ]
+                section.contentInsets = NSDirectionalEdgeInsets(top: ThumbnailSpacing, leading: ThumbnailSpacing, bottom: ThumbnailSpacing * 2, trailing: ThumbnailSpacing)
+                return section
+            }
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.90),
                                                  heightDimension: .estimated(preferredHeight))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
