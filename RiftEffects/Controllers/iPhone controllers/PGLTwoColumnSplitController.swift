@@ -37,6 +37,10 @@ class PGLTwoColumnSplitController: UIViewController {
         return view.bounds.height > view.bounds.width
     }
 
+    /// Which constraint set is currently active, so layout passes only swap
+    /// when the orientation of this view's own bounds actually changes.
+    private var activeLayoutIsPortrait: Bool?
+
     func layoutViews(_ imageView: UIView, _ controlView: UIView) {
             //        let spacer = -5.0
             // for iPad and iPhone Plus.. with three column split view
@@ -73,24 +77,30 @@ class PGLTwoColumnSplitController: UIViewController {
             controlView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ]
 
-        NSLayoutConstraint.activate(isPortraitLayout ? verticalConstraints : horizontalConstraints)
+        let portrait = isPortraitLayout
+        NSLayoutConstraint.activate(portrait ? verticalConstraints : horizontalConstraints)
+        activeLayoutIsPortrait = portrait
     }
 
-    /// Swap the active constraint set when the device rotates (iPhone portrait
-    /// ↔ landscape). Landscape keeps the original side-by-side layout.
-    override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
+    /// Swap the active constraint set when this view's own bounds change
+    /// orientation (iPhone portrait ↔ landscape). Done in a layout pass rather
+    /// than viewWillTransition: covered controllers in the nav stack also
+    /// receive viewWillTransition while their views still hold the old size,
+    /// and activating landscape constraints on a portrait-sized view is
+    /// unsatisfiable — UIKit breaks a constraint and the columns collapse
+    /// (zero-height control view) when the controller reappears.
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
 
-        let toPortrait = size.height > size.width
-        let newConstraints = toPortrait ? verticalConstraints : horizontalConstraints
         // Nothing to swap until the columns have been laid out at least once.
-        guard !newConstraints.isEmpty else { return }
+        guard !verticalConstraints.isEmpty else { return }
+
+        let portrait = view.bounds.height > view.bounds.width
+        guard portrait != activeLayoutIsPortrait else { return }
 
         NSLayoutConstraint.deactivate(horizontalConstraints + verticalConstraints)
-        NSLayoutConstraint.activate(newConstraints)
-        coordinator.animate(alongsideTransition: { _ in
-            self.view.layoutIfNeeded()
-        })
+        NSLayoutConstraint.activate(portrait ? verticalConstraints : horizontalConstraints)
+        activeLayoutIsPortrait = portrait
     }
 
     override func viewIsAppearing(_ animated: Bool) {

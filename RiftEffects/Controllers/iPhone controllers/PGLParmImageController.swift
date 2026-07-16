@@ -49,15 +49,25 @@ class PGLParmImageController: PGLTwoColumnSplitController {
     
 
     override func viewDidDisappear(_ animated: Bool) {
-        guard let containerImageController = imageController()
-            else { return }
+        // Tear down only on an actual pop/dismiss — see the matching guard in
+        // PGLFilterImageContainerController. Releasing the children on a push-over
+        // leaves zombie views (and a table/collection view with a nil dataSource)
+        // when navigation returns to this instance.
+        guard isMovingFromParent || isBeingDismissed else {
+            super.viewDidDisappear(animated)
+            return
+        }
 
-        containerImageController.releaseVars()
-        containerImageController.removeFromParent()
+        if let containerImageController = imageController() {
+            containerImageController.releaseVars()
+            containerImageController.view.removeFromSuperview()
+            containerImageController.removeFromParent()
+        }
 
-        guard let containerParmController = columns?.control as? PGLSelectParmController
-        else {return }
-        containerParmController.removeFromParent()
+        if let containerParmController = columns?.control as? PGLSelectParmController {
+            containerParmController.view.removeFromSuperview()
+            containerParmController.removeFromParent()
+        }
         columns = nil
         super.viewDidDisappear(animated)
     }

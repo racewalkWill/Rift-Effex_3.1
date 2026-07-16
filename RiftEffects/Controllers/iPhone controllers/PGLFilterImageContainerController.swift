@@ -67,21 +67,30 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        guard let imageViewerController = imageController()
-            else { return }
+        // Tear down only on an actual pop/dismiss. viewDidDisappear also fires when
+        // another controller is pushed on top; releasing the children then makes this
+        // instance a zombie when navigation comes back to it — the filter collection
+        // view stays in the hierarchy while its deallocated diffable dataSource (a weak
+        // UICollectionView reference) goes nil, and the focus system crashes preparing
+        // a cell: "UICollectionView dataSource is not set".
+        guard isMovingFromParent || isBeingDismissed else {
+            super.viewDidDisappear(animated)
+            return
+        }
 
-        imageViewerController.releaseVars()
-        imageViewerController.removeFromParent()
-
-//        containerImageController = nil
+        if let imageViewerController = imageController() {
+            imageViewerController.releaseVars()
+            imageViewerController.view.removeFromSuperview()
+            imageViewerController.removeFromParent()
+        }
 
         // NOTE: the filter controller is columns.control (columns.imageViewer is the
-        // PGLCompactImageController). Casting imageViewer here always failed, so the
-        // early return skipped `columns = nil` and super.viewDidDisappear entirely.
-        guard let containerFilterController = columns?.control as? PGLMainFilterController
-            else { return }
-        containerFilterController.removeFromParent()
-//        containerFilterController = nil
+        // PGLCompactImageController). Remove the view too — a removeFromParent alone
+        // leaves the stale collection view in the hierarchy.
+        if let containerFilterController = columns?.control as? PGLMainFilterController {
+            containerFilterController.view.removeFromSuperview()
+            containerFilterController.removeFromParent()
+        }
         columns = nil
         super.viewDidDisappear(animated)
     }
