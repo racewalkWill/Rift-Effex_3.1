@@ -40,12 +40,7 @@ extension PGLSelectParmController {
     // iOS26.3 cast crash noted below.
     func registerUndoImageChange(imageAttribute: PGLFilterAttributeImage,
                                  oldImageList: PGLImageList) {
-        if (traitCollection.userInterfaceIdiom == .phone){
-            // in iOS26.3 there is a crash on the iPhone
-            // ERROR Could not cast value of type 'AGXG16GFamilyComputeProgram' to 'RiftEffects.PGLSelectParmController'.
-            // iPad is okay - possible Apple iOS bug
-            return
-        }
+        // restored undo on the iPhone in iOS27 Beta
         appStack.registerUndoImageChange(imageAttribute: imageAttribute, oldImageList: oldImageList)
     }
 }
