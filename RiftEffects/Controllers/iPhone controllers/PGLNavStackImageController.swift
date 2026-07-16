@@ -27,6 +27,40 @@ class PGLNavStackImageController: UINavigationController, UINavigationController
 
    }
 
+    func navigationController(_ navigationController: UINavigationController,
+                              didShow viewController: UIViewController,
+                              animated: Bool) {
+        pruneEditContainers(below: viewController)
+    }
+
+    /// Cap the edit-flow depth. Each add-filter/adjust-parms cycle pushes new
+    /// PGLFilterImageContainerController / PGLParmImageController instances, so
+    /// the stack grows two controllers per cycle — each holding its own
+    /// PGLCompactImageController with a Metal view. Once a new container is
+    /// fully shown, the older filter/parm containers beneath it are history the
+    /// back arrow should skip anyway: remove and release them.
+    /// PGLStackImageContainerController is the base of the edit flow and kept.
+    /// Runs from didShow (never willShow) so the stack is not mutated while a
+    /// transition is in flight.
+    private func pruneEditContainers(below topController: UIViewController) {
+        guard topController is PGLTwoColumnSplitController else { return }
+
+        let staleContainers = viewControllers.filter {
+            $0 !== topController
+                && $0 is PGLTwoColumnSplitController
+                && !($0 is PGLStackImageContainerController)
+        }
+        if staleContainers.isEmpty { return }
+
+        Logger(subsystem: LogSubsystem, category: LogNavigation).info( "\("#pruneEditContainers " + String(describing: self)) removing \(staleContainers)")
+
+        viewControllers.removeAll { candidate in
+            staleContainers.contains { $0 === candidate } }
+        for aContainer in staleContainers {
+            (aContainer as? PGLTwoColumnSplitController)?.viewControllerRelease()
+        }
+    }
+
     override func popViewController(animated: Bool) -> UIViewController? {
         Logger(subsystem: LogSubsystem, category: LogNavigation).info( "\("#popViewController " + String(describing: self)) + \(self.viewControllers)")
 
