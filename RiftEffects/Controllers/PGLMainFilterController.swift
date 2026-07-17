@@ -835,7 +835,10 @@ extension PGLMainFilterController {
 
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
 
-        let iPhoneCompact = traitCollection.userInterfaceIdiom == .phone
+//        let iPhoneCompact = traitCollection.userInterfaceIdiom == .phone
+        let iPhoneCompact = splitViewController!.isCollapsed
+            // iPhone Pro Max in landscape uses three column splitViewController
+            //  in portrait it is the twoContainer .phone case
 
         if iPhoneCompact {
 //            if let  twoContainerController = storyboard?.instantiateViewController(withIdentifier: "PGLParmImageController") as? PGLParmImageController
