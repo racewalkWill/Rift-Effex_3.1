@@ -23,7 +23,7 @@ class PGLSaliencyBlurFilter: CIFilter {
 
     @objc    class func customAttributes() -> [String: Any] {
             let customDict:[String: Any] = [
-                kCIAttributeFilterDisplayName : "Saliency Blur",
+                kCIAttributeFilterDisplayName : NSLocalizedString("Saliency Blur", comment: "Saliency Blur filter display name"),
 
                 kCIAttributeFilterCategories :
                     [kCICategoryBlur, kCICategoryInterlaced, kCICategoryNonSquarePixels, kCICategoryStillImage] ,
@@ -121,7 +121,7 @@ class PGLSaliencyBlurFilter: CIFilter {
             kCIAttributeFilterCategories :    [
                 kCICategoryBlur, kCICategoryInterlaced, kCICategoryNonSquarePixels, kCICategoryStillImage
                                                ],
-            kCIAttributeFilterDisplayName : "Saliency Blur"
+            kCIAttributeFilterDisplayName : NSLocalizedString("Saliency Blur", comment: "Saliency Blur filter display name")
             ])
     }
 

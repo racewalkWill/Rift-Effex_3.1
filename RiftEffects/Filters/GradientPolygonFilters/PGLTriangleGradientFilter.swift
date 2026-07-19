@@ -65,7 +65,7 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
 
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override
-       return "3 sided Gradient for Blend with Mask. Generates the mask shape"
+       return NSLocalizedString("3 sided Gradient for Blend with Mask. Generates the mask shape", comment: "Triangle Gradient custom filter description")
     }
 
     func centerPointAttribute() -> PGLFilterAttributeVector {

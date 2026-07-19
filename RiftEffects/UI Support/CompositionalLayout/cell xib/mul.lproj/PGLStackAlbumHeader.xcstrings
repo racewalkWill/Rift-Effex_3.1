@@ -1,0 +1,42 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "bKe-xs-Afz.text" : {
+      "comment" : "Class = \"UITextField\"; text = \"userText\"; ObjectID = \"bKe-xs-Afz\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Benutzertext"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "userText"
+          }
+        }
+      }
+    },
+    "Yyo-J2-ivl.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"cellLabel\"; ObjectID = \"Yyo-J2-ivl\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zellenbeschriftung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "cellLabel"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.3"
+}

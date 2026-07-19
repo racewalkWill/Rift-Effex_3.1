@@ -1,0 +1,1021 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "3 sided Gradient for Blend with Mask. Generates the mask shape" : {
+      "comment" : "Triangle Gradient custom filter description",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Třístranný přechod pro prolnutí s maskou. Generuje tvar masky"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "3-seitiger Verlauf zum Überblenden mit Maske. Erzeugt die Maskenform"
+          }
+        }
+      }
+    },
+    "4 Sided Gradient" : {
+      "comment" : "4 Sided Gradient filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Čtyřstranný přechod"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "4-seitiger Verlauf"
+          }
+        }
+      }
+    },
+    "4 sided Gradient for Blend with Mask. Generates the mask shape" : {
+      "comment" : "4 Sided Gradient custom filter description",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Čtyřstranný přechod pro prolnutí s maskou. Generuje tvar masky"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "4-seitiger Verlauf zum Überblenden mit Maske. Erzeugt die Maskenform"
+          }
+        }
+      }
+    },
+    "Blend Text" : {
+      "comment" : "Blend Text filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Prolnutí textu"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Textüberblendung"
+          }
+        }
+      }
+    },
+    "Bump Blend" : {
+      "comment" : "Bump Blend filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Prolnutí s vyboulením"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Wölbungsüberblendung"
+          }
+        }
+      }
+    },
+    "Center" : {
+      "comment" : "Bump Blend parameter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Střed"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Mitte"
+          }
+        }
+      }
+    },
+    "Clipboard" : {
+      "comment" : "Clipboard paste filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Schránka"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zwischenablage"
+          }
+        }
+      }
+    },
+    "Color" : {
+      "comment" : "Blend Text parameter description\nBlend Text parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Farbe"
+          }
+        }
+      }
+    },
+    "Color One" : {
+      "comment" : "Metal Perlin Noise parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Farbe 1"
+          }
+        }
+      }
+    },
+    "Color Two" : {
+      "comment" : "Metal Perlin Noise parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Farbe 2"
+          }
+        }
+      }
+    },
+    "Composite Text" : {
+      "comment" : "Composite Text filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Kompozice textu"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Textkomposition"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Smazat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Löschen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Eliminar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Supprimer"
+          }
+        }
+      }
+    },
+    "Display Time" : {
+      "comment" : "Sequenced Filters parameter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Doba zobrazení"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Anzeigedauer"
+          }
+        }
+      }
+    },
+    "Dissolve Wrapper" : {
+      "comment" : "Dissolve Wrapper filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Wrapper prolnutí"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Überblendungs-Wrapper"
+          }
+        }
+      }
+    },
+    "Empty" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Prázdné"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Leer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vacío"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vide"
+          }
+        }
+      }
+    },
+    "Enlarge & pan" : {
+      "comment" : "Maximum Scale custom filter description",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zvětšení a posun"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vergrößern & Schwenken"
+          }
+        }
+      }
+    },
+    "Fade Time" : {
+      "comment" : "Sequenced Filters parameter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Doba prolnutí"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Überblenddauer"
+          }
+        }
+      }
+    },
+    "Feature Dissolve" : {
+      "comment" : "Feature Dissolve filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Prolnutí prvků"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Merkmalsüberblendung"
+          }
+        }
+      }
+    },
+    "Font Name" : {
+      "comment" : "Blend Text parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Schriftname"
+          }
+        }
+      }
+    },
+    "Font Size" : {
+      "comment" : "Blend Text parameter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Velikost písma"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Schriftgröße"
+          }
+        }
+      }
+    },
+    "Height" : {
+      "comment" : "Metal Perlin Noise parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Höhe"
+          }
+        }
+      }
+    },
+    "Hello, World!" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ahoj, světe!"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Hallo, Welt!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "¡Hola, mundo!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Bonjour, le monde !"
+          }
+        }
+      }
+    },
+    "Image" : {
+      "comment" : "Filter parameter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Obrázek"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Bild"
+          }
+        }
+      }
+    },
+    "Images" : {
+      "comment" : "Images filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Obrázky"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Bilder"
+          }
+        }
+      }
+    },
+    "Ken Burns Dissolve" : {
+      "comment" : "Ken Burns Dissolve filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Prolnutí Ken Burns"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ken Burns-Überblendung"
+          }
+        }
+      }
+    },
+    "Ken Burns Style dissolve" : {
+      "comment" : "Ken Burns Dissolve custom filter description",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Prolnutí ve stylu Ken Burns"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Überblendung im Ken Burns-Stil"
+          }
+        }
+      }
+    },
+    "Mask" : {
+      "comment" : "Mask filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Maska"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Maske"
+          }
+        }
+      }
+    },
+    "Metal Kuwahara" : {
+      "comment" : "Metal Kuwahara filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal Kuwahara"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal-Kuwahara"
+          }
+        }
+      }
+    },
+    "Metal Perlin Noise" : {
+      "comment" : "Metal Perlin Noise filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal Perlinův šum"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal-Perlin-Rauschen"
+          }
+        }
+      }
+    },
+    "Metal Pixellate" : {
+      "comment" : "Metal Pixellate filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal pixelace"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal-Verpixelung"
+          }
+        }
+      }
+    },
+    "Octaves" : {
+      "comment" : "Metal Perlin Noise parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Oktaven"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "comment" : "Alert OK button\nDefault action",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "OK"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "OK"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "OK"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "Pan Zoom" : {
+      "comment" : "Pan Zoom filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posun a zoom"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Schwenken und Zoomen"
+          }
+        }
+      }
+    },
+    "Pans and Zooms the image in continous vary loops" : {
+      "comment" : "Pan Zoom custom filter description",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posouvá a zoomuje obrázek v nepřetržitě se měnících smyčkách"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Schwenkt und zoomt das Bild in fortlaufend variierenden Schleifen"
+          }
+        }
+      }
+    },
+    "Paste image from clipboard" : {
+      "comment" : "Clipboard paste custom filter description",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vložení obrázku ze schránky"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Bild aus der Zwischenablage einsetzen"
+          }
+        }
+      }
+    },
+    "Persistence" : {
+      "comment" : "Metal Perlin Noise parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Persistenz"
+          }
+        }
+      }
+    },
+    "Pitch" : {
+      "comment" : "Blend Text parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nicken"
+          }
+        }
+      }
+    },
+    "Pitch angle in radians." : {
+      "comment" : "Blend Text parameter description",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nickwinkel im Bogenmaß."
+          }
+        }
+      }
+    },
+    "Pixel Height" : {
+      "comment" : "Metal Pixellate parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pixelhöhe"
+          }
+        }
+      }
+    },
+    "Pixel Width" : {
+      "comment" : "Metal Pixellate parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pixelbreite"
+          }
+        }
+      }
+    },
+    "Position Text" : {
+      "comment" : "Blend Text parameter description",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Text positionieren"
+          }
+        }
+      }
+    },
+    "Radius" : {
+      "comment" : "Metal Kuwahara parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Radius"
+          }
+        }
+      }
+    },
+    "Random Filters" : {
+      "comment" : "Random Filters filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Náhodné filtry"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zufallsfilter"
+          }
+        }
+      }
+    },
+    "Reduce to a smaller frame" : {
+      "comment" : "Scale Frame custom filter description",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zmenšení do menšího rámečku"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Auf einen kleineren Rahmen verkleinern"
+          }
+        }
+      }
+    },
+    "Rift-Effex doesn't have permission to use the camera." : {
+      "comment" : "Alert message when the user has denied access to the camera",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rift-Effex nemá oprávnění používat kameru."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rift-Effex hat keine Berechtigung, die Kamera zu verwenden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rift-Effex no tiene permiso para usar la cámara."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rift-Effex n’est pas autorisé à utiliser la caméra."
+          }
+        }
+      }
+    },
+    "Roll" : {
+      "comment" : "Blend Text parameter description\nBlend Text parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rollen"
+          }
+        }
+      }
+    },
+    "Saliency Blur" : {
+      "comment" : "Saliency Blur filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rozostření podle salience"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salienz-Weichzeichner"
+          }
+        }
+      }
+    },
+    "Scale" : {
+      "comment" : "Metal Perlin Noise parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Skalierung"
+          }
+        }
+      }
+    },
+    "Scale Factor" : {
+      "comment" : "Blend Text parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Skalierungsfaktor"
+          }
+        }
+      }
+    },
+    "Sequence Dissolve" : {
+      "comment" : "Sequence Dissolve filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Prolnutí sekvence"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sequenzüberblendung"
+          }
+        }
+      }
+    },
+    "Sequenced Filters" : {
+      "comment" : "Sequenced Filters filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sekvence filtrů"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtersequenz"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "comment" : "Alert button to open Settings",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nastavení"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Einstellungen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ajustes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Réglages"
+          }
+        }
+      }
+    },
+    "Swipe 'Make' to add random filters. Select photos for random input on Parms 'Pick' command" : {
+      "comment" : "Random Filters custom filter description",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Přejetím přes „Make“ přidáte náhodné filtry. Fotografie jako náhodný vstup vyberete příkazem „Pick“ na obrazovce parametrů"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Streiche über „Make“, um Zufallsfilter hinzuzufügen. Wähle Fotos als zufällige Eingabe mit dem Befehl „Pick“ auf dem Parameter-Bildschirm"
+          }
+        }
+      }
+    },
+    "Text" : {
+      "comment" : "Blend Text parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Text"
+          }
+        }
+      }
+    },
+    "Text Position" : {
+      "comment" : "Blend Text parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Textposition"
+          }
+        }
+      }
+    },
+    "Triangle Gradient" : {
+      "comment" : "Triangle Gradient filter display name",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Trojúhelníkový přechod"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dreiecksverlauf"
+          }
+        }
+      }
+    },
+    "Unable to capture media" : {
+      "comment" : "Alert message when something goes wrong during capture session configuration",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nelze zaznamenat média"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Medien können nicht aufgenommen werden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "No se puede capturar contenido multimedia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Impossible de capturer des médias"
+          }
+        }
+      }
+    },
+    "Unable to resume" : {
+      "comment" : "Alert message when unable to resume the session running",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nelze pokračovat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fortsetzen nicht möglich"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "No se puede reanudar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Impossible de reprendre"
+          }
+        }
+      }
+    },
+    "Width" : {
+      "comment" : "Metal Perlin Noise parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Breite"
+          }
+        }
+      }
+    },
+    "Yaw" : {
+      "comment" : "Blend Text parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gieren"
+          }
+        }
+      }
+    },
+    "Yaw angle in radians." : {
+      "comment" : "Blend Text parameter description",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gierwinkel im Bogenmaß."
+          }
+        }
+      }
+    },
+    "Z Position" : {
+      "comment" : "Metal Perlin Noise parameter display name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Z-Position"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.3"
+}

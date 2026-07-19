@@ -25,7 +25,7 @@ class PGLSequenceDissolve: PGLTransitionFilter {
     var sequenceStack: PGLSequenceStack!
 
     override class func displayName() -> String? {
-        return "Sequence Dissolve"
+        return NSLocalizedString("Sequence Dissolve", comment: "Sequence Dissolve filter display name")
     }
 
     required init?(filter: String, position: PGLFilterCategoryIndex) {

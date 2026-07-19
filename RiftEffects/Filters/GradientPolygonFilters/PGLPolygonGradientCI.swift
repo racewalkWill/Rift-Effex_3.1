@@ -50,7 +50,7 @@ class PGLPolygonGradientCI: CIFilter {
 
     @objc class func customAttributes() -> [String: Any] {
         let customDict:[String: Any] = [
-            kCIAttributeFilterDisplayName : kTriangleGradient,
+            kCIAttributeFilterDisplayName : NSLocalizedString("Triangle Gradient", comment: "Triangle Gradient filter display name"),
 
             kCIAttributeFilterCategories :
                 [kCICategoryGradient, kCICategoryStillImage],

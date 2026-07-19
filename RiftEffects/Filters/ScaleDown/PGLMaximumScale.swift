@@ -17,7 +17,7 @@ class PGLScaleUpFrame: PGLScaleDownFrame {
 
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override
-       return "Enlarge & pan"
+       return NSLocalizedString("Enlarge & pan", comment: "Maximum Scale custom filter description")
     }
 
     override func setDefaults() {

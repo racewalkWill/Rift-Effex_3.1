@@ -17,7 +17,7 @@ class PGLRandomFilterMaker: PGLTransitionFilter {
 
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override
-       return "Swipe 'Make' to add random filters. Select photos for random input on Parms 'Pick' command"
+       return NSLocalizedString("Swipe 'Make' to add random filters. Select photos for random input on Parms 'Pick' command", comment: "Random Filters custom filter description")
     }
 
 

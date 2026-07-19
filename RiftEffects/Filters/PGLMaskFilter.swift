@@ -22,7 +22,7 @@ class PGLMaskFilter: PGLRectangleFilter {
     }
 
     override class func displayName() -> String? {
-        return "Mask"
+        return NSLocalizedString("Mask", comment: "Mask filter display name")
     }
 }
 

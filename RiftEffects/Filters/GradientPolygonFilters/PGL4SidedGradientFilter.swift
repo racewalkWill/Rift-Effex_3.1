@@ -45,7 +45,7 @@ class PGL4SidedGradientFilter: PGLTriangleGradientFilter {
 
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override
-       return "4 sided Gradient for Blend with Mask. Generates the mask shape"
+       return NSLocalizedString("4 sided Gradient for Blend with Mask. Generates the mask shape", comment: "4 Sided Gradient custom filter description")
     }
 
     override class func displayName() -> String? {
@@ -53,7 +53,7 @@ class PGL4SidedGradientFilter: PGLTriangleGradientFilter {
         // FilterDescriptor will use the ciFilter.localizedName if this is nil.
         // where a ciFilter is used with different pglSourceFilter classes then this method should be implemented
         // by the subclass
-        return k4SidedGradient
+        return NSLocalizedString("4 Sided Gradient", comment: "4 Sided Gradient filter display name")
     }
 
     override func outputImageBasic() -> CIImage? {

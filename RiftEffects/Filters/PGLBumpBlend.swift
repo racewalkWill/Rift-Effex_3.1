@@ -27,7 +27,7 @@ class PGLBumpBlendCI: PGLFilterCIAbstract {
     @objc override class func customAttributes() -> [String: Any] {
 
         let customDict:[String: Any] = [
-            kCIAttributeFilterDisplayName : "Bump Blend",
+            kCIAttributeFilterDisplayName : NSLocalizedString("Bump Blend", comment: "Bump Blend filter display name"),
 
             kCIAttributeFilterCategories :
                 [kCICategoryDistortionEffect],
@@ -65,7 +65,7 @@ class PGLBumpBlendCI: PGLFilterCIAbstract {
                 kCIAttributeClass : "CIVector" ,
                 kCIAttributeDefault : CIVector(x: 300, y: 300),
                 kCIAttributeDescription :"The center of the effect as x and y coordinates",
-                kCIAttributeDisplayName :"Center",
+                kCIAttributeDisplayName : NSLocalizedString("Center", comment: "Bump Blend parameter display name"),
                 kCIAttributeType : kCIAttributeTypePosition
                             ] as [String : Any],
         ]

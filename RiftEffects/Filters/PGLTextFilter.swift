@@ -87,7 +87,7 @@ class PGLTextImageGenerator: PGLTextFilter {
     override class func displayName() -> String? {
         // for the older subclass override this displayname
         // currently there are two 'Blend Text in the Generator category..
-        return "Blend Text"
+        return NSLocalizedString("Blend Text", comment: "Blend Text filter display name")
     }
 
     override func setDefaults() {

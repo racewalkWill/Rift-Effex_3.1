@@ -47,7 +47,7 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
 
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override
-       return "Reduce to a smaller frame"
+       return NSLocalizedString("Reduce to a smaller frame", comment: "Scale Frame custom filter description")
     }
 
     class func initZoomPanFilter() -> PGLScaleDownFrame {

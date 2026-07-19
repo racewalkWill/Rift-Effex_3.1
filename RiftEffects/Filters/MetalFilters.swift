@@ -52,17 +52,17 @@ class MetalPixellateFilter: MetalImageFilter
     override var attributes: [String : Any]
     {
         return [
-            kCIAttributeFilterDisplayName: "Metal Pixellate",
+            kCIAttributeFilterDisplayName: NSLocalizedString("Metal Pixellate", comment: "Metal Pixellate filter display name"),
         
             "inputImage": [kCIAttributeIdentity: 0,
                 kCIAttributeClass: "CIImage",
-                kCIAttributeDisplayName: "Image",
+                kCIAttributeDisplayName: NSLocalizedString("Image", comment: "Filter parameter display name"),
                                kCIAttributeType: kCIAttributeTypeImage] as [String : Any],
             
             "inputPixelWidth": [kCIAttributeIdentity: 0,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 50,
-                kCIAttributeDisplayName: "Pixel Width",
+                kCIAttributeDisplayName: NSLocalizedString("Pixel Width", comment: "Metal Pixellate parameter display name"),
                 kCIAttributeMin: 0,
                 kCIAttributeSliderMin: 0,
                 kCIAttributeSliderMax: 100,
@@ -71,7 +71,7 @@ class MetalPixellateFilter: MetalImageFilter
             "inputPixelHeight": [kCIAttributeIdentity: 1,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 25,
-                kCIAttributeDisplayName: "Pixel Height",
+                kCIAttributeDisplayName: NSLocalizedString("Pixel Height", comment: "Metal Pixellate parameter display name"),
                 kCIAttributeMin: 0,
                 kCIAttributeSliderMin: 0,
                 kCIAttributeSliderMax: 100,
@@ -116,12 +116,12 @@ class MetalPerlinNoise: MetalGeneratorFilter
     override var attributes: [String : Any]
     {
         return [
-            kCIAttributeFilterDisplayName: "Metal Perlin Noise",
+            kCIAttributeFilterDisplayName: NSLocalizedString("Metal Perlin Noise", comment: "Metal Perlin Noise filter display name"),
             
             "inputReciprocalScale": [kCIAttributeIdentity: 0,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 50,
-                kCIAttributeDisplayName: "Scale",
+                kCIAttributeDisplayName: NSLocalizedString("Scale", comment: "Metal Perlin Noise parameter display name"),
                 kCIAttributeMin: 10,
                 kCIAttributeSliderMin: 10,
                 kCIAttributeSliderMax: 100,
@@ -130,7 +130,7 @@ class MetalPerlinNoise: MetalGeneratorFilter
             "inputOctaves": [kCIAttributeIdentity: 1,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 2,
-                kCIAttributeDisplayName: "Octaves",
+                kCIAttributeDisplayName: NSLocalizedString("Octaves", comment: "Metal Perlin Noise parameter display name"),
                 kCIAttributeMin: 1,
                 kCIAttributeSliderMin: 1,
                 kCIAttributeSliderMax: 16,
@@ -139,7 +139,7 @@ class MetalPerlinNoise: MetalGeneratorFilter
             "inputPersistence": [kCIAttributeIdentity: 2,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 0.5,
-                kCIAttributeDisplayName: "Persistence",
+                kCIAttributeDisplayName: NSLocalizedString("Persistence", comment: "Metal Perlin Noise parameter display name"),
                 kCIAttributeMin: 0,
                 kCIAttributeSliderMin: 0,
                 kCIAttributeSliderMax: 1,
@@ -148,19 +148,19 @@ class MetalPerlinNoise: MetalGeneratorFilter
             "inputColor0": [kCIAttributeIdentity: 3,
                 kCIAttributeClass: "CIColor",
                 kCIAttributeDefault: CIColor(red: 0.5, green: 0.25, blue: 0),
-                kCIAttributeDisplayName: "Color One",
+                kCIAttributeDisplayName: NSLocalizedString("Color One", comment: "Metal Perlin Noise parameter display name"),
                                 kCIAttributeType: kCIAttributeTypeColor] as [String : Any],
             
             "inputColor1": [kCIAttributeIdentity: 4,
                 kCIAttributeClass: "CIColor",
                 kCIAttributeDefault: CIColor(red: 0, green: 0, blue: 0.15),
-                kCIAttributeDisplayName: "Color Two",
+                kCIAttributeDisplayName: NSLocalizedString("Color Two", comment: "Metal Perlin Noise parameter display name"),
                                 kCIAttributeType: kCIAttributeTypeColor] as [String : Any],
             
             "inputZ": [kCIAttributeIdentity: 5,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 1,
-                kCIAttributeDisplayName: "Z Position",
+                kCIAttributeDisplayName: NSLocalizedString("Z Position", comment: "Metal Perlin Noise parameter display name"),
                 kCIAttributeMin: 0,
                 kCIAttributeSliderMin: 0,
                 kCIAttributeSliderMax: 1024,
@@ -169,7 +169,7 @@ class MetalPerlinNoise: MetalGeneratorFilter
             "inputWidth": [kCIAttributeIdentity: 2,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 640,
-                kCIAttributeDisplayName: "Width",
+                kCIAttributeDisplayName: NSLocalizedString("Width", comment: "Metal Perlin Noise parameter display name"),
                 kCIAttributeMin: 100,
                 kCIAttributeSliderMin: 100,
                 kCIAttributeSliderMax: 2048,
@@ -178,7 +178,7 @@ class MetalPerlinNoise: MetalGeneratorFilter
             "inputHeight": [kCIAttributeIdentity: 2,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 640,
-                kCIAttributeDisplayName: "Height",
+                kCIAttributeDisplayName: NSLocalizedString("Height", comment: "Metal Perlin Noise parameter display name"),
                 kCIAttributeMin: 100,
                 kCIAttributeSliderMin: 100,
                 kCIAttributeSliderMax: 2048,
@@ -211,17 +211,17 @@ class MetalKuwaharaFilter: MetalImageFilter
     override var attributes: [String : Any]
     {
         return [
-            kCIAttributeFilterDisplayName: "Metal Kuwahara",
+            kCIAttributeFilterDisplayName: NSLocalizedString("Metal Kuwahara", comment: "Metal Kuwahara filter display name"),
             
             "inputImage": [kCIAttributeIdentity: 0,
                 kCIAttributeClass: "CIImage",
-                kCIAttributeDisplayName: "Image",
+                kCIAttributeDisplayName: NSLocalizedString("Image", comment: "Filter parameter display name"),
                                kCIAttributeType: kCIAttributeTypeImage] as [String : Any],
             
             "inputRadius": [kCIAttributeIdentity: 0,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 15,
-                kCIAttributeDisplayName: "Radius",
+                kCIAttributeDisplayName: NSLocalizedString("Radius", comment: "Metal Kuwahara parameter display name"),
                 kCIAttributeMin: 0,
                 kCIAttributeSliderMin: 0,
                 kCIAttributeSliderMax: 30,

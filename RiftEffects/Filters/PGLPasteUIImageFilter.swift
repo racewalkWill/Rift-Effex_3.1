@@ -37,7 +37,7 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
 
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override
-       return "Paste image from clipboard"
+       return NSLocalizedString("Paste image from clipboard", comment: "Clipboard paste custom filter description")
     }
 
 
@@ -47,7 +47,7 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
         // FilterDescriptor will use the ciFilter.localizedName if this is nil.
         // where a ciFilter is used with different pglSourceFilter classes then this method should be implemented
         // by the subclass
-        return kUIImagePasteFilter
+        return NSLocalizedString("Clipboard", comment: "Clipboard paste filter display name")
     }
 
     override func canPasteImage() -> Bool {

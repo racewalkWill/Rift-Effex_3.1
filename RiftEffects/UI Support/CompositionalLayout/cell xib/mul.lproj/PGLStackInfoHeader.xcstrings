@@ -1,0 +1,42 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "HNG-5Z-J2k.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"cellLabel\"; ObjectID = \"HNG-5Z-J2k\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zellenbeschriftung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "cellLabel"
+          }
+        }
+      }
+    },
+    "HyN-mt-qPO.text" : {
+      "comment" : "Class = \"UITextField\"; text = \"userText\"; ObjectID = \"HyN-mt-qPO\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Benutzertext"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "userText"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.3"
+}

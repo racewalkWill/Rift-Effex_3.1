@@ -1,0 +1,60 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "bKe-xs-Afz.placeholder" : {
+      "comment" : "Class = \"UITextField\"; placeholder = \"0\"; ObjectID = \"bKe-xs-Afz\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "0"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "0"
+          }
+        }
+      }
+    },
+    "bKe-xs-Afz.text" : {
+      "comment" : "Class = \"UITextField\"; text = \"userSeconds\"; ObjectID = \"bKe-xs-Afz\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Benutzersekunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "userSeconds"
+          }
+        }
+      }
+    },
+    "Yyo-J2-ivl.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"cellLabel\"; ObjectID = \"Yyo-J2-ivl\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zellenbeschriftung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "cellLabel"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.3"
+}

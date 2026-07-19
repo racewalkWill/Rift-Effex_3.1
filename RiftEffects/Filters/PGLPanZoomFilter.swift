@@ -56,7 +56,7 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
 
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override
-       return "Pans and Zooms the image in continous vary loops"
+       return NSLocalizedString("Pans and Zooms the image in continous vary loops", comment: "Pan Zoom custom filter description")
     }
 
     override class func displayName() -> String? {
@@ -64,11 +64,11 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
         // FilterDescriptor will use the ciFilter.localizedName if this is nil.
         // where a ciFilter is used with different pglSourceFilter classes then this method should be implemented
         // by the subclass
-        return kPanZoom
+        return NSLocalizedString("Pan Zoom", comment: "Pan Zoom filter display name")
     }
 
    override func localizedName() -> String {
-      return kPanZoom
+      return NSLocalizedString("Pan Zoom", comment: "Pan Zoom filter display name")
     }
 
     override func setDefaults() {

@@ -1,0 +1,24 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "sgM-cI-Ja2.accessibilityLabel" : {
+      "comment" : "Class = \"UIView\"; accessibilityLabel = \"metalController\"; ObjectID = \"sgM-cI-Ja2\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal-Controller"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "metalController"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.3"
+}

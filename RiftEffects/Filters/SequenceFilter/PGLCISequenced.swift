@@ -35,7 +35,7 @@ class PGLCISequenced: CIFilter {
 
     @objc class func customAttributes() -> [String: Any] {
         let customDict:[String: Any] = [
-            kCIAttributeFilterDisplayName : kPSequencedFilter,
+            kCIAttributeFilterDisplayName : NSLocalizedString("Sequenced Filters", comment: "Sequenced Filters filter display name"),
 
             kCIAttributeFilterCategories :
                 [kCICategoryTransition, kCICategoryStillImage],
@@ -53,7 +53,7 @@ class PGLCISequenced: CIFilter {
                 kCIAttributeMin     : 0 ,
                 kCIAttributeSliderMax : 100 ,
                 kCIAttributeSliderMin :  0,
-                kCIAttributeDisplayName : "Fade Time"
+                kCIAttributeDisplayName : NSLocalizedString("Fade Time", comment: "Sequenced Filters parameter display name")
             ] as [String : Any],
 
             kCIinputSingleFilterDisplayTime : [
@@ -68,7 +68,7 @@ class PGLCISequenced: CIFilter {
                 kCIAttributeMin     : 1 ,
                 kCIAttributeSliderMax : 600,
                 kCIAttributeSliderMin :  1,
-                kCIAttributeDisplayName : "Display Time"
+                kCIAttributeDisplayName : NSLocalizedString("Display Time", comment: "Sequenced Filters parameter display name")
             ] as [String : Any],
 
         ]

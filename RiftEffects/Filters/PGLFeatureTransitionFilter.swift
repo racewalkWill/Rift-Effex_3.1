@@ -23,7 +23,7 @@ class PGLFeatureTransitionFilter: PGLTransitionFilter {
 
 
     override class func displayName() -> String? {
-        return "Feature Dissolve"
+        return NSLocalizedString("Feature Dissolve", comment: "Feature Dissolve filter display name")
     }
 
 //    required init?(filter: String, position: PGLFilterCategoryIndex) {
@@ -123,7 +123,7 @@ class PGLFeatureTransitionFilter: PGLTransitionFilter {
 //}
 class PGLBumpBlend: PGLSourceFilter {
     override class func displayName() -> String? {
-           return "Bump Blend"
+           return NSLocalizedString("Bump Blend", comment: "Bump Blend filter display name")
        }
     required init?(filter: String, position: PGLFilterCategoryIndex) {
          super.init(filter: filter, position: position)
@@ -137,7 +137,7 @@ class PGLDissolveWrapperFilter: PGLFeatureTransitionFilter {
     // inputs on the point parm.  for example the Center point on
     // a vignette effect will dissolve from face to face.
     override class func displayName() -> String? {
-        return "Dissolve Wrapper"
+        return NSLocalizedString("Dissolve Wrapper", comment: "Dissolve Wrapper filter display name")
     }
 
     required init?(filter: String, position: PGLFilterCategoryIndex) {

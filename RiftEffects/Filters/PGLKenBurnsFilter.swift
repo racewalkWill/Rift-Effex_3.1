@@ -20,7 +20,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
         // only increment imageList when offscreen
 
     override class func displayName() -> String? {
-        return kKenBurnsDissolve
+        return NSLocalizedString("Ken Burns Dissolve", comment: "Ken Burns Dissolve filter display name")
     }
 
         //    var dissolveFilter: PGLTransitionFilter
@@ -65,7 +65,7 @@ class PGLKenBurnsFilter: PGLTransitionFilter {
 
     override class func localizedDescription(filterName: String) -> String {
             // custom subclasses should override
-        return "Ken Burns Style dissolve"
+        return NSLocalizedString("Ken Burns Style dissolve", comment: "Ken Burns Dissolve custom filter description")
     }
 
         //    func incrementImageLists() {

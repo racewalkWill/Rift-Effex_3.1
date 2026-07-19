@@ -108,18 +108,18 @@ class CIBlendText: CIFilter {
                                    kCICategoryStillImage,
                                   kCICategoryVideo],
 
-            kCIAttributeFilterDisplayName : "Blend Text",
+            kCIAttributeFilterDisplayName : NSLocalizedString("Blend Text", comment: "Blend Text filter display name"),
 
             // now list the full set..
             "inputImage": [kCIAttributeIdentity: 0,
                 kCIAttributeClass: "CIImage",
-                kCIAttributeDisplayName: "Image",
+                kCIAttributeDisplayName: NSLocalizedString("Image", comment: "Filter parameter display name"),
                                kCIAttributeType: kCIAttributeTypeImage] as [String : Any],
 
             "inputFontSize": [kCIAttributeIdentity: 0,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 24,
-                kCIAttributeDisplayName: "Font Size",
+                kCIAttributeDisplayName: NSLocalizedString("Font Size", comment: "Blend Text parameter display name"),
                 kCIAttributeMin: 9,
                 kCIAttributeSliderMin: 9,
                 kCIAttributeSliderMax: 128,
@@ -128,17 +128,17 @@ class CIBlendText: CIFilter {
             "inputScaleFactor": [kCIAttributeIdentity: 1,
                 kCIAttributeClass: "NSNumber",
                 kCIAttributeDefault: 2,
-                kCIAttributeDisplayName: "Scale Factor",
+                kCIAttributeDisplayName: NSLocalizedString("Scale Factor", comment: "Blend Text parameter display name"),
                 kCIAttributeMin: 0,
                 kCIAttributeSliderMin: 1,
                 kCIAttributeSliderMax: 4,
                                      kCIAttributeType: kCIAttributeTypeScalar] as [String : Any] as [String : Any],
 
             "inputFontName": [kCIAttributeDefault: "HelveticaNeue",
-                              kCIAttributeDisplayName: "Font Name",
+                              kCIAttributeDisplayName: NSLocalizedString("Font Name", comment: "Blend Text parameter display name"),
                               kCIAttributeClass: "NSString" ],
 
-            "inputText" : [kCIAttributeDisplayName: "Text",
+            "inputText" : [kCIAttributeDisplayName: NSLocalizedString("Text", comment: "Blend Text parameter display name"),
                            kCIAttributeClass: "NSString"
 
             ],
@@ -146,16 +146,16 @@ class CIBlendText: CIFilter {
             "inputTextPosition" : [ kCIAttributeClass: "CIVector",
                                         kCIAttributeType: "CIAttributeTypePosition",
                                         kCIAttributeDefault: CIVector(x: 300.0, y: 300.0),
-                                        kCIAttributeDisplayName: "Text Position",
-                                        kCIAttributeDescription: "Position Text"
+                                        kCIAttributeDisplayName: NSLocalizedString("Text Position", comment: "Blend Text parameter display name"),
+                                        kCIAttributeDescription: NSLocalizedString("Position Text", comment: "Blend Text parameter description")
                                   ] as [String : Any] ,
 
 
         "inputPitch" : [ kCIAttributeClass: "NSNumber",
                                     kCIAttributeType: "CIAttributeTypeAngle",
                                     kCIAttributeDefault: 0,
-                                    kCIAttributeDisplayName: "Pitch",
-                                    kCIAttributeDescription: "Pitch angle in radians.",
+                                    kCIAttributeDisplayName: NSLocalizedString("Pitch", comment: "Blend Text parameter display name"),
+                                    kCIAttributeDescription: NSLocalizedString("Pitch angle in radians.", comment: "Blend Text parameter description"),
                                     kCIAttributeSliderMin:  -0.5235987755982988,
                                     kCIAttributeSliderMax: 0.5235987755982988,
                               ] as [String : Any] ,
@@ -163,8 +163,8 @@ class CIBlendText: CIFilter {
         "inputYaw" : [ kCIAttributeClass: "NSNumber",
                                     kCIAttributeType: "CIAttributeTypeAngle",
                                     kCIAttributeDefault: 0,
-                                    kCIAttributeDisplayName: "Yaw",
-                                    kCIAttributeDescription: "Yaw angle in radians.",
+                                    kCIAttributeDisplayName: NSLocalizedString("Yaw", comment: "Blend Text parameter display name"),
+                                    kCIAttributeDescription: NSLocalizedString("Yaw angle in radians.", comment: "Blend Text parameter description"),
                                     kCIAttributeMin: 0,
                                     kCIAttributeSliderMin: -0.5235987755982988,
                                     kCIAttributeSliderMax: 0.5235987755982988,
@@ -174,8 +174,8 @@ class CIBlendText: CIFilter {
         "inputRoll" : [ kCIAttributeClass: "NSNumber",
                                     kCIAttributeType: "CIAttributeTypeAngle",
                                     kCIAttributeDefault: 0,
-                                    kCIAttributeDisplayName: "Roll",
-                                    kCIAttributeDescription: "Roll",
+                                    kCIAttributeDisplayName: NSLocalizedString("Roll", comment: "Blend Text parameter display name"),
+                                    kCIAttributeDescription: NSLocalizedString("Roll", comment: "Blend Text parameter description"),
 
                                     kCIAttributeSliderMin: -0.7853981633974483,
                                     kCIAttributeSliderMax: 0.7853981633974483,
@@ -183,8 +183,8 @@ class CIBlendText: CIFilter {
             "inputColor" :[ kCIAttributeClass: "CIColor",
                              kCIAttributeType: "CIAttributeTypeColor",
                           kCIAttributeDefault: CIColor(color: UIColor.black),
-                             kCIAttributeDisplayName: "Color",
-                             kCIAttributeDescription: "Color"
+                             kCIAttributeDisplayName: NSLocalizedString("Color", comment: "Blend Text parameter display name"),
+                             kCIAttributeDescription: NSLocalizedString("Color", comment: "Blend Text parameter description")
                         ] as [String : Any ]
 
             ]
@@ -203,14 +203,14 @@ class CIBlendText: CIFilter {
             kCIAttributeFilterCategories :    [kCICategoryGenerator ,
                                                kCICategoryStillImage,
                                                kCICategoryVideo],
-            kCIAttributeFilterDisplayName : "Blend Text"
+            kCIAttributeFilterDisplayName : NSLocalizedString("Blend Text", comment: "Blend Text filter display name")
             ])
 
         CIFilter.registerName(kCompositeTextPositionFilter, constructor: PGLFilterConstructor(), classAttributes: [
             kCIAttributeFilterCategories :    [kCICategoryGenerator ,
                                                kCICategoryStillImage,
                                                kCICategoryVideo],
-            kCIAttributeFilterDisplayName : "Composite Text"
+            kCIAttributeFilterDisplayName : NSLocalizedString("Composite Text", comment: "Composite Text filter display name")
             ])
 
     }
@@ -229,7 +229,7 @@ class CompositeTextPositionFilter: CIBlendText {
             kCIAttributeFilterCategories :    [kCICategoryGenerator ,
                                                kCICategoryStillImage,
                                                kCICategoryVideo],
-            kCIAttributeFilterDisplayName : "Composite Text"
+            kCIAttributeFilterDisplayName : NSLocalizedString("Composite Text", comment: "Composite Text filter display name")
             ])
 
     }
