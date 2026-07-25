@@ -111,12 +111,18 @@ extension NSManagedObjectContext {
     /**
      Save a context, or handle the save error (for example, when there data inconsistency or low memory).
      */
-    func save(with contextualInfo: ContextSaveContextualInfo) {
-        guard hasChanges else { return }
+    @discardableResult
+    func save(with contextualInfo: ContextSaveContextualInfo) -> Bool {
+        guard hasChanges else { return true }   // nothing to save counts as success
         do {
             try save()
+            return true
         } catch {
+            // Discard the failed in-memory changes so they cannot later merge into
+            // the viewContext in a half-applied state (thumbnail without images, etc.).
+            rollback()
             handleSavingError(error, contextualInfo: contextualInfo)
+            return false
         }
     }
 }

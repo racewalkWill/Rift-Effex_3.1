@@ -145,14 +145,16 @@ class PGLStackProvider {
         }
     }
 
-    func saveStack(aStack: CDFilterStack, in context: NSManagedObjectContext, shouldSave: Bool = true) {
-        context.perform {
-
-            if shouldSave {
-                context.save(with: .addPost)
-            }
-
+    @discardableResult
+    func saveStack(aStack: CDFilterStack, in context: NSManagedObjectContext, shouldSave: Bool = true) -> Bool {
+        guard shouldSave else { return true }
+        // performAndWait so the caller can report the outcome. The save runs on the
+        // context's own queue; the calling stack save has already stopped drawing.
+        var didSave = false
+        context.performAndWait {
+            didSave = context.save(with: .addPost)
         }
+        return didSave
     }
 
     func filterStackCount() -> Int {

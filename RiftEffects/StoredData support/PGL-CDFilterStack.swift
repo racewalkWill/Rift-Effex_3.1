@@ -861,7 +861,16 @@ extension PGLAppStack {
         }
         let myCDStack = initialStack.writeCDStack(moContext: dataViewContext)
 
-        dataProvider.saveStack(aStack: myCDStack, in: dataViewContext , shouldSave: true )
+        let didSave = dataProvider.saveStack(aStack: myCDStack, in: dataViewContext , shouldSave: true )
+
+        guard didSave else {
+            // save(with:) has already rolled back the context and alerted the user.
+            // Do not tell the open-stack list about a stack that was not persisted -
+            // its objectID may be a temporary id that never reached the store.
+            Logger(subsystem: LogSubsystem, category: LogCategory).error("writeCDStacks: save failed, stack not persisted")
+            return
+        }
+
             // post notification to update PGLOpenStackViewController
             // with the new or updated stack
             // send only the objectID to the main UI process
