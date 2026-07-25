@@ -23,6 +23,26 @@ import os
 let appTransactionAuthorName = "PGL"
 let appStackName = "RiftEffects"
 
+/// A stable per-install identifier used to tag a CDImageList row whose assetIDs
+/// are device-local Photos identifiers rather than iCloud identifiers. This
+/// happens when the local -> iCloud identifier conversion cannot complete at
+/// save time (photos not yet synced to iCloud, offline, etc.). A row tagged with
+/// this machineName is only valid on the device whose PGLCurrentDeviceID matches;
+/// a cloud-synced copy loaded on any other device must skip those identifiers.
+///
+/// The value is a UUID persisted in the local (non-syncing) UserDefaults, so it
+/// stays unique to this physical install and is safe to read from any thread /
+/// Core Data context. It is intentionally not derived from iCloud state.
+let PGLCurrentDeviceIDKey = "PGLCurrentDeviceID"
+var PGLCurrentDeviceID: String {
+    if let existing = UserDefaults.standard.string(forKey: PGLCurrentDeviceIDKey) {
+        return existing
+    }
+    let newID = UUID().uuidString
+    UserDefaults.standard.set(newID, forKey: PGLCurrentDeviceIDKey)
+    return newID
+}
+
 enum Schema {
     enum Post: String {
         case title

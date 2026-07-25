@@ -526,21 +526,37 @@ extension PGLFilterAttributeImage {
 
     func loadInputAssets(cdImageParm: CDParmImage) {
         if let inputImageList = cdImageParm.inputAssets {
-            // convert the stored cloudIDs in the cdImageParm to localIdentifiers
-//                let aCloudID = PHCloudIdentifier(stringValue: "thisisATest")
-            let storedCloudStrings = inputImageList.assetIDs ?? [String]()
-            let cloudIDs: [PHCloudIdentifier] = storedCloudStrings.map({ (cloudString: String )
+
+            let storedAssetStrings = inputImageList.assetIDs ?? [String]()
+            let storedAlbumStrings = inputImageList.albumIds ?? [String]()
+
+            let localIds: [String]
+            let localAlbums: [String]
+
+            if let deviceTag = inputImageList.machineName {
+                // the stored identifiers are device-local Photos identifiers,
+                // not iCloud identifiers.
+                guard deviceTag == PGLCurrentDeviceID else {
+                    // a cloud-synced record saved on a different physical device.
+                    // The local identifiers are invalid here - do not transfer
+                    // them to a PGLImageList or its PGLAssets.
+                    Logger(subsystem: LogSubsystem, category: LogCategory).info("\(#function) skipping device-local assetIDs from another device" )
+                    return
+                }
+                // same physical device - the local identifiers are valid as stored
+                localIds = storedAssetStrings
+                localAlbums = storedAlbumStrings
+            } else {
+                // convert the stored cloudIDs in the cdImageParm to localIdentifiers
+                let cloudIDs: [PHCloudIdentifier] = storedAssetStrings.map({ (cloudString: String )
+                        in  PHCloudIdentifier(stringValue: cloudString )})
+                localIds = cloudId2LocalId(assetCloudIdentifiers: cloudIDs)
+
+                let cloudAlbumIDs: [PHCloudIdentifier] = storedAlbumStrings.map({ (cloudString: String )
                     in  PHCloudIdentifier(stringValue: cloudString )})
-//            NSLog(#function + " #cloudIDs \(String(describing: cloudIDs) )")
-            let localIds = cloudId2LocalId(assetCloudIdentifiers: cloudIDs)
-//            NSLog(#function + " #localIds \(String(describing: localIds) )")
-            let cloudAlbums = inputImageList.albumIds ?? [String]()
+                localAlbums = cloudId2LocalId(assetCloudIdentifiers: cloudAlbumIDs)
+            }
 
-            let cloudAlbumIDs: [PHCloudIdentifier] = cloudAlbums.map({ (cloudString: String )
-                in  PHCloudIdentifier(stringValue: cloudString )})
-
-            let localAlbums = cloudId2LocalId(assetCloudIdentifiers: cloudAlbumIDs)
-//            NSLog(#function + " #localAlbums \(String(describing: localAlbums) )")
             let newImageList = PGLImageList(localAssetIDs: (localIds),albumIds: (localAlbums) )
                 // in limited Library mode some photos may not load
             newImageList.validateLoad()
@@ -617,37 +633,59 @@ extension PGLFilterAttributeImage {
                 }
                     storedParmImage?.inputAssets = storedImageList // sets up the relationship parm to inputAssets
                 }
-            if let theAssetIdentifiers = self.inputCollection?.assetIDs {
+            // Convert the local Photos identifiers to iCloud identifiers so the
+            // image list can be restored on any device through cloud sync.
+            // When the conversion cannot complete (photos not yet synced to
+            // iCloud, offline, etc.) store the local identifiers instead and tag
+            // the row with this device's machineName. The load path uses the tag
+            // to know the identifiers are only valid on this physical device.
+            let localAssetIdentifiers: [String]
+            if let theAssetIdentifiers = self.inputCollection?.assetIDs, !theAssetIdentifiers.isEmpty {
                 // on the iPhone PHPicker the imageAssets do not have the identifiers
                 // use the inputCollection identifiers
-                let cloudAssetIDs = localId2CloudId(localIdentifiers: theAssetIdentifiers)
-                storedParmImage?.inputAssets?.assetIDs = cloudAssetIDs
+                localAssetIdentifiers = theAssetIdentifiers
+            } else {
+                localAssetIdentifiers = self.inputCollection?.imageAssets.map({$0.localIdentifier}) ?? [String]()
             }
-            else {
-                if let imageListAssets = self.inputCollection?.imageAssets {
 
-                    let cloudIDs = localId2CloudId(localIdentifiers: imageListAssets.map({$0.localIdentifier}))
-                    storedParmImage?.inputAssets?.assetIDs = cloudIDs }
-
+            var storedAsLocalDevice = false
+            if !localAssetIdentifiers.isEmpty {
+                let conversion = convertToCloudIds(localIdentifiers: localAssetIdentifiers)
+                if conversion.allConverted {
+                    storedParmImage?.inputAssets?.assetIDs = conversion.cloudIds
+                    storedParmImage?.inputAssets?.machineName = nil
+                        // a successful cloudId conversion clears the device-local tag
+                } else {
+                    // iCloud conversion incomplete - keep the local identifiers
+                    // (valid only on this device) rather than discarding them, and
+                    // mark the row so a later save can retry the cloud conversion.
+                    storedAsLocalDevice = true
+                    storedParmImage?.inputAssets?.assetIDs = localAssetIdentifiers
+                    storedParmImage?.inputAssets?.machineName = PGLCurrentDeviceID
+                    Logger(subsystem: LogSubsystem, category: LogCategory).info("\(#function) stored device-local assetIDs, will retry cloud conversion on next save" )
                 }
+            }
+
             // albums are set in the getAssets(localIds: [String],albums: [String])
-
             if let localListAssets = self.inputCollection?.imageAssets {
-                var mappedCloudIds = [String]()
                 let myAlbumIds = localListAssets.map({$0.albumId})
+                if storedAsLocalDevice {
+                    // keep local album identifiers to match the local asset identifiers
+                    storedParmImage?.inputAssets?.albumIds = myAlbumIds.filter({ !$0.isEmpty })
+                } else {
+                    var mappedCloudIds = [String]()
+                    for eachAlbumID in myAlbumIds {
+                        if eachAlbumID.isEmpty { continue }
+                        let thisAlbumMapping  = localId2CloudId(localIdentifiers: [ eachAlbumID ] )
+                        mappedCloudIds.append(contentsOf: thisAlbumMapping)
+                    }
 
-                for eachAlbumID in myAlbumIds {
-                    if eachAlbumID.isEmpty { continue }
-                    let thisAlbumMapping  = localId2CloudId(localIdentifiers: [ eachAlbumID ] )
-                    mappedCloudIds.append(contentsOf: thisAlbumMapping)
+                    // local2CloudId will return a single cloudAlbum if the albumIds are the same...
+                    // we expect a matching same size array.. every local image asset has a cloudAlbumId
+                   // therefore need to iterate and map each albumID one, by one
+
+                    storedParmImage?.inputAssets?.albumIds = mappedCloudIds
                 }
-
-                // local2CloudId will return a single cloudAlbum if the albumIds are the same...
-                // we expect a matching same size array.. every local image asset has a cloudAlbumId
-               // therefore need to iterate and map each albumID one, by one
-
-                storedParmImage?.inputAssets?.albumIds = mappedCloudIds
-
             }
 
         }
@@ -694,18 +732,24 @@ extension PGLFilterAttributeImage {
             Logger(subsystem: LogSubsystem, category: LogCategory).info("localId2CloudIdWaiting: \(tryCount) tries" )
 
         }
-        Logger(subsystem: LogSubsystem, category: LogCategory).info("localId2CloudIdWaiting: success on first iteration" )
+        if mappedIdentifiers.count == locals.count {
+            Logger(subsystem: LogSubsystem, category: LogCategory).info("localId2CloudIdRetrying: mapped all \(locals.count) identifiers" )
+        } else {
+            Logger(subsystem: LogSubsystem, category: LogCategory).error("localId2CloudIdRetrying: incomplete mapping \(mappedIdentifiers.count) of \(locals.count) identifiers" )
+        }
 
         return mappedIdentifiers
 
     }
 
-    func localId2CloudId(localIdentifiers: [String]) -> [String] {
+    /// Convert local Photos identifiers to iCloud identifiers.
+    /// Returns the mapped cloud ids and `allConverted`, which is true only when
+    /// every unique identifier converted successfully. A partial or empty
+    /// conversion (photos not yet synced to iCloud, offline, etc.) reports
+    /// `allConverted == false` so the caller can fall back to storing the
+    /// device-local identifiers instead of silently losing them.
+    func convertToCloudIds(localIdentifiers: [String]) -> (cloudIds: [String], allConverted: Bool) {
         var mappedIdentifiers = [String]()
-//       let library = PHPhotoLibrary.shared()
-        // need to wait for cloudIdentifierMappings..
-
-//        let iCloudIDs = library.cloudIdentifierMappings(forLocalIdentifiers: localIdentifiers)
         let iCloudIDs = localId2CloudIdRetrying(locals: localIdentifiers)
         for aCloudID in iCloudIDs {
             //'Dictionary<String, Result<PHCloudIdentifier, Error>>.Element' (aka '(key: String, value: Result<PHCloudIdentifier, Error>)')
@@ -713,22 +757,20 @@ extension PGLFilterAttributeImage {
             // Result is an enum .. not a tuple
             switch cloudResult {
                 case .success(let success):
-                    let newValue = success.stringValue
-                    mappedIdentifiers.append(newValue)
-                case .failure(_):
-                    // do error notify to user
-                    let iCloudError = savePhotoError.otherSaveError
-                    // dispatch to PGLAppStack
-                    DispatchQueue.main.async {
-                        let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
-                        myAppDelegate.displayDataError(error: iCloudError)
-                    }
-
-                    Logger(subsystem: LogSubsystem, category: LogCategory).error("iCloud Error occurred in localId2CloudId + String(describing: iCloudError)" )
+                    mappedIdentifiers.append(success.stringValue)
+                case .failure(let failure):
+                    // Do not alarm the user here - the caller recovers by storing
+                    // the local identifiers and tagging the row for a later retry.
+                    Logger(subsystem: LogSubsystem, category: LogCategory).error("convertToCloudIds iCloud mapping failed: \(failure.localizedDescription)" )
             }
         }
-        NSLog(#function + "success + \(String(describing: mappedIdentifiers.first))" )
-        return mappedIdentifiers
+        let uniqueLocalCount = Set(localIdentifiers).count
+        let allConverted = !localIdentifiers.isEmpty && (mappedIdentifiers.count == uniqueLocalCount)
+        return (mappedIdentifiers, allConverted)
+    }
+
+    func localId2CloudId(localIdentifiers: [String]) -> [String] {
+        return convertToCloudIds(localIdentifiers: localIdentifiers).cloudIds
     }
 
     func cloudId2LocalId(assetCloudIdentifiers: [PHCloudIdentifier]) -> [String] {
