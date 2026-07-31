@@ -873,11 +873,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             self.musicButtonTapped(controllerMusicBtn: self.moreBtn)
         } ,
                      // use this menu command on the iPad to work on the optimize stack debugging
-         UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) { [weak self]
-            action in
-            guard let self else { return }
-            self.optimizeStack(controllerMusicBtn: self.moreBtn)
-        }
+//         UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) { [weak self]
+//            action in
+//            guard let self else { return }
+//            self.optimizeStack(controllerMusicBtn: self.moreBtn)
+//        }
             ] )
         moreBtn.menu = contextMenu
     }

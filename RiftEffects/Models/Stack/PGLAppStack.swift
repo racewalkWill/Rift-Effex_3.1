@@ -19,7 +19,7 @@ let  PGLStackNameChange = NSNotification.Name(rawValue: "PGLStackNameChange")
 let PGLSelectActiveStackRow = NSNotification.Name(rawValue: "PGLSelectActiveStackRow")
  // 2021/02/02 PGLSelectActiveStackRow may not be used.. remove?
 
-let  PGLOptimizeStack = NSNotification.Name(rawValue: "PGLOptimizeStack")
+//let  PGLOptimizeStack = NSNotification.Name(rawValue: "PGLOptimizeStack")
 let PGLRunLuminanceMeasureFlag = NSNotification.Name(rawValue: "PGLRunLuminanceMeasureFlag")
 
 let PGLUndoManagerLevels = 8
@@ -86,59 +86,60 @@ class PGLAppStack {
         outputStack = viewerStack
 //        initialImagePick = PGLImageList.
 //        pixelBuffer = TestPixelBuffer()
-        let myCenter =  NotificationCenter.default
-        cancellable = myCenter.publisher(for:  PGLRunLuminanceMeasureFlag)
-            .sink() { [weak self]
-                myUpdate in
-                guard let self = self else { return }
-                NSLog("PGLAppStack: received PGLRunLuminanceMeasureFlag")
-                //  call this at the end
-                if activeFilterIsLastRow() {
-                    // stop the lumninanceMeasurs
-                    self.endOptimizeStack()
-                }
-                else {
-                    // if the current filter has failed Luminance test - it's black
-                    // remove it
-                    let currentDisplayFilter = self.viewerStack.currentFilter
-                    let filterIsBlack = currentDisplayFilter().isAverageLuminanceNearZero
-                    if filterIsBlack
-                    { NSLog (" removing filter from stack because- filterIsBlack")
-
-                        DispatchQueue.main.async {
-                            let removeFilterIndex = self.viewerStack.activeFilterIndex
-                            _ = self.viewerStack.removeFilter(position: removeFilterIndex)
-                            NSLog (" removed filter from stack at index \(removeFilterIndex)")
-                            // this will also advance the activeFilterIndex to the next filter
-                            // the next filter luminance will thus be checked on the next drawBasicCenter(in..)
-                            // now add imageInputs to the next filter in case some are missing from the
-                            // removeFilter(position:) action
-                            if self.viewerStack.activeFilterIndex < 0 {
-                                // minus 1 index = empty stack
-                                return
-                            } else {
-                                self.viewerStack.currentFilter().setDemoImageInputs()
-                            }
-
-
-
-                        }
-                    } else {
-                            // if the current filter passes Lumanance test - it's not back
-                            // move to the next one
-                        DispatchQueue.main.async {
-                            self.moveActiveAhead()
-                        }
-                    }
-                }
-
-            }
-        publishers.append(cancellable!)
+//        let myCenter =  NotificationCenter.default
+//        cancellable = myCenter.publisher(for:  PGLRunLuminanceMeasureFlag)
+//            .sink() { [weak self]
+//                myUpdate in
+//                guard let self = self else { return }
+//                NSLog("PGLAppStack: received PGLRunLuminanceMeasureFlag")
+//                //  call this at the end
+//                if activeFilterIsLastRow() {
+//                    // stop the lumninanceMeasurs
+//                    self.endOptimizeStack()
+//                }
+//                else {
+//                    // if the current filter has failed Luminance test - it's black
+//                    // remove it
+//                    let currentDisplayFilter = self.viewerStack.currentFilter
+//                    let filterIsBlack = currentDisplayFilter().isAverageLuminanceNearZero
+//                    if filterIsBlack
+//                    { NSLog (" removing filter from stack because- filterIsBlack")
+//
+//                        DispatchQueue.main.async {
+//                            let removeFilterIndex = self.viewerStack.activeFilterIndex
+//                            _ = self.viewerStack.removeFilter(position: removeFilterIndex)
+//                            NSLog (" removed filter from stack at index \(removeFilterIndex)")
+//                            // this will also advance the activeFilterIndex to the next filter
+//                            // the next filter luminance will thus be checked on the next drawBasicCenter(in..)
+//                            // now add imageInputs to the next filter in case some are missing from the
+//                            // removeFilter(position:) action
+//                            if self.viewerStack.activeFilterIndex < 0 {
+//                                // minus 1 index = empty stack
+//                                return
+//                            } else {
+//                                self.viewerStack.currentFilter().setDemoImageInputs()
+//                            }
+//
+//
+//
+//                        }
+//                    } else {
+//                            // if the current filter passes Lumanance test - it's not back
+//                            // move to the next one
+//                        DispatchQueue.main.async {
+//                            self.moveActiveAhead()
+//                        }
+//                    }
+//                }
+//
+//            }
+//        publishers.append(cancellable!)
 
         appStackUndoManager.levelsOfUndo = PGLUndoManagerLevels
 
 
     }
+
     // MARK: REFACTOR ParmController
     // this section contains the logic from the PGLSelectParmController
     // to set values into the parm attribute.

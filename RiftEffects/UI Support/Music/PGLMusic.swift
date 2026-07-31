@@ -15,9 +15,9 @@ import MediaPlayer
 
 extension PGLImageController {
 
-    @objc func optimizeStack(controllerMusicBtn: UIBarButtonItem?) {
-        appStack?.optimizeStack()
-    }
+//    @objc func optimizeStack(controllerMusicBtn: UIBarButtonItem?) {
+//        appStack?.optimizeStack()
+//    }
 
 
     @objc func musicButtonTapped(controllerMusicBtn: UIBarButtonItem?) {

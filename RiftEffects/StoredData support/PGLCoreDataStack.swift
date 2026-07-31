@@ -15,6 +15,7 @@ A class to set up the Core Data stack, observe Core Data notifications, process 
 
 import Foundation
 @preconcurrency import CoreData
+import CloudKit
 import os
 import UIKit
 
@@ -76,6 +77,15 @@ class CoreDataWrapper: @unchecked Sendable  {
             self, selector: #selector(type(of: self).storeRemoteChange(_:)),
             name: .NSPersistentStoreRemoteChange, object: container.persistentStoreCoordinator)
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("CoreDataWrapper  notificationBlock storeRemoteChange")
+
+        // Observe CloudKit mirroring events so a failed import/export - and the
+        // record ID that is blocking the sync queue - are written to the log.
+        // The logged recordName can be pasted into the CloudKit Console to find
+        // and delete the offending record. See cloudKitEventChanged(_:).
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(type(of: self).cloudKitEventChanged(_:)),
+            name: NSPersistentCloudKitContainer.eventChangedNotification, object: container)
+
         return container
     }()
 
@@ -206,6 +216,44 @@ extension CoreDataWrapper {
         // Process persistent history to merge changes from other coordinators.
         historyQueue.addOperation {
             self.processPersistentHistory()
+        }
+    }
+
+    /**
+     Handle NSPersistentCloudKitContainer mirroring events (setup / import / export).
+
+     A failed import or export is almost always a `CKError.partialFailure` whose
+     per-record errors are keyed by `CKRecord.ID` under `CKPartialErrorsByItemIDKey`.
+     A single bad record (a dangling reference, an oversized field, or a field not
+     present in the deployed Production schema) makes the whole batch fail and retry
+     forever, blocking all further sync imports. Logging the `recordName` gives a
+     value that can be searched in the CloudKit Console to find and delete the
+     record that is holding up the queue.
+     */
+    @objc
+    func cloudKitEventChanged(_ notification: Notification) {
+        guard let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey]
+                as? NSPersistentCloudKitContainer.Event else { return }
+
+        // Only report events that have finished and carry an error.
+        guard event.endDate != nil, let error = event.error as NSError? else { return }
+
+        let phase: String
+        if event.type == .import {
+            phase = "import"
+        } else if event.type == .export {
+            phase = "export"
+        } else {
+            phase = "setup"
+        }
+
+        let syncLog = Logger(subsystem: LogSubsystem, category: "CloudKitSync")
+        syncLog.error("CloudKit \(phase, privacy: .public) event failed: \(error.localizedDescription, privacy: .public)")
+
+        if let partialErrors = error.userInfo[CKPartialErrorsByItemIDKey] as? [CKRecord.ID: NSError] {
+            for (recordID, itemError) in partialErrors {
+                syncLog.error("CloudKit blocking recordName=\(recordID.recordName, privacy: .public) zone=\(recordID.zoneID.zoneName, privacy: .public) reason=\(itemError.localizedDescription, privacy: .public)")
+            }
         }
     }
 }
@@ -541,7 +589,7 @@ extension CoreDataWrapper {
         let taskContext = persistentContainer.backgroundContext()
 
         // Use performAndWait because each step relies on the sequence. Since historyQueue runs in the background, waiting won’t block the main queue.
-        taskContext.performAndWait {
+       _ = taskContext.performAndWait {
 //            objectIDs.forEach { anID in
 //                self.deduplicate(tagObjectID: anID, performingContext: taskContext)
 //            }

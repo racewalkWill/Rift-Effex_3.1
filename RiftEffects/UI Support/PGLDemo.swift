@@ -23,7 +23,7 @@ class PGLDemo {
             PGLGuide.resetAll()
         }
     }
-    static let NoRandomChildStackPercentage = 70  // integer 0 to 100
+    static let NoRandomChildStackPercentage = 90  // integer 0 to 100
                                                   // percentage to control how often a child stack is added in the Random function
                                                   // 100 means child stack is never added
    static var RandomImageList: PGLImageList = PGLDemo.getRandomImagesFromFavorites()
@@ -327,6 +327,7 @@ class PGLDemo {
             PGLDemo.Category1Index = 0 // reset
         }
         templateDemoCompletion(startingDemoFilter: firstRandomFilter)
+
 //        thisAppStack.optimizeStack()
         // 4/22/26  just run the optimize later using the menu command
         
@@ -363,8 +364,8 @@ class PGLDemo {
         let goToStack = Notification(name: PGLLoadedDataStack)
         NotificationCenter.default.post(goToStack)
 
-        let optimizeStack = Notification(name: PGLOptimizeStack)
-        NotificationCenter.default.post(optimizeStack)
+//        let optimizeStack = Notification(name: PGLOptimizeStack)
+//        NotificationCenter.default.post(optimizeStack)
 
     }
 

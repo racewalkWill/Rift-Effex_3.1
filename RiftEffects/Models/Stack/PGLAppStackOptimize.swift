@@ -34,44 +34,44 @@ extension PGLAppStack {
         publishers = [any Cancellable]()
     }
 
-    func endOptimizeStack() {
-
-        let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
-
-        NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["measureFlag" : false as AnyObject])
-
-        showFilterImage = false // restore to show stack output
-
-        // trigger stack update display for the single/all button set
-        let stackChangeNotification = Notification(name: PGLStackChange)
-        NotificationCenter.default.post(stackChangeNotification)
-
-
-    }
+//    func endOptimizeStack() {
+//
+//        let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
+//
+//        NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["measureFlag" : false as AnyObject])
+//
+//        showFilterImage = false // restore to show stack output
+//
+//        // trigger stack update display for the single/all button set
+//        let stackChangeNotification = Notification(name: PGLStackChange)
+//        NotificationCenter.default.post(stackChangeNotification)
+//
+//
+//    }
     
         ///step through all filters in the stacks and remove filters that do not produce any changes in the output,
 ///optimize individual filters to produce changes by updating values
 ///compares rendered image output of a filter with the prior filters rendered output
-func optimizeStack() {
-    guard  let firstFilter = flatCellFilters.first else {
-        return
-    }
+//func optimizeStack() {
+//    guard  let firstFilter = flatCellFilters.first else {
+//        return
+//    }
+//
+//    let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
+//
+//    NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["measureFlag" : true as AnyObject])
+//    NSLog("PGLAppStack: optimizeStack() posted  TRUE PGLMetalLuminanceMeasureFlag")
+//
+//    // startingImage
+//    showFilterImage = true
+//    // move to first filter
+//
+//    _ = moveTo(filterIndent: firstFilter)
+//    self.postFilterChangeRedraw()
+//
+//    }
 
-    let luminanceNotification = Notification(name: PGLMetalLuminanceMeasureFlag)
-
-    NotificationCenter.default.post(name: luminanceNotification.name, object: nil, userInfo: ["measureFlag" : true as AnyObject])
-    NSLog("PGLAppStack: optimizeStack() posted  TRUE PGLMetalLuminanceMeasureFlag")
-
-    // startingImage
-    showFilterImage = true
-    // move to first filter
-
-    _ = moveTo(filterIndent: firstFilter)
-    self.postFilterChangeRedraw()
-
-    }
-
-    func advanceStackForLuminanceMeasure() {
-            moveActiveAhead() // moves into child stack if needed
-    }
+//    func advanceStackForLuminanceMeasure() {
+//            moveActiveAhead() // moves into child stack if needed
+//    }
 }

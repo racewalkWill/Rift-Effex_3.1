@@ -37,14 +37,16 @@ class PGLAttributeRectangle: PGLFilterAttribute {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
         if let myVector = self.getVectorValue(){
 //            NSLog("PGLFilterAttributeRectangle init vectorValue = x:\(myVector.x) y:\(myVector.y)  width: \( myVector.z) height: \(myVector.w)")
-            if (myVector.x < 1.0 && myVector.y < 1.0 && myVector.z < 1.0 && myVector.w < 1.0) {
-                filterRect = CGRect(x: myVector.x, y: myVector.y, width: myVector.z, height: myVector.w)
-            }  // else keep the default rect of 300
-            else {
-                // default to TargetSize or effectively no crop
-                filterRect = CGRect(origin: CGPoint.zero, size: TargetSize) .insetBy(dx: 100.0, dy: 100.0)
-                applyCropRect(mappedCropRect: filterRect)
+            if myVector.x <= 0.0 && myVector.y <= 0.0 && myVector.z <= 0.0 && myVector.w <= 0.0 {
+                // for zero vector create default inset by 200
+                filterRect = CGRect(origin: CGPoint.zero, size: TargetSize) .insetBy(dx: 200.0, dy: 200.0)
             }
+            else {
+                // there is a saved value use it
+                filterRect = CGRect(x: myVector.x, y: myVector.y, width: myVector.z, height: myVector.w)
+            }
+            applyCropRect(mappedCropRect: filterRect)
+
         }
         if let rectangleFilter = pglFilter as? PGLRectangleFilter {
             rectangleFilter.cropAttribute = self
