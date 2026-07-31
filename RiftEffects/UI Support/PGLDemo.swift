@@ -331,8 +331,8 @@ class PGLDemo {
 //        thisAppStack.optimizeStack()
         // 4/22/26  just run the optimize later using the menu command
         
-//        let updateFilterNotification = Notification(name:PGLHideParmControlsOnFilterChange)
-//        NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
+   let updateFilterNotification = Notification(name:PGLHideParmControlsOnFilterChange)
+        NotificationCenter.default.post(name: updateFilterNotification.name, object: nil, userInfo: ["sender" : self as AnyObject])
 //            // triggers PGLImageController to set view.isHidden to false
 //            // show the new results !
     }
