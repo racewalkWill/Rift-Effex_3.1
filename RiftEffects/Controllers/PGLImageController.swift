@@ -446,7 +446,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func confirmTrashDisplayStack(_ sender: UIBarButtonItem)  {
 
-        let discardAction = UIAlertAction(title: "Start Over",
+        let discardAction = UIAlertAction(title: NSLocalizedString("Start Over", comment: "Trash alert action"),
                                           style: .destructive) { (action) in
             self.trashOldStartNewStack()
                 //            self.hideViewReleaseStack()
@@ -461,26 +461,26 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             //
             //        }
 
-        let removeFilters = UIAlertAction(title: "Remove Filters",
+        let removeFilters = UIAlertAction(title: NSLocalizedString("Remove Filters", comment: "Trash alert action"),
                                           style: .default) { (action) in
             self.removeFiltersFromStack()
                 // remove filters keep first one (or keep all images in first image filter?
         }
 
-        let removeImages = UIAlertAction(title: "Remove Images",
+        let removeImages = UIAlertAction(title: NSLocalizedString("Remove Images", comment: "Trash alert action"),
                                          style: .default) { (action) in
                 // remove all image parm inputs
             self.removeImagesFromStack()
         }
 
-        let cancelAction = UIAlertAction(title: "Cancel",
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Alert cancel button"),
                                          style: .cancel) { (action) in
                 // do nothing
         }
 
 
-        let alert = UIAlertController(title: "Trash"   ,
-                                      message: "This cannot be undone",
+        let alert = UIAlertController(title: NSLocalizedString("Trash", comment: "Trash alert title")   ,
+                                      message: NSLocalizedString("This cannot be undone", comment: "Trash alert message"),
                                       preferredStyle: .alert)
         alert.addAction(discardAction)
         alert.addAction(removeFilters)
@@ -774,18 +774,18 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                                  children: [
                                     UIDeferredMenuElement.uncached { [weak self] completion in
                                         let actions = [
-                                            UIAction.init(title: PGLMenuLabel.random.rawValue, image: UIImage(systemName: "plus.diamond"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
+                                            UIAction.init(title: PGLMenuLabel.random.localizedTitle, image: UIImage(systemName: "plus.diamond"), identifier: PGLImageController.TemplateMenuIdentifier, discoverabilityTitle: "Template", attributes: [], state: UIMenuElement.State.off) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
                                                 self.templateBtnAction(self.templateBtn)
                                             } ,
-                                            UIAction(title: PGLMenuLabel.Guide.rawValue , image: UIImage(systemName: "flag.circle"), state: PGLDemo.GuideMode == true ? .on : .off, handler: { (action) in
+                                            UIAction(title: PGLMenuLabel.Guide.localizedTitle , image: UIImage(systemName: "flag.circle"), state: PGLDemo.GuideMode == true ? .on : .off, handler: { (action) in
                                                 PGLDemo.toggleGuideMode()
                                                 let stackNotification = Notification(name:PGLStackChange)
                                                 NotificationCenter.default.post(stackNotification)
                                                         }),
-                                            UIAction(title: PGLMenuLabel.Blend.rawValue, image:UIImage(systemName: imageName)) {
+                                            UIAction(title: PGLMenuLabel.Blend.localizedTitle, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
@@ -793,13 +793,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                                                 demoGenerator.iPhoneCompact = false  // now on the iPad
                                                 demoGenerator.blendTemplate(appStack: self.appStack)
                                             },
-                                            UIAction(title: PGLMenuLabel.Sequence.rawValue, image:UIImage(systemName: imageName)) {
+                                            UIAction(title: PGLMenuLabel.Sequence.localizedTitle, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
                                                 self.loadDemoStack(self.templateBtn)
                                             },
-                                            UIAction(title: PGLMenuLabel.Edge.rawValue, image:UIImage(systemName: imageName)) {
+                                            UIAction(title: PGLMenuLabel.Edge.localizedTitle, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
@@ -808,7 +808,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                                             },
 
                                             // place holder - change to demo methods
-                                            UIAction(title: PGLMenuLabel.Tone.rawValue, image:UIImage(systemName: imageName)) {
+                                            UIAction(title: PGLMenuLabel.Tone.localizedTitle, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
@@ -816,7 +816,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                                                 demoGenerator.toneTemplate(appStack: self.appStack)
                                             },
                                             // place holder - change to demo methods
-                                            UIAction(title: PGLMenuLabel.Kaleidoscope.rawValue, image:UIImage(systemName: imageName)) {
+                                            UIAction(title: PGLMenuLabel.Kaleidoscope.localizedTitle, image:UIImage(systemName: imageName)) {
                                                 [weak self ]
                                                 action in
                                                 guard let self else { return }
@@ -836,7 +836,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func setMoreBtnMenu() {
 
-        let libraryMenu = UIAction.init(title: PGLMenuLabel.Library.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) { [weak self]
+        let libraryMenu = UIAction.init(title: PGLMenuLabel.Library.localizedTitle, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Library", attributes: [], state: UIMenuElement.State.off) { [weak self]
             action in
             guard let self else { return }
             self.openStackActionBtn(self.moreBtn)
@@ -857,23 +857,23 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let contextMenu = UIMenu(title: "",
          children: [ libraryMenu ,
 
-         UIAction(title: PGLMenuLabel.Save.rawValue, image:UIImage(systemName: "square.and.arrow.down")) { [weak self]
+         UIAction(title: PGLMenuLabel.Save.localizedTitle, image:UIImage(systemName: "square.and.arrow.down")) { [weak self]
            action in
            guard let self else { return }
            self.saveStackActionBtn(self.moreBtn)
        },
-         UIAction(title: PGLMenuLabel.Record.rawValue, image:UIImage(systemName: "recordingtape")) { [weak self]
+         UIAction(title: PGLMenuLabel.Record.localizedTitle, image:UIImage(systemName: "recordingtape")) { [weak self]
             action in
             guard let self else { return }
             self.recordButtonTapped(controllerRecordBtn: self.recordBtn)
         },
-         UIAction(title: PGLMenuLabel.Music.rawValue, image:UIImage(systemName: "music.note.list")) { [weak self]
+         UIAction(title: PGLMenuLabel.Music.localizedTitle, image:UIImage(systemName: "music.note.list")) { [weak self]
             action in
             guard let self else { return }
             self.musicButtonTapped(controllerMusicBtn: self.moreBtn)
         } ,
                      // use this menu command on the iPad to work on the optimize stack debugging
-//         UIAction(title: PGLMenuLabel.Optimize.rawValue, image:UIImage(systemName: "flag.circle.fill")) { [weak self]
+//         UIAction(title: PGLMenuLabel.Optimize.localizedTitle, image:UIImage(systemName: "flag.circle.fill")) { [weak self]
 //            action in
 //            guard let self else { return }
 //            self.optimizeStack(controllerMusicBtn: self.moreBtn)
@@ -884,7 +884,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
     func setHelpBtnMenu() {
 
-        let helpMenu = UIAction.init(title: PGLMenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) { [weak self]
+        let helpMenu = UIAction.init(title: PGLMenuLabel.Help.localizedTitle, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) { [weak self]
             action in
                 guard let self else { return }
                 self.helpBtnAction(self.helpBtn)
@@ -895,7 +895,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         let contextMenu = UIMenu(title: "",
                                  children: [ helpMenu ,
 
-          UIAction(title: PGLMenuLabel.Privacy.rawValue , image:UIImage(systemName: "info.circle")) { [weak self]
+          UIAction(title: PGLMenuLabel.Privacy.localizedTitle , image:UIImage(systemName: "info.circle")) { [weak self]
             action in
             guard let self else { return }
             self.displayPrivacyPolicy(self.helpBtn)

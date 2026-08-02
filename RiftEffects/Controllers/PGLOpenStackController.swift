@@ -51,7 +51,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
 
 
 
-    let filterOpenTitle = "Library"
+    let filterOpenTitle = NSLocalizedString("Library", comment: "Library screen title")
      let dateFormatter = DateFormatter()
 
 

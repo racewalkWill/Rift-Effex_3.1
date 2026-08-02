@@ -246,7 +246,11 @@
 		A31BF4002BB8B35F00FA1E5F /* PGLCenterPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCenterPoint.swift; sourceTree = "<group>"; };
 		A31FAF9E28F5E619002DCFEA /* PGLSequenceDissolve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSequenceDissolve.swift; sourceTree = "<group>"; };
 		A320F6252669550E008F6090 /* PGLInfoPrivacyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLInfoPrivacyController.swift; sourceTree = "<group>"; };
-		A320F62926699FA7008F6090 /* PrivacyPolicy.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = PrivacyPolicy.rtf; sourceTree = "<group>"; };
+		A320F7A126699FA7008F60E1 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = en; path = en.lproj/PrivacyPolicy.rtf; sourceTree = "<group>"; };
+		A320F7A126699FA7008F60E2 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = de; path = de.lproj/PrivacyPolicy.rtf; sourceTree = "<group>"; };
+		A320F7A126699FA7008F60E3 /* cs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = cs; path = cs.lproj/PrivacyPolicy.rtf; sourceTree = "<group>"; };
+		A320F7A126699FA7008F60E4 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = fr; path = fr.lproj/PrivacyPolicy.rtf; sourceTree = "<group>"; };
+		A320F7A126699FA7008F60E5 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = es; path = es.lproj/PrivacyPolicy.rtf; sourceTree = "<group>"; };
 		A3249AAF25BC728D00F7FAC2 /* PGLDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLDemo.swift; sourceTree = "<group>"; };
 		A326F7A42B1FDEB30070D759 /* PGLFilterAttributeVectorUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeVectorUI.swift; sourceTree = "<group>"; };
 		A327122129775C30007DF04A /* MetalFilters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalFilters.swift; sourceTree = "<group>"; };
@@ -1280,6 +1284,18 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		A320F62926699FA7008F6090 /* PrivacyPolicy.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A320F7A126699FA7008F60E1 /* en */,
+				A320F7A126699FA7008F60E2 /* de */,
+				A320F7A126699FA7008F60E3 /* cs */,
+				A320F7A126699FA7008F60E4 /* fr */,
+				A320F7A126699FA7008F60E5 /* es */,
+			);
+			name = PrivacyPolicy.rtf;
+			sourceTree = "<group>";
+		};
 		A359500D300D7F0500FBE753 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

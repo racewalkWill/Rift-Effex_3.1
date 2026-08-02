@@ -140,7 +140,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         // self or the image controller strongly here creates a retain cycle
         // (self -> helpBtn.menu -> UIAction -> closure -> self) that leaks both
         // this container and its image controller.
-        let helpMenu = UIAction.init(title: PGLMenuLabel.Help.rawValue, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) { [weak self]
+        let helpMenu = UIAction.init(title: PGLMenuLabel.Help.localizedTitle, image: UIImage(systemName: "folder"), identifier: PGLImageController.LibraryMenuIdentifier, discoverabilityTitle: "Help", attributes: [], state: UIMenuElement.State.off) { [weak self]
             action in
             guard let self, let imageViewerController = self.imageController() else { return }
             imageViewerController.helpBtnAction(self.helpBtn)
@@ -150,7 +150,7 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
 
         let contextMenu = UIMenu(title: "",
                                  children: [ helpMenu ,
-                                             UIAction(title: PGLMenuLabel.Privacy.rawValue, image:UIImage(systemName: "info.circle")) { [weak self]
+                                             UIAction(title: PGLMenuLabel.Privacy.localizedTitle, image:UIImage(systemName: "info.circle")) { [weak self]
             action in
             guard let self, let imageViewerController = self.imageController() else { return }
             imageViewerController.displayPrivacyPolicy(self.helpBtn)

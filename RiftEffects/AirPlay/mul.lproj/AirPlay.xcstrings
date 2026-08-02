@@ -5,6 +5,12 @@
       "comment" : "Class = \"UIView\"; accessibilityLabel = \"metalController\"; ObjectID = \"sgM-cI-Ja2\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Kontroler Metal"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -15,6 +21,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "metalController"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Contrôleur Metal"
           }
         }
       }

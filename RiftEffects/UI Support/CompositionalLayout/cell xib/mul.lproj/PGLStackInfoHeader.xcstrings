@@ -5,6 +5,12 @@
       "comment" : "Class = \"UILabel\"; text = \"cellLabel\"; ObjectID = \"HNG-5Z-J2k\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Popisek buňky"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -16,6 +22,12 @@
             "state" : "new",
             "value" : "cellLabel"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Libellé de cellule"
+          }
         }
       }
     },
@@ -23,6 +35,12 @@
       "comment" : "Class = \"UITextField\"; text = \"userText\"; ObjectID = \"HyN-mt-qPO\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Uživatelský text"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -33,6 +51,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "userText"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Texte utilisateur"
           }
         }
       }

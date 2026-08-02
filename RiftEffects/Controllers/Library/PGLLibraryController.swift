@@ -55,7 +55,7 @@ class PGLLibraryController:  UIViewController, NSFetchedResultsControllerDelegat
 // MARK: View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Library"
+        navigationItem.title = NSLocalizedString("Library", comment: "Library screen title")
         configureHierarchy()
         configureDataSource()
         setCategoryData()

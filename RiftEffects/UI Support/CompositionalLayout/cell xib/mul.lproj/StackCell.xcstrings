@@ -5,6 +5,12 @@
       "comment" : "Class = \"UILabel\"; text = \"Subtitle\"; ObjectID = \"d49-xS-VsN\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Podtitul"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -16,6 +22,12 @@
             "state" : "new",
             "value" : "Subtitle"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sous-titre"
+          }
         }
       }
     },
@@ -23,6 +35,12 @@
       "comment" : "Class = \"UILabel\"; text = \"Title\"; ObjectID = \"eFx-Dt-y2e\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Název"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -33,6 +51,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Title"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Titre"
           }
         }
       }

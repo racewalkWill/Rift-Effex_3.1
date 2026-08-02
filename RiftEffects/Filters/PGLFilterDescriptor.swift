@@ -50,6 +50,16 @@ struct PGLFilterDescriptor: Equatable, Hashable {
 
     var pglSourceFilterClass = PGLSourceFilter.self  //some will use a subclass ie PGLCropFilter etc..
 
+    // display names for runtime-registered custom filters and for built-in
+    // filters whose names CIFilter.localizedName(forFilterName:) does not localize
+    static let localizedDisplayNames: [String: String] = [
+        kPImages : NSLocalizedString("Images", comment: "Images filter display name"),
+        kSaliencyBlurFilter : NSLocalizedString("Saliency Blur", comment: "Saliency Blur filter display name"),
+        "CIMix" : NSLocalizedString("Mix", comment: "Mix filter display name"),
+        "CIPersonSegmentation" : NSLocalizedString("Person Segmentation", comment: "Person Segmentation filter display name"),
+        "CISaliencyMapFilter" : NSLocalizedString("Saliency Map Filter", comment: "Saliency Map Filter display name")
+    ]
+
     //MARK: init
     // connect the ciFilter name to a PGLSourceFilter class
     // the ciFilter will get installed into the PGLSourceFilter instances
@@ -70,6 +80,9 @@ struct PGLFilterDescriptor: Equatable, Hashable {
                 tempName =  pglSourceDisplayName
             }
         }
+         if tempName == nil {
+             tempName = PGLFilterDescriptor.localizedDisplayNames[ciFilterName]
+         }
          if tempName == nil {
              displayName = CIFilter.localizedName(forFilterName: ciFilterName) ?? ciFilterName
                      // will be localized to Dissolve or other..

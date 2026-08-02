@@ -801,7 +801,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         cell.cancelBtn.addTarget(self, action: #selector(cancelStackSave), for: .touchUpInside)
         cell.saveBtn.addTarget(self, action: #selector(saveStack), for: .touchUpInside)
         saveStackBtn = cell.saveBtn
-        saveStackBtn?.setTitle("Save", for: .normal)
+        saveStackBtn?.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
         return cell
     }
 
@@ -1238,7 +1238,7 @@ extension PGLStackController {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // see the StackSaveState logic in #writeCDStack..
         if saveStackBtn?.title(for: .normal) != "Save As" {
-            saveStackBtn?.setTitle("Save", for: .normal)
+            saveStackBtn?.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
         }
     }
         /// make sure that textField is not editing on first display !
@@ -1268,7 +1268,7 @@ extension PGLStackController {
                 if saveStackBtn?.title(for: .normal) != "Save As" {
                         // don't overwrite if on the other unchanged field
                         // "Save As" gets to win..
-                    saveStackBtn?.setTitle("Save", for: .normal)
+                    saveStackBtn?.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
                 }
             }
         else {
