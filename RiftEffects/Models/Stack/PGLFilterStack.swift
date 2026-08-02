@@ -712,7 +712,9 @@ class PGLFilterStack: Equatable, Hashable  {
 //                    if doPrintCropClamp {   NSLog("PGLFilterStack imageUpdate clamped and cropped to  \(String(describing: thisImage?.extent))") }
                 }
                 filter.setInput(image: thisImage, source: nil)
-                if filter.hasImageParmMissingInput() {
+
+                if filter.hasImageParmMissingInput() && thisImage != CIImage.empty() {
+                    // only change the state if there is a real image
                     if let changedAttribute = filter.getInputImageAttribute() {
                         changedAttribute.setImageParmState(newState: ParmInputState.inputPriorFilter)
                     }
