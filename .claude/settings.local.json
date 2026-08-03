@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find /Users/willloew/Developer/Rift-Effex_3.8 -name *PGLCommonController* -o -name *UIBarButtonItem*)"
+      "Bash(find /Users/willloew/Developer/Rift-Effex_3.8 -name *PGLCommonController* -o -name *UIBarButtonItem*)",
+      "WebSearch",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:www.apple.com)"
     ]
   }
 }

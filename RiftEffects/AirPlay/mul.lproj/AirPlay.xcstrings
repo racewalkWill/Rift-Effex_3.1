@@ -23,6 +23,12 @@
             "value" : "metalController"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Controlador Metal"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",

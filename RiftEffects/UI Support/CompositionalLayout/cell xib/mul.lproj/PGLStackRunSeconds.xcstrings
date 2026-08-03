@@ -23,6 +23,12 @@
             "value" : "0"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "0"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -53,6 +59,12 @@
             "value" : "userSeconds"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Segundos de usuario"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -81,6 +93,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "cellLabel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Etiqueta de celda"
           }
         },
         "fr" : {

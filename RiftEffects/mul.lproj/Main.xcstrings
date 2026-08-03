@@ -23,6 +23,12 @@
             "value" : "Change Rate"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Velocidad de cambio"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -51,6 +57,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Random"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aleatorio"
           }
         },
         "fr" : {
@@ -83,6 +95,12 @@
             "value" : "Subtitle"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Subtítulo"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -111,6 +129,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Subtitle"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Subtítulo"
           }
         },
         "fr" : {
@@ -143,6 +167,12 @@
             "value" : "Item"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Elemento"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -171,6 +201,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "< Back"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "< Atrás"
           }
         },
         "fr" : {
@@ -203,6 +239,12 @@
             "value" : "Title"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -231,6 +273,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
           }
         },
         "fr" : {
@@ -263,6 +311,12 @@
             "value" : "Title"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -291,6 +345,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "recordBtn"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Grabar"
           }
         },
         "fr" : {
@@ -323,6 +383,12 @@
             "value" : "Green"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Verde"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -351,6 +417,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Green"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Verde"
           }
         },
         "fr" : {
@@ -383,6 +455,12 @@
             "value" : "upChevron"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtro anterior"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -411,6 +489,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Parm"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Parámetros"
           }
         },
         "fr" : {
@@ -443,6 +527,12 @@
             "value" : "Detail"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Detalle"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -471,6 +561,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "downChevron"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtro siguiente"
           }
         },
         "fr" : {
@@ -503,6 +599,12 @@
             "value" : "Normalize"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Normalizar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -531,6 +633,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Button"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Botón"
           }
         },
         "fr" : {
@@ -563,6 +671,12 @@
             "value" : "Item"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Elemento"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -591,6 +705,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Help"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ayuda"
           }
         },
         "fr" : {
@@ -623,6 +743,12 @@
             "value" : "Stack"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pila"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -651,6 +777,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Filter Info"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Info del filtro"
           }
         },
         "fr" : {
@@ -683,6 +815,12 @@
             "value" : "Title"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -711,6 +849,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "toggleAnimationPause"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pausar/reanudar animación"
           }
         },
         "fr" : {
@@ -743,6 +887,12 @@
             "value" : "Red"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rojo"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -771,6 +921,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Red"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rojo"
           }
         },
         "fr" : {
@@ -803,6 +959,12 @@
             "value" : "More"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Más"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -831,6 +993,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "ParmHolderView"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vista de parámetros"
           }
         },
         "fr" : {
@@ -863,6 +1031,12 @@
             "value" : "Record Btn"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Grabar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -891,6 +1065,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
           }
         },
         "fr" : {
@@ -923,6 +1103,12 @@
             "value" : "toggleAnimationPause"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pausar/reanudar animación"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -951,6 +1137,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "New"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nuevo"
           }
         },
         "fr" : {
@@ -983,6 +1175,12 @@
             "value" : "Detail"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Detalle"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1011,6 +1209,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
           }
         },
         "fr" : {
@@ -1043,6 +1247,12 @@
             "value" : "Title"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1071,6 +1281,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
           }
         },
         "fr" : {
@@ -1103,6 +1319,12 @@
             "value" : "New"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nuevo"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1131,6 +1353,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Record"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Grabar"
           }
         },
         "fr" : {
@@ -1163,6 +1391,12 @@
             "value" : "Random"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aleatorio"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1191,6 +1425,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "toggleAnimationPause"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pausar/reanudar animación"
           }
         },
         "fr" : {
@@ -1223,6 +1463,12 @@
             "value" : "Help"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ayuda"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1251,6 +1497,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Detail"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Detalle"
           }
         },
         "fr" : {
@@ -1283,6 +1535,12 @@
             "value" : "Filter"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtro"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1311,6 +1569,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "New"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nuevo"
           }
         },
         "fr" : {
@@ -1343,6 +1607,12 @@
             "value" : "Title"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1371,6 +1641,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Label"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Etiqueta"
           }
         },
         "fr" : {
@@ -1403,6 +1679,12 @@
             "value" : "Title"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1431,6 +1713,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "RootSplit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vista principal"
           }
         },
         "fr" : {
@@ -1463,6 +1751,12 @@
             "value" : "ParmSettings"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ajustes de parámetros"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1491,6 +1785,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Help is here"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aquí encontrarás ayuda"
           }
         },
         "fr" : {
@@ -1523,6 +1823,12 @@
             "value" : "More Btn"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Más"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1551,6 +1857,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "metalController"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Controlador Metal"
           }
         },
         "fr" : {
@@ -1583,6 +1895,12 @@
             "value" : "Detail"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Detalle"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1611,6 +1929,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Blue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Azul"
           }
         },
         "fr" : {
@@ -1643,6 +1967,12 @@
             "value" : "Blue"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Azul"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1671,6 +2001,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Item"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Lista de imágenes"
           }
         },
         "fr" : {
@@ -1703,6 +2039,12 @@
             "value" : "Help"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ayuda"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1733,6 +2075,12 @@
             "value" : "Alpha"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Alfa"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1761,6 +2109,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Alpha"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Alfa"
           }
         },
         "fr" : {

@@ -23,6 +23,12 @@
             "value" : "Subtitle"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Subtítulo"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -51,6 +57,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título"
           }
         },
         "fr" : {

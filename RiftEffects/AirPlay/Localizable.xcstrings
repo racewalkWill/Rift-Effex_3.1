@@ -16,6 +16,12 @@
             "value" : "3-seitiger Verlauf zum Überblenden mit Maske. Erzeugt die Maskenform"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Degradado de 3 lados para fusión con máscara. Genera la forma de la máscara"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -66,6 +72,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "4-seitiger Verlauf zum Überblenden mit Maske. Erzeugt die Maskenform"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Degradado de 4 lados para fusión con máscara. Genera la forma de la máscara"
           }
         },
         "fr" : {
@@ -207,6 +219,12 @@
             "value" : "Mitte"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Centro"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -259,6 +277,12 @@
             "value" : "Farbe"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Color"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -282,6 +306,12 @@
             "value" : "Farbe 1"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Color 1"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -303,6 +333,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Farbe 2"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Color 2"
           }
         },
         "fr" : {
@@ -415,6 +451,12 @@
             "value" : "Anzeigedauer"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tiempo de visualización"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -436,6 +478,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Überblendungs-Wrapper"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Wrapper de fundido"
           }
         },
         "fr" : {
@@ -518,6 +566,12 @@
             "value" : "Vergrößern & Schwenken"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ampliar y hacer paneo"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -539,6 +593,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Überblenddauer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tiempo de fundido"
           }
         },
         "fr" : {
@@ -564,6 +624,12 @@
             "value" : "Merkmalsüberblendung"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fundido de características"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -587,6 +653,12 @@
             "value" : "Schriftname"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nombre de fuente"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -608,6 +680,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Schriftgröße"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tamaño de fuente"
           }
         },
         "fr" : {
@@ -660,6 +738,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Höhe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Altura"
           }
         },
         "fr" : {
@@ -740,6 +824,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Bild"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Imagen"
           }
         },
         "fr" : {
@@ -823,6 +913,12 @@
             "value" : "Ken Burns-Überblendung"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fundido Ken Burns"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -846,6 +942,12 @@
             "value" : "Überblendung im Ken Burns-Stil"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fundido al estilo Ken Burns"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -867,6 +969,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Bibliothek"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Biblioteca"
           }
         },
         "fr" : {
@@ -1037,6 +1145,12 @@
             "value" : "Mischen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Mezcla"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1087,6 +1201,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Oktaven"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Octavas"
           }
         },
         "fr" : {
@@ -1170,6 +1290,12 @@
             "value" : "Schwenken und Zoomen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Paneo y zoom"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1191,6 +1317,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Schwenkt und zoomt das Bild in fortlaufend variierenden Schleifen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aplica paneo y zoom a la imagen en bucles de variación continua."
           }
         },
         "fr" : {
@@ -1245,6 +1377,12 @@
             "value" : "Bild aus der Zwischenablage einsetzen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pegar imagen desde el portapapeles"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1266,6 +1404,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Persistenz"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Persistencia"
           }
         },
         "fr" : {
@@ -1291,6 +1435,12 @@
             "value" : "Personensegmentierung"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Segmentación de personas"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1312,6 +1462,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Nicken"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cabeceo"
           }
         },
         "fr" : {
@@ -1337,6 +1493,12 @@
             "value" : "Nickwinkel im Bogenmaß."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ángulo de cabeceo en radianes."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1358,6 +1520,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Pixelhöhe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Altura de píxel"
           }
         },
         "fr" : {
@@ -1383,6 +1551,12 @@
             "value" : "Pixelbreite"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Anchura de píxel"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1404,6 +1578,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Text positionieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posicionar el texto"
           }
         },
         "fr" : {
@@ -1456,6 +1636,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Radius"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Radio"
           }
         },
         "fr" : {
@@ -1597,6 +1783,12 @@
             "value" : "Auf einen kleineren Rahmen verkleinern"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Reducción a un marco más pequeño"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1707,6 +1899,12 @@
             "value" : "Rollen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Balanceo"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1757,6 +1955,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Salienzkarten-Filter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtro de mapa de saliencia"
           }
         },
         "fr" : {
@@ -1840,6 +2044,12 @@
             "value" : "Skalierung"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Escala"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -1861,6 +2071,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Skalierungsfaktor"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Factor de escala"
           }
         },
         "fr" : {
@@ -1913,6 +2129,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Sequenzüberblendung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fundido de secuencia"
           }
         },
         "fr" : {
@@ -2025,6 +2247,12 @@
             "value" : "Streiche über „Make“, um Zufallsfilter hinzuzufügen. Wähle Fotos als zufällige Eingabe mit dem Befehl „Pick“ auf dem Parameter-Bildschirm"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Desliza «Make» para agregar filtros aleatorios. Selecciona fotos como entrada aleatoria con el comando «Pick» en la pantalla de parámetros."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -2048,6 +2276,12 @@
             "value" : "Text"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Texto"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -2069,6 +2303,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Textposition"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posición del texto"
           }
         },
         "fr" : {
@@ -2297,6 +2537,12 @@
             "value" : "Breite"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Anchura"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -2318,6 +2564,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Gieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Guiñada"
           }
         },
         "fr" : {
@@ -2343,6 +2595,12 @@
             "value" : "Gierwinkel im Bogenmaß."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ángulo de guiñada en radianes."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
@@ -2364,6 +2622,12 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Z-Position"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posición Z"
           }
         },
         "fr" : {
