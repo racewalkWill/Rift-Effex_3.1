@@ -3,6 +3,7 @@
   "strings" : {
     "+Effex" : {
       "comment" : "Swipe action label - brand name for adding a Rift Effects filter stack as input",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -120,6 +121,7 @@
     },
     "Add" : {
       "comment" : "Swipe action label - add a new item",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -177,7 +179,7 @@
       }
     },
     "All" : {
-      "comment" : "Toolbar button title - show all filters display mode",
+      "comment" : "Show all filters mode button",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -351,7 +353,7 @@
       }
     },
     "Change" : {
-      "comment" : "Swipe action label - replace the current filter with a different one",
+      "comment" : "Swipe action label",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -554,7 +556,7 @@
       }
     },
     "Delete" : {
-      "comment" : "Menu title",
+      "comment" : "Edit mode delete button\nMenu title\nSwipe action label",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -670,7 +672,7 @@
       }
     },
     "Edit" : {
-      "comment" : "Navigation bar button to enable table editing mode",
+      "comment" : "Edit mode toggle button",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -1016,7 +1018,7 @@
       }
     },
     "Images" : {
-      "comment" : "Images filter display name",
+      "comment" : "Default image attribute name\nImages filter display name",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -1422,7 +1424,7 @@
       }
     },
     "Open" : {
-      "comment" : "Swipe action label - open a filter's parameters",
+      "comment" : "Swipe action label",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -2466,7 +2468,7 @@
       }
     },
     "Single" : {
-      "comment" : "Toolbar button title - single filter display mode",
+      "comment" : "Show single filter mode button",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -2610,8 +2612,38 @@
         }
       }
     },
+    "This cannot be undone" : {
+      "comment" : "Trash alert message",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tuto akci nelze odvolat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dies kann nicht widerrufen werden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Esta acción no se puede deshacer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cette action est irréversible."
+          }
+        }
+      }
+    },
     "Time" : {
       "comment" : "CIFilter attribute display name for a time parameter",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -2664,35 +2696,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Titre :"
-          }
-        }
-      }
-    },
-    "This cannot be undone" : {
-      "comment" : "Trash alert message",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "machine_translated",
-            "value" : "Tuto akci nelze odvolat"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "machine_translated",
-            "value" : "Dies kann nicht widerrufen werden"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "machine_translated",
-            "value" : "Esta acción no se puede deshacer"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "machine_translated",
-            "value" : "Cette action est irréversible."
           }
         }
       }
@@ -2873,6 +2876,7 @@
     },
     "Vary" : {
       "comment" : "Swipe action label - start animating/varying a parameter",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
