@@ -211,7 +211,9 @@ class PGLFilterAttribute {
         aSourceFilter = pglFilter  // unowned var that may be deferenced..
         attributeType = attributeDict[kCIAttributeType] as? String
         attributeClass = attributeDict[kCIAttributeClass] as? String
-        attributeDisplayName = attributeDict[kCIAttributeDisplayName] as? String
+        if let rawDisplayName = attributeDict[kCIAttributeDisplayName] as? String {
+            attributeDisplayName = NSLocalizedString(rawDisplayName, comment: "Filter attribute display name")
+        }
         attributeDescription = attributeDict[kCIAttributeDescription] as? String
         attributeName = inputKey
         minValue = attributeDict[kCIAttributeMin] as? Float

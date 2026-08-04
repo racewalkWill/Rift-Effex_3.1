@@ -25,6 +25,7 @@ class PGLTableCellAction {
 
 
     let swipeLabel: String
+    var localizedLabel: String { NSLocalizedString(swipeLabel, comment: "Swipe action label") }
     let newSubUIAttribute: PGLFilterAttribute?
     let performAction: Bool
         // an attribute implements performCellAction

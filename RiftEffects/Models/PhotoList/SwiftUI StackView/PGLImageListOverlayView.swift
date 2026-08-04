@@ -34,7 +34,7 @@ class PGLImageListViewModel: ObservableObject {
 
         filterParms = allImageAttrs.compactMap { attr -> ParmSection? in
             guard let list = attr.inputCollection, !list.isEmpty() else { return nil }
-            let name = attr.attributeDisplayName ?? attr.attributeName ?? "Images"
+            let name = attr.attributeDisplayName ?? attr.attributeName ?? NSLocalizedString("Images", comment: "Default image attribute name")
             return ParmSection(attributeName: name, imageList: list, assets: list.imageAssets)
         }
 

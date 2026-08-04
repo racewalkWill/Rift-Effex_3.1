@@ -26,7 +26,7 @@ class PGLImageListViewModel: ObservableObject {
     func loadFromFilter(_ filter: PGLSourceFilter) {
         sections = filter.imageAttributes().compactMap { attr in
             guard let list = attr.inputCollection, !list.isEmpty() else { return nil }
-            let name = attr.attributeDisplayName ?? attr.attributeName ?? "Images"
+            let name = attr.attributeDisplayName ?? attr.attributeName ?? NSLocalizedString("Images", comment: "Default image attribute name")
             return AssetSection(attributeName: name, imageList: list, assets: list.imageAssets)
         }
     }

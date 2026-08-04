@@ -214,7 +214,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
     // MARK: editing
     func configureNavigationItem() {
            navigationItem.title = filterOpenTitle
-           let editingItem = UIBarButtonItem(title: tableView.isEditing ? "Delete" : "Edit", style: .plain, target: self, action: #selector(toggleEditing))
+           let editingItem = UIBarButtonItem(title: tableView.isEditing ? NSLocalizedString("Delete", comment: "Edit mode delete button") : NSLocalizedString("Edit", comment: "Edit mode toggle button"), style: .plain, target: self, action: #selector(toggleEditing))
            let sortItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(toggleStackSort))
            sortItem.isSelected = (stackSort == .createdDate)
                // highlighted while the date-created sort is active

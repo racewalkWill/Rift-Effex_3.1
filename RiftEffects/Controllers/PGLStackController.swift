@@ -281,7 +281,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         // both use the same selector...
 
 //        filterShiftImage.image = UIImage(systemName: "chart.bar.doc.horizontal")
-        filterShiftBtn.possibleTitles = [StackDisplayMode.Single.rawValue, StackDisplayMode.All.rawValue ]
+        filterShiftBtn.possibleTitles = [StackDisplayMode.Single.localizedTitle, StackDisplayMode.All.localizedTitle]
 
         upChevronBtn = UIBarButtonItem(title: "", style: .plain, target: self , action: #selector(upChevronAction))
         upChevronBtn.width = filterShiftBtn.width
@@ -314,9 +314,9 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 //            filterShiftImage.isEnabled = (appStack.flatRowCount() > 1 )
             setChevronState()
             if (appStack.showFilterImage) {
-                filterShiftBtn.title  = StackDisplayMode.Single.rawValue
+                filterShiftBtn.title  = StackDisplayMode.Single.localizedTitle
             } else {
-                filterShiftBtn.title  = StackDisplayMode.All.rawValue
+                filterShiftBtn.title  = StackDisplayMode.All.localizedTitle
             }
         }
 
@@ -740,7 +740,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                     cell.selectionStyle = .none
                         // header rows aren't navigable; suppress the blue selection
                         // highlight that otherwise dims the Title label and text
-                    cell.cellLabel.text = "Title:"
+                    cell.cellLabel.text = NSLocalizedString("Title:", comment: "Stack title field label")
                     cell.cellLabel.textColor = .secondaryLabel
                         // match the Album cell contrast; avoids the faint/dimmed title look
                     cell.userText.text = myStack.stackName
@@ -758,7 +758,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
                         fatalError("PGLStackController headerCell did not load")
                     }
                     cell.selectionStyle = .none
-                    cell.cellLabel.text = "Album:"
+                    cell.cellLabel.text = NSLocalizedString("Album:", comment: "Stack album field label")
                     cell.userText.text = myStack.stackType
                     cell.userText.delegate = self
                     cell.userText.tag = StackHeaderCell.album.rawValue
@@ -814,7 +814,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         // userSeconds.text expects String
 //                    cell.userSeconds.text = String(format: "%.0f", runTimeSeconds)
         cell.userSeconds.text = String(runTimeSeconds)
-        cell.cellLabel.text = "Seconds:"
+        cell.cellLabel.text = NSLocalizedString("Seconds:", comment: "Stack run seconds field label")
         // userText.text expects String; format from runTimeSeconds
 
         cell.userSeconds.tag = StackHeaderCell.videoRunSecs.rawValue

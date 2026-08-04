@@ -987,7 +987,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         var contextActions = [UIContextualAction]()
         var myAction: UIContextualAction!
 
-        myAction = UIContextualAction(style: .normal, title: "Open") { [weak self] (_, _, completion) in
+        myAction = UIContextualAction(style: .normal, title: NSLocalizedString("Open", comment: "Swipe action label")) { [weak self] (_, _, completion) in
             guard self != nil
                        else { return  }
             stackController.appStack.viewerStack.activeFilterIndex = indexPath.row
@@ -1004,7 +1004,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
                }
         contextActions.append(myAction)
         
-        myAction = UIContextualAction(style: .normal, title: "Change") { [weak self] (_, _, completion) in
+        myAction = UIContextualAction(style: .normal, title: NSLocalizedString("Change", comment: "Swipe action label")) { [weak self] (_, _, completion) in
             guard self != nil
                else { return  }
 
@@ -1037,7 +1037,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         contextActions.append(myAction)
 
 
-        myAction = UIContextualAction(style: .normal, title: "Delete") { [weak self] (_, _, completion) in
+        myAction = UIContextualAction(style: .normal, title: NSLocalizedString("Delete", comment: "Swipe action label")) { [weak self] (_, _, completion) in
             guard self != nil
                        else { return  }
            Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLStackController trailingSwipeActionsConfigurationForRowAt Delete")

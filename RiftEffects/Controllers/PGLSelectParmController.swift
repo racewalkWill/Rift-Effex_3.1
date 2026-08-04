@@ -416,9 +416,9 @@ class PGLSelectParmController: PGLCommonController,
 
         filterShiftLabel.isEnabled = (appStack.flatRowCount() > 1)
         if (appStack.showFilterImage) {
-            filterShiftLabel.title = StackDisplayMode.Single.rawValue
+            filterShiftLabel.title = StackDisplayMode.Single.localizedTitle
         } else {
-            filterShiftLabel.title = StackDisplayMode.All.rawValue
+            filterShiftLabel.title = StackDisplayMode.All.localizedTitle
         }
         setChevronState()
 
@@ -1003,7 +1003,7 @@ class PGLSelectParmController: PGLCommonController,
         for anActionCell in newActionCells {
             switch anActionCell.cellAction() {
             case .segue:
-                let myAction = UIContextualAction(style: .normal, title: anActionCell.swipeLabel) { [weak self] (_, _, completion) in
+                let myAction = UIContextualAction(style: .normal, title: anActionCell.localizedLabel) { [weak self] (_, _, completion) in
                     guard let self = self
                         else { return  }
                     // this case for a new cell in the interface
@@ -1041,7 +1041,7 @@ class PGLSelectParmController: PGLCommonController,
                 }
                 contextActions.append(myAction)
             case .command:
-                let myAction = UIContextualAction(style: .normal, title: anActionCell.swipeLabel) { [weak self] (_, _, completion) in
+                let myAction = UIContextualAction(style: .normal, title: anActionCell.localizedLabel) { [weak self] (_, _, completion) in
                     guard let self = self
                         else { return  }
                     if anActionCell.performAction2 {
@@ -1052,7 +1052,7 @@ class PGLSelectParmController: PGLCommonController,
                 }
                 contextActions.append(myAction)
             case .addCell:
-                let myAction = UIContextualAction(style: .normal, title: anActionCell.swipeLabel) { [weak self] (_, _, completion) in
+                let myAction = UIContextualAction(style: .normal, title: anActionCell.localizedLabel) { [weak self] (_, _, completion) in
                     // this case for a new cell in the interface
                     guard let self = self
                                            else { return  }
@@ -1065,7 +1065,7 @@ class PGLSelectParmController: PGLCommonController,
                  contextActions.append(myAction)
             case .addANDcommand:
                 // this case for a new cell in the interface
-                let myAction = UIContextualAction(style: .normal, title: anActionCell.swipeLabel) { [weak self] (_, _, completion) in
+                let myAction = UIContextualAction(style: .normal, title: anActionCell.localizedLabel) { [weak self] (_, _, completion) in
                     // this case for a new cell in the interface
                     guard let self = self
                                            else { return  }
@@ -1091,7 +1091,7 @@ class PGLSelectParmController: PGLCommonController,
                 }
                 contextActions.append(myAction)
             case .cancel:
-                let myAction = UIContextualAction(style: .normal, title: anActionCell.swipeLabel) { [weak self] (_, _, completion) in
+                let myAction = UIContextualAction(style: .normal, title: anActionCell.localizedLabel) { [weak self] (_, _, completion) in
                     // cancel needs to remove the timerRate uiCell
                     guard let self = self
                                            else { return  }

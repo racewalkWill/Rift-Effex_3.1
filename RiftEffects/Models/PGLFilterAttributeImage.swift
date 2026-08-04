@@ -107,7 +107,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
                 newDescriptionString = newDescriptionString + " ----> "
             }
             else {
-                newDescriptionString = newDescriptionString + " -> " + "Photos"
+                newDescriptionString = newDescriptionString + " -> " + NSLocalizedString("Photos", comment: "Photo library source name")
             }
 
         }

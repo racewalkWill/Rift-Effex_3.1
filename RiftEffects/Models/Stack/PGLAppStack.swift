@@ -27,6 +27,12 @@ let PGLUndoManagerLevels = 8
 enum StackDisplayMode: String {
      case All
      case Single
+    var localizedTitle: String {
+        switch self {
+        case .All: return NSLocalizedString("All", comment: "Show all filters mode button")
+        case .Single: return NSLocalizedString("Single", comment: "Show single filter mode button")
+        }
+    }
 }
 @MainActor
 class PGLAppStack {
