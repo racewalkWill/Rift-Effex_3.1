@@ -37,46 +37,18 @@ extension PGLFilterStack {
         ]
 
 
-        let demoInput = PGLImageList(imageFileNames: [
-            "Eagle Mtn",
-            "FarmSunrise",
-            "foggyPath"])
-        let demoBackgrdInput = PGLImageList(imageFileNames: [
-            "LakeOverlook",
-            "LakeHarbor" ] )
-        let demoMaskInput = PGLImageList(imageFileNames: [
-            "morningMeadow",
-            "winterScene" ] )
-//        let demoPersonSegmentImage = PGLImageList(imageFileNames: [
-//            "WL-B" ] )
+        let demoInput =  PGLDemo.getRandomImagesFromFavorites()
+        let demoBackgrdInput =  PGLDemo.getRandomImagesFromFavorites()
+        let demoMaskInput =  PGLDemo.getRandomImagesFromFavorites()
 
 
-//        if let startingFilter =  demoLoadFilter(ciFilterString: topFilterName) {
-//            append(startingFilter)
 
-//            let imageAttribute = startingFilter.getInputImageAttribute()
-//            imageAttribute?.setImageCollectionInput(cycleStack: demoPersonSegmentImage)
-//
-//                /// set up mask
-//
-//            _ = startingFilter.addChildFilter(toAttributeName: kCIInputMaskImageKey, childFilterName: maskInputName, childImageInputs: demoPersonSegmentImage)
-//
-//                /// set up background sequence
-//            let backgrdInputAttribute = startingFilter.attribute(nameKey: kCIInputBackgroundImageKey)
-
-//            let backgrdChildStack = PGLFilterStack()
-//            backgrdChildStack.stackName = "Mask"
-//            backgrdChildStack.stackType = "input"
-//            backgrdChildStack.parentAttribute = backgrdInputAttribute
-//
-//            backgrdInputAttribute?.inputStack = backgrdChildStack
-//            backgrdInputAttribute?.setImageParmState(newState: .inputChildStack)
 
             let theDescriptor = PGLFilterDescriptor(kPSequencedFilter, PGLSequencedFilters.self)
 
             guard let seqFilter = theDescriptor?.pglSourceFilter() as? PGLSequencedFilters
             else {   fatalError("Did not create SequencedFilters" ) }
-//            backgrdChildStack.append(seqFilter)
+
             append(seqFilter)
 
             seqFilter.addChildSequenceStack(appStack: appStack)
@@ -246,8 +218,7 @@ extension PGLSourceFilter {
 
         func demoDifferenceBlendParms() {
             // filter "CIDifferenceBlendMode"
-            let eyeGlassMask = PGLImageList(imageFileNames: [
-                "eyeGlasses"])
+            let eyeGlassMask = PGLDemo.getRandomImagesFromFavorites()
             if let backgrdInputAttribute = self.attribute(nameKey: kCIInputBackgroundImageKey) {
                 backgrdInputAttribute.setImageCollectionInput(cycleStack: eyeGlassMask ) }
             

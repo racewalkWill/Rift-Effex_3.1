@@ -136,12 +136,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     }
 
 
-    /// demo init for images in the build Assets.xcassets - not in the user photos library
-    convenience init(imageFileNames: [String]) {
-        self .init()
-        fatalError("PGLImageList imageFileNames not yet implemented")
 
-    }
 
 
     func releaseVars() {
