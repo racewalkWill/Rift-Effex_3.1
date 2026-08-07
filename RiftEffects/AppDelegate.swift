@@ -246,6 +246,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: Orientation
 
+    // TODO: Modernization - Consider adopting `prefersInterfaceOrientationLocked` (iOS 26+)
+    // as the modern replacement for orientation locking via `supportedInterfaceOrientations`.
+    // Override `prefersInterfaceOrientationLocked` in the relevant view controllers and call
+    // `setNeedsUpdateOfPrefersInterfaceOrientationLocked()` when the preference changes.
     /// iPhone supports landscape (the original side-by-side layout) plus portrait
     /// (the single-column layout in PGLTwoColumnSplitController). iPad supports all
     /// orientations.
