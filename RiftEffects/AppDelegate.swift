@@ -255,10 +255,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// orientations.
     func application(_ application: UIApplication,
                      supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            return .all
-        }
-        return [.landscapeLeft, .landscapeRight, .portrait]
+        return .all
+//        if UIDevice.current.userInterfaceIdiom == .pad {
+//            return .all
+//        }
+//        ///  effectively all for the iPhone now
+//        return [.landscapeLeft, .landscapeRight, .portrait, .portraitUpsideDown]
+
     }
 
     //MARK: standard lifecycle overrides

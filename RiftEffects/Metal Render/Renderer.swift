@@ -313,7 +313,7 @@ class Renderer: NSObject, MTKViewDelegate {
     func set(metalView: MTKView) {
         metalView.device = device
         metalView.framebufferOnly = false
-            // "To optimize a drawable from an MTKView for GPU access, set the view’s framebufferOnly
+            // "To optimize a drawable from an MTKView for GPU access, set the view's framebufferOnly
             // property to true. This property configures the texture exclusively
             //  as a render target and displayable resource."
             // in WWDC 2020 "Optimize the Core Image pipeline for your video app" suggest false setting
@@ -428,7 +428,12 @@ class Renderer: NSObject, MTKViewDelegate {
 
      func startCaptureSession(_ secondsToCapture: Int = 2) {
          // default to 2 second save
-        myCaptureSession = PGLCaptureOutput(context: ciMetalContext, size: TargetSize)
+            // Do NOT size the writer from TargetSize here: this can run before
+            // DoNotDraw is cleared and the draw loop has re-synced TargetSize to
+            // the view's current drawableSize, which previously baked in a stale
+            // (often much smaller) size and produced a badly cropped/zoomed video.
+            // PGLCaptureOutput now sizes itself from the actual frame it receives.
+        myCaptureSession = PGLCaptureOutput(context: ciMetalContext)
         myCaptureSession?.maxFrames = secondsToCapture * 60 // assuming 60 frames per second
 
     }
@@ -559,7 +564,7 @@ class Renderer: NSObject, MTKViewDelegate {
                             startCaptureSession()
                                 // CGSize(width: 1936.0, height: 1520.0 )
                         }
-                        DoCapture =  myCaptureSession?.addFrame(ciOutputImage) ?? false
+                        DoCapture =  myCaptureSession?.addFrame(ciOutputImage, size: dSize) ?? false
                             // add to the output queue to save
                             // if maxFrames captured then stop
                         if !DoCapture {

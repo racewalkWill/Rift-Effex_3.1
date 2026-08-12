@@ -149,6 +149,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
 
     }
     override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
         let deviceIdom = traitCollection.userInterfaceIdiom
         if deviceIdom == .phone {
             navigationItem.leftItemsSupplementBackButton = true
