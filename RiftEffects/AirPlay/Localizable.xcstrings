@@ -295,7 +295,7 @@
       }
     },
     "Cancel" : {
-      "comment" : "Alert cancel button\nCancel a long running video save",
+      "comment" : "Alert cancel button\nCancel a long running video save\nCancel button title",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -2234,6 +2234,12 @@
           }
         }
       }
+    },
+    "Save As" : {
+      "comment" : "Save As button title"
+    },
+    "Save Stack" : {
+      "comment" : "Save stack sheet title"
     },
     "Save..." : {
       "comment" : "Menu title",

@@ -15,7 +15,7 @@ import SwiftUI
 let PGLUpdateSplitView = NSNotification.Name(rawValue: "PGLUpdateSplitView")
 let PGLSaveStackAction = NSNotification.Name(rawValue: "PGLSaveStackAction")
 
-class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate {
+class PGLStackController: UITableViewController, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate {
     // tableview of the filters in the stack
     // opens on cell select the masterFilterController to pick new filter
     // on swipe cell "Parms" opens parmController to change filter parms
@@ -33,8 +33,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     var segueStarted = false  // set to true during prepareFor segue
 
     var existingStackTypes: [String]!
-    var albumUserTextCell: UITextField?
-    var saveStackBtn: UIButton?
+    var saveStackHostingController: UIViewController?
     var myButtonHeader: PGLEffexButtonsHeader?
 
     var publishers = [any Cancellable]()
@@ -49,10 +48,6 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
             }
        }
 
-    /// default to title and album input cells as hidden
-    private var showStackTitleAlbumCells = false
-    private var titleAlbumSectionRowCount: Int = 0
-
     var runTimeSeconds: Int = 0 {
         didSet {
             appStack.runTimeSeconds = runTimeSeconds
@@ -64,13 +59,6 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         case filters = 1
     }
 
-    enum StackHeaderCell: Int {
-        case title = 0
-        case album = 1
-        case videoRunSecs = 2 // this one is skipped if no motion  or video
-        case saveBtn = 3
-    }
-
     // MARK: View LifeCycle
 
     
@@ -80,8 +68,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
         if #available(iOS 26.0, *) {
             // Keep the top row crisp. The default soft scroll-edge effect blurs
-            // the first table row (the save-form "Title:" field) where it sits
-            // under the translucent navigation bar, dimming it vs. the Album row.
+            // the first table row where it sits under the translucent navigation bar.
             tableView.topEdgeEffect.isHidden = true
         }
         guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
@@ -139,12 +126,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
         cancellable = myCenter.publisher(for:  PGLStackStartSave)
             .sink() { [weak self]
-                myUpdate in 
-                if !(self?.showStackTitleAlbumCells ?? false) {
-                    // two messages to show from the image controller
-                    // only the stack controller should toggle back/forth
-                    self?.toggleStackTitleAlbumCellsVisible()
-                }
+                myUpdate in
+                self?.presentSaveStackSheet()
         }
         publishers.append(cancellable!)
 
@@ -166,9 +149,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
         registerCellNibs()
 
         
-        // provide the album names (aka stackTypes) for the header album choice menu
-        // see setAlbumChoiceMenu that creates UIActions for the menu with the stackTypes
-        
+        // provide the album names (aka stackTypes) for the save-sheet's album picker menu
         if let sections = appStack.dataProvider.fetchedResultsController.sections {
             existingStackTypes = sections.map({$0.name})
         } else
@@ -432,9 +413,8 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
            switch section {
                case 0:
-                   // may be zero or 3
-                   return titleAlbumSectionRowCount
-                   //  stackName, type, video secs, saveBtn input rows
+                   // save-stack title/album form now presented as a sheet, not table rows
+                   return 0
                case 1:
                    return appStack.flatRowCount()
                default:
@@ -447,12 +427,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     // MARK: TableView cells
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//             headers don't count for indexPath.
-        if indexPath.section == 0 {
-                return titleAlbumCell(tableView, indexPath)}
-            else {
-                return filterCellFor(tableView, indexPath)
-                }
+        return filterCellFor(tableView, indexPath)
     }
 
 
@@ -531,47 +506,6 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
 
 
-
-// MARK: Stack Name input
-
-    func addAlbumLookUp(albumUserText: UITextField) {
-        let overlayButton = UIButton(type: .custom)
-        let bookmarkImage = UIImage(systemName: "bookmark")
-        overlayButton.setImage(bookmarkImage, for: .normal)
-
-        overlayButton.sizeToFit()
-        setAlbumChoiceMenu(bookMarkBtn: overlayButton)
-
-        // Assign the overlay button to the text field
-        albumUserText.leftView = overlayButton
-        albumUserText.leftViewMode = .always
-        
-    }
-
-    @objc func setAlbumChoiceMenu(bookMarkBtn: UIButton) {
-        // open popup menu with existingStackTypes
-//        existingStackTypes
-
-        // [weak self]: this menu is stored on overlayButton.menu, which lives in
-        // this controller's view hierarchy, so a strong self capture would form a
-        // retain cycle (self -> button.menu -> UIAction -> closure -> self).
-        let albumItems:[UIAction] = existingStackTypes.map {
-            UIAction( title: $0, handler: { [weak self] thisAction in self?.setStackTo(albumName: thisAction.title )})
-        }
-
-        let albumMenu = UIMenu(title:"Albums", children: albumItems)
-        bookMarkBtn.menu = albumMenu
-        bookMarkBtn.showsMenuAsPrimaryAction = true
-
-    }
-
-    func setStackTo(albumName: String) {
-        NSLog("PGLStackController #setStackTo(albumName \(albumName)")
-        let theOutputStack = self.appStack.outputStack
-        theOutputStack.stackType = albumName
-        theOutputStack.exportAlbumName = albumName
-        albumUserTextCell?.text = albumName
-    }
 
 //    override func tableView( _ tableView: UITableView, didHighlightRowAt indexPath:IndexPath ) {
 //        // make the viewerStack visible for this filter
@@ -669,18 +603,6 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
     // MARK: Header setup
 
     fileprivate func registerCellNibs() {
-        let stackInfoHeaderCellNib = UINib(nibName: PGLStackInfoHeader.nibName, bundle: nil)
-        tableView.register(stackInfoHeaderCellNib ,forCellReuseIdentifier: PGLStackInfoHeader.reuseIdentifer)
-
-        let stackAlbumHeaderCellNib = UINib(nibName: PGLStackAlbumHeader.nibName, bundle: nil)
-        tableView.register(stackAlbumHeaderCellNib ,forCellReuseIdentifier: PGLStackAlbumHeader.reuseIdentifer)
-
-        let saveButtonsCellNib = UINib(nibName: PGLSaveButtonRow.nibName, bundle: nil)
-        tableView.register(saveButtonsCellNib , forCellReuseIdentifier: PGLSaveButtonRow.reuseIdentifer)
-
-        let stackRunSecondsCellNib = UINib(nibName: PGLStackInfoRunSeconds.nibName, bundle: nil)
-        tableView.register(stackRunSecondsCellNib ,forCellReuseIdentifier: PGLStackInfoRunSeconds.reuseIdentifer)
-
         let effexButtonsCellNib = UINib(nibName: PGLEffexButtonsHeader.nibName, bundle: nil)
         tableView.register(effexButtonsCellNib , forHeaderFooterViewReuseIdentifier: PGLEffexButtonsHeader.reuseIdentifer)
     }
@@ -697,9 +619,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     override func tableView( _ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
-            if showStackTitleAlbumCells {
-                return UITableViewHeaderFooterView()
-            } else { return nil }
+            return nil
         }
         if section == 1 {
             if  let myButtonHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: PGLEffexButtonsHeader.reuseIdentifer) as? PGLEffexButtonsHeader {
@@ -723,105 +643,6 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
             }
         }
         return nil // no other headers
-    }
-
-
-    fileprivate func titleAlbumCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
-            // header
-       // titleAlbumSectionRowCount may be 0,3,4
-        let myStack = appStack.outputStack
-        if indexPath.section == 0 {
-            switch indexPath.row {
-                case StackHeaderCell.title.rawValue :
-                    guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
-                    else {
-                        fatalError("PGLStackController headerCell did not load")
-                    }
-                    cell.selectionStyle = .none
-                        // header rows aren't navigable; suppress the blue selection
-                        // highlight that otherwise dims the Title label and text
-                    cell.cellLabel.text = NSLocalizedString("Title:", comment: "Stack title field label")
-                    cell.cellLabel.textColor = .secondaryLabel
-                        // match the Album cell contrast; avoids the faint/dimmed title look
-                    cell.userText.text = myStack.stackName
-                    cell.userText.textColor = .label
-                    cell.userText.isEnabled = true
-                    cell.userText.delegate = self
-                    cell.userText.tag = StackHeaderCell.title.rawValue
-                    cell.userText.returnKeyType = .done
-                    cell.userText.delegate = self
-                    return cell
-
-                case StackHeaderCell.album.rawValue :
-                    guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackAlbumHeader.reuseIdentifer, for: indexPath) as? PGLStackAlbumHeader
-                    else {
-                        fatalError("PGLStackController headerCell did not load")
-                    }
-                    cell.selectionStyle = .none
-                    cell.cellLabel.text = NSLocalizedString("Album:", comment: "Stack album field label")
-                    cell.userText.text = myStack.stackType
-                    cell.userText.delegate = self
-                    cell.userText.tag = StackHeaderCell.album.rawValue
-                    cell.userText.returnKeyType = .done
-                    cell.userText.delegate = self
-                    addAlbumLookUp(albumUserText: cell.userText)
-                    albumUserTextCell = cell.userText
-                    return cell
-
-
-                case StackHeaderCell.videoRunSecs.rawValue  :
-                    if titleAlbumSectionRowCount == 3 {
-                        // case of three rows.. omit the stackRunSeconds
-                        // answer the saveBtnRow
-                        return stackSaveBtnCell(toIndexPath: IndexPath(row: 0, section: titleAlbumSectionRowCount - 1))!
-                    }
-                    else {
-                       return stackRunSecondsCell(toIndexPath: IndexPath(row: 0, section: titleAlbumSectionRowCount - 1))!
-                    }
-
-                case StackHeaderCell.saveBtn.rawValue :
-                    return stackSaveBtnCell(toIndexPath: IndexPath(row: 0, section: titleAlbumSectionRowCount - 1))!
-
-                default:
-                        // or let cell = tableView.dequeueReusableCell(withIdentifier: "childStackHeader", for: indexPath)
-
-                    guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoHeader.reuseIdentifer, for: indexPath) as? PGLStackInfoHeader
-                    else {
-                        fatalError("PGLStackController headerCell did not load")
-                    }
-                    return cell
-            }
-        }
-        return UITableViewCell()
-    }
-
-    func stackSaveBtnCell(toIndexPath: IndexPath) -> UITableViewCell? {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLSaveButtonRow.reuseIdentifer, for: toIndexPath) as? PGLSaveButtonRow
-        else { fatalError("PGLStackController did not load save buttons") }
-        cell.cancelBtn.addTarget(self, action: #selector(cancelStackSave), for: .touchUpInside)
-        cell.saveBtn.addTarget(self, action: #selector(saveStack), for: .touchUpInside)
-        saveStackBtn = cell.saveBtn
-        saveStackBtn?.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
-        return cell
-    }
-
-    func stackRunSecondsCell(toIndexPath: IndexPath) -> UITableViewCell? {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: PGLStackInfoRunSeconds.reuseIdentifer, for: toIndexPath) as? PGLStackInfoRunSeconds else {
-            fatalError("PGLStackController headerCell did not load")
-        }
-        // secondsValue is Int; assign from runTimeSeconds
-        cell.secondsValue = Int(runTimeSeconds)
-        // userSeconds.text expects String
-//                    cell.userSeconds.text = String(format: "%.0f", runTimeSeconds)
-        cell.userSeconds.text = String(runTimeSeconds)
-        cell.cellLabel.text = NSLocalizedString("Seconds:", comment: "Stack run seconds field label")
-        // userText.text expects String; format from runTimeSeconds
-
-        cell.userSeconds.tag = StackHeaderCell.videoRunSecs.rawValue
-        cell.userSeconds.returnKeyType = .done
-        cell.userSeconds.delegate = self
-        return cell
-
     }
 
 
@@ -851,40 +672,79 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
     }
 
-    @objc func cancelStackSave() {
-      toggleStackTitleAlbumCellsVisible()
-    }
+    func presentSaveStackSheet() {
+        guard presentedViewController == nil else { return }
 
-    @objc func saveStack() {
-        // post notication to the imageController
-        let notifier = Notification(name: PGLStackSavePerform)
-        NotificationCenter.default.post(notifier)
-        toggleStackTitleAlbumCellsVisible()
-
-    }
-
-    func toggleStackTitleAlbumCellsVisible() {
-        var expandedSectionRowCount = 3
-                // without the video seconds save time cell row
-        runTimeSeconds = 0 // default
-        showStackTitleAlbumCells = !showStackTitleAlbumCells
-        if showStackTitleAlbumCells {
-            if appStack.appRenderer.isRunningFrameUpdates() {
-                runTimeSeconds = Int(appStack.outputStack.estimateStackRunSeconds())
-                if runTimeSeconds > 0 {
-                    expandedSectionRowCount = 4
-                    // add a row for the video seconds save time
-                }
-            }
-            titleAlbumSectionRowCount = expandedSectionRowCount
-        } else {
-            titleAlbumSectionRowCount = 0
+        runTimeSeconds = 0 // default; only set below if the stack renders motion/video
+        var showsRunSeconds = false
+        if appStack.appRenderer.isRunningFrameUpdates() {
+            runTimeSeconds = Int(appStack.outputStack.estimateStackRunSeconds())
+            showsRunSeconds = runTimeSeconds > 0
         }
 
+        let myStack = appStack.outputStack
+        let sheet = PGLSaveStackSheet(
+            originalTitle: myStack.stackName,
+            originalAlbum: myStack.stackType,
+            existingAlbums: existingStackTypes,
+            showsRunSeconds: showsRunSeconds,
+            estimatedSeconds: runTimeSeconds,
+            isNewStack: myStack.storedStack == nil,
+            onCancel: { [weak self] in
+                self?.dismiss(animated: true)
+            },
+            onSave: { [weak self] title, album, seconds in
+                self?.saveStack(title: title, album: album, seconds: showsRunSeconds ? seconds : nil)
+            })
 
-        tableView.reloadData()
+        let hosting = UIHostingController(rootView: sheet)
+        saveStackHostingController = hosting
 
-        NSLog(#function + " runTimeSeconds: \(runTimeSeconds)")
+        // present small, like popUpFilterDescription below, instead of a full-window sheet
+        hosting.modalPresentationStyle = .popover
+        let preferredSize = PGLSaveStackSheet.Layout.preferredSize(showsRunSeconds: showsRunSeconds)
+        hosting.preferredContentSize = preferredSize
+
+        if let popOverPresenter = hosting.popoverPresentationController {
+            popOverPresenter.sourceView = view
+            popOverPresenter.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+            popOverPresenter.permittedArrowDirections = []
+
+            let sheetPresentation = popOverPresenter.adaptiveSheetPresentationController
+            sheetPresentation.prefersEdgeAttachedInCompactHeight = true
+            sheetPresentation.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+            sheetPresentation.detents = [.custom { _ in preferredSize.height }]
+        }
+
+        present(hosting, animated: true)
+    }
+
+    func saveStack(title: String, album: String, seconds: Int?) {
+        let thisStack = appStack.outputStack
+        var didChangeName = false
+
+        if title != thisStack.stackName {
+            thisStack.stackName = title
+            didChangeName = true
+        }
+        if album != thisStack.stackType {
+            thisStack.stackType = album
+            thisStack.exportAlbumName = album
+            didChangeName = true
+        }
+        if let seconds, seconds >= 0 {
+            runTimeSeconds = seconds
+        }
+        if didChangeName {
+            postStackNameChange()
+        }
+
+        // post notification to the imageController
+        let notifier = Notification(name: PGLStackSavePerform)
+        NotificationCenter.default.post(notifier)
+
+        dismiss(animated: true)
+        saveStackHostingController = nil
     }
 
 //    func showStackControllerAction() {
@@ -1224,95 +1084,7 @@ class PGLStackController: UITableViewController, UITextFieldDelegate, UINavigati
 
 }
 
-/// UITextFieldDelegate Header cells text editing
 extension PGLStackController {
-//    func textField(
-//        _ textField: UITextField,
-//        shouldChangeCharactersIn range: NSRange,
-//        replacementString string: String
-//    ) -> Bool {
-//
-//        return true
-//    }
-
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        // see the StackSaveState logic in #writeCDStack..
-        if saveStackBtn?.title(for: .normal) != "Save As" {
-            saveStackBtn?.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
-        }
-    }
-        /// make sure that textField is not editing on first display !
-        ///  only enter here after the user selects and edits the text
-    func textFieldDidEndEditing(_ textField: UITextField) {
-
-       let thisStack = appStack.outputStack
-
-            // first stack is the highest level.. not a child stack
-        guard var newText = textField.text else {return }
-
-        newText = newText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        var isSave = true
-        switch textField.tag {
-            case StackHeaderCell.title.rawValue :
-                if newText != thisStack.stackName {
-                    isSave = false
-                }
-            case StackHeaderCell.album.rawValue :
-                if newText != thisStack.stackType {
-                    isSave = false
-                }
-            default:
-               isSave = true
-        }
-        if isSave {
-                if saveStackBtn?.title(for: .normal) != "Save As" {
-                        // don't overwrite if on the other unchanged field
-                        // "Save As" gets to win..
-                    saveStackBtn?.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
-                }
-            }
-        else {
-            saveStackBtn?.setTitle("Save As", for: .normal)
-        }
-
-        switch textField.tag {
-            /// also the case of one field is changed then tab into the other. Save As should still  be button text
-            case StackHeaderCell.title.rawValue:
-                if newText != thisStack.stackName {
-                    thisStack.stackName = newText
-                    postStackNameChange()
-                }
-
-            case StackHeaderCell.album.rawValue:
-                if newText != thisStack.stackType {
-                    thisStack.stackType = newText
-                    thisStack.exportAlbumName = thisStack.stackType
-                    postStackNameChange()
-                }
-
-            case StackHeaderCell.videoRunSecs.rawValue:
-                if let newValue = Int(newText) {
-                    if newValue >= 0 {
-                        runTimeSeconds = newValue
-                    }
-
-                }
-
-
-            default:
-                return
-        }
-
-        Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLStackController textFieldDidEndEditing name - \(thisStack.stackName) type - \(thisStack.stackType) - tag \(textField.tag) ")
-       
-
-    }
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        textField.resignFirstResponder()
-        return true
-    }
 
     func postStackNameChange() {
 
@@ -1320,11 +1092,7 @@ extension PGLStackController {
         let stackNotification = Notification(name:PGLStackNameChange)
         NotificationCenter.default.post(stackNotification)
 
-        
-
-
     }
-
 
 }
 

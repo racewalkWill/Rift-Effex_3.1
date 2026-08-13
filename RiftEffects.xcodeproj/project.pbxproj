@@ -22,6 +22,7 @@
 		A320F6262669550E008F6090 /* PGLInfoPrivacyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320F6252669550E008F6090 /* PGLInfoPrivacyController.swift */; };
 		A320F62A26699FA8008F6090 /* PrivacyPolicy.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A320F62926699FA7008F6090 /* PrivacyPolicy.rtf */; };
 		A3249AB025BC728D00F7FAC2 /* PGLDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3249AAF25BC728D00F7FAC2 /* PGLDemo.swift */; };
+		A325406F302E6A54005B55F4 /* PGLSaveStackSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A325406E302E6A54005B55F4 /* PGLSaveStackSheet.swift */; };
 		A326F7A52B1FDEB30070D759 /* PGLFilterAttributeVectorUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A326F7A42B1FDEB30070D759 /* PGLFilterAttributeVectorUI.swift */; };
 		A327122229775C30007DF04A /* MetalFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A327122129775C30007DF04A /* MetalFilters.swift */; };
 		A32772F12B336BDC00C4428A /* PGLAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF50A524D32A3400CD5114 /* PGLAsset.swift */; };
@@ -31,7 +32,6 @@
 		A32F2139283BBA83006C026F /* PGLNavSecondaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32F2138283BBA83006C026F /* PGLNavSecondaryController.swift */; };
 		A32F213B283BBAF1006C026F /* PGLNavPrimaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32F213A283BBAF1006C026F /* PGLNavPrimaryController.swift */; };
 		A32F213D283BBF3A006C026F /* PGLFilterImageContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32F213C283BBF3A006C026F /* PGLFilterImageContainerController.swift */; };
-		A333185E2CE42E5100FA8A45 /* PGLSaveButtonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A333185D2CE42E5100FA8A45 /* PGLSaveButtonRow.swift */; };
 		A33BD1B129626597007D3527 /* PGLButtonCellUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33BD1B029626597007D3527 /* PGLButtonCellUI.swift */; };
 		A33C441D28E8D4E50096E7EE /* PGLSequencedFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33C441C28E8D4E50096E7EE /* PGLSequencedFilters.swift */; };
 		A33E82032B15458D008F79B3 /* PGLScaleFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33E82022B15458D008F79B3 /* PGLScaleFrame.swift */; };
@@ -53,11 +53,7 @@
 		A3595014300D7F0500FBE753 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3595013300D7F0500FBE753 /* Launch Screen.storyboard */; };
 		A3595017300D7F0600FBE753 /* StackCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3595016300D7F0600FBE753 /* StackCell.xib */; };
 		A359501A300D7F0600FBE753 /* TableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3595019300D7F0600FBE753 /* TableCell.xib */; };
-		A359501D300D7F0600FBE753 /* PGLStackInfoHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A359501C300D7F0600FBE753 /* PGLStackInfoHeader.xib */; };
-		A3595020300D7F0600FBE753 /* PGLStackAlbumHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A359501F300D7F0600FBE753 /* PGLStackAlbumHeader.xib */; };
-		A3595023300D7F0600FBE753 /* PGLStackRunSeconds.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3595022300D7F0600FBE753 /* PGLStackRunSeconds.xib */; };
 		A3595026300D7F0600FBE753 /* PGLEffexButtonsHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3595025300D7F0600FBE753 /* PGLEffexButtonsHeader.xib */; };
-		A3595029300D7F0600FBE753 /* SaveButtons.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3595028300D7F0600FBE753 /* SaveButtons.xib */; };
 		A359502C300D7F0600FBE753 /* Root.strings in Resources */ = {isa = PBXBuildFile; fileRef = A359502B300D7F0600FBE753 /* Root.strings */; };
 		A3595039300D7F0700FBE753 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A3595037300D7F0700FBE753 /* InfoPlist.xcstrings */; };
 		A359503A300D7F0700FBE753 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A3595038300D7F0700FBE753 /* Localizable.xcstrings */; };
@@ -67,7 +63,6 @@
 		A35FF77C26DC324E00D78252 /* CoreDataSampleLicense.txt in Resources */ = {isa = PBXBuildFile; fileRef = A35FF77B26DC324E00D78252 /* CoreDataSampleLicense.txt */; };
 		A35FF77E26DC346200D78252 /* PGLCoreData+Defns.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35FF77D26DC346200D78252 /* PGLCoreData+Defns.swift */; };
 		A36324E825B247F7003F4C0F /* PGLExcludeFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36324E725B247F7003F4C0F /* PGLExcludeFilters.swift */; };
-		A3651FA32A9BD4E1006F50F6 /* PGLStackAlbumHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3651FA12A9BD4E1006F50F6 /* PGLStackAlbumHeader.swift */; };
 		A369A7FC2D44622100C55438 /* PGLFilterAttributeVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A369A7FB2D44622100C55438 /* PGLFilterAttributeVector.swift */; };
 		A369A7FE2D44624800C55438 /* PGLFilterAttributeTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A369A7FD2D44624800C55438 /* PGLFilterAttributeTime.swift */; };
 		A369A8002D44625B00C55438 /* PGLFilterAttributeVector3.swift in Sources */ = {isa = PBXBuildFile; fileRef = A369A7FF2D44625B00C55438 /* PGLFilterAttributeVector3.swift */; };
@@ -93,7 +88,6 @@
 		A3811C012DC56DA900A1A178 /* PGLFilterConstructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811C002DC56DA900A1A178 /* PGLFilterConstructor.swift */; };
 		A3811C032DC57CE100A1A178 /* PGLRectangleGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3811C022DC57CE100A1A178 /* PGLRectangleGenerator.swift */; };
 		A38735AB2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */; };
-		A389C2C22F22A22F007B2ABA /* PGLStackInfoRunSeconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = A389C2C12F22A22F007B2ABA /* PGLStackInfoRunSeconds.swift */; };
 		A38D76AB2DBAF42B00318585 /* Swift TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */; };
 		A38E6FF52DD0EBD300E050DC /* PGLFilterIndent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38E6FF42DD0EBD300E050DC /* PGLFilterIndent.swift */; };
 		A38F9D76250442B800B58F6B /* CVPixelBufferExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */; };
@@ -185,7 +179,6 @@
 		A3CB99C42BBAE5980015E03F /* PGLVectorScaling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CB99C32BBAE5980015E03F /* PGLVectorScaling.swift */; };
 		A3CBB6282E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CBB6272E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift */; };
 		A3CBB62A2E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CBB6292E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift */; };
-		A3D04B142A8444A300E6DB16 /* PGLStackInfoHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D04B122A8444A300E6DB16 /* PGLStackInfoHeader.swift */; };
 		A3D119CE2ED11ADF00CD36EF /* PGLPasteUIImageFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D119CD2ED11ADF00CD36EF /* PGLPasteUIImageFilter.swift */; };
 		A3D68B312D1DC895007FD92E /* PGLMaskFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D68B302D1DC895007FD92E /* PGLMaskFilter.swift */; };
 		A3D9FF09292A9EFE00BAE158 /* VertexDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D9FF08292A9EFE00BAE158 /* VertexDescriptor.swift */; };
@@ -252,6 +245,7 @@
 		A320F7A126699FA7008F60E4 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = fr; path = fr.lproj/PrivacyPolicy.rtf; sourceTree = "<group>"; };
 		A320F7A126699FA7008F60E5 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = es; path = es.lproj/PrivacyPolicy.rtf; sourceTree = "<group>"; };
 		A3249AAF25BC728D00F7FAC2 /* PGLDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLDemo.swift; sourceTree = "<group>"; };
+		A325406E302E6A54005B55F4 /* PGLSaveStackSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSaveStackSheet.swift; sourceTree = "<group>"; };
 		A326F7A42B1FDEB30070D759 /* PGLFilterAttributeVectorUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeVectorUI.swift; sourceTree = "<group>"; };
 		A327122129775C30007DF04A /* MetalFilters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalFilters.swift; sourceTree = "<group>"; };
 		A32D22A62BC1B20A00051EB0 /* PGL4SidedGradientFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGL4SidedGradientFilter.swift; sourceTree = "<group>"; };
@@ -260,7 +254,6 @@
 		A32F2138283BBA83006C026F /* PGLNavSecondaryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLNavSecondaryController.swift; sourceTree = "<group>"; };
 		A32F213A283BBAF1006C026F /* PGLNavPrimaryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLNavPrimaryController.swift; sourceTree = "<group>"; };
 		A32F213C283BBF3A006C026F /* PGLFilterImageContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterImageContainerController.swift; sourceTree = "<group>"; };
-		A333185D2CE42E5100FA8A45 /* PGLSaveButtonRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSaveButtonRow.swift; sourceTree = "<group>"; };
 		A33BD1B029626597007D3527 /* PGLButtonCellUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLButtonCellUI.swift; sourceTree = "<group>"; };
 		A33C441C28E8D4E50096E7EE /* PGLSequencedFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSequencedFilters.swift; sourceTree = "<group>"; };
 		A33E82022B15458D008F79B3 /* PGLScaleFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLScaleFrame.swift; sourceTree = "<group>"; };
@@ -283,19 +276,11 @@
 		A3595012300D7F0500FBE753 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		A3595015300D7F0600FBE753 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/StackCell.xib; sourceTree = "<group>"; };
 		A3595018300D7F0600FBE753 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TableCell.xib; sourceTree = "<group>"; };
-		A359501B300D7F0600FBE753 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PGLStackInfoHeader.xib; sourceTree = "<group>"; };
-		A359501E300D7F0600FBE753 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PGLStackAlbumHeader.xib; sourceTree = "<group>"; };
-		A3595021300D7F0600FBE753 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PGLStackRunSeconds.xib; sourceTree = "<group>"; };
 		A3595024300D7F0600FBE753 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PGLEffexButtonsHeader.xib; sourceTree = "<group>"; };
-		A3595027300D7F0600FBE753 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SaveButtons.xib; sourceTree = "<group>"; };
 		A359502A300D7F0600FBE753 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Root.strings; sourceTree = "<group>"; };
 		A359502D300D7F0700FBE753 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/AirPlay.xcstrings; sourceTree = "<group>"; };
 		A359502E300D7F0700FBE753 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Root.strings; sourceTree = "<group>"; };
 		A359502F300D7F0700FBE753 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/PGLEffexButtonsHeader.xcstrings; sourceTree = "<group>"; };
-		A3595030300D7F0700FBE753 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/PGLStackAlbumHeader.xcstrings; sourceTree = "<group>"; };
-		A3595031300D7F0700FBE753 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/PGLStackInfoHeader.xcstrings; sourceTree = "<group>"; };
-		A3595032300D7F0700FBE753 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/PGLStackRunSeconds.xcstrings; sourceTree = "<group>"; };
-		A3595033300D7F0700FBE753 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/SaveButtons.xcstrings; sourceTree = "<group>"; };
 		A3595034300D7F0700FBE753 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/StackCell.xcstrings; sourceTree = "<group>"; };
 		A3595035300D7F0700FBE753 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/TableCell.xcstrings; sourceTree = "<group>"; };
 		A3595036300D7F0700FBE753 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/Main.xcstrings; sourceTree = "<group>"; };
@@ -310,7 +295,6 @@
 		A35FF77B26DC324E00D78252 /* CoreDataSampleLicense.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CoreDataSampleLicense.txt; sourceTree = "<group>"; };
 		A35FF77D26DC346200D78252 /* PGLCoreData+Defns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PGLCoreData+Defns.swift"; sourceTree = "<group>"; };
 		A36324E725B247F7003F4C0F /* PGLExcludeFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLExcludeFilters.swift; sourceTree = "<group>"; };
-		A3651FA12A9BD4E1006F50F6 /* PGLStackAlbumHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PGLStackAlbumHeader.swift; path = "cell xib/PGLStackAlbumHeader.swift"; sourceTree = "<group>"; };
 		A369A7FB2D44622100C55438 /* PGLFilterAttributeVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeVector.swift; sourceTree = "<group>"; };
 		A369A7FD2D44624800C55438 /* PGLFilterAttributeTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeTime.swift; sourceTree = "<group>"; };
 		A369A7FF2D44625B00C55438 /* PGLFilterAttributeVector3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeVector3.swift; sourceTree = "<group>"; };
@@ -337,7 +321,6 @@
 		A3811C022DC57CE100A1A178 /* PGLRectangleGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLRectangleGenerator.swift; sourceTree = "<group>"; };
 		A384CF912B968DA300ACC220 /* iPad3.0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = iPad3.0.xctestplan; sourceTree = "<group>"; };
 		A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLEffexButtonsHeader.swift; sourceTree = "<group>"; };
-		A389C2C12F22A22F007B2ABA /* PGLStackInfoRunSeconds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackInfoRunSeconds.swift; sourceTree = "<group>"; };
 		A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Swift TestPlan.xctestplan"; sourceTree = "<group>"; };
 		A38E6FF42DD0EBD300E050DC /* PGLFilterIndent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterIndent.swift; sourceTree = "<group>"; };
 		A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVPixelBufferExtension.swift; sourceTree = "<group>"; };
@@ -438,7 +421,6 @@
 		A3CB99C32BBAE5980015E03F /* PGLVectorScaling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLVectorScaling.swift; sourceTree = "<group>"; };
 		A3CBB6272E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDImageList+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A3CBB6292E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDImageList+CoreDataClass.swift"; sourceTree = "<group>"; };
-		A3D04B122A8444A300E6DB16 /* PGLStackInfoHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackInfoHeader.swift; sourceTree = "<group>"; };
 		A3D119CD2ED11ADF00CD36EF /* PGLPasteUIImageFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLPasteUIImageFilter.swift; sourceTree = "<group>"; };
 		A3D68B302D1DC895007FD92E /* PGLMaskFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMaskFilter.swift; sourceTree = "<group>"; };
 		A3D9FF08292A9EFE00BAE158 /* VertexDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VertexDescriptor.swift; sourceTree = "<group>"; };
@@ -703,11 +685,7 @@
 				A3BF506524D32A3400CD5114 /* BadgeSupplementrayView.swift */,
 				A3F1075625604EB1005E86B4 /* cell xib */,
 				A3BF506624D32A3400CD5114 /* TextCell.swift */,
-				A3651FA12A9BD4E1006F50F6 /* PGLStackAlbumHeader.swift */,
-				A3D04B122A8444A300E6DB16 /* PGLStackInfoHeader.swift */,
-				A389C2C12F22A22F007B2ABA /* PGLStackInfoRunSeconds.swift */,
 				A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */,
-				A333185D2CE42E5100FA8A45 /* PGLSaveButtonRow.swift */,
 				A3BF506724D32A3400CD5114 /* OutlineItemCell.swift */,
 				A3BF506924D32A3400CD5114 /* TitleSupplementaryView.swift */,
 				A3BF506A24D32A3400CD5114 /* StackDataCell.swift */,
@@ -804,6 +782,7 @@
 				A3DD328625CC999C00ABEE61 /* PGLHelpPageController.swift */,
 				A34DE10C25D050AF005DC3DD /* PGLHelpSinglePage.swift */,
 				A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */,
+				A325406E302E6A54005B55F4 /* PGLSaveStackSheet.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -905,11 +884,7 @@
 			children = (
 				A3595016300D7F0600FBE753 /* StackCell.xib */,
 				A3595019300D7F0600FBE753 /* TableCell.xib */,
-				A359501C300D7F0600FBE753 /* PGLStackInfoHeader.xib */,
-				A359501F300D7F0600FBE753 /* PGLStackAlbumHeader.xib */,
-				A3595022300D7F0600FBE753 /* PGLStackRunSeconds.xib */,
 				A3595025300D7F0600FBE753 /* PGLEffexButtonsHeader.xib */,
-				A3595028300D7F0600FBE753 /* SaveButtons.xib */,
 			);
 			path = "cell xib";
 			sourceTree = "<group>";
@@ -1039,8 +1014,6 @@
 				A3595017300D7F0600FBE753 /* StackCell.xib in Resources */,
 				A359500E300D7F0500FBE753 /* Main.storyboard in Resources */,
 				A320F62A26699FA8008F6090 /* PrivacyPolicy.rtf in Resources */,
-				A359501D300D7F0600FBE753 /* PGLStackInfoHeader.xib in Resources */,
-				A3595023300D7F0600FBE753 /* PGLStackRunSeconds.xib in Resources */,
 				A37B189D2F7DB0A000B81437 /* Image Gallery License.txt in Resources */,
 				A38D76AB2DBAF42B00318585 /* Swift TestPlan.xctestplan in Resources */,
 				A3595011300D7F0500FBE753 /* AirPlay.storyboard in Resources */,
@@ -1052,8 +1025,6 @@
 				A3BF50F124D32A3400CD5114 /* Assets.xcassets in Resources */,
 				A3E6243D2691261A0017372F /* Settings.bundle in Resources */,
 				A35FF77C26DC324E00D78252 /* CoreDataSampleLicense.txt in Resources */,
-				A3595020300D7F0600FBE753 /* PGLStackAlbumHeader.xib in Resources */,
-				A3595029300D7F0600FBE753 /* SaveButtons.xib in Resources */,
 			);
 		};
 		A3BF502024D3299100CD5114 /* Resources */ = {
@@ -1074,7 +1045,6 @@
 			files = (
 				A3BF511924D32A3400CD5114 /* RiftEffects.xcdatamodeld in Sources */,
 				A303930F27AADED800E2A3D4 /* PGLCompactPresentationController.swift in Sources */,
-				A333185E2CE42E5100FA8A45 /* PGLSaveButtonRow.swift in Sources */,
 				A3BF510E24D32A3400CD5114 /* PGLImageCIFilter.swift in Sources */,
 				A3D68B312D1DC895007FD92E /* PGLMaskFilter.swift in Sources */,
 				A3AF92E12D4009BF001E4785 /* PGLAttributeRectangle.swift in Sources */,
@@ -1097,6 +1067,7 @@
 				A3C278972BAF071200BE40C1 /* PGLTriangleGradientFilter.swift in Sources */,
 				A38E6FF52DD0EBD300E050DC /* PGLFilterIndent.swift in Sources */,
 				A3712BFE2908628400993C5E /* CDStoredFilter+CoreDataProperties.swift in Sources */,
+				A325406F302E6A54005B55F4 /* PGLSaveStackSheet.swift in Sources */,
 				A392D5EE26C3EBDA00688952 /* PGLRandomFilterMaker.swift in Sources */,
 				A3EF017E2DCA74CB00C4BBDF /* PGLCaptureOutput.swift in Sources */,
 				A34DE10D25D050AF005DC3DD /* PGLHelpSinglePage.swift in Sources */,
@@ -1123,7 +1094,6 @@
 				A3BF50E924D32A3400CD5114 /* PGLTableCellAction.swift in Sources */,
 				A3BF50DB24D32A3400CD5114 /* PGL-CDFilterStack.swift in Sources */,
 				A3811BFF2DC56D7100A1A178 /* PGLDetectorFilter.swift in Sources */,
-				A3D04B142A8444A300E6DB16 /* PGLStackInfoHeader.swift in Sources */,
 				A36A10BB2F8199C800D082BC /* CDAttributeAffine+CoreDataProperties.swift in Sources */,
 				A3BF50E724D32A3400CD5114 /* PGLMetalController.swift in Sources */,
 				A39193612F1AD223000B6F23 /* UndoSupport.swift in Sources */,
@@ -1227,7 +1197,6 @@
 				A3BF50FF24D32A3400CD5114 /* PGLAttributeUI.swift in Sources */,
 				A3552BEE2946AA7D002FBC72 /* PGLAttributeVectorNumeric.swift in Sources */,
 				A3AF92DB2D400921001E4785 /* PGLFilterAttributeAngle.swift in Sources */,
-				A389C2C22F22A22F007B2ABA /* PGLStackInfoRunSeconds.swift in Sources */,
 				A3BF50F224D32A3400CD5114 /* ListCell.swift in Sources */,
 				A3CB99C42BBAE5980015E03F /* PGLVectorScaling.swift in Sources */,
 				A3BF50F724D32A3400CD5114 /* TitleSupplementaryView.swift in Sources */,
@@ -1236,7 +1205,6 @@
 				A3BF511024D32A3400CD5114 /* PGLAppStack.swift in Sources */,
 				A3E593B32541F0FD0001EDF9 /* PGLFilterCDDataTransformer.swift in Sources */,
 				A3EF3EF4294AA3A900AD0B10 /* PGLAttributeVectorExpand.swift in Sources */,
-				A3651FA32A9BD4E1006F50F6 /* PGLStackAlbumHeader.swift in Sources */,
 				A3ABF28E2B194DD3006286B2 /* Documentation.docc in Sources */,
 				A3DC264F2698FD83003E48C2 /* PGLImageController.swift in Sources */,
 				A3719FA628233D5B009A9DBE /* PGLCommonParmController.swift in Sources */,
@@ -1341,33 +1309,6 @@
 			name = TableCell.xib;
 			sourceTree = "<group>";
 		};
-		A359501C300D7F0600FBE753 /* PGLStackInfoHeader.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A359501B300D7F0600FBE753 /* Base */,
-				A3595031300D7F0700FBE753 /* mul */,
-			);
-			name = PGLStackInfoHeader.xib;
-			sourceTree = "<group>";
-		};
-		A359501F300D7F0600FBE753 /* PGLStackAlbumHeader.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A359501E300D7F0600FBE753 /* Base */,
-				A3595030300D7F0700FBE753 /* mul */,
-			);
-			name = PGLStackAlbumHeader.xib;
-			sourceTree = "<group>";
-		};
-		A3595022300D7F0600FBE753 /* PGLStackRunSeconds.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A3595021300D7F0600FBE753 /* Base */,
-				A3595032300D7F0700FBE753 /* mul */,
-			);
-			name = PGLStackRunSeconds.xib;
-			sourceTree = "<group>";
-		};
 		A3595025300D7F0600FBE753 /* PGLEffexButtonsHeader.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1375,15 +1316,6 @@
 				A359502F300D7F0700FBE753 /* mul */,
 			);
 			name = PGLEffexButtonsHeader.xib;
-			sourceTree = "<group>";
-		};
-		A3595028300D7F0600FBE753 /* SaveButtons.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A3595027300D7F0600FBE753 /* Base */,
-				A3595033300D7F0700FBE753 /* mul */,
-			);
-			name = SaveButtons.xib;
 			sourceTree = "<group>";
 		};
 		A359502B300D7F0600FBE753 /* Root.strings */ = {
