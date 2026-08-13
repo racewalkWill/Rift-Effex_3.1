@@ -12,6 +12,9 @@ import os
 import AVFoundation
 
 let PGLVideoHasSavedNotification = NSNotification.Name(rawValue: "PGLVideoHasSavedNotification")
+let PGLVideoSaveProgressNotification = NSNotification.Name(rawValue: "PGLVideoSaveProgressNotification")
+    // userInfo: ["secondsElapsed": Int, "secondsTotal": Int] - posted by PGLCaptureOutput
+    // at most once per elapsed second while a video capture session is running.
 
 
 @MainActor var TargetSize = CGSize(width: 1040, height: 768)
@@ -436,6 +439,14 @@ class Renderer: NSObject, MTKViewDelegate {
         myCaptureSession = PGLCaptureOutput(context: ciMetalContext)
         myCaptureSession?.maxFrames = secondsToCapture * 60 // assuming 60 frames per second
 
+    }
+
+    // Called by PGLImageController's cancel button to abandon a long-running
+    // video capture. Discards the partially-encoded file instead of saving it.
+    func cancelCaptureSession() {
+        myCaptureSession?.cancelSession()
+        myCaptureSession = nil
+        DoCapture = false
     }
     
     func drawBasicCentered(in view: MTKView) {

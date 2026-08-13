@@ -278,15 +278,14 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             // go to full screen to render the save image
             // preferredStatusBarStyle left to user action
 
-        showSpinner() // if there is video save
+        if appStack.runTimeSeconds > 0 {
+            showProgressBar(secondsTotal: appStack.runTimeSeconds) // long running video save
+        }
         self.appStack.saveStack()
         saveToPhotoLibrary()
         self.incrementCountForAppReview()
-        if appStack.runTimeSeconds == 0 {
-            // if saving video (runTime >0) then the video completion will hide the spinnger
-            // see PGLVideoHasSavedNotification update handler in PGLImageController
-            hideSpinner()
-        }
+        // if saving video (runTime >0) then the video completion will hide the progress bar
+        // see PGLVideoHasSavedNotification update handler in PGLImageController
 
     }
 
@@ -318,26 +317,82 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
 
-    // MARK: Wait Spinner
-    lazy var spinner: UIActivityIndicatorView = {
-       let indicator = UIActivityIndicatorView(style: .large)
-       indicator.color = .gray
-       indicator.hidesWhenStopped = true
-       return indicator
-   }()
+    // MARK: Save Progress
+        // Shown on top of the metal image view while a long-running
+        // PGLCaptureOutput video save (appStack.runTimeSeconds > 0) is in
+        // progress. Driven by PGLVideoSaveProgressNotification from
+        // PGLCaptureOutput rather than an indeterminate spinner, so the user
+        // can see how much of the capture remains and cancel it.
+        // Backing panel so the progress bar reads clearly against the video
+        // content playing behind it, instead of a bare, hard-to-see track.
+    lazy var saveProgressBackground: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = UIColor.black.withAlphaComponent(0.65)
+        container.layer.cornerRadius = 10
+        container.layer.borderWidth = 1
+        container.layer.borderColor = UIColor.white.withAlphaComponent(0.8).cgColor
+        return container
+    }()
 
-   func showSpinner() {
-       spinner.center = view.center
-       view.addSubview(spinner)
-       view.bringSubviewToFront(spinner)
-//       spinner.center = CGPoint(x: view.frame.size.width / 2, y: view.frame.size.height / 2)
-       spinner.startAnimating()
-   }
+    lazy var saveProgressView: UIProgressView = {
+        let bar = UIProgressView(progressViewStyle: .default)
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        bar.trackTintColor = UIColor.white.withAlphaComponent(0.3)
+        bar.progressTintColor = .systemBlue
+        return bar
+    }()
 
-   func hideSpinner() {
-       spinner.stopAnimating()
-       spinner.removeFromSuperview()
-   }
+    lazy var cancelSaveButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(NSLocalizedString("Cancel", comment: "Cancel a long running video save"), for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(cancelVideoSaveBtn), for: .touchUpInside)
+        return button
+    }()
+
+    var saveProgressConstraints: [NSLayoutConstraint] = []
+
+    func showProgressBar(secondsTotal: Int) {
+        saveProgressView.progress = 0
+        saveProgressBackground.addSubview(saveProgressView)
+        saveProgressBackground.addSubview(cancelSaveButton)
+        view.addSubview(saveProgressBackground)
+        view.bringSubviewToFront(saveProgressBackground)
+
+        if saveProgressConstraints.isEmpty {
+            saveProgressConstraints = [
+                saveProgressBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                saveProgressBackground.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                saveProgressBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.75),
+
+                saveProgressView.topAnchor.constraint(equalTo: saveProgressBackground.topAnchor, constant: 16),
+                saveProgressView.leadingAnchor.constraint(equalTo: saveProgressBackground.leadingAnchor, constant: 16),
+                saveProgressView.trailingAnchor.constraint(equalTo: saveProgressBackground.trailingAnchor, constant: -16),
+
+                cancelSaveButton.topAnchor.constraint(equalTo: saveProgressView.bottomAnchor, constant: 12),
+                cancelSaveButton.centerXAnchor.constraint(equalTo: saveProgressBackground.centerXAnchor),
+                cancelSaveButton.bottomAnchor.constraint(equalTo: saveProgressBackground.bottomAnchor, constant: -16)
+            ]
+        }
+        NSLayoutConstraint.activate(saveProgressConstraints)
+    }
+
+    func updateProgressBar(secondsElapsed: Int, secondsTotal: Int) {
+        guard secondsTotal > 0 else { return }
+        let progress = Float(secondsElapsed) / Float(secondsTotal)
+        saveProgressView.setProgress(min(max(progress, 0), 1.0), animated: true)
+    }
+
+    func hideProgressBar() {
+        saveProgressBackground.removeFromSuperview()
+    }
+
+    @objc func cancelVideoSaveBtn() {
+        self.appStack.appRenderer.cancelCaptureSession()
+        hideProgressBar()
+    }
 
         //MARK: App Review save count
     func incrementCountForAppReview() {
@@ -1042,13 +1097,25 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         cancellable = myCenter.publisher(for: PGLVideoHasSavedNotification)
             .sink() { [weak self]
             myUpdate in
-                // turn off the spinner first
-                self?.hideSpinner()
+                // turn off the progress bar first
+                self?.hideProgressBar()
                 let alert = UIAlertController(title: "Save Completed", message: "Video has been saved to Photos", preferredStyle: .alert)
 
                 alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default) )
 
                 self?.present(alert, animated: true, completion: nil)
+            }
+
+        publishers.append(cancellable!)
+
+        cancellable = myCenter.publisher(for: PGLVideoSaveProgressNotification)
+            .sink() { [weak self]
+            myUpdate in
+                if let userInfo = myUpdate.userInfo,
+                   let secondsElapsed = userInfo["secondsElapsed"] as? Int,
+                   let secondsTotal = userInfo["secondsTotal"] as? Int {
+                    self?.updateProgressBar(secondsElapsed: secondsElapsed, secondsTotal: secondsTotal)
+                }
             }
 
         publishers.append(cancellable!)

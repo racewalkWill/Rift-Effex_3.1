@@ -25,6 +25,7 @@ class PGLCaptureOutput {
 
     let skipFrameCount = 10 // skip the first frames captured, they have a crop offset
     var framesWritten: Int64 = 0
+    var lastReportedSecond = -1
 
     init(context: CIContext) {
         self.metalContext = context
@@ -106,6 +107,7 @@ class PGLCaptureOutput {
         if frameCount >= skipFrameCount {
             appendFrame(frame)
         }
+        postProgressNotification(elapsedFrameCount: frameCount + 1)
             // add the video frame
         let shouldContinue = addFrameCount()
         if !shouldContinue {
@@ -123,6 +125,22 @@ class PGLCaptureOutput {
         } else {
             return true
         }
+    }
+
+
+        // Posted at most once per elapsed second so PGLImageController can drive
+        // a progress bar from secondsElapsed/secondsTotal instead of polling.
+    func postProgressNotification(elapsedFrameCount: Int) {
+        let secondsTotal = maxFrames / framesPerSecond
+        let secondsElapsed = min(elapsedFrameCount / framesPerSecond, secondsTotal)
+        guard secondsElapsed != lastReportedSecond else { return }
+        lastReportedSecond = secondsElapsed
+
+        NotificationCenter.default.post(
+            name: PGLVideoSaveProgressNotification,
+            object: nil,
+            userInfo: ["secondsElapsed": secondsElapsed, "secondsTotal": secondsTotal]
+        )
     }
 
 
@@ -178,6 +196,15 @@ class PGLCaptureOutput {
                 }
             }
         }
+    }
+
+
+        // Called when the user cancels a long running capture. Discards whatever
+        // has been encoded so far rather than saving a partial video to the library.
+    func cancelSession() {
+        guard writer != nil, writer.status == .writing else { return }
+        writer.cancelWriting()
+        try? FileManager.default.removeItem(at: videoPath)
     }
 
 

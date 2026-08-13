@@ -295,7 +295,7 @@
       }
     },
     "Cancel" : {
-      "comment" : "Alert cancel button",
+      "comment" : "Alert cancel button\nCancel a long running video save",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
