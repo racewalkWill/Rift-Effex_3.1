@@ -63,6 +63,8 @@
 		A35FF77C26DC324E00D78252 /* CoreDataSampleLicense.txt in Resources */ = {isa = PBXBuildFile; fileRef = A35FF77B26DC324E00D78252 /* CoreDataSampleLicense.txt */; };
 		A35FF77E26DC346200D78252 /* PGLCoreData+Defns.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35FF77D26DC346200D78252 /* PGLCoreData+Defns.swift */; };
 		A36324E825B247F7003F4C0F /* PGLExcludeFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36324E725B247F7003F4C0F /* PGLExcludeFilters.swift */; };
+		A367E1C430325AB700EFAA87 /* PGLGradientCornerAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A367E1C330325AB700EFAA87 /* PGLGradientCornerAttribute.swift */; };
+		A367E1C630325ABD00EFAA87 /* PGLGradientWidthAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A367E1C530325ABD00EFAA87 /* PGLGradientWidthAttribute.swift */; };
 		A369A7FC2D44622100C55438 /* PGLFilterAttributeVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A369A7FB2D44622100C55438 /* PGLFilterAttributeVector.swift */; };
 		A369A7FE2D44624800C55438 /* PGLFilterAttributeTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A369A7FD2D44624800C55438 /* PGLFilterAttributeTime.swift */; };
 		A369A8002D44625B00C55438 /* PGLFilterAttributeVector3.swift in Sources */ = {isa = PBXBuildFile; fileRef = A369A7FF2D44625B00C55438 /* PGLFilterAttributeVector3.swift */; };
@@ -295,6 +297,8 @@
 		A35FF77B26DC324E00D78252 /* CoreDataSampleLicense.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CoreDataSampleLicense.txt; sourceTree = "<group>"; };
 		A35FF77D26DC346200D78252 /* PGLCoreData+Defns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PGLCoreData+Defns.swift"; sourceTree = "<group>"; };
 		A36324E725B247F7003F4C0F /* PGLExcludeFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLExcludeFilters.swift; sourceTree = "<group>"; };
+		A367E1C330325AB700EFAA87 /* PGLGradientCornerAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLGradientCornerAttribute.swift; sourceTree = "<group>"; };
+		A367E1C530325ABD00EFAA87 /* PGLGradientWidthAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLGradientWidthAttribute.swift; sourceTree = "<group>"; };
 		A369A7FB2D44622100C55438 /* PGLFilterAttributeVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeVector.swift; sourceTree = "<group>"; };
 		A369A7FD2D44624800C55438 /* PGLFilterAttributeTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeTime.swift; sourceTree = "<group>"; };
 		A369A7FF2D44625B00C55438 /* PGLFilterAttributeVector3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeVector3.swift; sourceTree = "<group>"; };
@@ -508,6 +512,8 @@
 				A3C278962BAF071200BE40C1 /* PGLTriangleGradientFilter.swift */,
 				A32D22A62BC1B20A00051EB0 /* PGL4SidedGradientFilter.swift */,
 				A31BF4002BB8B35F00FA1E5F /* PGLCenterPoint.swift */,
+				A367E1C330325AB700EFAA87 /* PGLGradientCornerAttribute.swift */,
+				A367E1C530325ABD00EFAA87 /* PGLGradientWidthAttribute.swift */,
 			);
 			path = GradientPolygonFilters;
 			sourceTree = "<group>";
@@ -1154,6 +1160,7 @@
 				A3AF392C25B61D850035A5FF /* PGLSaliencyBlur.swift in Sources */,
 				A30464D22DC4F60C00809D4A /* PGLMaximumScale.swift in Sources */,
 				A3B6EC0D2E1C404400EBCE55 /* PGLMusic.swift in Sources */,
+				A367E1C630325ABD00EFAA87 /* PGLGradientWidthAttribute.swift in Sources */,
 				A3BF50F324D32A3400CD5114 /* BadgeSupplementrayView.swift in Sources */,
 				A3BF510824D32A3400CD5114 /* PGLSourceFilter.swift in Sources */,
 				A3AD94762B7CF96E00125E74 /* PGLTwoColumnSplitController.swift in Sources */,
@@ -1171,6 +1178,7 @@
 				A39632D8250049F000F02CEC /* PGLDisparityFilter.swift in Sources */,
 				A3BF50F824D32A3400CD5114 /* StackDataCell.swift in Sources */,
 				A32F2139283BBA83006C026F /* PGLNavSecondaryController.swift in Sources */,
+				A367E1C430325AB700EFAA87 /* PGLGradientCornerAttribute.swift in Sources */,
 				A32D22A72BC1B20A00051EB0 /* PGL4SidedGradientFilter.swift in Sources */,
 				A3B785162B224E6F00F3DA68 /* PGLCameraViewFilter.swift in Sources */,
 				A36324E825B247F7003F4C0F /* PGLExcludeFilters.swift in Sources */,
