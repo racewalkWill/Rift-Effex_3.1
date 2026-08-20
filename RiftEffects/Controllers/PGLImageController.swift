@@ -1442,6 +1442,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                                 if parmAttribute.isRectUI() {
                                     hideRectControl()
                         } else {
+                            NSLog(#function +  " hide false \(nameAttribute.key)" )
                             let isSelected = (appStack.targetAttribute === parmAttribute)
                             if ( parmAttribute.shouldHidePosition(userSelected: isSelected)) {
                                        // && !(uiTypeToShow == nil)  {
@@ -1518,26 +1519,29 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             // adjustment for point to effectView transforms
             // let inViewHeight = view.bounds.height
              let inViewHeight = metalController!.view.bounds.height 
+            Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self)) addPositionControl start" )
+            Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self.metalController)) " )
 
-//              NSLog("PGLImageController #addPositionControl positionVector = \(positionVector)")
-            var mappedOrigin = attribute.mapVector2Point(vector: positionVector, viewHeight: inViewHeight, scale: myScaleFactor)
+            NSLog("PGLImageController #addPositionControl positionVector = \(positionVector)")
+            NSLog("PGLImageController #addPositionControl inViewHeight = \(inViewHeight)")
+            NSLog("PGLImageController #addPositionControl myScaleFactor = \(myScaleFactor)")
 
-            // move mappedOrigin for size of the image
-            // mappedOrigin point is ULO upper Left origin
-            mappedOrigin.x = mappedOrigin.x + newSize.width/2 // shift to right
-            mappedOrigin.y = mappedOrigin.y - newSize.height/2 // shift up in ULO
 
-//            NSLog("PGLImageController #addPositionControl mappedOrigin = \(mappedOrigin)")
-//
-            let controlFrame = CGRect(origin: mappedOrigin, size: newSize)
-            // newOrigin should be the center of the controlFrame
+            let centerPoint = attribute.mapVector2Point(vector: positionVector, viewHeight: inViewHeight, scale: myScaleFactor)
+            NSLog("PGLImageController #addPositionControl centerPoint = \(centerPoint)")
+            // centerPoint is already the ULO point where the control should be centered;
+            // derive the frame's top-left origin from it rather than mutating centerPoint itself
+            let controlFrame = CGRect(x: centerPoint.x - newSize.width/2,
+                                       y: centerPoint.y - newSize.height/2,
+                                       width: newSize.width,
+                                       height: newSize.height)
+
 
             let newView = UIImageView(image: crossPoint)
-//            newView.animationImages?.append(reverseCrossPanimationImagesoint!)
-//            newView.animationDuration = 1.0
+
 
             newView.frame =  controlFrame
-            newView.center = mappedOrigin
+            newView.center = centerPoint
 
             // initial disabled look
             // changed in #togglePosition(theControlView:
@@ -1548,6 +1552,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             newView.isUserInteractionEnabled = true
 
             view.addSubview(newView)
+        //    metalController?.view.addSubview(newView)
+   // should the metalView receive the .addSubView
             setPositionTapRecognizer(view: newView)
             
             appStack.parmControls[attribute.attributeName!] = newView

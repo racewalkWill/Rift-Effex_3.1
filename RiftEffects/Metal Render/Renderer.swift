@@ -370,6 +370,7 @@ class Renderer: NSObject, MTKViewDelegate {
         TargetSize = size
         outputZoomPanFilter = initZoomPanFilter() // inits with new center
         appStack.resetDrawableSize(newScale: FullScreenTargetTransform)
+            // reset positionControls here?
     }
 
     func hideAirPlay() {
