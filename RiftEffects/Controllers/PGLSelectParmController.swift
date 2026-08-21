@@ -882,7 +882,7 @@ class PGLSelectParmController: PGLCommonController,
             return  }
 
         switch tappedAttribute!.attributeUIType() {
-        case AttrUIType.pointUI , AttrUIType.rectUI:
+        case AttrUIType.pointUI , AttrUIType.rectUI, AttrUIType.gradientCornerUI:
 
             selectedParmControlView = parmControl(named: (tappedAttribute!.attributeName)!)
                 imageController?.selectedParmControlView = selectedParmControlView

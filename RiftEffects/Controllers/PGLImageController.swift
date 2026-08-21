@@ -1413,58 +1413,55 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
 
     func toggleViewControls(hide: Bool, uiTypeToShow: AttrUIType?) {
-        // should use the attribute methods isPointUI() or isRectUI()..
-        // for hide = true all view controls should hide
-        // if hide = false, then apply to parms of the same uiType
-        // textInputUI should stay hidden if showing the pointUI
-        // and likewise.
-        //
+        // hide == true hides every parm control.
+        // hide == false shows only the controls whose uiType matches uiTypeToShow (nil matches every type),
+        // deferring to shouldHidePosition(userSelected:) to decide whether an individual control is shown.
+        // gradientCornerUI controls act as one group, not individually: they all show together
+        // whenever the currently targeted attribute is a corner, and all hide otherwise -
+        // since PGLTriangleGradientFilter and PGL4SidedGradientFilter need every corner handle
+        // visible at once to let the user drag any of them.
+        let cornerIsSelected = appStack.targetAttribute?.isGradientCorner() ?? false
 
-        // this needs restructuring logic tree is too big with too many if else lines
         for nameAttribute in appStack.parms {
             let parmAttribute = nameAttribute.value
             let parmView = appStack.parmControls[nameAttribute.key]
-            if hide {
-                if parmAttribute.isPointUI() || parmAttribute.isTextInputUI() {
-                    parmView?.isHidden = hide
-                    NSLog(#function +  " hide  \(nameAttribute.key)" )
-                } else {
-                    if parmAttribute.isRectUI() {
-                        if parmAttribute is PGLAttributeRectangle {
-                            hideRectControl()
-                        }
-                    }
-                }
-            } else
-                { // hide is false
-                    // SHOW the control(s)
-                        if (uiTypeToShow == nil) || (uiTypeToShow == parmAttribute.attributeUIType()) {
-                                if parmAttribute.isRectUI() {
-                                    hideRectControl()
-                        } else {
-                            NSLog(#function +  " hide false \(nameAttribute.key)" )
-                            let isSelected = (appStack.targetAttribute === parmAttribute)
-                            if ( parmAttribute.shouldHidePosition(userSelected: isSelected)) {
-                                       // && !(uiTypeToShow == nil)  {
-                                        // only show the selected gradient vector view control
-                                    parmView?.isHidden = !hide // hides  the parmView
-                                }
-                                else {
-                                    parmView?.isHidden = hide  // show the controls
-                                }
 
-                            }
-                        }
+            if parmAttribute.isRectUI() {
+                if hide {
+                    if parmAttribute is PGLAttributeRectangle {
+                        hideRectControl()
+                    }
+                } else if (uiTypeToShow == nil) || (uiTypeToShow == parmAttribute.attributeUIType()) {
+                    hideRectControl()
+                }
+                continue
             }
 
+            if hide {
+                if parmAttribute.isPointUI() || parmAttribute.isTextInputUI() {
+                    parmView?.isHidden = true
+                    NSLog(#function +  " hide  \(nameAttribute.key)" )
+                }
+                continue
+            }
 
-            // leave video buttons in current state hidden or visible
+            // hide == false: showing controls
+            if parmAttribute.isGradientCorner() {
+                parmView?.isHidden = !cornerIsSelected
+                continue
+            }
+
+            guard (uiTypeToShow == nil) || (uiTypeToShow == parmAttribute.attributeUIType())
+            else { continue }
+
+            NSLog(#function +  " hide false \(nameAttribute.key)" )
+            let isSelected = (appStack.targetAttribute === parmAttribute)
+            parmView?.isHidden = parmAttribute.shouldHidePosition(userSelected: isSelected)
+        } // end for appStack.parm
+
+        // leave video buttons in current state hidden or visible
 //            appStack.setVideoBtnIsHidden(hide: hide)
 
-//        Logger(subsystem: LogSubsystem, category: LogCategory).debug("\( String(describing: self) + "-" + #function)")
-
-        } // end for appStack.parm
-        
     } // end toggleViewControls(hide:..)
 
 

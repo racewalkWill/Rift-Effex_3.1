@@ -57,6 +57,7 @@ enum AttrUIType {
     case timerSliderUI
     case textInputUI
     case fontUI
+    case gradientCornerUI
 
 }
 
@@ -1075,6 +1076,10 @@ class PGLFilterAttribute {
     
     func attributeUIType() -> AttrUIType {
         // assumes these types do not overlap
+        // isGradientCorner must be checked before isPointUI: PGLGradientCornerAttribute
+        // is built with CIAttributeTypePosition, so isPointUI() would otherwise also answer true
+        // and this method would never report gradientCornerUI.
+        if isGradientCorner() { return AttrUIType.gradientCornerUI}
         if isPointUI() { return AttrUIType.pointUI}
 
         if isSliderUI() {  return AttrUIType.sliderUI}
@@ -1113,6 +1118,11 @@ class PGLFilterAttribute {
         }
         else { return isVectorPosition }
             // where attributeType is not defined then use the attributeClass only
+    }
+
+    func isGradientCorner() -> Bool {
+        return ( self is PGLGradientCornerAttribute )
+
     }
 
     func isTextInputUI() -> Bool {
