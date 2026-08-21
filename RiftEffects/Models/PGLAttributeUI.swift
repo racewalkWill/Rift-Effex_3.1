@@ -501,6 +501,119 @@ class PGLTimerRateAttributeUI: PGLFilterAttribute {
     // MARK: Affine Value set
 }
 
+class PGLBooleanSwitchAttributeUI: PGLFilterAttribute {
+    // sub row inserted below a boolean parm when that parm's row is selected
+    // (see PGLSelectParmController #tableView(_:didSelectRowAt:) case AttrUIType.booleanUI)
+    // holds the on/off UISwitch shown in cell "parmSwitchInputCell" / PGLTableCellSwitch
+    // mirrors the PGLTimerRateAttributeUI pattern used for the "Vary" rate sub row
+
+    var booleanParent: PGLFilterAttribute?
+
+    // MARK: PGLAttributeUI protocol
+    required init?(pglFilter: PGLSourceFilter, attributeDict: [String : Any], inputKey: String) {
+
+        super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
+        attributeDisplayName = "On"
+        attributeName = attributeDisplayName! + attributeName!
+        attributeType = AttrType.Boolean.rawValue
+        // attributeName is index for parm controls must be unique
+        indentLevel = 1
+    }
+
+    override func uiCellIdentifier() -> String {
+        return "parmSwitchInputCell"
+    }
+
+    override func setUICellDescription(_ uiCell: UITableViewCell) {
+        guard let switchCell = uiCell as? PGLTableCellSwitch
+            else { return super.setUICellDescription(uiCell) }
+        switchCell.textLabel?.text = attributeDisplayName
+        switchCell.switchControl?.isOn = booleanParent?.getNumberValue()?.boolValue ?? false
+    }
+
+    func filterAttribute(parent: PGLFilterAttribute) {
+        booleanParent = parent
+    }
+
+    override func set(_ value: Any) {
+        if let newNumber = value as? NSNumber {
+            booleanParent?.set(newNumber)
+        }
+    }
+
+    override func getValue() -> Any? {
+        return booleanParent?.getNumberValue()
+    }
+
+    override func cellAction() -> [PGLTableCellAction] {
+        return [] // the sub row itself offers no further swipe actions
+    }
+
+    override func varyTimerAttribute() -> PGLFilterAttribute? {
+        return nil // booleans do not animate/vary
+    }
+
+    override func okActionToSetValue() -> Bool {
+        return false
+    }
+
+    override func restoreOldValue() {
+        // empty for now
+    }
+
+    override func moveTo(startPoint: CGPoint, newPoint: CGPoint, inView: UIView) {
+        // do nothing
+    }
+
+    override func movingChange(startPoint: CGPoint, newPoint: CGPoint, inView: UIView) {
+        // do nothing
+    }
+
+    override func movingCorner(atCorner: Vertex, startPoint: CGPoint, newPoint: CGPoint) {
+        // do nothing
+    }
+
+    override func attributeUIType() -> AttrUIType {
+        return AttrUIType.booleanUI
+    }
+
+    override func isBooleanUI() -> Bool {
+        return true
+    }
+
+    override func isSliderUI() -> Bool {
+        return false
+    }
+
+    override func isPointUI() -> Bool {
+        return false
+    }
+
+    override func isImageUI() -> Bool {
+        return false
+    }
+
+    override func isRectUI() -> Bool {
+        return false
+    }
+
+    override func isImageInput() -> Bool {
+        return false
+    }
+
+    override func isBackgroundImageInput() -> Bool {
+        return false
+    }
+
+    override func updateFromInputStack() {
+        // do nothing
+    }
+
+    override func isSingluar() -> Bool {
+        return booleanParent?.isSingluar() ?? true
+    }
+}
+
 class PGLNewFilterUI: PGLFilterAttribute {
     // provides cell to add new filter chain as input
     // not used delete replaced by the swipe command

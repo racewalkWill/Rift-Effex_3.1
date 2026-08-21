@@ -1585,6 +1585,18 @@
         }
       }
     },
+    "SwT-la-bel.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Title\"; ObjectID = \"SwT-la-bel\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Title"
+          }
+        }
+      }
+    },
     "te2-NL-lee.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Title\"; ObjectID = \"te2-NL-lee\";",
       "extractionState" : "extracted_with_value",

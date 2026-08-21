@@ -58,6 +58,7 @@ enum AttrUIType {
     case textInputUI
     case fontUI
     case gradientCornerUI
+    case booleanUI
 
 }
 
@@ -1081,6 +1082,9 @@ class PGLFilterAttribute {
         // and this method would never report gradientCornerUI.
         if isGradientCorner() { return AttrUIType.gradientCornerUI}
         if isPointUI() { return AttrUIType.pointUI}
+        // isBooleanUI must be checked before isSliderUI: boolean attributes have
+        // attributeClass == NSNumber, which isSliderUI() also matches on.
+        if isBooleanUI() { return AttrUIType.booleanUI}
 
         if isSliderUI() {  return AttrUIType.sliderUI}
         if isImageUI() {  return AttrUIType.imagePickUI}
@@ -1108,6 +1112,12 @@ class PGLFilterAttribute {
          let answer = ( isNumberScalar || isNumberDistance || isNumberAngle  || hasSliderValue || isColorSlider  || isTransform || isNumberClass )
 //            NSLog("attribute \(attributeName) isSliderUI = \(answer)")
         return answer
+    }
+
+    func isBooleanUI() -> Bool {
+        // CICoreMLModelFilter, CICameraCalibrationLensCorrection, CINinePartStretched,
+        // CINinePartTiled, CIPerspectiveCorrection, TiltShift, CIPaletteCentroid, CIPalettize
+        return attributeType == AttrType.Boolean.rawValue
     }
 
     func isPointUI() -> Bool {

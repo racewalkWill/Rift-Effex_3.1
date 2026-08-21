@@ -521,6 +521,31 @@
                                             <outlet property="sliderControl" destination="0YH-xH-KM9" id="sYO-1I-pIQ"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="parmSwitchInputCell" textLabel="SwT-la-bel" style="IBUITableViewCellStyleValue1" id="SwC-el-l01" userLabel="parmSwitchInputCell" customClass="PGLTableCellSwitch" customModule="RiftEffects" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="254" width="340" height="51"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SwC-el-l01" id="SwV-ct-v01">
+                                            <rect key="frame" x="0.0" y="0.0" width="340" height="51"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SwT-la-bel">
+                                                    <rect key="frame" x="119" y="15" width="44" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="750" verticalCompressionResistancePriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SwS-wi-tch1">
+                                                    <rect key="frame" x="171" y="10" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="parmSwitchChange:" destination="VjG-Q1-3mN" eventType="valueChanged" id="SwA-ct-01"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="switchControl" destination="SwS-wi-tch1" id="SwO-ut-01"/>
+                                        </connections>
+                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="Image" textLabel="te2-NL-lee" style="IBUITableViewCellStyleDefault" id="swc-b8-0cV" userLabel="Image">
                                         <rect key="frame" x="0.0" y="203" width="340" height="51"/>
                                         <autoresizingMask key="autoresizingMask"/>
