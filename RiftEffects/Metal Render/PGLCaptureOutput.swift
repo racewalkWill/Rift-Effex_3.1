@@ -27,6 +27,25 @@ class PGLCaptureOutput {
     var framesWritten: Int64 = 0
     var lastReportedSecond = -1
 
+        // Called with the finished video's file URL once encoding completes.
+        // Defaults to a plain Photos save with no stack name or album, matching
+        // the previous behavior. Renderer#startCaptureSession lets a caller (e.g.
+        // PGLAppStack #saveToPhotoLibrary) replace this before capture starts so
+        // the saved video gets the same stackName/exportAlbum treatment as
+        // PGLAppStack #saveToHEIFPhotosLibrary gives still photos.
+    var onCaptureFinished: (URL) -> Void = { outputURL in
+        PHPhotoLibrary.shared().performChanges({
+            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputURL)
+        }) { saved, error in
+            if let error {
+                NSLog("PGLCaptureOutput #onCaptureFinished Error saving video to library: \(error.localizedDescription)")
+            }
+            if saved {
+                NSLog("PGLCaptureOutput #onCaptureFinished Video saved to library")
+            }
+        }
+    }
+
     init(context: CIContext) {
         self.metalContext = context
 
@@ -181,19 +200,11 @@ class PGLCaptureOutput {
 
         writer.finishWriting { () -> Void in
             // This method returns immediately and causes its work to be performed asynchronously.
+            // Hop back to the MainActor to read/call the (non-Sendable) onCaptureFinished
+            // closure, rather than capturing it directly in this @Sendable completion handler.
             NSLog(#function , " finishWriting return handler block ")
-
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputURL)
-            }) { saved, error in
-
-                if let error = error {
-                    NSLog (#function , "Error saving video to library: \(error.localizedDescription)")
-                }
-                if saved {
-                    NSLog (#function , "finishWriting Video saved to library")
-
-                }
+            Task { @MainActor in
+                self.onCaptureFinished(outputURL)
             }
         }
     }

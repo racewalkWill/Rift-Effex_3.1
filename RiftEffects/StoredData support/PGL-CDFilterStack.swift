@@ -925,7 +925,11 @@ extension PGLAppStack {
 
         if  runTimeSeconds > 0 {
             // appRenderer.isRunningFrameUpdates() {
-            metalRender.startCaptureSession(runTimeSeconds)
+            // [weak self]: myCaptureSession (owned by metalRender, owned by self.appRenderer)
+            // holds this closure, so a strong self here would be a retain cycle.
+            metalRender.startCaptureSession(runTimeSeconds) { [weak self] videoURL in
+                self?.saveVideoToPhotosLibrary(stack: targetStack, videoURL: videoURL)
+            }
             metalRender.DoCapture = true
             DoNotDraw = false
             // triggers save of 2 sec video burst
@@ -945,6 +949,30 @@ extension PGLAppStack {
                 default:
                     return // not supported format??
             }
+        }
+    }
+
+        // Gives a PGLCaptureOutput video the same stackName/exportAlbum treatment
+        // that saveToHEIFPhotosLibrary/photoLibPerformHEIFChange give still photos,
+        // instead of the un-albumed save PGLCaptureOutput used to do on its own.
+    fileprivate func saveVideoToPhotosLibrary(stack: PGLFilterStack, videoURL: URL) {
+        var assetCollection: PHAssetCollection?
+        fetchExistingAlbum(stack, &assetCollection)
+
+        do {
+            try PHPhotoLibrary.shared().performChangesAndWait {
+                let creationRequest = PHAssetCreationRequest.forAsset()
+                let fileNameOption = PHAssetResourceCreationOptions()
+                fileNameOption.originalFilename = stack.stackName
+                    // the temp file is only used for this import, so let Photos
+                    // move it instead of copying the whole video.
+                fileNameOption.shouldMoveFile = true
+                creationRequest.addResource(with: .video, fileURL: videoURL, options: fileNameOption)
+
+                self.basicPhotoLibChange(placeholder: creationRequest.placeholderForCreatedAsset!, stack, assetCollection)
+            }
+        } catch {
+            userSaveErrorAlert(withError: error)
         }
     }
 

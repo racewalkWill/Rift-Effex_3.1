@@ -430,7 +430,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
 
 
-     func startCaptureSession(_ secondsToCapture: Int = 2) {
+     func startCaptureSession(_ secondsToCapture: Int = 2, onFinished: ((URL) -> Void)? = nil) {
          // default to 2 second save
             // Do NOT size the writer from TargetSize here: this can run before
             // DoNotDraw is cleared and the draw loop has re-synced TargetSize to
@@ -439,6 +439,12 @@ class Renderer: NSObject, MTKViewDelegate {
             // PGLCaptureOutput now sizes itself from the actual frame it receives.
         myCaptureSession = PGLCaptureOutput(context: ciMetalContext)
         myCaptureSession?.maxFrames = secondsToCapture * 60 // assuming 60 frames per second
+            // onFinished lets a caller (e.g. PGLAppStack #saveToPhotoLibrary) attach
+            // the stackName/exportAlbum handling used for still photos; if omitted,
+            // PGLCaptureOutput falls back to a plain, un-albumed Photos save.
+        if let onFinished {
+            myCaptureSession?.onCaptureFinished = onFinished
+        }
 
     }
 
