@@ -190,6 +190,8 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
         // BUT .outputImage is used for the blendFilter image return..
         // it's a bug in the filter code !!
 
+        addFilterStepTime()  // if animation then move time forward - drives center/corner Vary via addAnimationStepTime()
+
         guard sideCount > 0, !linearGradients.isEmpty else { return nil }
         var currentImage = linearGradients[0].outputImage()
         for index in 1 ..< sideCount {
