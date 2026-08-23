@@ -420,5 +420,51 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7FD25E07-F42E-415E-B822-78E862EF7D9C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RiftEffects/Controllers/iPhone controllers/PGLNavStackImageController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "pruneEditContainers(below:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "7FD25E07-F42E-415E-B822-78E862EF7D9C - 5d44203cf8849783"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RiftEffects.PGLNavStackImageController.pruneEditContainers(below: __C.UIViewController) -&gt; ()"
+                  moduleName = "RiftEffects.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex_4.0/RiftEffects/Controllers/iPhone%20controllers/PGLNavStackImageController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "48"
+                  endingLineNumber = "48">
+               </Location>
+               <Location
+                  uuid = "7FD25E07-F42E-415E-B822-78E862EF7D9C - 136c0855390dd4c8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.UIViewController) -&gt; Swift.Bool in RiftEffects.PGLNavStackImageController.pruneEditContainers(below: __C.UIViewController) -&gt; ()"
+                  moduleName = "RiftEffects.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex_4.0/RiftEffects/Controllers/iPhone%20controllers/PGLNavStackImageController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "48"
+                  endingLineNumber = "48">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

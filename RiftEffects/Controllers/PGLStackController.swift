@@ -134,7 +134,19 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
         updateNavigationBar()
         setLongPressGesture()
 
-        if !(splitViewController?.isCollapsed ?? false) {
+        // Not `splitViewController?.isCollapsed` here: at cold launch this
+        // viewDidLoad runs before the split view has resolved its initial
+        // collapse state, so `isCollapsed` reads false even on iPhone. That
+        // let this iPad-only branch also perform "showFilterController" on
+        // the very first launch, racing PGLStackImageContainerController's
+        // own empty-stack "showFilterImageContainer" push and stranding a
+        // bare PGLMainFilterController in the nav stack (pruneEditContainers
+        // only recognizes PGLTwoColumnSplitController subclasses, so it
+        // never gets cleaned up — an extra back tap was needed to skip it).
+        // `parent` is set synchronously by addChild before this view loads,
+        // so it's a reliable signal, matching the check already used
+        // elsewhere (PGLSourceFilter#cellFilterAction, #addFilterBtn).
+        if !(parent is PGLStackImageContainerController) {
             navigationController?.isToolbarHidden = false
             addToolBarButtons(toController: self)
 
