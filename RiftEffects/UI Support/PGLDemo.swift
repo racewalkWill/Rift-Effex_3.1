@@ -30,7 +30,7 @@ class PGLDemo {
 
 
         // interacts with PGLRandomFilter to hold user images for random consturction
-    static let MaxListSize = 6
+    static let MaxListSize = 10
     let NumOfFilters = 5
 
     static var FavoritesAlbumList: PGLAlbumSource?
@@ -120,6 +120,9 @@ class PGLDemo {
                 let newbieList = PGLDemo.RandomImageList.clone(toParm: imageParm)
 
                 newbieList.randomPrune(imageParm: imageParm)
+                if newbieList.isEmpty() {
+                    Logger(subsystem: LogSubsystem, category: LogCategory).error("PGLDemo #setInputTo no images in list")
+                }
                 imageParm.setImageCollectionInput(cycleStack: newbieList)
             }
     }
@@ -282,6 +285,9 @@ class PGLDemo {
                     setDemoImageInputs(imageParm: thisAttribute) // the six images from favorites
 
                 }
+            } else {
+                Logger(subsystem: LogSubsystem, category: LogCategory).error("PGLDemo #setInputTo skip setting imageInputs in \(targetFilter.filterName)")
+                Logger(subsystem: LogSubsystem, category: LogCategory).error("PGLDemo skip \(anImageAttributeName) inputParmType = \(String(describing: thisAttribute.inputParmType()))")
             }
         }
     }
