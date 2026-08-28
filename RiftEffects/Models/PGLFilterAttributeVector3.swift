@@ -18,8 +18,8 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
 
-        zValue = TargetSize.height / 7.0
-            // using TargetSize to make some adaption for different devices, iPad, iPHone etc..
+        zValue = FilterCanvasSize.height / 7.0
+            // FilterCanvasSize is fixed, so this default is now identical across devices
         set3ValueVector( zValue)
 
     }
@@ -46,28 +46,23 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
         }
 
     func set3ValueVector(_ newXYvector: CIVector, newZValue: CGFloat) {
-        // the XYvector is dragged to a new point.
+        // the XYvector is dragged to a new point - both stored canvas-relative.
             parmInputState = .inputValueSet
-            let newVector = CIVector(x: newXYvector.x, y: newXYvector.y, z: newZValue)
-            aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
+            zValue = newZValue
+            canvasVector = CIVector(x: newXYvector.x, y: newXYvector.y, z: newZValue)
+            pushToFilter(renderSize: RenderTargetSize)
     }
 
     func set3ValueVector(_ newZValue: CGFloat) {
         // when the zValue is the only change
+        zValue = newZValue
         if let oldVector = getVectorValue() {
-            let newVector = CIVector(x: oldVector.x, y: oldVector.y, z: newZValue)
-            parmInputState = .inputValueSet
-             aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
+            set3ValueVector(oldVector, newZValue: newZValue)
         }
-
-        func getZValue() -> CGFloat {
-            return getVectorValue()?.z ?? zValue
-        }
-        
     }
 
-    override func moveOnDrawableSizeChange() -> Bool {
-        // only some PGLFilterAttributeVectors should move
+    override func usesCanvasCoordinates() -> Bool {
+        // only some PGLFilterAttributeVectors use canvas coordinates
         return true
     }
 
@@ -82,8 +77,7 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
 
                 let newX = Float(startPoint!.x) + (xSign * (vectorCos * distanceTime))
                 let newY = Float(startPoint!.y) + (vectorSin * distanceTime)
-                let newVector = CIVector(x: CGFloat(newX), y: CGFloat(newY), z: zValue)
-                aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
+                set3ValueVector(CIVector(x: CGFloat(newX), y: CGFloat(newY)), newZValue: zValue)
                 postUIChange(attribute: self)
             }
         }

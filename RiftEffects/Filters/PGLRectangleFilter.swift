@@ -80,7 +80,7 @@ class PGLRectangleFilter : PGLSourceFilter {
             return thisFilterRect
         }
         else {
-            return CGRect(x: 0, y: 0, width: TargetSize.width, height: TargetSize.height)
+            return CGRect(x: 0, y: 0, width: RenderTargetSize.width, height: RenderTargetSize.height)
         }
 
     }

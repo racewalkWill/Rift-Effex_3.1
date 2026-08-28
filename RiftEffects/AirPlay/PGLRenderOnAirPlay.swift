@@ -160,17 +160,17 @@ class PGLRenderOnAirPlay: Renderer {
 
         Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " drawableSizeWillChange to \(String(describing: size))") "))
 
-//        let translate = CGAffineTransform.init(translationX:  (size.width - TargetSize.width)/2, y:  (size.height - TargetSize.height)/2)
-            // this uses the old TargetSize compared to the new size
+//        let translate = CGAffineTransform.init(translationX:  (size.width - RenderTargetSize.width)/2, y:  (size.height - RenderTargetSize.height)/2)
+            // this uses the old RenderTargetSize compared to the new size
 //        FullScreenTargetTransform = translate
         mtkViewSize = size
             // mktViewSize is instance var - with AirPlay there are two instances.
 
-//        TargetSize = size
+//        RenderTargetSize = size
             // in AirPlay mode just output let the mainScreen set this value
 
         outputZoomPanFilter = initZoomPanFilter() // inits with new center
-        // change the center point from the global TargetSize (which is the iPad or iPhone size)
+        // change the center point from the global RenderTargetSize (which is the iPad or iPhone size)
         outputZoomPanFilter?.centerPoint = CGPoint(x: size.width / 2, y: size.height / 2)
 
 // appStack does not have the new scale for the AirPlay device

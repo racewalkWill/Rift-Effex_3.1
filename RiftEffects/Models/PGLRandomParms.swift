@@ -39,8 +39,8 @@ extension PGLFilterAttributeVector {
 
         if defaultValue == nil {
 
-            let maxWidth = TargetSize.width / 2
-            let maxHeight = TargetSize.height / 2
+            let maxWidth = FilterCanvasSize.width / 2
+            let maxHeight = FilterCanvasSize.height / 2
             let randomValue: CGFloat = CGFloat.random(in: 0...maxWidth)
             let randomValue2: CGFloat = CGFloat.random(in: 0...maxHeight)
             let newRandom = CIVector(x: randomValue, y: randomValue2)

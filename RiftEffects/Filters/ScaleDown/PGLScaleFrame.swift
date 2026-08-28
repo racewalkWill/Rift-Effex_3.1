@@ -27,14 +27,14 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
     let opaqueBackground: CIImage = CIImage.black // CIImage.clear
     var addBackground: Bool = true
 
-    // TargetSize is global but with airPlay extr
-    var centerPoint: CGPoint = CGPoint(x: TargetSize.width/2, y: TargetSize.height/2) {
+    // RenderTargetSize is global but with airPlay extr
+    var centerPoint: CGPoint = CGPoint(x: RenderTargetSize.width/2, y: RenderTargetSize.height/2) {
         didSet {
             shouldMoveCenter = true
         }
     }
     var fullScreenRect: CGRect { get
-    {   return CGRect(x: 0, y: 0, width: TargetSize.width, height: TargetSize.height)
+    {   return CGRect(x: 0, y: 0, width: RenderTargetSize.width, height: RenderTargetSize.height)
 
         }
     }
@@ -58,7 +58,7 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
     }
 
     func defaultCenterPoint() -> CGPoint {
-        CGPoint(x: TargetSize.width/2, y: TargetSize.height/2)
+        CGPoint(x: RenderTargetSize.width/2, y: RenderTargetSize.height/2)
     }
 
     /// defines centerPoint for the LanczosScale rendering

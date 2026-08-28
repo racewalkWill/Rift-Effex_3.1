@@ -50,7 +50,12 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             }
         }
     }
-    var scaling: PGLVectorScaling?
+    /// Authoritative value, in FilterCanvasSize-relative coordinates - independent of the
+    /// live view/drawable size, navigation history, or which view resized last.
+    var canvasVector: CIVector?
+    /// The RenderTargetSize this attribute's CIFilter value was last pushed for; used by
+    /// `applyRenderSize(_:)` to avoid redundant pushes.
+    var appliedRenderSize: CGSize?
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
@@ -58,7 +63,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
 
             var cornerPoint: CGPoint?
 //            NSLog("PGLFilterAttributeVector does not have default")
-            let insetRect = CGRect(x: 30, y: 30, width: TargetSize.width, height: TargetSize.height).insetBy(dx: 100.0, dy: 100.0)
+            let insetRect = CGRect(x: 30, y: 30, width: FilterCanvasSize.width, height: FilterCanvasSize.height).insetBy(dx: 100.0, dy: 100.0)
             // assuming LLO here... Lower Left Origin coordinates
             switch attributeName {
                 case "inputTopLeft":
@@ -96,7 +101,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
 
             }
             if cornerPoint != nil {
-                aSourceFilter.setVectorValue(newValue: CIVector(cgPoint: cornerPoint!), keyName: attributeName!)
+                set(CIVector(cgPoint: cornerPoint!))
             }
         }
 
@@ -128,16 +133,16 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         let startPointX = startPoint.x
         let startPointY = startPoint.y
 
-        // Valid range is inset 20% from TargetSize edges
+        // Valid range is inset 20% from FilterCanvasSize edges
         let insetFraction: CGFloat = 0.2
-        let minX = TargetSize.width * insetFraction
-        let maxX = TargetSize.width * (1.0 - insetFraction)
-        let minY = TargetSize.height * insetFraction
-        let maxY = TargetSize.height * (1.0 - insetFraction)
+        let minX = FilterCanvasSize.width * insetFraction
+        let maxX = FilterCanvasSize.width * (1.0 - insetFraction)
+        let minY = FilterCanvasSize.height * insetFraction
+        let maxY = FilterCanvasSize.height * (1.0 - insetFraction)
 
         // Maximum change is 50% of the dimension from startPoint
-        let maxChangeX = TargetSize.width * 0.8
-        let maxChangeY = TargetSize.height * 0.8
+        let maxChangeX = FilterCanvasSize.width * 0.8
+        let maxChangeY = FilterCanvasSize.height * 0.8
 
         // Intersect both constraints to get safe bounds
         let lowerX = max(minX, startPointX - maxChangeX)
@@ -162,16 +167,16 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
 //        let startPointX = startPoint.x
 //        let startPointY = startPoint.y
 
-        // Valid range is inset 20% from TargetSize edges
+        // Valid range is inset 20% from FilterCanvasSize edges
         let insetFraction: CGFloat = 0.2
-        let minX = TargetSize.width * insetFraction
-        let maxX = TargetSize.width * (1.0 - insetFraction)
-        let minY = TargetSize.height * insetFraction
-        let maxY = TargetSize.height * (1.0 - insetFraction)
+        let minX = FilterCanvasSize.width * insetFraction
+        let maxX = FilterCanvasSize.width * (1.0 - insetFraction)
+        let minY = FilterCanvasSize.height * insetFraction
+        let maxY = FilterCanvasSize.height * (1.0 - insetFraction)
 
         // Maximum change is 50% of the dimension from startPoint
-//        let maxChangeX = TargetSize.width * 0.5
-//        let maxChangeY = TargetSize.height * 0.5
+//        let maxChangeX = FilterCanvasSize.width * 0.5
+//        let maxChangeY = FilterCanvasSize.height * 0.5
 
 
         let newX: CGFloat =  CGFloat.random(in: minX...maxX)
@@ -190,28 +195,47 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         if attributeName != nil {
             if let newVectorValue = value as? CIVector {
                 parmInputState = .inputValueSet
-                aSourceFilter.setVectorValue(newValue: newVectorValue, keyName: attributeName!) }
+                canvasVector = newVectorValue
+                pushToFilter(renderSize: RenderTargetSize)
+            }
+        }
+    }
+
+    override func getVectorValue() -> CIVector? {
+        return canvasVector
+    }
+
+    /// Converts the canonical (FilterCanvasSize-relative) value into `renderSize`-relative
+    /// coordinates and writes it into the actual CIFilter.
+    func pushToFilter(renderSize: CGSize) {
+        guard let canvasVector, attributeName != nil else { return }
+        aSourceFilter.setVectorValue(newValue: canvasVector.scaledFromCanvas(toRenderSize: renderSize), keyName: attributeName!)
+        appliedRenderSize = renderSize
+    }
+
+    override func applyRenderSize(_ renderSize: CGSize) {
+        guard usesCanvasCoordinates() else { return }
+        if appliedRenderSize != renderSize {
+            pushToFilter(renderSize: renderSize)
         }
     }
 
     override func resizeFrom(savedSize: CGSize?) {
-        // assumes setStoredValueToAttribute has created the vector and set into the filter
-        if !moveOnDrawableSizeChange() {
+        // assumes setStoredValueToAttribute has already called set(...) with the raw value
+        // loaded from CoreData - which is in the OLD saved coordinate space, not yet
+        // FilterCanvasSize-relative. Remap the canonical value now that savedSize is known.
+        if !usesCanvasCoordinates() {
             // not a vector that should move..
             return
         }
-        if savedSize != nil {
-            let resizingTransform = resizeStoredTransform(savedSize)
-            let filterVector = getVectorValue()?.applying(resizingTransform)
-            if filterVector != nil {
-                aSourceFilter.setVectorValue(newValue: filterVector!, keyName: attributeName!)
-            }
-            if startPoint != nil {
-                startPoint = startPoint!.applying(resizingTransform)
-            }
-            if endPoint != nil {
-                endPoint = endPoint!.applying(resizingTransform)
-            }
+        guard savedSize != nil, let currentVector = canvasVector else { return }
+        let resizingTransform = resizeStoredTransform(savedSize, destination: FilterCanvasSize)
+        set(currentVector.applying(resizingTransform))
+        if startPoint != nil {
+            startPoint = startPoint!.applying(resizingTransform)
+        }
+        if endPoint != nil {
+            endPoint = endPoint!.applying(resizingTransform)
         }
     }
 
@@ -369,8 +393,8 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     }
 
 // MARK: Vector Scaling
-    override func moveOnDrawableSizeChange() -> Bool {
-        // only some PGLFilterAttributeVectors should move
+    override func usesCanvasCoordinates() -> Bool {
+        // only some PGLFilterAttributeVectors use canvas coordinates
         return true
     }
 
@@ -389,14 +413,6 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
 //        NSLog(#function + "scaledPoint: \(scaledPoint) ")
         let scaledVectorValue = CIVector.init(cgPoint: scaledPoint)
         return scaledVectorValue
-    }
-
-    override  func setScaling(heightScreenScale: PGLVectorScaling) {
-        scaling = heightScreenScale
-    }
-
-    override func getScaling() -> PGLVectorScaling? {
-        return scaling
     }
 
 

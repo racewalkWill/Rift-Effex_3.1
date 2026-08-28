@@ -17,8 +17,7 @@ let PGLVideoSaveProgressNotification = NSNotification.Name(rawValue: "PGLVideoSa
     // at most once per elapsed second while a video capture session is running.
 
 
-@MainActor var TargetSize = CGSize(width: 1040, height: 768)
-@MainActor var FullScreenTargetTransform = CGAffineTransform.identity
+@MainActor var RenderTargetSize = CGSize(width: 1040, height: 768)
 @MainActor var DoNotDraw = false
 
 
@@ -209,7 +208,7 @@ class Renderer: NSObject, MTKViewDelegate {
             // uses existing ciContext in a background process..
 
         if let ciOutput = filterStack()?.stackOutputImage(false) {
-            let currentRect = CGRect(x: 0, y: 0, width: TargetSize.width, height: TargetSize.height)
+            let currentRect = CGRect(x: 0, y: 0, width: RenderTargetSize.width, height: RenderTargetSize.height)
             Logger(subsystem: LogSubsystem, category: LogCategory).debug ("Renderer #captureImage currentRect ")
             let croppedOutput = ciOutput.cropped(to: currentRect)
             guard let currentOutputImage = ciMetalContext.createCGImage(croppedOutput, from: croppedOutput.extent) else { return nil }
@@ -246,7 +245,7 @@ class Renderer: NSObject, MTKViewDelegate {
             // capture the current image in the context
             // provide a UIImage for save to photoLibrary
             // uses existing ciContext in a background process..
-        let cropSize = TargetSize
+        let cropSize = RenderTargetSize
         if let ciOutput = filterStack()?.stackOutputImage(false)
 
         {
@@ -363,14 +362,14 @@ class Renderer: NSObject, MTKViewDelegate {
         Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " drawableSizeWillChange from \(String(describing: self.mtkViewSize))") "))
         Logger(subsystem: LogSubsystem, category: LogNavigation).info(("\( String(describing: self) + " drawableSizeWillChange to \(String(describing: size))") "))
 
-        let translate = CGAffineTransform.init(translationX:  (size.width - TargetSize.width)/2, y:  (size.height - TargetSize.height)/2)
-            // this uses the old TargetSize compared to the new size
-        FullScreenTargetTransform = translate
         mtkViewSize = size
-        TargetSize = size
+        RenderTargetSize = size
         outputZoomPanFilter = initZoomPanFilter() // inits with new center
-        appStack.resetDrawableSize(newScale: FullScreenTargetTransform)
-            // reset positionControls here?
+        appStack.resetDrawableSize()
+            // vector/rect parm positions no longer need reactive shifting here - they're
+            // stored in FilterCanvasSize-relative coordinates and converted to RenderTargetSize
+            // on the fly (PGLFilterAttribute.applyRenderSize / mapVector2Point), independent
+            // of navigation history or which view last resized.
     }
 
     func hideAirPlay() {
@@ -392,7 +391,7 @@ class Renderer: NSObject, MTKViewDelegate {
         // A covered MTKView is resized by rotation (viewWillTransition runs
         // layoutIfNeeded on off-screen views) while another MTKView is on screen;
         // the interleaved drawableSizeWillChange callbacks from the two views can
-        // leave TargetSize and the scaled image caches stale for the view that is
+        // leave RenderTargetSize and the scaled image caches stale for the view that is
         // drawing now - image too small or offset in the view after rotations.
         let currentDrawableSize = view.drawableSize
         if currentDrawableSize.width > 0, currentDrawableSize.height > 0,
@@ -432,8 +431,8 @@ class Renderer: NSObject, MTKViewDelegate {
 
      func startCaptureSession(_ secondsToCapture: Int = 2, onFinished: ((URL) -> Void)? = nil) {
          // default to 2 second save
-            // Do NOT size the writer from TargetSize here: this can run before
-            // DoNotDraw is cleared and the draw loop has re-synced TargetSize to
+            // Do NOT size the writer from RenderTargetSize here: this can run before
+            // DoNotDraw is cleared and the draw loop has re-synced RenderTargetSize to
             // the view's current drawableSize, which previously baked in a stale
             // (often much smaller) size and produced a badly cropped/zoomed video.
             // PGLCaptureOutput now sizes itself from the actual frame it receives.
@@ -548,7 +547,7 @@ class Renderer: NSObject, MTKViewDelegate {
                     // This is needed if the image is smaller than the view, or if it has transparent pixels.
                 if isFullScreen { 
                     // perform zoom/pan from gestures
-                    // let cropSize = TargetSize
+                    // let cropSize = RenderTargetSize
 //                    let cropSize = backBounds.size
                     ciOutputImage = ciOutputImage.cropForInfiniteExtent(cropSize: dSize)
                     outputZoomPanFilter?.setInput(image: ciOutputImage, source: nil)

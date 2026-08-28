@@ -1513,19 +1513,14 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             // fails if no vector
             let newSize = CGSize(width: 60.0, height: 60.0)
 
-            // adjustment for point to effectView transforms
-            // let inViewHeight = view.bounds.height
-             let inViewHeight = metalController!.view.bounds.height 
+            // the marker's on-screen position is computed directly from this view's own
+            // current size - no dependency on RenderTargetSize or any other view's history.
+            // Matches the viewSize used by panMoveChange/panEnded below (same `view`).
+            let viewSize = view.bounds.size
             Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self)) addPositionControl start" )
             Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self.metalController)) " )
 
-            NSLog("PGLImageController #addPositionControl positionVector = \(positionVector)")
-            NSLog("PGLImageController #addPositionControl inViewHeight = \(inViewHeight)")
-            NSLog("PGLImageController #addPositionControl myScaleFactor = \(myScaleFactor)")
-
-
-            let centerPoint = attribute.mapVector2Point(vector: positionVector, viewHeight: inViewHeight, scale: myScaleFactor)
-            NSLog("PGLImageController #addPositionControl centerPoint = \(centerPoint)")
+            let centerPoint = attribute.mapVector2Point(vector: positionVector, viewSize: viewSize)
             // centerPoint is already the ULO point where the control should be centered;
             // derive the frame's top-left origin from it rather than mutating centerPoint itself
             let controlFrame = CGRect(x: centerPoint.x - newSize.width/2,
@@ -1937,11 +1932,7 @@ extension PGLImageController: UIGestureRecognizerDelegate {
             tappedControl?.center = endingPoint // this makes the screen update for point
 //            parm.movingChange(startPoint: startPoint, newPoint: endingPoint, inView: (myimageController?.view)!)
 
-             let viewHeight = view.bounds.height
-            let flippedVertical = viewHeight - endingPoint.y
-            let theScreenScaling = PGLVectorScaling(viewHeight: viewHeight, viewScale:  myScaleFactor)
-            parm.setScaling(heightScreenScale: theScreenScaling)
-            parm.set(CIVector(x: endingPoint.x * myScaleFactor , y: flippedVertical * myScaleFactor))
+            parm.set(parm.mapPoint2Vector(point: endingPoint, viewSize: view.bounds.size))
 
         }
         // make the display show this
@@ -1950,8 +1941,7 @@ extension PGLImageController: UIGestureRecognizerDelegate {
 
     func panEnded( endingPoint: CGPoint, parm: PGLFilterAttribute) {
 
-         let viewHeight = view.bounds.height
-            let newVector = parm.mapPoint2Vector(point: endingPoint, viewHeight: viewHeight, scale: myScaleFactor)
+            let newVector = parm.mapPoint2Vector(point: endingPoint, viewSize: view.bounds.size)
             parm.set(newVector)
 //        NSLog("PGLImageController #panEnded endingPoint = \(endingPoint)")
 //        NSLog("PGLImageController #panEnded newVector = \(newVector)")

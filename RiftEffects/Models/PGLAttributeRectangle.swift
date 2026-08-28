@@ -39,7 +39,10 @@ class PGLAttributeRectangle: PGLFilterAttribute {
 //            NSLog("PGLFilterAttributeRectangle init vectorValue = x:\(myVector.x) y:\(myVector.y)  width: \( myVector.z) height: \(myVector.w)")
             if myVector.x <= 0.0 && myVector.y <= 0.0 && myVector.z <= 0.0 && myVector.w <= 0.0 {
                 // for zero vector create default inset by 200
-                filterRect = CGRect(origin: CGPoint.zero, size: TargetSize) .insetBy(dx: 200.0, dy: 200.0)
+                // Crop rect stays in live RenderTargetSize-relative coordinates, like its
+                // drag handling below (moveTo/movingChange/movingCorner all take live view
+                // points directly) - it does not participate in the FilterCanvasSize scheme.
+                filterRect = CGRect(origin: CGPoint.zero, size: RenderTargetSize) .insetBy(dx: 200.0, dy: 200.0)
             }
             else {
                 // there is a saved value use it
@@ -176,14 +179,6 @@ class PGLAttributeRectangle: PGLFilterAttribute {
         filterRect = mappedCropRect // save the rect
 
     }
-
-    override func movePointParms(transform: CGAffineTransform) {
-           // adjust the crop for a move of parms
-        let newCropRect = filterRect.applying(transform)
-        applyCropRect(mappedCropRect: newCropRect)
-
-    }
-
 
     override func movingChange(startPoint: CGPoint, newPoint: CGPoint, inView: UIView) {
         // pan move in progress.. update as needed

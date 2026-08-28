@@ -178,7 +178,7 @@ class PGLAppStack {
     /// answer true if demoStack created in the viewerStack
     func createDemoStack(view: UIView) {
         // check if stacks exist.. if not then
-//        TargetSize = view.bounds.size
+//        RenderTargetSize = view.bounds.size
 
         viewerStack.createDemoStack(appStack: self)
 
@@ -818,15 +818,9 @@ class PGLAppStack {
     }
 
     // MARK: Display state
-    func resetDrawableSize(newScale: CGAffineTransform) {
+    func resetDrawableSize() {
         for aCellIndent in flatCellFilters {
-            aCellIndent.filter.resetDrawableSize(newScale: newScale)
-        }
-    }
-
-    func pointParms(shiftTransform: CGAffineTransform) {
-        for aFilter in flatCellFilters {
-            aFilter.filter.pointParms(shiftTransform: shiftTransform)
+            aCellIndent.filter.resetDrawableSize()
         }
     }
 

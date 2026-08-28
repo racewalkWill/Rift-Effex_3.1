@@ -45,7 +45,7 @@ class PGLOffScreenRender {
         let hardCodeScale: CGFloat = 2.0
 
         let ciOutput = filterStack.stackOutputImage(false)
-          let currentRect = CGRect(x: 0, y: 0, width: TargetSize.width, height: TargetSize.height)
+          let currentRect = CGRect(x: 0, y: 0, width: RenderTargetSize.width, height: RenderTargetSize.height)
 //          NSLog("PGLOffScreenRender #captureUIImage currentRect = \(currentRect)")
           let croppedOutput = ciOutput.cropped(to: currentRect)
           guard let currentOutputImage = offScreenContext.createCGImage(croppedOutput, from: croppedOutput.extent)
@@ -63,7 +63,7 @@ class PGLOffScreenRender {
 
     func renderCGImage(source: CIImage) -> CGImage? {
 
-        let currentRect = CGRect(origin: CGPoint.zero, size: TargetSize)
+        let currentRect = CGRect(origin: CGPoint.zero, size: RenderTargetSize)
 //        Logger(subsystem: LogSubsystem, category: LogCategory).notice("PGLOffScreenRender #captureUIImage currentRect = \(currentRect)")
         let croppedOutput = source.cropped(to: currentRect)
           guard let currentOutputImage = offScreenContext.createCGImage(croppedOutput, from: croppedOutput.extent) else { return nil }

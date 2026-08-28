@@ -10,7 +10,7 @@ import Foundation
 import CoreImage
 
 ///  one centerScaler for each image - images are different sizes
-///   uses Global TargetSize for  center and size transform
+///   uses Global RenderTargetSize for  center and size transform
 @MainActor
 class PGLCenterScaler {
     var aspectFitCenter: CGAffineTransform?
@@ -30,7 +30,7 @@ class PGLCenterScaler {
     }
 
     func setAspectFitTransform(imageExtent: CGRect) {
-        let dSize = TargetSize
+        let dSize = RenderTargetSize
 
         let xTransform = 0.0 - imageExtent.origin.x
         let yTransform = 0.0 - imageExtent.origin.y
@@ -55,7 +55,7 @@ class PGLCenterScaler {
     func setAspectFillTransform (imageExtent: CGRect) {
         // based upon the PGLImageList #scaleToFrame(ciImage, newSize) transform
 
-        let newSize = TargetSize
+        let newSize = RenderTargetSize
         let xTransform:CGFloat = 0.0 - imageExtent.origin.x
         let yTransform:CGFloat = 0.0  - imageExtent.origin.y
         //move to zero

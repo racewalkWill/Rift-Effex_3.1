@@ -177,8 +177,9 @@
 		A3BF515924D32D7400CD5114 /* GlanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF515724D32D7400CD5114 /* GlanceUITests.swift */; };
 		A3C11A8B29E9D9F5001D0831 /* PGLPersonSegmentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C11A8A29E9D9F5001D0831 /* PGLPersonSegmentation.swift */; };
 		A3C278972BAF071200BE40C1 /* PGLTriangleGradientFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C278962BAF071200BE40C1 /* PGLTriangleGradientFilter.swift */; };
+		A3C5A6503042358800FAFBC4 /* PGLCanvasSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C5A64F3042358800FAFBC4 /* PGLCanvasSpace.swift */; };
+		A3C5A652304238D500FAFBC4 /* PGLCanvasSpaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C5A651304238D500FAFBC4 /* PGLCanvasSpaceTests.swift */; };
 		A3CA2BFF295A01FD00502A8A /* PGLConvolutionFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CA2BFE295A01FD00502A8A /* PGLConvolutionFilter.swift */; };
-		A3CB99C42BBAE5980015E03F /* PGLVectorScaling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CB99C32BBAE5980015E03F /* PGLVectorScaling.swift */; };
 		A3CBB6282E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CBB6272E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift */; };
 		A3CBB62A2E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CBB6292E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift */; };
 		A3D119CE2ED11ADF00CD36EF /* PGLPasteUIImageFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D119CD2ED11ADF00CD36EF /* PGLPasteUIImageFilter.swift */; };
@@ -421,8 +422,9 @@
 		A3BF515724D32D7400CD5114 /* GlanceUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlanceUITests.swift; sourceTree = "<group>"; };
 		A3C11A8A29E9D9F5001D0831 /* PGLPersonSegmentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLPersonSegmentation.swift; sourceTree = "<group>"; };
 		A3C278962BAF071200BE40C1 /* PGLTriangleGradientFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLTriangleGradientFilter.swift; sourceTree = "<group>"; };
+		A3C5A64F3042358800FAFBC4 /* PGLCanvasSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCanvasSpace.swift; sourceTree = "<group>"; };
+		A3C5A651304238D500FAFBC4 /* PGLCanvasSpaceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCanvasSpaceTests.swift; sourceTree = "<group>"; };
 		A3CA2BFE295A01FD00502A8A /* PGLConvolutionFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLConvolutionFilter.swift; sourceTree = "<group>"; };
-		A3CB99C32BBAE5980015E03F /* PGLVectorScaling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLVectorScaling.swift; sourceTree = "<group>"; };
 		A3CBB6272E637BDD00CB15D5 /* CDImageList+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDImageList+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A3CBB6292E637D2B00CB15D5 /* CDImageList+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDImageList+CoreDataClass.swift"; sourceTree = "<group>"; };
 		A3D119CD2ED11ADF00CD36EF /* PGLPasteUIImageFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLPasteUIImageFilter.swift; sourceTree = "<group>"; };
@@ -669,6 +671,7 @@
 				A3DC6E5A2DBC02AF00E32FAA /* PGLCategorySurvey.swift */,
 				A3FF819E2DBC3A7600CD705C /* PGLFilterStackTests.swift */,
 				A3BF502824D3299100CD5114 /* Info.plist */,
+				A3C5A651304238D500FAFBC4 /* PGLCanvasSpaceTests.swift */,
 			);
 			path = RiftEffectsTests;
 			sourceTree = "<group>";
@@ -753,9 +756,9 @@
 				A3552BEB29463C10002FBC72 /* PGLAttributeVectorNumericUI.swift */,
 				A3552BED2946AA7D002FBC72 /* PGLAttributeVectorNumeric.swift */,
 				A3EF3EF3294AA3A900AD0B10 /* PGLAttributeVectorExpand.swift */,
-				A3CB99C32BBAE5980015E03F /* PGLVectorScaling.swift */,
 				A34BB8BD295E4834007BFBA7 /* PGLAttributeWeightsVector.swift */,
 				A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */,
+				A3C5A64F3042358800FAFBC4 /* PGLCanvasSpace.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1059,6 +1062,7 @@
 				A35311012C33571300FB29EA /* PGLStackSection.swift in Sources */,
 				A3811C012DC56DA900A1A178 /* PGLFilterConstructor.swift in Sources */,
 				A37D91552D5CF0FC006E1426 /* PGLDetector.swift in Sources */,
+				A3C5A6503042358800FAFBC4 /* PGLCanvasSpace.swift in Sources */,
 				A3D9FF0B292A9F1400BAE158 /* Quad.swift in Sources */,
 				A369A7FE2D44624800C55438 /* PGLFilterAttributeTime.swift in Sources */,
 				A3181C042974C84F00834D89 /* PGLNeedsRedraw.swift in Sources */,
@@ -1206,7 +1210,6 @@
 				A3552BEE2946AA7D002FBC72 /* PGLAttributeVectorNumeric.swift in Sources */,
 				A3AF92DB2D400921001E4785 /* PGLFilterAttributeAngle.swift in Sources */,
 				A3BF50F224D32A3400CD5114 /* ListCell.swift in Sources */,
-				A3CB99C42BBAE5980015E03F /* PGLVectorScaling.swift in Sources */,
 				A3BF50F724D32A3400CD5114 /* TitleSupplementaryView.swift in Sources */,
 				A37D84F42F4226D70058669F /* PGLKenBurnsFilter.swift in Sources */,
 				A3FA93E42E958C7D008859D5 /* PGLSplitViewDelegate.swift in Sources */,
@@ -1229,6 +1232,7 @@
 		A3BF501E24D3299100CD5114 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
+				A3C5A652304238D500FAFBC4 /* PGLCanvasSpaceTests.swift in Sources */,
 				A3DC6E592DBBF23A00E32FAA /* PGLFilterDescriptorTests.swift in Sources */,
 				A3DC6E5B2DBC02AF00E32FAA /* PGLCategorySurvey.swift in Sources */,
 				A3FF819F2DBC3A7600CD705C /* PGLFilterStackTests.swift in Sources */,

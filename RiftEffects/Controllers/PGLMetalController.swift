@@ -117,11 +117,6 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
         setUpMetalRender()
         updateDrawableSize()
-        if isFullScreen {
-            // works fine when loading fullscreen
-            appStack.pointParms(shiftTransform: FullScreenTargetTransform)
-           NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by \(FullScreenTargetTransform)")
-        }
 
         let myCenter =  NotificationCenter.default
         cancellable = myCenter.publisher(for:  PGLMetalLuminanceMeasureFlag)
@@ -245,7 +240,7 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
         FullScreenAspectFillMode = !FullScreenAspectFillMode
  
         // parm changes...?
-        appStack.resetDrawableSize(newScale: CGAffineTransform.identity)
+        appStack.resetDrawableSize()
 
     }
 
@@ -254,9 +249,6 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
         NSLog("\(self.debugDescription) " + #function + " dismiss FullScreenAspectFillMode = false ")
         FullScreenAspectFillMode = false
         metalRender.isFullScreen = FullScreenAspectFillMode
-
-        appStack.pointParms(shiftTransform: FullScreenTargetTransform.inverted())
-       NSLog ("\( String(describing: self) + "-" + #function)" + " pointParms shifted by FullScreenTargetTransform.inverted ")
 
         self.dismiss(animated: true)
     }

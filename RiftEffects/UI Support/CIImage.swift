@@ -37,7 +37,7 @@ extension CIImage {
         if !self.extent.isInfinite {
             return self}
         let targetRect = CGRect(origin: CGPoint.zero, size: cropSize)
-            // TargetSize is the ImageController view size
+            // RenderTargetSize is the ImageController view size
 
         let returnImage = self.cropped(to: targetRect)
 

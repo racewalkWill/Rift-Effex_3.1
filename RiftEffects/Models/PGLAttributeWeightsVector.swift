@@ -33,7 +33,7 @@ class PGLAttributeWeightsVector: PGLFilterAttributeVector {
         return false
     }
 
-    override func moveOnDrawableSizeChange() -> Bool {
+    override func usesCanvasCoordinates() -> Bool {
         // only some PGLFilterAttributeVectors should move
         return false
     }

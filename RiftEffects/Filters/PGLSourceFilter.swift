@@ -518,6 +518,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
         for anAttribute in attributes {
                     anAttribute.updateFromInputStack()
+                    anAttribute.applyRenderSize(RenderTargetSize)
                 }
         if hasImageParmMissingInput() {
             return CIImage.empty()
@@ -635,7 +636,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
          var sizedInput: CIImage
         if isTransitionFilter() {
 
-            sizedInput = newValue.scale( targetSize: TargetSize)
+            sizedInput = newValue.scale( targetSize: RenderTargetSize)
                     // scale checks for equal extent size, adjusts as needed to match
             
             localFilter.setValue( sizedInput, forKey: keyName)
@@ -781,7 +782,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 //        }
     }
 
-    func resetDrawableSize(newScale: CGAffineTransform) {
+    func resetDrawableSize() {
         if let myImageParms = imageParms() {
             for anImageParm in myImageParms {
                 anImageParm.resetDrawableSize()
@@ -789,13 +790,6 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         }
 
 
-    }
-
-    func pointParms(shiftTransform: CGAffineTransform) {
-            // now transform the parms that are vector or CGPoint
-            for anAttribute in attributes {
-                anAttribute.movePointParms(transform: shiftTransform)
-            }
     }
 
 

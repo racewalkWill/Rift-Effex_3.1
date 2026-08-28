@@ -14,14 +14,18 @@ import CoreImage
 
 class PGLAttributeVectorExpand: PGLFilterAttributeVector {
 
-    var upScaler = CGAffineTransform(scaleX: 1000.0, y: 1000.0)
+    // Scales the filter's raw 0...1 CIToneCurve coordinates up to FilterCanvasSize-relative
+    // coordinates, so getVectorValue()/set(_:) answer the same canonical space every other
+    // vector-based attribute uses - markers stay correctly placed regardless of view size.
+    var upScaler = CGAffineTransform(scaleX: FilterCanvasSize.width, y: FilterCanvasSize.height)
 
     override func shouldSetDefaultVectorValue() -> Bool {
         return false
     }
 
-    override func moveOnDrawableSizeChange() -> Bool {
-        // only some PGLFilterAttributeVectors should move
+    override func usesCanvasCoordinates() -> Bool {
+        // this attribute's canonical value is already pushed via set()/getVectorValue()
+        // above (unit <-> canvas scaling), so it does not need the applyRenderSize hook
         return false
     }
 

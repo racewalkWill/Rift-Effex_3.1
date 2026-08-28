@@ -75,7 +75,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
         NSLog("\(#function) start caching \(itemsToCache.count) assets")
         let appStack = (UIApplication.shared.delegate as? AppDelegate)?.appStack
         Task {
-            await appStack?.photoMgr.startCaching(for: itemsToCache, targetSize: TargetSize)
+            await appStack?.photoMgr.startCaching(for: itemsToCache, targetSize: RenderTargetSize)
             for item in itemsToCache {
                 NSLog("\(#function) startImageRequestTask for localIdentifer \(item.localIdentifier)")
                 item.startImageRequestTask()
@@ -198,7 +198,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
         Task {
             guard let cache = cache else { return }
 //            NSLog(#function, #line)
-            imageRequestID = await cache.requestImage(for: self, targetSize: TargetSize) { @Sendable result in
+            imageRequestID = await cache.requestImage(for: self, targetSize: RenderTargetSize) { @Sendable result in
                 Task { @MainActor in
 //                    NSLog("\(#function) process: \(ProcessInfo.processInfo.processName) time: \(Date()) result: \(String(describing: result))")
                     if let result = result {

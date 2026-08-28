@@ -31,7 +31,10 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
     var sideCount = 3
     var linearGradients =  [PGLSourceFilter]()
     var blendFilters = [CIFilter]()
-    var centerPoint: CGPoint = CGPoint(x: TargetSize.width/2, y: TargetSize.height/2)
+    /// centerPoint/corners/gradientWidth are canonical (FilterCanvasSize-relative) - converted
+    /// to RenderTargetSize-relative coordinates in recomputeSide(_:), which runs on every
+    /// outputImageBasic() so the actual gradient geometry always matches the current render size.
+    var centerPoint: CGPoint = CGPoint(x: FilterCanvasSize.width/2, y: FilterCanvasSize.height/2)
 
     /// corner positions of the polygon - corners[i] and corners[(i+1) % sideCount] define side i
     var corners: [CGPoint] = []
@@ -116,10 +119,10 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
 
     // MARK: Default layout
 
-    /// a regular polygon inscribed in a circle centered on TargetSize
+    /// a regular polygon inscribed in a circle centered on FilterCanvasSize
     class func defaultCorners(count: Int) -> [CGPoint] {
-        let center = CGPoint(x: TargetSize.width / 2, y: TargetSize.height / 2)
-        let radius = min(TargetSize.width, TargetSize.height) * 0.35
+        let center = CGPoint(x: FilterCanvasSize.width / 2, y: FilterCanvasSize.height / 2)
+        let radius = min(FilterCanvasSize.width, FilterCanvasSize.height) * 0.35
         return (0 ..< count).map { index in
             let angle = -CGFloat.pi / 2 + (2 * CGFloat.pi * CGFloat(index) / CGFloat(count))
             return CGPoint(x: center.x + radius * cos(angle), y: center.y + radius * sin(angle))
@@ -128,19 +131,29 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
 
     // MARK: Geometry mapping layer
 
-    func centroid() -> CGPoint {
-        let sum = corners.reduce(CGPoint.zero) { partial, point in
+    /// corners converted from canonical (FilterCanvasSize-relative) to RenderTargetSize-relative
+    /// coordinates - the space the actual CILinearGradient geometry below is computed in. Uses
+    /// a per-axis stretch, so this conversion must happen before (not after) any geometry that
+    /// depends on angles/perpendicularity, since a non-uniform stretch does not preserve them.
+    private func renderCorners() -> [CGPoint] {
+        let transform = canvasToRenderTransform(renderSize: RenderTargetSize)
+        return corners.map { $0.applying(transform) }
+    }
+
+    func centroid(of points: [CGPoint]) -> CGPoint {
+        let sum = points.reduce(CGPoint.zero) { partial, point in
             CGPoint(x: partial.x + point.x, y: partial.y + point.y)
         }
-        return CGPoint(x: sum.x / CGFloat(corners.count), y: sum.y / CGFloat(corners.count))
+        return CGPoint(x: sum.x / CGFloat(points.count), y: sum.y / CGFloat(points.count))
     }
 
     /// recompute inputPoint0/inputPoint1 of the linear gradient for side `index`
     /// side `index` connects corners[index] to corners[(index+1) % sideCount]
     func recomputeSide(_ index: Int) {
         guard index >= 0, index < linearGradients.count, corners.count == sideCount else { return }
-        let cornerA = corners[index]
-        let cornerB = corners[(index + 1) % sideCount]
+        let renderedCorners = renderCorners()
+        let cornerA = renderedCorners[index]
+        let cornerB = renderedCorners[(index + 1) % sideCount]
         let midpoint = CGPoint(x: (cornerA.x + cornerB.x) / 2, y: (cornerA.y + cornerB.y) / 2)
 
         let dx = cornerB.x - cornerA.x
@@ -151,13 +164,13 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
         // perpendicular to the side, oriented to point away from the polygon centroid
         var normalX = -dy / length
         var normalY = dx / length
-        let center = centroid()
+        let center = centroid(of: renderedCorners)
         if (normalX * (center.x - midpoint.x) + normalY * (center.y - midpoint.y)) > 0 {
             normalX = -normalX
             normalY = -normalY
         }
 
-        let halfWidth = gradientWidth / 2
+        let halfWidth = canvasScalar(gradientWidth, renderSize: RenderTargetSize) / 2
         let point0 = CGPoint(x: midpoint.x - normalX * halfWidth, y: midpoint.y - normalY * halfWidth)
         let point1 = CGPoint(x: midpoint.x + normalX * halfWidth, y: midpoint.y + normalY * halfWidth)
 
@@ -191,6 +204,11 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
         // it's a bug in the filter code !!
 
         addFilterStepTime()  // if animation then move time forward - drives center/corner Vary via addAnimationStepTime()
+
+        // corners/gradientWidth are canonical; always refresh the actual (RenderTargetSize-
+        // relative) gradient geometry before drawing, since RenderTargetSize can change
+        // (rotation, navigation) without any corner/width value itself changing.
+        recomputeAllSides()
 
         guard sideCount > 0, !linearGradients.isEmpty else { return nil }
         var currentImage = linearGradients[0].outputImage()

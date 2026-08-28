@@ -700,7 +700,7 @@ class PGLFilterStack: Equatable, Hashable  {
                     continue
                 }
             }
-            let cropTo = thisWindowSize ?? TargetSize
+            let cropTo = thisWindowSize ?? RenderTargetSize
             if thisImage != nil {
                 if thisImage!.extent.isInfinite {
                     // issue CIColorDodgeBlendMode -> CIZoomBlur -> CIToneCurve

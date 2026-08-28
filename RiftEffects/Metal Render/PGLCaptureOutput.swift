@@ -60,9 +60,9 @@ class PGLCaptureOutput {
 
 
         // The writer is not configured until the first captured frame arrives.
-        // Sizing it from TargetSize at session-start time (e.g. from
+        // Sizing it from RenderTargetSize at session-start time (e.g. from
         // startCaptureSession) can run before the draw loop has re-synced
-        // TargetSize to the view's current drawableSize, baking in a stale,
+        // RenderTargetSize to the view's current drawableSize, baking in a stale,
         // often much smaller size and producing a badly cropped/zoomed video.
         // Using the actual frame's size guarantees the buffer always matches
         // what was really rendered.
@@ -223,7 +223,7 @@ class PGLCaptureOutput {
 
 //     Combine the still image and video into a LivePhoto
     func createLivePhoto( videoURL: URL, completion: @escaping (PHLivePhoto?) -> Void) {
-        PHLivePhoto.request(withResourceFileURLs: [ videoPath], placeholderImage: nil, targetSize: TargetSize, contentMode: .aspectFit) { livePhoto, info in
+        PHLivePhoto.request(withResourceFileURLs: [ videoPath], placeholderImage: nil, targetSize: RenderTargetSize, contentMode: .aspectFit) { livePhoto, info in
             completion(livePhoto)
         }
     }

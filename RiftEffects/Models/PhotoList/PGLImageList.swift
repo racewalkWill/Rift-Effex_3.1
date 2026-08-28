@@ -55,7 +55,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 //    }
 
     var targetSize: CGSize { get {
-        return TargetSize
+        return RenderTargetSize
         }
     }
 //    var contentMode: UIView.ContentMode = UIView.ContentMode.scaleAspectFit
@@ -389,7 +389,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
         if imageAsset.isVideo() {
             answerImage =  imageAsset.imageFrom()
             if answerImage != nil {
-                return scaleToFrame(ciImage: answerImage!, newSize: TargetSize)
+                return scaleToFrame(ciImage: answerImage!, newSize: RenderTargetSize)
             }
             else {
                 return CIImage.empty()
@@ -490,7 +490,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
             return nil }
         return answerImage
 //        if doResize {
-//            return self.scaleToFrame(ciImage: answerImage, newSize: TargetSize) }
+//            return self.scaleToFrame(ciImage: answerImage, newSize: RenderTargetSize) }
 //        else { return answerImage}
 
 
@@ -582,7 +582,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
 /// answers false if the there is nothing to cache i.e. demo images
     func resetCenteredImageCache() -> Bool {
 
-            // global TargetSize has changed
+            // global RenderTargetSize has changed
             // images should be resized/centered again
             // set cachedImages to  empty and they will resize as accessed
         if (isDemoList() || isEmpty() ) {

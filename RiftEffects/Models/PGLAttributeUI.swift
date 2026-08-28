@@ -137,7 +137,7 @@ class PGLTranslateAffineUI: PGLFilterAttributeVector {
             // attributeName is index for parm controls must be unique
 
     }
-    override func moveOnDrawableSizeChange() -> Bool {
+    override func usesCanvasCoordinates() -> Bool {
         // only some PGLFilterAttributeVectors should move
         return false
     }
@@ -273,7 +273,7 @@ class PGLScaleAffineUI: PGLFilterAttributeNumber {
         // attributeName is index for parm controls must be unique
 
     }
-    override func moveOnDrawableSizeChange() -> Bool {
+    override func usesCanvasCoordinates() -> Bool {
         // only some PGLFilterAttributeVectors should move
         return false
     }

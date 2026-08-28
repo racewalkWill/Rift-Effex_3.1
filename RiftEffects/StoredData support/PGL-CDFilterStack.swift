@@ -224,9 +224,9 @@ extension PGLFilterStack {
 
 
         }
-            // always write the current TargetSize
-        storedStack!.globalSizeWidth = TargetSize.width
-        storedStack!.globalSizeHeight = TargetSize.height
+            // always write the current RenderTargetSize
+        storedStack!.globalSizeWidth = RenderTargetSize.width
+        storedStack!.globalSizeHeight = RenderTargetSize.height
 
         return storedStack!  // force error if not set
     }
@@ -1152,21 +1152,19 @@ extension PGLFilterAttribute {
 
 
     }
-    func resizeStoredTransform(_ savedSize: CGSize?) -> CGAffineTransform {
-        if savedSize == nil {
+    /// Maps a legacy saved-vector coordinate space to `destination` (defaults to the live
+    /// `RenderTargetSize`, for the Affine/Rectangle attributes that still store live-space
+    /// values). `PGLFilterAttributeVector` calls this with `destination: FilterCanvasSize`
+    /// since its canonical storage is not RenderTargetSize-relative.
+    /// A pure per-axis scale about the shared LLO origin - no translate term, since both
+    /// coordinate spaces are anchored at the same working-rect origin.
+    func resizeStoredTransform(_ savedSize: CGSize?, destination: CGSize = RenderTargetSize) -> CGAffineTransform {
+        guard let savedSize, savedSize.width > 0, savedSize.height > 0 else {
             return CGAffineTransform.identity
         }
-//        let translate = CGAffineTransform.init(translationX:  (savedSize!.width - TargetSize.width)/2, y:  (savedSize!.height - TargetSize.height)/2)
-//        let translate = CGAffineTransform.init(translationX:  ( TargetSize.width - savedSize!.width )/2, y:  (TargetSize.height - savedSize!.height)/2)
-
-        let xScale = TargetSize.width / savedSize!.width
-        let yScale =  TargetSize.height / savedSize!.height
-
-//        let xScale =  savedSize!.width / TargetSize.width
-//        let yScale =  savedSize!.height  / TargetSize.height
-        let scaleTransform = CGAffineTransform.init(scaleX: xScale, y: yScale)
-        return scaleTransform
-
+        let xScale = destination.width / savedSize.width
+        let yScale = destination.height / savedSize.height
+        return CGAffineTransform(scaleX: xScale, y: yScale)
     }
 
 
@@ -1558,12 +1556,17 @@ extension PGLFilterAttributeVector {
         }
 
 
-        guard let myVector = getVectorValue()
+        // getVectorValue() answers the canonical FilterCanvasSize-relative value; persist
+        // it in live RenderTargetSize-relative coordinates instead, matching the meaning of
+        // globalSizeWidth/Height (the live size at save time) so resizeFrom(savedSize:) on
+        // load - which converts from that saved live space to FilterCanvasSize - stays a
+        // single, correct conversion for both legacy and newly-saved stacks.
+        guard let myVector = getVectorValue()?.scaledFromCanvas(toRenderSize: RenderTargetSize)
             else { return }
 //        NSLog("PGLVectorAttribute storeParmValue \(myVector)")
         cd.vectorX = (myVector.x) as NSNumber
         cd.vectorY = (myVector.y) as NSNumber
-        if let myEndPoint = endPoint {
+        if let myEndPoint = endPoint?.scaledFromCanvas(toRenderSize: RenderTargetSize) {
             // endpoint used in the vary scenerio
             cd.vectorEndX = (myEndPoint.x) as NSNumber
             cd.vectorEndY = (myEndPoint.y) as NSNumber
@@ -1847,9 +1850,13 @@ extension PGLFilterAttributeVector3 {
             cd = storedParmValue as! CDAttributeVector3
         }
 
-        cd.vectorY = startPoint?.y as? NSNumber
-        cd.vectorX = startPoint?.x as? NSNumber
-       cd.vectorZ = Float(zValue)
+        // startPoint/zValue are canonical (FilterCanvasSize-relative); persist them in live
+        // RenderTargetSize-relative coordinates, matching globalSizeWidth/Height's meaning -
+        // see the matching comment in PGLFilterAttributeVector.storeParmValue.
+        let liveStart = startPoint?.scaledFromCanvas(toRenderSize: RenderTargetSize)
+        cd.vectorY = liveStart?.y as? NSNumber
+        cd.vectorX = liveStart?.x as? NSNumber
+        cd.vectorZ = Float(canvasScalar(zValue, renderSize: RenderTargetSize))
     }
 
     @objc override func setStoredValueToAttribute(_ value: CDParmValue)   {
@@ -1862,8 +1869,9 @@ extension PGLFilterAttributeVector3 {
             else { return }
         let storedVector = CIVector(x: CGFloat(truncating: vectorX), y: CGFloat(truncating: vectorY))
 
-        startPoint = storedVector
-        zValue = CGFloat(storedValue.vectorZ)
+        // route through set3ValueVector so canvasVector (used by resizeFrom) is populated too
+        set3ValueVector(storedVector, newZValue: CGFloat(storedValue.vectorZ))
+        startPoint = getVectorValue()
 
     }
 

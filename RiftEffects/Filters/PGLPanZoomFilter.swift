@@ -136,7 +136,7 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
             else    { return }
         if   panDirection != .panNone  {
             // starting from frame center
-            centerPoint = CGPoint( x: (TargetSize.width / 2 ), y: (TargetSize.height / 2) )
+            centerPoint = CGPoint( x: (RenderTargetSize.width / 2 ), y: (RenderTargetSize.height / 2) )
 
                     // change the filter's centerPoint to one of the random points
                     // setRandomParms()
@@ -187,7 +187,7 @@ class PGLPanZoomFilter: PGLScaleUpFrame {
 
     func randomCenterPoint() -> CGPoint {
         // default to center
-        var center: CGPoint = CGPoint( x: (TargetSize.width / 2 ), y: (TargetSize.height / 2) )
+        var center: CGPoint = CGPoint( x: (RenderTargetSize.width / 2 ), y: (RenderTargetSize.height / 2) )
 
         let x: CGFloat = CGFloat.random(in: 0.0...1.0)
         let y: CGFloat = CGFloat.random(in: 0.0...1.0)

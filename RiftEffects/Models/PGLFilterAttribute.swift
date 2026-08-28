@@ -554,11 +554,19 @@ class PGLFilterAttribute {
 
         // MARK: Filter Updates
 
-        /// some parms based on center points need to change if the image sizng changes
-        ///  does not change non position vector parms (such as color vectors)
-    func moveOnDrawableSizeChange() -> Bool {
-        // only some PGLFilterAttributeVectors should move
+        /// some parms are authored/stored in FilterCanvasSize-relative coordinates and need
+        /// to be converted to the live RenderTargetSize before the CIFilter runs.
+        ///  does not apply to non position vector parms (such as color vectors)
+    func usesCanvasCoordinates() -> Bool {
+        // only some PGLFilterAttributeVectors use canvas coordinates
         return false
+    }
+
+    /// Convert this attribute's canonical (FilterCanvasSize-relative) value into
+    /// `renderSize`-relative coordinates and push it into the actual CIFilter.
+    /// Called once per output-image evaluation from `PGLSourceFilter.outputImageBasic()`.
+    /// Default no-op; overridden by attributes that store canvas coordinates.
+    func applyRenderSize(_ renderSize: CGSize) {
     }
     // MARK: value change
 
@@ -673,58 +681,24 @@ class PGLFilterAttribute {
         return (attributeType == kCIAttributeTypeTime)
     }
 
-    func mapPoint2Vector(point: CGPoint, viewHeight: CGFloat, scale: CGFloat) -> CIVector {
-        // Upper Left Origin coord ULO point
-        // vector in Lower Left coord  LLO
-
-        let flippedVertical = viewHeight - point.y
-            // is this the inverse func for vector2Point??
-        let newVector = CIVector(x: point.x * scale , y: flippedVertical * scale )
-        return newVector
+    /// Maps a UIKit view point (ULO) back to a FilterCanvasSize-relative CIVector (LLO).
+    /// `viewSize` is the current metal/image view's own bounds size - the on-screen area
+    /// the marker/drag gesture is relative to, independent of any global render-size state.
+    func mapPoint2Vector(point: CGPoint, viewSize: CGSize) -> CIVector {
+        return viewPointToCanvasVector(point, viewSize: viewSize)
     }
 
-    func mapVector2Point(vector: CIVector, viewHeight: CGFloat, scale: CGFloat) -> CGPoint {
-        // set the scaling vars
-        let theScreenScaling = PGLVectorScaling(viewHeight: viewHeight, viewScale:  scale)
-        setScaling(heightScreenScale: theScreenScaling)
-
-        if (vector.x < 0.0) || (vector.y < 0.0 ) {
-            // it is some oddball initial neg value
-            let reasonablePlace = theScreenScaling.viewHeight
-            let defaultVector = CIVector(x: reasonablePlace,y: reasonablePlace)
-            return mapVector2PointScaled(vector: defaultVector)
-        } else {
-            return mapVector2PointScaled(vector: vector)
+    /// Maps a FilterCanvasSize-relative CIVector to a point in a UIKit view of `viewSize`.
+    func mapVector2Point(vector: CIVector, viewSize: CGSize) -> CGPoint {
+        if (vector.x < 0.0) || (vector.y < 0.0) {
+            // it is some oddball initial neg value - place it at a reasonable default
+            let reasonablePlace = FilterCanvasSize.height / 2.0
+            let defaultVector = CIVector(x: reasonablePlace, y: reasonablePlace)
+            return canvasVectorToViewPoint(defaultVector, viewSize: viewSize)
         }
+        return canvasVectorToViewPoint(vector, viewSize: viewSize)
     }
 
-    /// map the vector to view height and screen scale
-    /// assumes scaling var has been set during creation
-    func mapVector2PointScaled(vector: CIVector) -> CGPoint {
-            // Upper Left Origin coord ULO point
-            // vector in Lower Left coord  LLO
-        if let theScale = getScaling() {
-            let yPoint = ((vector.y / theScale.viewScale) - theScale.viewHeight) * -1.0
-                // UNDO the flip from ULO to LLO
-            let newPoint = CGPoint(x: (vector.x/theScale.viewScale) , y: yPoint)
-            return newPoint
-        }
-        else { 
-            // no mapping just answer the same point
-            return vector.cgPointValue}
-    }
-
-        /// set view.height and screen scale for mapping vectors
-    func setScaling(heightScreenScale: PGLVectorScaling) {
-        // empty implemenation
-        // see PGLFilterAttributeVectorUI
-    }
-
-    func getScaling() -> PGLVectorScaling? {
-            // empty implemenation
-            // see PGLFilterAttributeVectorUI
-       return nil
-   }
         ///  always display the position control view
         /// PGLFilterVectorAttributeVectorUI and PGLGradientVectorAttribute only shows if selected
     func shouldHidePosition(userSelected: Bool) -> Bool {
@@ -739,27 +713,7 @@ class PGLFilterAttribute {
         return false
     }
 
-    // MARK: Size changes
-    /// apply size changes to the point parms so they appear in the same spot
-    func movePointParms(transform: CGAffineTransform) {
-//        NSLog(description)
-        if moveOnDrawableSizeChange() {
-            if let currentValue = getVectorValue() {
-//               NSLog ("#movePointParms transform = \(transform)")
-                let theValuePoint = currentValue.cgPointValue
-                let newPoint = theValuePoint.applying(transform)
-                let newVector = CIVector(cgPoint: newPoint)
-//                Logger(subsystem: LogSubsystem, category: LogCategory).info ( "#movePointParms oldVector = \(currentValue)  newVector = \(newVector)")
-
-                set(newVector)
-                // PGLFilterAttributeVector3 or PGLFilterAttributeVector
-                // will set correctly with either x,y,z vector or an x,y vector
-
-            }
-        }
-    }
-
-    /// saved on different coordinate TargetSize
+    /// saved on different coordinate RenderTargetSize
     ///  map points to current Target size
     ///  ONLY used on read from dataStore
     func resizeFrom(savedSize: CGSize?) {
