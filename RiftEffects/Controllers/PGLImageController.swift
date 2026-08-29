@@ -1512,28 +1512,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         if let positionVector = attribute.getVectorValue() {
             // fails if no vector
             let newSize = CGSize(width: 60.0, height: 60.0)
-
-            // the marker's on-screen position is computed directly from this view's own
-            // current size - no dependency on RenderTargetSize or any other view's history.
-            // Matches the viewSize used by panMoveChange/panEnded below (same `view`).
-            let viewSize = view.bounds.size
             Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self)) addPositionControl start" )
             Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self.metalController)) " )
 
-            let centerPoint = attribute.mapVector2Point(vector: positionVector, viewSize: viewSize)
-            // centerPoint is already the ULO point where the control should be centered;
-            // derive the frame's top-left origin from it rather than mutating centerPoint itself
-            let controlFrame = CGRect(x: centerPoint.x - newSize.width/2,
-                                       y: centerPoint.y - newSize.height/2,
-                                       width: newSize.width,
-                                       height: newSize.height)
-
-
             let newView = UIImageView(image: crossPoint)
-
-
-            newView.frame =  controlFrame
-            newView.center = centerPoint
+            newView.bounds.size = newSize
 
             // initial disabled look
             // changed in #togglePosition(theControlView:
@@ -1547,9 +1530,24 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         //    metalController?.view.addSubview(newView)
    // should the metalView receive the .addSubView
             setPositionTapRecognizer(view: newView)
-            
+
             appStack.parmControls[attribute.attributeName!] = newView
             newView.isHidden = true
+
+            // addPositionControl runs during initial column setup, before this view
+            // controller's view is actually installed in a window - view.bounds still
+            // reports its pre-layout (full-container) size at this point, so the
+            // proportional image/control split hasn't taken effect yet. Defer the actual
+            // placement to the next run loop turn, by which point the navigation/embed
+            // transaction has completed and view.bounds reflects the real, laid-out size.
+            DispatchQueue.main.async { [weak self, weak newView] in
+                guard let self, let newView else { return }
+                self.view.window?.layoutIfNeeded()
+                let viewSize = self.view.bounds.size
+                let centerPoint = attribute.mapVector2Point(vector: positionVector, viewSize: viewSize)
+                newView.center = centerPoint
+                Logger(subsystem: LogSubsystem, category: LogParms).info(" addPositionControl at \(String(describing: centerPoint))" )
+            }
         }
         else {
             Logger(subsystem: LogSubsystem, category: LogCategory).error("PGLImageController #addPositionControl fails on no vector value ")}
