@@ -593,13 +593,21 @@ class PGLSelectParmController: PGLCommonController,
         imageController?.view.setNeedsDisplay()
     }
     @IBAction func parmSwitchChange(_ sender: UISwitch) {
-        // switch in the parmController tableView cell for a boolean parm's sub row
-        if let target = appStack.targetAttribute {
-            target.set(NSNumber(value: sender.isOn))
-        } else {
-            Logger(subsystem: LogSubsystem, category: LogCategory).error( "PGLSelectParmController parmSwitchChange fatalError( targetAttribute is nil, value can not be changed")
+        // switch lives directly on the boolean parm's own row, so resolve
+        // the target attribute from the switch's cell indexPath rather than
+        // relying on row selection (tapping a switch does not select its row)
+        var responder: UIResponder? = sender
+        while let nextResponder = responder, !(nextResponder is UITableViewCell) {
+            responder = nextResponder.next
+        }
+        guard let cell = responder as? UITableViewCell,
+              let indexPath = parmsTableView.indexPath(for: cell),
+              let target = getTappedAttribute(indexPath: indexPath)
+        else {
+            Logger(subsystem: LogSubsystem, category: LogCategory).error( "PGLSelectParmController parmSwitchChange fatalError( could not resolve target attribute, value can not be changed")
             return
         }
+        target.set(NSNumber(value: sender.isOn))
         imageController?.view.setNeedsDisplay()
     }
 
@@ -717,23 +725,6 @@ class PGLSelectParmController: PGLCommonController,
         return rowCount
     }
 
-    func addBooleanSwitchRow(for booleanAttribute: PGLFilterAttribute, at indexPath: IndexPath, in tableView: UITableView) {
-        // adds a sub row beneath the tapped boolean parm containing the on/off switch,
-        // mirroring the .addCell swipe-action pattern used for the Vary/timer sub row
-        // (see trailingSwipeActionsConfigurationForRowAt case .addCell)
-        let nextRowIndex = indexPath.row + 1
-        if filterParms[indexPath.section].count > nextRowIndex,
-           let existingSwitchRow = filterParms[indexPath.section][nextRowIndex] as? PGLBooleanSwitchAttributeUI,
-           existingSwitchRow.booleanParent === booleanAttribute {
-            return // already added
-        }
-        guard let newSwitchRow = PGLBooleanSwitchAttributeUI(pglFilter: booleanAttribute.aSourceFilter, attributeDict: booleanAttribute.initDict, inputKey: booleanAttribute.attributeName!)
-            else { return }
-        newSwitchRow.filterAttribute(parent: booleanAttribute)
-        filterParms[indexPath.section].insert(newSwitchRow, at: nextRowIndex)
-        tableView.insertRows(at: [indexPath], with: .automatic)
-        tableView.reloadData()
-    }
 
     func getTappedAttribute(indexPath: IndexPath) -> PGLFilterAttribute? {
         guard filterParms.indices.contains(indexPath.section),
@@ -954,14 +945,6 @@ class PGLSelectParmController: PGLCommonController,
 
             imageController?.hideParmControls()
             highlight(viewNamed: tappedAttribute!.attributeName!)
-
-        case AttrUIType.booleanUI :
-
-            imageController?.hideParmControls()
-            if let booleanAttribute = tappedAttribute, !(booleanAttribute is PGLBooleanSwitchAttributeUI) {
-                addBooleanSwitchRow(for: booleanAttribute, at: indexPath, in: tableView)
-            }
-
 
         case AttrUIType.fontUI :
             imageController?.parmSlider.isHidden = true

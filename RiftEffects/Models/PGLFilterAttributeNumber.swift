@@ -63,6 +63,10 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
     }
 
     override  func setUICellDescription(_ uiCell: UITableViewCell) {
+      if isBooleanUI() {
+        // boolean parms use the switch cell handled by the base class
+        return super.setUICellDescription(uiCell)
+      }
       var content = uiCell.defaultContentConfiguration()
       let newDescriptionString = self.attributeDisplayName ?? ""
       content.text = newDescriptionString

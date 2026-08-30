@@ -336,6 +336,9 @@ class PGLFilterAttribute {
         if let cellSlider = uiCell as?  PGLTableCellSlider {
             cellSlider.showTextValueInCell()
         }
+        else if let cellSwitch = uiCell as? PGLTableCellSwitch {
+            cellSwitch.switchControl?.isOn = getNumberValue()?.boolValue ?? false
+        }
         else {
 //            NSLog("PGLFilterAttribute #setUICellDescription \(uiCell.textLabel!.text)")
             uiCell.detailTextLabel?.text = valueString()
@@ -490,6 +493,7 @@ class PGLFilterAttribute {
 
     func uiCellIdentifier() -> String {
 
+        if isBooleanUI() { return "parmSwitchInputCell" }
         return  "parmNoDetailCell"
     }
 
