@@ -475,8 +475,19 @@ extension PGLLibraryController: UICollectionViewDelegate {
                 if singleMode {
                     theAppStack.loadChildStack(childStackId: stackId, onParm: parentInputImageParm!)
 //                    postStackChange()
+                    if traitCollection.userInterfaceIdiom == .phone {
+                        // iPhone: picking a stack for a single-image parm closes the Library right away.
+                        // iPad: stays open so the user can keep browsing until Done or an outside tap dismisses it.
+                        parentInputImageParm = nil
+                        dismiss(animated: true)
+                    }
                 }
                             // trigger the image controller to show the stack}
+                else if let alreadyPickedIndex = selectedStackIds.firstIndex(of: stackId) {
+                    // a second tap on an already-picked stack un-picks it
+                    selectedStackIds.remove(at: alreadyPickedIndex)
+                    collectionView.deselectItem(at: indexPath, animated: true)
+                }
                 else {
                     selectedStackIds.append(stackId)
                 }

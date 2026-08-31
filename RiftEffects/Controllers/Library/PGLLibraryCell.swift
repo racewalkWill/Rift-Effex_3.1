@@ -57,10 +57,19 @@ class PGLLibraryCell: UICollectionViewCell {
 
         layer.shadowOpacity = 0.2
         layer.shadowRadius = 6.0
+
+        contentView.layer.borderColor = UIColor.tintColor.cgColor
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    /// outlines the cell when it's picked for the multi-select Sequence filter case; a second tap clears it
+    override var isSelected: Bool {
+        didSet {
+            contentView.layer.borderWidth = isSelected ? 3.0 : 0.0
+        }
     }
 
     deinit {
