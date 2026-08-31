@@ -133,13 +133,19 @@ class PGLStackProvider {
     }
         
     func batchDelete(deleteIds: [NSManagedObjectID]) {
+        guard !deleteIds.isEmpty else { return }
         let taskContext = persistentContainer.viewContext
         let batchDelete = NSBatchDeleteRequest(objectIDs: deleteIds)
         batchDelete.resultType = .resultTypeObjectIDs
-        batchDelete.resultType = .resultTypeCount
         do {
             let batchDeleteResult = try taskContext.execute(batchDelete) as? NSBatchDeleteResult
-            print("###\(#function): Batch deleted post count: \(String(describing: batchDeleteResult?.result))")
+            // NSBatchDeleteRequest deletes rows directly in the store, bypassing the context.
+            // Without this merge, taskContext (and every NSFetchedResultsController bound to it,
+            // including PGLLibraryController's) keeps stale registered objects and the deleted
+            // stacks reappear on the next fetch until some unrelated save/reset happens to catch up.
+            if let deletedObjectIDs = batchDeleteResult?.result as? [NSManagedObjectID] {
+                NSManagedObjectContext.mergeChanges(fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs], into: [taskContext])
+            }
         } catch {
             print("###\(#function): Failed to batch delete existing records: \(error)")
         }

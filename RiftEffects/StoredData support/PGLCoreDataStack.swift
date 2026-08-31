@@ -360,10 +360,16 @@ extension CoreDataWrapper {
 
             let batchDelete = NSBatchDeleteRequest(objectIDs: deleteIds)
             batchDelete.resultType = .resultTypeObjectIDs
-            batchDelete.resultType = .resultTypeCount
             do {
                 let batchDeleteResult = try aContext.execute(batchDelete) as? NSBatchDeleteResult
-                print("###\(#function): Batch deleted post count: \(String(describing: batchDeleteResult?.result))")
+                // NSBatchDeleteRequest deletes rows directly in the store, bypassing every
+                // NSManagedObjectContext. Without this merge, aContext (and the viewContext,
+                // which does not learn about batch deletes via automaticallyMergesChangesFromParent)
+                // keep stale registered objects and any FRC bound to them can show deleted rows
+                // again on the next fetch.
+                if let deletedObjectIDs = batchDeleteResult?.result as? [NSManagedObjectID] {
+                    NSManagedObjectContext.mergeChanges(fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs], into: [aContext, persistentContainer.viewContext])
+                }
             } catch {
                 print("###\(#function): Failed to batch delete existing records: \(error)")
             }
@@ -644,4 +650,3 @@ extension CoreDataWrapper {
 //        }
 //    }
 }
-

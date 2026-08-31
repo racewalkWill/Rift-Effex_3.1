@@ -295,7 +295,8 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
 
        }
 
-    func removeDeletedFromSnapshot(deletedRows: [IndexPath]) {
+    func
+    removeDeletedFromSnapshot(deletedRows: [IndexPath]) {
 
         var diffableIdentifiers = [FilterStack]()
         for aRow in deletedRows {

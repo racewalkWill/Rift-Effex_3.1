@@ -643,6 +643,8 @@
 				A359502B300D7F0600FBE753 /* Root.strings */,
 				A37D915F2D5CF166006E1426 /* Root.plist */,
 				A3BF50A624D32A3400CD5114 /* Info.plist */,
+				A3595037300D7F0700FBE753 /* InfoPlist.xcstrings */,
+				A3595038300D7F0700FBE753 /* Localizable.xcstrings */,
 				A3167D112ED255750029FA92 /* AppDelegate.swift */,
 				A3167D132ED255CF0029FA92 /* PGLWindowSceneDelegate.swift */,
 				A3FE178B2E15DAA0002B2270 /* AirPlay */,
@@ -901,8 +903,6 @@
 		A3FE178B2E15DAA0002B2270 /* AirPlay */ = {
 			isa = PBXGroup;
 			children = (
-				A3595037300D7F0700FBE753 /* InfoPlist.xcstrings */,
-				A3595038300D7F0700FBE753 /* Localizable.xcstrings */,
 				584DC7122DEC990700DDFE38 /* PGLAirPlaySceneDelegate.swift */,
 				58165C1D2DEE55C400A45425 /* PGLRenderOnAirPlay.swift */,
 				58165C1B2DEE4D4300A45425 /* PGLAirPlayMetalController.swift */,
