@@ -27,8 +27,18 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
     let opaqueBackground: CIImage = CIImage.black // CIImage.clear
     var addBackground: Bool = true
 
-    // RenderTargetSize is global but with airPlay extr
-    var centerPoint: CGPoint = CGPoint(x: RenderTargetSize.width/2, y: RenderTargetSize.height/2) {
+    /// The coordinate space `centerPoint` is expressed in. PGLScaleDownFrame has two roles:
+    /// (1) a regular "Reduce to a smaller frame" stack filter, whose centerPoint comes from
+    /// the attribute UI and is canonical (FilterCanvasSize-relative) like every other vector
+    /// parm; (2) Renderer/PGLRenderOnAirPlay's internal pinch-zoom/pan filter, whose
+    /// centerPoint is set directly (never through the attribute) in live drawable-pixel
+    /// coordinates. Renderer.initZoomPanFilter()/PGLRenderOnAirPlay set this to their own
+    /// live size right after creating that instance, so outputImageBasic()'s canvas->live
+    /// conversion below becomes a no-op (identity) for role (2) while still converting
+    /// correctly for role (1).
+    var workingSize: CGSize = FilterCanvasSize
+
+    var centerPoint: CGPoint = CGPoint(x: FilterCanvasSize.width/2, y: FilterCanvasSize.height/2) {
         didSet {
             shouldMoveCenter = true
         }
@@ -58,7 +68,7 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
     }
 
     func defaultCenterPoint() -> CGPoint {
-        CGPoint(x: RenderTargetSize.width/2, y: RenderTargetSize.height/2)
+        CGPoint(x: workingSize.width/2, y: workingSize.height/2)
     }
 
     /// defines centerPoint for the LanczosScale rendering
@@ -80,7 +90,14 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
         if scaledImage == nil
             { return CIImage.empty() }
         if shouldMoveCenter {
-            scaledImage = positionOutput(ciOutput: scaledImage!, inFrame: fullScreenRect, newCenterPoint: centerPoint)
+            // centerPoint is workingSize-relative; positionOutput/fullScreenRect operate in
+            // live RenderTargetSize pixels. This is identity when workingSize == RenderTargetSize
+            // (the internal zoom/pan filter role, kept in sync by its owner) and a real
+            // conversion when workingSize == FilterCanvasSize (the regular attribute-UI role).
+            let liveCenter = centerPoint.applying(CGAffineTransform(
+                scaleX: workingSize.width > 0 ? RenderTargetSize.width / workingSize.width : 1,
+                y: workingSize.height > 0 ? RenderTargetSize.height / workingSize.height : 1))
+            scaledImage = positionOutput(ciOutput: scaledImage!, inFrame: fullScreenRect, newCenterPoint: liveCenter)
         }
         // Blend the image over an opaque background image.
         // This is needed if the image is smaller than the view, or if it has transparent pixels.

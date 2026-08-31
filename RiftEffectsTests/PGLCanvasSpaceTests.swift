@@ -9,6 +9,8 @@
 import Testing
 import CoreGraphics
 import CoreImage
+import CoreData
+import UIKit
 
 @testable import RiftEffects
 
@@ -72,7 +74,7 @@ import CoreImage
         #expect(rendered.count == 3)
         #expect(abs(rendered.x - 200) < 0.001)
         #expect(abs(rendered.y - 600) < 0.001)
-        // z is a radius/distance - scaled by min(sx,sy), not dropped and not axis-scaled
+        // z is a radius/distance - scaled by the x-axis factor (sx=2), not dropped
         #expect(abs(rendered.z - 100) < 0.001)
     }
 
@@ -144,5 +146,115 @@ import CoreImage
         let canonicalAfter = attribute.getVectorValue()
         #expect(canonicalAfter?.x == canonicalBefore?.x)
         #expect(canonicalAfter?.y == canonicalBefore?.y)
+    }
+
+    @Test func vector3RoundTripsFullXYZThroughCoreData() throws {
+        // Regression test for: CDAttributeVector3 only ever persisted z (via the
+        // separately-stored zValue) because storeParmValue read x/y from `startPoint`,
+        // which is nil outside the vary/animation flow. setStoredValueToAttribute then
+        // bailed out entirely (dropping z too) whenever x/y were missing.
+        let appDelegate = try #require(UIApplication.shared.delegate as? AppDelegate)
+        let moContext = appDelegate.dataWrapper.persistentContainer.viewContext
+
+        let filter = try #require(PGLSourceFilter(filter: "CISpotLight"))
+        let attribute = try #require(filter.attribute(nameKey: "inputLightPosition") as? PGLFilterAttributeVector3)
+
+        let savedRenderSize = CGSize(width: 1179, height: 2556)
+        RenderTargetSize = savedRenderSize
+        attribute.set3ValueVector(CIVector(x: 436.4, y: 300.4), newZValue: 187.675)
+        let canonicalBefore = try #require(attribute.getVectorValue())
+
+        attribute.storeParmValue(moContext: moContext)
+        let stored = try #require(attribute.storedParmValue as? CDAttributeVector3)
+
+        // storeParmValue must have written all three components, not just z.
+        #expect(stored.vectorX != nil)
+        #expect(stored.vectorY != nil)
+
+        // Reload into a fresh attribute instance, simulating a later app launch where
+        // RenderTargetSize has changed since the save.
+        RenderTargetSize = CGSize(width: 800, height: 1200)
+        let freshFilter = try #require(PGLSourceFilter(filter: "CISpotLight"))
+        let freshAttribute = try #require(freshFilter.attribute(nameKey: "inputLightPosition") as? PGLFilterAttributeVector3)
+        freshAttribute.setStoredValueToAttribute(stored)
+        freshAttribute.resizeFrom(savedSize: savedRenderSize)
+
+        let canonicalAfter = try #require(freshAttribute.getVectorValue())
+        #expect(abs(canonicalAfter.x - canonicalBefore.x) < 0.01)
+        #expect(abs(canonicalAfter.y - canonicalBefore.y) < 0.01)
+        #expect(abs(canonicalAfter.z - canonicalBefore.z) < 0.01)
+    }
+
+    @Test func vector3LegacySaveMissingXYStillRestoresZ() throws {
+        // Regression test for the load-side half of the same bug: a record saved by the
+        // old buggy code (or before this fix) with vectorX/vectorY nil must still restore z,
+        // rather than the whole setStoredValueToAttribute bailing out and losing everything.
+        let appDelegate = try #require(UIApplication.shared.delegate as? AppDelegate)
+        let moContext = appDelegate.dataWrapper.persistentContainer.viewContext
+
+        let legacyRecord = NSEntityDescription.insertNewObject(forEntityName: "CDAttributeVector3", into: moContext) as! CDAttributeVector3
+        legacyRecord.vectorX = nil
+        legacyRecord.vectorY = nil
+        legacyRecord.vectorZ = 187.675
+
+        let filter = try #require(PGLSourceFilter(filter: "CISpotLight"))
+        let attribute = try #require(filter.attribute(nameKey: "inputLightPosition") as? PGLFilterAttributeVector3)
+        let defaultXY = try #require(attribute.getVectorValue())
+
+        attribute.setStoredValueToAttribute(legacyRecord)
+
+        #expect(abs(attribute.zValue - 187.675) < 0.001) // vectorZ is a Float, so exact equality doesn't round-trip
+        // x/y should fall back to whatever the attribute already had, not get zeroed out.
+        let afterVector = try #require(attribute.getVectorValue())
+        #expect(afterVector.x == defaultXY.x)
+        #expect(afterVector.y == defaultXY.y)
+    }
+
+    @Test func scaleDownFrameCenterRoundTripsThroughCoreDataAsRegularFilter() throws {
+        // Regression test for: PGLScaleDownFrame's centerPoint attribute (PGLFilterAttributeVectorUI)
+        // overrides getVectorValue()/set() to delegate to centerPoint directly, bypassing
+        // canvasVector entirely - so the base class's resizeFrom used to silently no-op on
+        // load (it checked canvasVector, which this subclass never populates), leaving
+        // centerPoint in stale live-space-at-save-time coordinates after a reload.
+        let appDelegate = try #require(UIApplication.shared.delegate as? AppDelegate)
+        let moContext = appDelegate.dataWrapper.persistentContainer.viewContext
+
+        let descriptor = try #require(PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self))
+        let filter = try #require(descriptor.pglSourceFilter() as? PGLScaleDownFrame)
+        let attribute = try #require(filter.attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVectorUI)
+        #expect(filter.workingSize == FilterCanvasSize) // regular attribute-UI role, not the internal zoom/pan role
+
+        let savedRenderSize = CGSize(width: 2420, height: 1668)
+        RenderTargetSize = savedRenderSize
+        attribute.set(CIVector(x: 846.498, y: 157.928))
+        let canonicalBefore = try #require(attribute.getVectorValue())
+
+        attribute.storeParmValue(moContext: moContext)
+        let stored = try #require(attribute.storedParmValue as? CDAttributeVector)
+
+        RenderTargetSize = CGSize(width: 800, height: 1200)
+        let freshDescriptor = try #require(PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self))
+        let freshFilter = try #require(freshDescriptor.pglSourceFilter() as? PGLScaleDownFrame)
+        let freshAttribute = try #require(freshFilter.attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVectorUI)
+        freshAttribute.setStoredValueToAttribute(stored)
+        freshAttribute.resizeFrom(savedSize: savedRenderSize)
+
+        let canonicalAfter = try #require(freshAttribute.getVectorValue())
+        #expect(abs(canonicalAfter.x - canonicalBefore.x) < 0.01)
+        #expect(abs(canonicalAfter.y - canonicalBefore.y) < 0.01)
+    }
+
+    @Test func scaleDownFrameZoomPanRoleKeepsLiveCoordinates() {
+        // The internal pinch-zoom/pan role (Renderer.outputZoomPanFilter) manipulates
+        // centerPoint directly in live drawable-pixel coordinates and must NOT be converted -
+        // workingSize kept in sync with RenderTargetSize makes that conversion an identity.
+        RenderTargetSize = CGSize(width: 1206, height: 2622)
+        let zoomFilter = PGLScaleDownFrame.initZoomPanFilter()
+        zoomFilter.workingSize = RenderTargetSize
+        let liveCenter = CGPoint(x: 500, y: 900)
+        zoomFilter.centerPoint = liveCenter
+
+        #expect(zoomFilter.workingSize == RenderTargetSize)
+        #expect(zoomFilter.centerPoint == liveCenter)
     }
 }

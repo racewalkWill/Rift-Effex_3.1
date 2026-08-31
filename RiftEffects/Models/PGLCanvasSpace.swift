@@ -36,8 +36,15 @@ func renderToCanvasTransform(renderSize: CGSize) -> CGAffineTransform {
 
 extension CIVector {
     /// Scales a canvas-space vector into `renderSize`-space. Handles 2-component points,
-    /// 3-component points (the z component is a radius/distance, scaled by min(sx,sy)
-    /// rather than silently dropped), and 4-component rects.
+    /// 3-component points (the z component is a radius/distance, scaled by the x-axis
+    /// factor rather than silently dropped), and 4-component rects.
+    ///
+    /// z (and the scalar helper below) intentionally scale by the x-axis factor alone,
+    /// not min(sx,sy): a value's round trip through two *different* non-uniform stretches
+    /// (e.g. canvas->render at save time, then render->canvas at load time with a
+    /// different render size) is only exactly invertible if the same single axis is used
+    /// both times - min(sx,sy) of a transform's inverse is not the inverse of min(sx,sy)
+    /// of the forward transform unless the stretch happens to be uniform.
     func scaledFromCanvas(toRenderSize renderSize: CGSize) -> CIVector {
         canvasScaled(otherSize: renderSize, canvasIsSource: true)
     }
@@ -62,8 +69,7 @@ extension CIVector {
             case 2:
                 return CIVector(x: x * sx, y: y * sy)
             case 3:
-                let sz = min(sx, sy)
-                return CIVector(x: x * sx, y: y * sy, z: z * sz)
+                return CIVector(x: x * sx, y: y * sy, z: z * sx)
             case 4:
                 let rect = cgRectValue
                 let scaledRect = CGRect(x: rect.origin.x * sx, y: rect.origin.y * sy,
@@ -122,11 +128,12 @@ func viewRectToCanvasRect(_ rect: CGRect, viewSize: CGSize) -> CGRect {
 }
 
 /// Scales a canvas-space scalar distance (e.g. a gradient width or radius) into `renderSize`-space.
+/// Uses the x-axis factor alone - see the comment on CIVector.scaledFromCanvas(toRenderSize:)
+/// for why a single consistent axis (not min(sx,sy)) is required for exact round-tripping.
 func canvasScalar(_ value: CGFloat, renderSize: CGSize) -> CGFloat {
-    guard FilterCanvasSize.width > 0, FilterCanvasSize.height > 0 else {
+    guard FilterCanvasSize.width > 0 else {
         return value
     }
     let sx = renderSize.width / FilterCanvasSize.width
-    let sy = renderSize.height / FilterCanvasSize.height
-    return value * min(sx, sy)
+    return value * sx
 }

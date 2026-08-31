@@ -1850,27 +1850,32 @@ extension PGLFilterAttributeVector3 {
             cd = storedParmValue as! CDAttributeVector3
         }
 
-        // startPoint/zValue are canonical (FilterCanvasSize-relative); persist them in live
-        // RenderTargetSize-relative coordinates, matching globalSizeWidth/Height's meaning -
-        // see the matching comment in PGLFilterAttributeVector.storeParmValue.
-        let liveStart = startPoint?.scaledFromCanvas(toRenderSize: RenderTargetSize)
-        cd.vectorY = liveStart?.y as? NSNumber
-        cd.vectorX = liveStart?.x as? NSNumber
-        cd.vectorZ = Float(canvasScalar(zValue, renderSize: RenderTargetSize))
+        // getVectorValue() (canvasVector) is the always-populated canonical x/y/z - startPoint
+        // is only set during the vary/animation flow and is nil for an ordinary set-and-save,
+        // which previously meant only zValue (stored separately below) ever got persisted.
+        // Persist in live RenderTargetSize-relative coordinates, matching globalSizeWidth/Height's
+        // meaning - see the matching comment in PGLFilterAttributeVector.storeParmValue.
+        let liveVector = getVectorValue()?.scaledFromCanvas(toRenderSize: RenderTargetSize)
+        cd.vectorX = liveVector?.x as? NSNumber
+        cd.vectorY = liveVector?.y as? NSNumber
+        cd.vectorZ = Float(liveVector?.z ?? canvasScalar(zValue, renderSize: RenderTargetSize))
     }
 
     @objc override func setStoredValueToAttribute(_ value: CDParmValue)   {
         super.setStoredValueToAttribute(value)
         guard let storedValue = value as? CDAttributeVector3
             else { return }
-        guard let vectorX = (storedValue.vectorX)
-            else { return }
-        guard let vectorY = storedValue.vectorY
-            else { return }
-        let storedVector = CIVector(x: CGFloat(truncating: vectorX), y: CGFloat(truncating: vectorY))
 
-        // route through set3ValueVector so canvasVector (used by resizeFrom) is populated too
-        set3ValueVector(storedVector, newZValue: CGFloat(storedValue.vectorZ))
+        // z alone must still be restored even for older saves missing x/y (see the
+        // storeParmValue fix above) - don't bail out of the whole restore on a missing x/y.
+        let newZValue = CGFloat(storedValue.vectorZ)
+        if let vectorX = storedValue.vectorX, let vectorY = storedValue.vectorY {
+            let storedVector = CIVector(x: CGFloat(truncating: vectorX), y: CGFloat(truncating: vectorY))
+            // route through set3ValueVector so canvasVector (used by resizeFrom) is populated too
+            set3ValueVector(storedVector, newZValue: newZValue)
+        } else {
+            set3ValueVector(newZValue)
+        }
         startPoint = getVectorValue()
 
     }

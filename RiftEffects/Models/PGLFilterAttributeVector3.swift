@@ -66,6 +66,24 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
         return true
     }
 
+    override func resizeFrom(savedSize: CGSize?) {
+        // Base PGLFilterAttributeVector.resizeFrom() ends by calling set(_:), but this
+        // class's set(_:) override ignores the z component of whatever CIVector it's given
+        // and substitutes the current (not-yet-resized) zValue - so routing through it here
+        // would silently drop the resized z. Go through set3ValueVector directly instead.
+        guard usesCanvasCoordinates() else { return }
+        guard savedSize != nil, let currentVector = canvasVector else { return }
+        let resizingTransform = resizeStoredTransform(savedSize, destination: FilterCanvasSize)
+        let resized = currentVector.applying(resizingTransform)
+        set3ValueVector(resized, newZValue: resized.z)
+        if startPoint != nil {
+            startPoint = startPoint!.applying(resizingTransform)
+        }
+        if endPoint != nil {
+            endPoint = endPoint!.applying(resizingTransform)
+        }
+    }
+
     override func incrementValueDelta()  {
         // animation time range 0.0 to 1.0
         // must also set with a x,y,z vector

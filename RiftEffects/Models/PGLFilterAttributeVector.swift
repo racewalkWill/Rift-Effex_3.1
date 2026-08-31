@@ -224,11 +224,15 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         // assumes setStoredValueToAttribute has already called set(...) with the raw value
         // loaded from CoreData - which is in the OLD saved coordinate space, not yet
         // FilterCanvasSize-relative. Remap the canonical value now that savedSize is known.
+        // Uses getVectorValue()/set() (polymorphic) rather than canvasVector directly, so
+        // subclasses that override those to delegate elsewhere (PGLFilterAttributeVectorUI's
+        // centerPoint, PGLGradientCornerAttribute's corners array) get resized correctly too -
+        // they never populate canvasVector at all.
         if !usesCanvasCoordinates() {
             // not a vector that should move..
             return
         }
-        guard savedSize != nil, let currentVector = canvasVector else { return }
+        guard savedSize != nil, let currentVector = getVectorValue() else { return }
         let resizingTransform = resizeStoredTransform(savedSize, destination: FilterCanvasSize)
         set(currentVector.applying(resizingTransform))
         if startPoint != nil {

@@ -170,6 +170,10 @@ class PGLRenderOnAirPlay: Renderer {
             // in AirPlay mode just output let the mainScreen set this value
 
         outputZoomPanFilter = initZoomPanFilter() // inits with new center
+        // this instance's centerPoint is manipulated directly in this AirPlay device's own
+        // live drawable-pixel coordinates, not the canonical FilterCanvasSize the regular
+        // attribute-UI role uses - see the comment on PGLScaleDownFrame.workingSize.
+        outputZoomPanFilter?.workingSize = size
         // change the center point from the global RenderTargetSize (which is the iPad or iPhone size)
         outputZoomPanFilter?.centerPoint = CGPoint(x: size.width / 2, y: size.height / 2)
 

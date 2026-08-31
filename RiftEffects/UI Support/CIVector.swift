@@ -17,10 +17,12 @@ extension CIVector {
                 return CIVector(cgPoint: newPoint)
             case 3 :
                 // z is a radius/distance, not a coordinate - scale it by the transform's
-                // (assumed axis-aligned, non-rotated) scale factor rather than dropping it.
+                // (assumed axis-aligned, non-rotated) x scale factor rather than dropping it.
+                // Uses the x axis alone (not min(a,d)) so that applying a transform and then
+                // its inverse round-trips exactly - see the comment on
+                // CIVector.scaledFromCanvas(toRenderSize:) in PGLCanvasSpace.swift.
                 let newPoint = self.cgPointValue.applying(transform)
-                let zScale = min(transform.a, transform.d)
-                return CIVector(x: newPoint.x, y: newPoint.y, z: self.z * zScale)
+                return CIVector(x: newPoint.x, y: newPoint.y, z: self.z * transform.a)
             case 4:
                 let newRect = self.cgRectValue.applying(transform)
                 return CIVector(cgRect: newRect)

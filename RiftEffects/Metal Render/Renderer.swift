@@ -365,6 +365,10 @@ class Renderer: NSObject, MTKViewDelegate {
         mtkViewSize = size
         RenderTargetSize = size
         outputZoomPanFilter = initZoomPanFilter() // inits with new center
+        outputZoomPanFilter?.workingSize = size
+            // this instance's centerPoint is manipulated directly (userPan/userPinch) in
+            // live drawable-pixel coordinates, not the canonical FilterCanvasSize the
+            // regular attribute-UI role uses - see the comment on PGLScaleDownFrame.workingSize.
         appStack.resetDrawableSize()
             // vector/rect parm positions no longer need reactive shifting here - they're
             // stored in FilterCanvasSize-relative coordinates and converted to RenderTargetSize
