@@ -218,11 +218,13 @@ class PGLFilterAttribute {
         }
         attributeDescription = attributeDict[kCIAttributeDescription] as? String
         attributeName = inputKey
-        minValue = attributeDict[kCIAttributeMin] as? Float
-        sliderMinValue = attributeDict[kCIAttributeSliderMin] as? Float
-        sliderMaxValue = attributeDict[kCIAttributeSliderMax] as? Float
-        defaultValue = attributeDict[kCIAttributeDefault] as? Float // this fails for affineTransform
-        identityValue = attributeDict[kCIAttributeIdentity] as? Float // this fails for affineTransform
+        // CIFilter attribute dict values are NSNumber boxing a Double, so `as? Float`
+        // fails even when a value is present - use .floatValue to convert unconditionally.
+        minValue = (attributeDict[kCIAttributeMin] as? NSNumber)?.floatValue
+        sliderMinValue = (attributeDict[kCIAttributeSliderMin] as? NSNumber)?.floatValue
+        sliderMaxValue = (attributeDict[kCIAttributeSliderMax] as? NSNumber)?.floatValue
+        defaultValue = (attributeDict[kCIAttributeDefault] as? NSNumber)?.floatValue // nil for affineTransform
+        identityValue = (attributeDict[kCIAttributeIdentity] as? NSNumber)?.floatValue // nil for affineTransform
 
         isTransitionFilter = pglFilter.isTransitionCategoryFilter()
             // // cache at init time aSourceFilter is unowned var and may  be dereferenced

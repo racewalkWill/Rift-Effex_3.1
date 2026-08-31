@@ -1760,7 +1760,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             }
 
             case _ as PGLFilterAttributeAngle:
-                if let numberValue = attribute.getNumberValue() as? Float {
+                if let numberValue = attribute.getNumberValue()?.floatValue {
                     parmSlider?.maximumValue = attribute.sliderMaxValue! // init to 2pi Radians
                     parmSlider?.minimumValue = attribute.sliderMinValue!  // init to 0.0
                     parmSlider?.setValue( numberValue, animated: false )

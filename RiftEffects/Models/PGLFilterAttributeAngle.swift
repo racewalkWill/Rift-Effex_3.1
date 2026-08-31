@@ -20,12 +20,12 @@ class PGLFilterAttributeAngle: PGLFilterAttribute {
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
-        minValue = 0.0
-        sliderMinValue = minValue
-        sliderMaxValue = 2 * Float.pi  //assuming a rangle limit.. the attributes do not supply this
-//        if let thisFilterAngle = getNumberValue() {
-//
-//        }
+        // super.init already parsed sliderMinValue/sliderMaxValue from the filter's own
+        // CIAttributeSliderMin/Max when the filter supplies them (e.g. CIVortexDistortion's
+        // +/-30pi range). Only fall back to the 0...2pi assumption when the filter doesn't.
+        if sliderMinValue == nil { sliderMinValue = 0.0 }
+        if sliderMaxValue == nil { sliderMaxValue = 2 * Float.pi }
+        minValue = sliderMinValue
 
     }
 
@@ -58,8 +58,9 @@ class PGLFilterAttributeAngle: PGLFilterAttribute {
         if !hasAnimation() {return }
         // get the current value and add the delta
         // then set into the filter
-        guard let currentValue = getNumberValue() as? Float
-        else { return }
+        // NSNumber may box a Double, so `as? Float` can fail even when a
+        // value is present - use Float(truncating:) to convert unconditionally.
+        let currentValue = Float(truncating: getNumberValue() ?? 0.0)
 
         let incrementValue = NSNumber ( value: currentValue + ( attributeValueDelta  ?? 0.0 ) )
         aSourceFilter.setNumberValue(newValue: incrementValue, keyName: attributeName!)
