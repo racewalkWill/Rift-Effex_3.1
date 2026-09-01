@@ -138,9 +138,9 @@ class PGLSequenceStack: PGLFilterStack {
                     updateImageParm.inputCollection = sourceImages
                     updateImageParm.setImageParmState(newState: imageAttribute.parmInputState)
                         // put the first image into the filter
-                    if let firstImageOfSequence = sourceImages.first() {
-                        updateFilter.setImageValue(newValue: (firstImageOfSequence), keyName: imageKeyName)
-                    }
+                    let firstImageOfSequence = sourceImages.first() ?? CIImage.empty()
+                    updateFilter.setImageValue(newValue: (firstImageOfSequence), keyName: imageKeyName)
+
                 }
             }
         }

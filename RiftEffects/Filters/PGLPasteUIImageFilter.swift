@@ -149,8 +149,13 @@ class PGLPasteUIImageFilter: PGLScaleUpFrame {
         // my image parm does not come from PhotoLibrary
         // copy my clipboardImage into table CDImageData
 
-        let myCGImage = clipboardImage?.cgImage
-        let myUIImage = UIImage(cgImage: myCGImage!)
+        guard let myClipboardImage = clipboardImage
+            else { return }
+        // clipboardImage is often the result of .oriented(_:) applied on paste, which has
+        // no cgImage backing - render through a CIContext instead of the .cgImage accessor
+        guard let myCGImage = CIContext().createCGImage(myClipboardImage, from: myClipboardImage.extent)
+            else { return }
+        let myUIImage = UIImage(cgImage: myCGImage)
         guard let rawImageData = myUIImage.pngData()
             else {
                 return }
