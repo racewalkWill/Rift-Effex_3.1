@@ -8,7 +8,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "84C7D523-E86C-40CE-AA14-8A3D3F1F4063"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RiftEffects/Filters/PGLSourceFilter.swift"
@@ -24,7 +24,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "5506414B-9D7C-491A-9831-5DDC25926B3C"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RiftEffects/Controllers/PGLImageController.swift"
@@ -34,6 +34,60 @@
             endingLineNumber = "1763"
             landmarkName = "showSliderControl(attribute:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+         <BreakpointContent
+            uuid = "18C7CB16-88F7-47CE-A6D1-3F960214F1AE"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            symbolName = "forceRelayoutForCurrentOrientation"
+            moduleName = "">
+            <Locations>
+               <Location
+                  uuid = "18C7CB16-88F7-47CE-A6D1-3F960214F1AE - 144204295ed8d660"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RiftEffects.PGLTwoColumnSplitController.forceRelayoutForCurrentOrientation() -&gt; ()"
+                  moduleName = "RiftEffects.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex_4.0/RiftEffects/Controllers/iPhone%20controllers/PGLTwoColumnSplitController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "117"
+                  endingLineNumber = "117">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+         <BreakpointContent
+            uuid = "BD539921-BF7E-4944-A866-D5DB4E36CA2D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            symbolName = "forceRelayoutForCurrentOrientation"
+            moduleName = "">
+            <Locations>
+               <Location
+                  uuid = "BD539921-BF7E-4944-A866-D5DB4E36CA2D - 144204295ed8d660"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RiftEffects.PGLTwoColumnSplitController.forceRelayoutForCurrentOrientation() -&gt; ()"
+                  moduleName = "RiftEffects.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/willloew/Developer/Rift-Effex_4.0/RiftEffects/Controllers/iPhone%20controllers/PGLTwoColumnSplitController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "117"
+                  endingLineNumber = "117">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

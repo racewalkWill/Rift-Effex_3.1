@@ -30,6 +30,16 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
         /// in full screen mode the MetalController uses GestureRecogniziers
     var isFullScreen = false
+
+    /// The embedded (compact-column) MTKView this full-screen viewer covers,
+    /// set by PGLImageController.fullScreenImage() before presenting. Both
+    /// MTKViews share one Renderer instance (appStack.appRenderer); if both
+    /// keep drawing at once, their drawableSizeWillChange callbacks
+    /// interleave and each undoes the other's RenderTargetSize forever (the
+    /// oscillating drawableSize / wrong-scale bug). Pausing the covered
+    /// view's draw loop while this one is full-screen, and resuming it on
+    /// dismiss, keeps only one view driving the shared renderer at a time.
+    weak var coveredCompactMetalView: MTKView?
     override var prefersStatusBarHidden: Bool {
         get {
             return true
@@ -110,6 +120,19 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         removeGestureRecogniziers()
         super.viewWillDisappear(animated)
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        // PGLWindowSceneDelegate's rotation handling only re-lays-out the
+        // underlying split view's compact column; it does not know about
+        // whatever is presented full-screen on top (this controller, when
+        // showing the double-tap image viewer). Without this, the MTKView's
+        // drawable size is never recalculated after rotating while
+        // full-screen, so the image kept rendering at its pre-rotation size.
+        coordinator.animate(alongsideTransition: nil) { [weak self] _ in
+            self?.updateDrawableSize()
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
 //        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
@@ -250,7 +273,28 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
         FullScreenAspectFillMode = false
         metalRender.isFullScreen = FullScreenAspectFillMode
 
-        self.dismiss(animated: true)
+        // Stop this view from drawing before the covered view resumes, so
+        // only one MTKView drives the shared renderer at a time.
+        (view as? MTKView)?.isPaused = true
+        coveredCompactMetalView?.isPaused = false
+
+        self.dismiss(animated: true) {
+            // Dismissal is not a rotation event, but the revealed compact
+            // column may still be holding a frame from before a rotation
+            // that happened while this viewer covered it (that rotation
+            // deliberately skipped the covered column — see
+            // PGLWindowSceneDelegate). Force it to catch up now.
+            //
+            // Deferred one run-loop tick: right at the dismiss completion,
+            // presentedViewController bookkeeping was not reliably cleared
+            // yet, which made the relayout mistake this controller for
+            // still-presented content and skip resizing the compact column
+            // entirely.
+            DispatchQueue.main.async {
+                NSLog("PGLMetalController.userDoubleTap dismiss completion: calling relayoutForCurrentWindowBounds, windowSceneDelegate=\(String(describing: (UIApplication.shared.delegate as? AppDelegate)?.windowSceneDelegate))")
+                (UIApplication.shared.delegate as? AppDelegate)?.windowSceneDelegate?.relayoutForCurrentWindowBounds()
+            }
+        }
     }
 
     @objc func userPinch(sender: UIPinchGestureRecognizer) {

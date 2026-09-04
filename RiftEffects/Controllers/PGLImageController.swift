@@ -2145,6 +2145,16 @@ extension PGLImageController {
 //        NSLog("newImageController = \(newImageController.debugDescription)")
         // turns on gesture recogniziers to dismiss, zoom, pan
 
+        // This view and the full-screen viewer share one Renderer instance
+        // (appStack.appRenderer). Pause this view's draw loop while covered
+        // so its drawableSizeWillChange callbacks stop interleaving with the
+        // full-screen view's — otherwise each undoes the other's
+        // RenderTargetSize every frame (the oscillating-size/wrong-scale
+        // bug). Resumed in PGLMetalController.userDoubleTap on dismiss.
+        let compactMetalView = metalController?.view as? MTKView
+        compactMetalView?.isPaused = true
+        newImageController.coveredCompactMetalView = compactMetalView
+
 //        let nav = UINavigationController(rootViewController: newImageController)
 //                nav.modalPresentationStyle = .fullScreen
         newImageController.modalPresentationStyle = .fullScreen

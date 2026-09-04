@@ -103,6 +103,22 @@ class PGLTwoColumnSplitController: UIViewController {
         activeLayoutIsPortrait = portrait
     }
 
+    /// Forces the portrait/landscape constraint swap on the next layout
+    /// pass, bypassing the `activeLayoutIsPortrait` cache. Needed when this
+    /// controller's view is resized programmatically from outside a normal
+    /// rotation this instance itself observed — e.g.
+    /// PGLWindowSceneDelegate.relayoutForCurrentWindowBounds forcing a
+    /// covered controller's frame back to the current window bounds after
+    /// the full-screen image viewer is dismissed. Without this, the cache
+    /// can already read the "correct" orientation while the wrong
+    /// constraint set is still the one actually active, so
+    /// viewWillLayoutSubviews's own guard silently skips the swap.
+    func forceRelayoutForCurrentOrientation() {
+        activeLayoutIsPortrait = nil
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+    }
+
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         guard let theImageController = columns?.imageViewer as? PGLImageController
