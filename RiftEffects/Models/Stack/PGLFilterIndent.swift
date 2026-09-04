@@ -63,7 +63,11 @@ class PGLFilterIndent: Hashable, Equatable , @preconcurrency CustomDebugStringCo
                 // .withAlphaComponent(0.2)
         }
         else {
-            aCell.backgroundColor = nil
+            // .clear rather than nil: on iPhone this cell may sit inside
+            // PGLTwoColumnSplitController's glass drawer, whose table view is
+            // itself transparent — nil would fall back to the cell's default
+            // opaque background and hide the glass behind it.
+            aCell.backgroundColor = .clear
         }
     }
 

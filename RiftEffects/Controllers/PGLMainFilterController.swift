@@ -634,6 +634,15 @@ extension PGLMainFilterController {
         view.addSubview(filterCollectionView)
         filterCollectionView.delegate = self
 
+        // Inside PGLTwoColumnSplitController's glass drawer: the insetGrouped
+        // list appearance below defaults every cell's background to opaque
+        // systemBackground via UIBackgroundConfiguration. Clearing the
+        // collection view itself isn't enough — each cell registration below
+        // also clears its own backgroundConfiguration when this is true.
+        if parent is PGLTwoColumnSplitController {
+            filterCollectionView.backgroundColor = .clear
+        }
+
     }
 
     private func configureDataSource() {
@@ -661,14 +670,20 @@ extension PGLMainFilterController {
                     }
                 }
             cell.accessories = [disclosureOptions]
+            if self?.parent is PGLTwoColumnSplitController {
+                cell.backgroundConfiguration = .clear()
+            }
         }
 
-        let headerRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { (cell, indexPath, item) in
+        let headerRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [weak self] (cell, indexPath, item) in
 //            var content = cell.defaultContentConfiguration()
             var content = UIListContentConfiguration.extraProminentInsetGroupedHeader()
             content.text = item.title
             cell.contentConfiguration = content
             cell.accessories = [.outlineDisclosure()]
+            if self?.parent is PGLTwoColumnSplitController {
+                cell.backgroundConfiguration = .clear()
+            }
         }
 
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [weak self] (cell, indexPath, item) in
@@ -678,6 +693,9 @@ extension PGLMainFilterController {
             cell.contentConfiguration = content
             let disclosureOptions = UICellAccessory.OutlineDisclosureOptions(style: .cell)
             cell.accessories = [.outlineDisclosure(options: disclosureOptions)]
+            if self?.parent is PGLTwoColumnSplitController {
+                cell.backgroundConfiguration = .clear()
+            }
         }
 
         // [weak self]: dataSource is a stored property and this provider closure is

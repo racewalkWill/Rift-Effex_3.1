@@ -205,6 +205,14 @@ class PGLSelectParmController: PGLCommonController,
         super.viewDidLoad()
 
         splitViewController?.delegate = self
+
+        // Inside PGLTwoColumnSplitController's glass drawer: clear the
+        // table's own opaque background so the glass material is visible.
+        if parent is PGLTwoColumnSplitController {
+            parmsTableView.backgroundColor = .clear
+            parmsTableView.backgroundView = nil
+        }
+
         if showGuideArrowBack( ) {
             parmsTableView.reloadData()
         }
@@ -766,6 +774,9 @@ class PGLSelectParmController: PGLCommonController,
 //      NSLog("PGLSelectParmController cellForRowAt cellIdentifier = \(cellIdentifier)")
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
 //        NSLog("PGLSelectParmController cellForRowAt cell = \(cell)")
+        if parent is PGLTwoColumnSplitController {
+            cell.backgroundConfiguration = .clear()
+        }
         thisCellAttribute?.setUICellDescription(cell)
         thisCellAttribute?.uiIndexPath = indexPath
         if let myInputType = thisCellAttribute?.inputParmType() {

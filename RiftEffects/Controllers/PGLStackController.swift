@@ -71,6 +71,14 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
             // the first table row where it sits under the translucent navigation bar.
             tableView.topEdgeEffect.isHidden = true
         }
+
+        // Inside PGLTwoColumnSplitController's glass drawer: clear the table's
+        // own opaque background so the glass material behind it is visible.
+        if parent is PGLTwoColumnSplitController {
+            tableView.backgroundColor = .clear
+            tableView.backgroundView = nil
+        }
+
         guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
             else {
             Logger(subsystem: LogSubsystem, category: LogCategory).fault ("PGLStackController viewDidLoad fatalError(AppDelegate not loaded")

@@ -20,16 +20,36 @@ class PGLTwoColumnSplitController: UIViewController {
     var publishers = [any Cancellable]()
     var cancellable: (any Cancellable)?
 
-    /// Constraints for the side-by-side (landscape) arrangement: control on the
-    /// left, wide image on the right. This is the original/current layout.
-    private var horizontalConstraints: [NSLayoutConstraint] = []
+    /// Holds `columns.control`'s view over the full-bleed image. Never set to
+    /// `alpha < 1` — the glass material provides the translucency, and a
+    /// reduced alpha on the effect view (or a superview) breaks the effect.
+    private var drawerView: UIVisualEffectView?
+    private var collapseButton: UIButton?
 
-    /// Constraints for the single-column (portrait) arrangement: image on top,
-    /// controls stacked below — used in portrait on iPhone.
-    private var verticalConstraints: [NSLayoutConstraint] = []
+    /// The handle strip left on screen when the drawer is collapsed.
+    private let drawerHandleThickness: CGFloat = 44.0
 
-    /// Portrait uses the single-column layout. Prefer the live interface
-    /// orientation; fall back to the view bounds before a window exists.
+    /// Fraction of the safe area the drawer occupies when expanded.
+    private let drawerPortraitHeightFraction: CGFloat = 0.45
+    private let drawerLandscapeWidthFraction: CGFloat = 0.38
+
+    /// Pins the image to the view's own edges — full-bleed, one constraint
+    /// set, never swapped on rotation. (Previously the landscape image width
+    /// was `safeArea.heightAnchor * 5/3`; a live lldb session traced the
+    /// squeezed-column bug to that math executing correctly against a wrong
+    /// safe-area height after a full-screen dismiss + rotate. Removing the
+    /// safe-area dependency from the image entirely makes that failure mode
+    /// unreachable rather than patched.)
+    private var imageConstraints: [NSLayoutConstraint] = []
+
+    private var drawerSizeConstraint: NSLayoutConstraint?
+    private var drawerCrossAxisConstraints: [NSLayoutConstraint] = []
+    private var drawerAttachmentConstraint: NSLayoutConstraint?
+
+    private var isDrawerCollapsed = false
+
+    /// Prefer the live interface orientation; fall back to the view bounds
+    /// before a window exists.
     private var isPortraitLayout: Bool {
         if let scene = view.window?.windowScene {
             return scene.effectiveGeometry.interfaceOrientation.isPortrait
@@ -37,70 +57,103 @@ class PGLTwoColumnSplitController: UIViewController {
         return view.bounds.height > view.bounds.width
     }
 
-    /// Which constraint set is currently active, so layout passes only swap
-    /// when the orientation of this view's own bounds actually changes.
+    /// Which drawer arrangement is currently active, so layout passes only
+    /// rebuild when the orientation of this view's own bounds actually changes.
     private var activeLayoutIsPortrait: Bool?
 
     func layoutViews(_ imageView: UIView, _ controlView: UIView) {
-            //        let spacer = -5.0
-            // for iPad and iPhone Plus.. with three column split view
+        guard let drawerView else { return }
 
-        // Remove any constraints from a prior layout pass before rebuilding.
-        // (FilterImageContainerController re-calls this in viewIsAppearing.)
-        NSLayoutConstraint.deactivate(horizontalConstraints + verticalConstraints)
-
-        let safeArea = view.safeAreaLayoutGuide
-        let imageWidthFactor: Double = 5/3
-
-        // Landscape: control on the left, wide image on the right (4:3-ish).
-        horizontalConstraints = [
-            imageView.rightAnchor.constraint(equalTo: view.rightAnchor),
+        NSLayoutConstraint.deactivate(imageConstraints)
+        imageConstraints = [
             imageView.topAnchor.constraint(equalTo: view.topAnchor),
             imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            imageView.widthAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: imageWidthFactor),
-            // width to height 4:3 ratio
-            controlView.rightAnchor.constraint(equalTo: imageView.leftAnchor, constant:  -30.0),
-            controlView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            controlView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-            controlView.leftAnchor.constraint(equalTo: safeArea.leftAnchor)
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ]
+        NSLayoutConstraint.activate(imageConstraints)
 
-        // Portrait (iPhone): single column — image on top, controls below.
-        verticalConstraints = [
-            imageView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            imageView.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: 0.55),
-            controlView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8.0),
-            controlView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            controlView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            controlView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
-        ]
-
-        let portrait = isPortraitLayout
-        NSLayoutConstraint.activate(portrait ? verticalConstraints : horizontalConstraints)
-        activeLayoutIsPortrait = portrait
+        applyDrawerConstraints(drawerView, controlView, portrait: isPortraitLayout, animated: false)
     }
 
-    /// Swap the active constraint set when this view's own bounds change
+    /// Rebuilds the drawer's constraint set for a given orientation/collapsed
+    /// state. Only the drawer moves on rotation — the image's constraints
+    /// above are untouched by this method.
+    private func applyDrawerConstraints(_ drawerView: UIVisualEffectView, _ controlView: UIView, portrait: Bool, animated: Bool) {
+        let safeArea = view.safeAreaLayoutGuide
+
+        drawerSizeConstraint?.isActive = false
+        NSLayoutConstraint.deactivate(drawerCrossAxisConstraints)
+        drawerAttachmentConstraint?.isActive = false
+
+        let sizeConstraint: NSLayoutConstraint
+        let crossAxisConstraints: [NSLayoutConstraint]
+        let attachmentConstraint: NSLayoutConstraint
+
+        if portrait {
+            sizeConstraint = drawerView.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: drawerPortraitHeightFraction)
+            crossAxisConstraints = [
+                drawerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+                drawerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
+            ]
+            attachmentConstraint = isDrawerCollapsed
+                ? drawerView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -drawerHandleThickness)
+                : drawerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        } else {
+            sizeConstraint = drawerView.widthAnchor.constraint(equalTo: safeArea.widthAnchor, multiplier: drawerLandscapeWidthFraction)
+            crossAxisConstraints = [
+                drawerView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+                drawerView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+            ]
+            attachmentConstraint = isDrawerCollapsed
+                ? drawerView.trailingAnchor.constraint(equalTo: view.leadingAnchor, constant: drawerHandleThickness)
+                : drawerView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        }
+
+        drawerSizeConstraint = sizeConstraint
+        drawerCrossAxisConstraints = crossAxisConstraints
+        drawerAttachmentConstraint = attachmentConstraint
+        NSLayoutConstraint.activate(crossAxisConstraints + [sizeConstraint, attachmentConstraint])
+        activeLayoutIsPortrait = portrait
+
+        updateCollapseButton(portrait: portrait)
+
+        if animated {
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                self?.view.layoutIfNeeded()
+            }
+        }
+    }
+
+    private func updateCollapseButton(portrait: Bool) {
+        guard let collapseButton else { return }
+        let collapsedSymbol = portrait ? "chevron.up" : "chevron.right"
+        let expandedSymbol = portrait ? "chevron.down" : "chevron.left"
+        collapseButton.setImage(UIImage(systemName: isDrawerCollapsed ? collapsedSymbol : expandedSymbol), for: .normal)
+    }
+
+    @objc private func toggleDrawerCollapsed() {
+        guard let drawerView, let controlView = columns?.control.view else { return }
+        isDrawerCollapsed.toggle()
+        applyDrawerConstraints(drawerView, controlView, portrait: isPortraitLayout, animated: true)
+    }
+
+    /// Rebuild the drawer set only when this view's own bounds change
     /// orientation (iPhone portrait ↔ landscape). Done in a layout pass rather
     /// than viewWillTransition: covered controllers in the nav stack also
     /// receive viewWillTransition while their views still hold the old size,
     /// and activating landscape constraints on a portrait-sized view is
-    /// unsatisfiable — UIKit breaks a constraint and the columns collapse
-    /// (zero-height control view) when the controller reappears.
+    /// unsatisfiable — UIKit breaks a constraint and the drawer collapses to
+    /// zero size when the controller reappears.
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
 
-        // Nothing to swap until the columns have been laid out at least once.
-        guard !verticalConstraints.isEmpty else { return }
+        guard let drawerView, let controlView = columns?.control.view else { return }
 
         let portrait = view.bounds.height > view.bounds.width
         guard portrait != activeLayoutIsPortrait else { return }
 
-        NSLayoutConstraint.deactivate(horizontalConstraints + verticalConstraints)
-        NSLayoutConstraint.activate(portrait ? verticalConstraints : horizontalConstraints)
-        activeLayoutIsPortrait = portrait
+        applyDrawerConstraints(drawerView, controlView, portrait: portrait, animated: false)
     }
 
     override func viewIsAppearing(_ animated: Bool) {
@@ -129,7 +182,36 @@ class PGLTwoColumnSplitController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(imageView)
-        view.addSubview(controlView)
+
+        let effectView = UIVisualEffectView(effect: UIGlassEffect())
+        effectView.translatesAutoresizingMaskIntoConstraints = false
+        // Dark override so .label/.systemBackground-style content resolves
+        // light-on-dark, matching glass over live imagery without recoloring
+        // every control individually.
+        effectView.overrideUserInterfaceStyle = .dark
+        view.addSubview(effectView)
+        drawerView = effectView
+
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(toggleDrawerCollapsed), for: .touchUpInside)
+        effectView.contentView.addSubview(button)
+        collapseButton = button
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: drawerHandleThickness),
+            button.heightAnchor.constraint(equalToConstant: drawerHandleThickness),
+            button.topAnchor.constraint(equalTo: effectView.contentView.topAnchor),
+            button.trailingAnchor.constraint(equalTo: effectView.contentView.trailingAnchor)
+        ])
+
+        effectView.contentView.addSubview(controlView)
+        NSLayoutConstraint.activate([
+            controlView.topAnchor.constraint(equalTo: effectView.contentView.topAnchor, constant: drawerHandleThickness),
+            controlView.leadingAnchor.constraint(equalTo: effectView.contentView.leadingAnchor),
+            controlView.trailingAnchor.constraint(equalTo: effectView.contentView.trailingAnchor),
+            controlView.bottomAnchor.constraint(equalTo: effectView.contentView.bottomAnchor)
+        ])
 
         layoutViews(imageView, controlView)
 
@@ -144,6 +226,10 @@ class PGLTwoColumnSplitController: UIViewController {
             viewControllerReleaseBasic(aPGLController: columns!.control)
             viewControllerReleaseBasic(aPGLController: columns!.imageViewer)
         }
+        collapseButton?.removeFromSuperview()
+        collapseButton = nil
+        drawerView?.removeFromSuperview()
+        drawerView = nil
     }
 
     func viewControllerReleaseBasic(aPGLController: UIViewController) {

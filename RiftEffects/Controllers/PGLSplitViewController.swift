@@ -59,6 +59,14 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         delegate = splitDelegate
         presentsWithGesture = true
 
+        // Regular-width iPhone (Plus/Max landscape): layer the primary/
+        // supplementary sidebars over the secondary image column instead of
+        // tiling them, so the image keeps its full width. iPad keeps the
+        // storyboard's "tile" behavior.
+        if traitCollection.userInterfaceIdiom == .phone {
+            preferredSplitBehavior = .overlay
+        }
+
         let myCenter =  NotificationCenter.default
         cancellable = myCenter.publisher(for:  PGLShowImageListOverLay)
             .sink() { [weak self]
