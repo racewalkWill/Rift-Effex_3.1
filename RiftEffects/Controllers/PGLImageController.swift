@@ -94,6 +94,21 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         // when navigating in .phone vertical compact from parms keep
         // parm value controllers visible in the imageController
 
+    /// Storyboard positions `sliders`/`parmSlider` with one absolute anchor per
+    /// axis: 104pt from this view's own leading edge, and 33pt above the
+    /// bottom layout guide. That was safe when this view was a narrower image
+    /// column beside a separate control column. Now that this view is
+    /// full-bleed and PGLTwoColumnSplitController's glass drawer floats on top
+    /// of it, those same coordinates land inside the drawer in one axis per
+    /// orientation (the drawer's left band in landscape, its bottom band in
+    /// portrait). `drawerAvoidanceGuide` mirrors the drawer's own footprint so
+    /// the sliders can be pinned just outside it instead.
+    private var drawerAvoidanceGuide: UILayoutGuide?
+    private var drawerAvoidanceGuideConstraints: [NSLayoutConstraint] = []
+    private var sliderLeadingOverride: NSLayoutConstraint?
+    private var sliderBottomOverride: NSLayoutConstraint?
+    private var sliderAvoidanceIsPortrait: Bool?
+
     @IBOutlet weak var parmSlider: UISlider!
 
 
@@ -651,6 +666,91 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             // mode is controlled by targetDisplayModeForAction(in svc: UISplitViewController) -> UISplitViewController.DisplayMode
 
         navigationItem.leftItemsSupplementBackButton = true
+
+        if parent is PGLTwoColumnSplitController {
+            let portrait = view.bounds.height > view.bounds.width
+            updateSliderDrawerAvoidance(portrait: portrait)
+        }
+    }
+
+    /// One-time setup: replace the storyboard's two absolute slider-stack
+    /// anchors (104pt from this view's leading edge, 33pt above the bottom
+    /// layout guide) with our own, then perform the first orientation-specific
+    /// placement. Safe to call multiple times - only acts once.
+    private func installSliderDrawerAvoidanceIfNeeded() {
+        guard drawerAvoidanceGuide == nil,
+              parent is PGLTwoColumnSplitController,
+              let sliderView = parmSlider
+        else { return }
+
+        let containerView: UIView = view
+        let matchingLeading = containerView.constraints.filter {
+            ($0.firstItem as? UIView === sliderView && $0.firstAttribute == .leading && $0.secondItem as? UIView === containerView)
+                || ($0.secondItem as? UIView === sliderView && $0.secondAttribute == .leading && $0.firstItem as? UIView === containerView)
+        }
+        let matchingBottom = containerView.constraints.filter {
+            ($0.firstItem as? UIView === sliderView && $0.firstAttribute == .bottom)
+                || ($0.secondItem as? UIView === sliderView && $0.secondAttribute == .bottom)
+        }
+        NSLayoutConstraint.deactivate(matchingLeading + matchingBottom)
+
+        let guide = UILayoutGuide()
+        containerView.addLayoutGuide(guide)
+        drawerAvoidanceGuide = guide
+
+        let portrait = view.bounds.height > view.bounds.width
+        updateSliderDrawerAvoidance(portrait: portrait)
+    }
+
+    /// Re-pins `drawerAvoidanceGuide` to whichever screen band
+    /// PGLTwoColumnSplitController's drawer currently occupies (bottom in
+    /// portrait, leading in landscape - same fractions it uses), then points
+    /// whichever slider-stack axis that band affects at the guide's far edge
+    /// instead of the original storyboard anchor. The other axis keeps its
+    /// original 104pt / 33pt value, since that band doesn't overlap it.
+    private func updateSliderDrawerAvoidance(portrait: Bool) {
+        guard let guide = drawerAvoidanceGuide,
+              let sliderView = parmSlider,
+              portrait != sliderAvoidanceIsPortrait
+        else { return }
+        sliderAvoidanceIsPortrait = portrait
+
+        let containerView: UIView = view
+        let safeArea = containerView.safeAreaLayoutGuide
+        let margin: CGFloat = 12.0
+
+        NSLayoutConstraint.deactivate(drawerAvoidanceGuideConstraints)
+        sliderLeadingOverride?.isActive = false
+        sliderBottomOverride?.isActive = false
+
+        let leadingOverride: NSLayoutConstraint
+        let bottomOverride: NSLayoutConstraint
+
+        if portrait {
+            drawerAvoidanceGuideConstraints = [
+                guide.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+                guide.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+                guide.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+                guide.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: PGLTwoColumnSplitController.drawerPortraitHeightFraction)
+            ]
+            leadingOverride = sliderView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 104)
+            bottomOverride = sliderView.bottomAnchor.constraint(equalTo: guide.topAnchor, constant: -margin)
+        } else {
+            drawerAvoidanceGuideConstraints = [
+                guide.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+                guide.topAnchor.constraint(equalTo: safeArea.topAnchor),
+                guide.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+                guide.widthAnchor.constraint(equalTo: safeArea.widthAnchor, multiplier: PGLTwoColumnSplitController.drawerLandscapeWidthFraction)
+            ]
+            leadingOverride = sliderView.leadingAnchor.constraint(equalTo: guide.trailingAnchor, constant: margin)
+            bottomOverride = sliderView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -33)
+        }
+
+        leadingOverride.priority = UILayoutPriority(999)
+        bottomOverride.priority = UILayoutPriority(999)
+        sliderLeadingOverride = leadingOverride
+        sliderBottomOverride = bottomOverride
+        NSLayoutConstraint.activate(drawerAvoidanceGuideConstraints + [leadingOverride, bottomOverride])
     }
 
     func setAnimation(_ animationState: PGLAnimationState, _ barButtonItem: UIBarButtonItem) {
@@ -1191,6 +1291,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         super.viewDidLoad()
 //        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("viewDidLoad() \( String(describing: self) + "-" + #function)")
+
+        installSliderDrawerAvoidanceIfNeeded()
 //      view has been typed as MTKView in the PGLView subclass
 //        and the view assigned in the setter of effectView var
 

@@ -211,6 +211,7 @@ class PGLSelectParmController: PGLCommonController,
         if parent is PGLTwoColumnSplitController {
             parmsTableView.backgroundColor = .clear
             parmsTableView.backgroundView = nil
+            view.backgroundColor = .clear
         }
 
         if showGuideArrowBack( ) {
@@ -697,6 +698,26 @@ class PGLSelectParmController: PGLCommonController,
         }
        
 
+    }
+
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        // Default UITableViewHeaderFooterView draws its own opaque background,
+        // independent of tableView.backgroundColor - the clear() set in
+        // viewDidLoad above never reaches it. Inside the glass drawer this left
+        // the header's light-on-dark title text (from overrideUserInterfaceStyle
+        // = .dark) invisible against that leftover opaque background.
+        //
+        // Setting .backgroundView directly does not stick:
+        // automaticallyUpdatesBackgroundConfiguration defaults to true, so UIKit
+        // re-derives an opaque defaultBackgroundConfiguration() on the next state
+        // change and reapplies it, which per Apple's docs resets backgroundView
+        // back to nil. Going through .backgroundConfiguration (and disabling
+        // auto-updates) is the API that actually persists.
+        guard parent is PGLTwoColumnSplitController,
+              let headerView = view as? UITableViewHeaderFooterView
+        else { return }
+        headerView.automaticallyUpdatesBackgroundConfiguration = false
+        headerView.backgroundConfiguration = .clear()
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

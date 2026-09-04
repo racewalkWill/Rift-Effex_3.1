@@ -29,9 +29,12 @@ class PGLTwoColumnSplitController: UIViewController {
     /// The handle strip left on screen when the drawer is collapsed.
     private let drawerHandleThickness: CGFloat = 44.0
 
-    /// Fraction of the safe area the drawer occupies when expanded.
-    private let drawerPortraitHeightFraction: CGFloat = 0.45
-    private let drawerLandscapeWidthFraction: CGFloat = 0.38
+    /// Fraction of the safe area the drawer occupies when expanded. Internal
+    /// (not private) so PGLImageController can size a matching drawer-avoidance
+    /// layout guide for its on-image sliders/controls, which otherwise sit
+    /// exactly where the drawer floats now that the image is full-bleed.
+    static let drawerPortraitHeightFraction: CGFloat = 0.45
+    static let drawerLandscapeWidthFraction: CGFloat = 0.38
 
     /// Pins the image to the view's own edges — full-bleed, one constraint
     /// set, never swapped on rotation. (Previously the landscape image width
@@ -91,7 +94,7 @@ class PGLTwoColumnSplitController: UIViewController {
         let attachmentConstraint: NSLayoutConstraint
 
         if portrait {
-            sizeConstraint = drawerView.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: drawerPortraitHeightFraction)
+            sizeConstraint = drawerView.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: Self.drawerPortraitHeightFraction)
             crossAxisConstraints = [
                 drawerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
                 drawerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
@@ -100,7 +103,7 @@ class PGLTwoColumnSplitController: UIViewController {
                 ? drawerView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -drawerHandleThickness)
                 : drawerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         } else {
-            sizeConstraint = drawerView.widthAnchor.constraint(equalTo: safeArea.widthAnchor, multiplier: drawerLandscapeWidthFraction)
+            sizeConstraint = drawerView.widthAnchor.constraint(equalTo: safeArea.widthAnchor, multiplier: Self.drawerLandscapeWidthFraction)
             crossAxisConstraints = [
                 drawerView.topAnchor.constraint(equalTo: safeArea.topAnchor),
                 drawerView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
