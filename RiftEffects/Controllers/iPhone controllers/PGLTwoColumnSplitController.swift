@@ -141,6 +141,19 @@ class PGLTwoColumnSplitController: UIViewController {
         applyDrawerConstraints(drawerView, controlView, portrait: isPortraitLayout, animated: true)
     }
 
+    /// Vector-type parms (point/rect/gradient-corner) place a draggable
+    /// positionView directly on the image at the parm's own stored
+    /// coordinates. Unlike the on-image slider, that position can't be
+    /// nudged aside — it IS the value being edited — so when one becomes
+    /// active the only fix is getting the drawer out of the way. Called by
+    /// PGLSelectParmController when such a row is selected; a no-op if
+    /// already collapsed.
+    func collapseDrawerForPositionEditing() {
+        guard !isDrawerCollapsed, let drawerView, let controlView = columns?.control.view else { return }
+        isDrawerCollapsed = true
+        applyDrawerConstraints(drawerView, controlView, portrait: isPortraitLayout, animated: true)
+    }
+
     /// Rebuild the drawer set only when this view's own bounds change
     /// orientation (iPhone portrait ↔ landscape). Done in a layout pass rather
     /// than viewWillTransition: covered controllers in the nav stack also

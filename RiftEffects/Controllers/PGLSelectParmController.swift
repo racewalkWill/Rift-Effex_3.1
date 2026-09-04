@@ -936,6 +936,13 @@ class PGLSelectParmController: PGLCommonController,
         switch tappedAttribute!.attributeUIType() {
         case AttrUIType.pointUI , AttrUIType.rectUI, AttrUIType.gradientCornerUI:
 
+            // These place a draggable positionView directly on the image at
+            // the parm's own stored coordinates, which can land under the
+            // glass drawer now that the image is full-bleed. Its position
+            // can't be nudged aside like the numeric slider - collapse the
+            // drawer instead so it's reachable.
+            (parent as? PGLTwoColumnSplitController)?.collapseDrawerForPositionEditing()
+
             selectedParmControlView = parmControl(named: (tappedAttribute!.attributeName)!)
                 imageController?.selectedParmControlView = selectedParmControlView
             if let thisAttributeName = tappedAttribute!.attributeName {
