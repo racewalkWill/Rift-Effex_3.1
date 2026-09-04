@@ -374,6 +374,16 @@ class Renderer: NSObject, MTKViewDelegate {
             // stored in FilterCanvasSize-relative coordinates and converted to RenderTargetSize
             // on the fly (PGLFilterAttribute.applyRenderSize / mapVector2Point), independent
             // of navigation history or which view last resized.
+
+            // MTKView's own autoResizeDrawable calls this delegate method automatically
+            // when its bounds change (e.g. on rotation, while it stays on-screen and never
+            // re-runs viewWillAppear/loadMetalController). resetDrawableSize() above just
+            // recomputed each PGLAsset's PGLCenterScaler against the new RenderTargetSize,
+            // but draw(in:) only actually renders when needsRedraw.redrawNow() is true -
+            // without this, the recentered image sits in the model while the view keeps
+            // showing whatever was last drawn before rotation (stretched into the new
+            // drawable size), since nothing else here requests a fresh frame.
+        needsRedraw.filterChanged = true
     }
 
     func hideAirPlay() {
