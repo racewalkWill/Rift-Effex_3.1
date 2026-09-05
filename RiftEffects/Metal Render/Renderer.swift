@@ -59,9 +59,14 @@ class Renderer: NSObject, MTKViewDelegate {
     var mtkViewSize: CGSize!
     var isFullScreen = false {
         didSet{
-            if !isFullScreen {
-                outputZoomPanFilter = nil
-            }
+            /* R261.5
+           Fix for drawing error  'startTaskToRender:.. The image extent and destination extent do not intersect' .  Do not nil out renderer outputZoomPanFilter when changing isFullScreen
+             */
+
+//            if !isFullScreen {
+//                outputZoomPanFilter = nil
+//            }
+
             needsRedraw.isFullScreen = isFullScreen
             // turns off/on drawing on every frame for pinch zoom & drag
         }

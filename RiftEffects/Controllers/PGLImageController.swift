@@ -2240,6 +2240,10 @@ extension PGLImageController {
         if appStack.viewerStack.isEmptyStack() {
             return
         }
+        // to turn off iPhone fullScreen just return
+//        if traitCollection.userInterfaceIdiom == .phone {
+//            return
+//        }
         guard let newImageController = storyboard?.instantiateViewController(withIdentifier: "MetalController") as? PGLMetalController
         else {return }
         newImageController.isFullScreen = true
