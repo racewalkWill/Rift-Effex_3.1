@@ -30,6 +30,21 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
         /// in full screen mode the MetalController uses GestureRecogniziers
     var isFullScreen = false
+
+    /// The compact column's MTKView, paused by PGLImageController.fullScreenImage()
+    /// before this controller is presented, and resumed here on dismiss.
+    /// Renderer.isFullScreen is one flag shared by the single Renderer
+    /// instance both MTKViews delegate to - while this controller is
+    /// presented it stays true for every draw(in:) call, including any the
+    /// covered compact view still makes if left running. That covered view
+    /// then hits the fullscreen-only branch in Renderer.drawBasicCentered
+    /// (cropForInfiniteExtent + the shared outputZoomPanFilter, sized for
+    /// whichever view drew most recently) using its own different drawable
+    /// size, which is what produces "the image extent and destination extent
+    /// do not intersect" - reported as a repeating error loop specifically in
+    /// landscape once the compact view became full-bleed and started
+    /// redrawing continuously behind the fullscreen presentation.
+    weak var coveredCompactMetalView: MTKView?
     override var prefersStatusBarHidden: Bool {
         get {
             return true
@@ -246,11 +261,34 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
     @objc func userDoubleTap(sender: UITapGestureRecognizer) {
         // two taps dismiss
+        dismissFullScreen(animated: true)
+    }
+
+    private var isDismissingForRotation = false
+
+    /// Any size change while presented full-screen (device rotation, or an
+    /// iPad multitasking resize) closes full-screen immediately and lets the
+    /// normal window's own rotation handling take over, rather than trying to
+    /// keep this presented controller in sync with an orientation it was not
+    /// entered in. That resume-while-rotated case is what previously required
+    /// pausing the covered view, deferring its resume to dismiss's completion
+    /// handler, and forcing an explicit redraw to un-stick it - none of that
+    /// is reachable anymore once rotation always exits full-screen first, so
+    /// dismissFullScreen(animated:) below no longer needs any of it.
+    override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        guard isFullScreen, !isDismissingForRotation else { return }
+        isDismissingForRotation = true
+        dismissFullScreen(animated: false)
+    }
+
+    private func dismissFullScreen(animated: Bool) {
         NSLog("\(self.debugDescription) " + #function + " dismiss FullScreenAspectFillMode = false ")
         FullScreenAspectFillMode = false
         metalRender.isFullScreen = FullScreenAspectFillMode
-
-        self.dismiss(animated: true)
+        coveredCompactMetalView?.isPaused = false
+        coveredCompactMetalView = nil
+        self.dismiss(animated: animated)
     }
 
     @objc func userPinch(sender: UIPinchGestureRecognizer) {
