@@ -27,7 +27,7 @@ class PGLTwoColumnSplitController: UIViewController {
     private var collapseButton: UIButton?
 
     /// The handle strip left on screen when the drawer is collapsed.
-    private let drawerHandleThickness: CGFloat = 44.0
+    private let drawerHandleThickness: CGFloat = 84.0
 
     /// Fraction of the safe area the drawer occupies when expanded. Internal
     /// (not private) so PGLImageController can size a matching drawer-avoidance
@@ -109,8 +109,8 @@ class PGLTwoColumnSplitController: UIViewController {
                 drawerView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
             ]
             attachmentConstraint = isDrawerCollapsed
-                ? drawerView.trailingAnchor.constraint(equalTo: view.leadingAnchor, constant: drawerHandleThickness)
-                : drawerView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+                ? drawerView.trailingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: drawerHandleThickness)
+                : drawerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor)
         }
 
         drawerSizeConstraint = sizeConstraint
