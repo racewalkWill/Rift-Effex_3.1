@@ -46,8 +46,17 @@ static let LogParmValues = false //false
         // example:
         //  [PGL_Parms] CILinearGradient setVectorValue(newValue:keyName:)( [1047 504] , inputPoint0 )
 
+static let LogRenderTargetSize = true
+        // logs the transform value map process of RenderTargetSize / FilterCanvasSize
+        //  enter in the debug
+        //      po PGLSourceFilter.LogRenderTargetSize = true
+        //  similar to LogParmValues example above
 
-
+    enum RenderMapDirection: String {
+        //  RenderTargetSize to/from FilterCanvasSize
+        case uiToFilter
+        case filterToUI
+    }
 
     class func displayName() -> String? {
         return nil // subclasses override

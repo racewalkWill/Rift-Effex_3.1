@@ -687,22 +687,39 @@ class PGLFilterAttribute {
         return (attributeType == kCIAttributeTypeTime)
     }
 
-    /// Maps a UIKit view point (ULO) back to a FilterCanvasSize-relative CIVector (LLO).
-    /// `viewSize` is the current metal/image view's own bounds size - the on-screen area
-    /// the marker/drag gesture is relative to, independent of any global render-size state.
+    //MARK: Map Render/Filter values
+
+
+   func logRenderTarget(newValue: String, oldValue: String, direction: String, keyName: String) {
+       if PGLSourceFilter.LogRenderTargetSize {
+           Logger(subsystem: LogSubsystem, category: LogParms).debug("logRenderTarget \(self.aSourceFilter.descriptorDisplayName ?? "noFilterName") (  \(oldValue) -> \(newValue) ) \(direction) , \(keyName) )")
+       }
+   }
+
+        /// Maps a UIKit view point (ULO) back to a FilterCanvasSize-relative CIVector (LLO).
+        /// `viewSize` is the current metal/image view's own bounds size - the on-screen area
+        /// the marker/drag gesture is relative to, independent of any global render-size state.
     func mapPoint2Vector(point: CGPoint, viewSize: CGSize) -> CIVector {
-        return viewPointToCanvasVector(point, viewSize: viewSize)
+
+        let answerVector = viewPointToCanvasVector(point, viewSize: viewSize)
+        logRenderTarget(newValue: answerVector.description, oldValue: point.debugDescription, direction: PGLSourceFilter.RenderMapDirection.uiToFilter.rawValue, keyName: self.attributeName ?? "noAttributeName")
+        NSLog("\(String(describing:self)): mapPoint2Vector: \(point.debugDescription) -> \(answerVector.debugDescription)")
+        return answerVector
     }
 
     /// Maps a FilterCanvasSize-relative CIVector to a point in a UIKit view of `viewSize`.
     func mapVector2Point(vector: CIVector, viewSize: CGSize) -> CGPoint {
+        var answerPoint: CGPoint
         if (vector.x < 0.0) || (vector.y < 0.0) {
             // it is some oddball initial neg value - place it at a reasonable default
             let reasonablePlace = FilterCanvasSize.height / 2.0
             let defaultVector = CIVector(x: reasonablePlace, y: reasonablePlace)
-            return canvasVectorToViewPoint(defaultVector, viewSize: viewSize)
+            answerPoint = canvasVectorToViewPoint(defaultVector, viewSize: viewSize)
+        } else {
+            answerPoint = canvasVectorToViewPoint(vector, viewSize: viewSize)
         }
-        return canvasVectorToViewPoint(vector, viewSize: viewSize)
+        logRenderTarget(newValue: answerPoint.debugDescription, oldValue: vector.debugDescription, direction: PGLSourceFilter.RenderMapDirection.filterToUI.rawValue, keyName: self.attributeName ?? "noAttributeName")
+        return answerPoint
     }
 
         ///  always display the position control view

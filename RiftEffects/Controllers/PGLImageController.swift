@@ -1793,10 +1793,10 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 // .concatenating(glkScaleTransform) // for mapping the rect vector to the image coordinates
                 // combines the scaleFactor of 2.0 with the ULO flip for applying the crop to the glkImage
 
-//            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLImageController #setRectTintAndCornerViews rectController.scaleTransform = \(String(describing: self.rectController!.scaleTransform))")
+            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLImageController #setRectTintAndCornerViews rectController.scaleTransform = \(String(describing: self.rectController!.scaleTransform))")
 
-//            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLImageController #setRectTintAndCornerViews rectController.view.frame inset from bounds = \(self.view)")
-//            NSLog("PGLImageController #setRectTintAndCornerViews rectController.view.frame now = \(newInsetRectFrame)")
+            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLImageController #setRectTintAndCornerViews rectController.view.frame inset from bounds = \(self.view)")
+            NSLog("PGLImageController #setRectTintAndCornerViews rectController.view.frame now = \(newInsetRectFrame)")
             let rectCropView = rectController!.view!
             view.addSubview(rectCropView)
             appStack.parmControls[attribute.attributeName!] = rectCropView

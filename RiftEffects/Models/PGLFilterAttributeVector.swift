@@ -241,6 +241,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         if endPoint != nil {
             endPoint = endPoint!.applying(resizingTransform)
         }
+        NSLog("\(String(describing:self)) resizeFrom(savedSize:), resizingTransform: \(resizingTransform), startPoint: \(String(describing: startPoint)), endPoint: \(String(describing: endPoint))")
     }
 
 
