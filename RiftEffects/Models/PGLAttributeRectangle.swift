@@ -43,10 +43,12 @@ class PGLAttributeRectangle: PGLFilterAttribute {
                 // drag handling below (moveTo/movingChange/movingCorner all take live view
                 // points directly) - it does not participate in the FilterCanvasSize scheme.
                 filterRect = CGRect(origin: CGPoint.zero, size: RenderTargetSize) .insetBy(dx: 200.0, dy: 200.0)
+                NSLog("DIAGNOSTIC PGLAttributeRectangle.init [1] default-branch filterRect=\(filterRect) RenderTargetSize=\(RenderTargetSize)")
             }
             else {
                 // there is a saved value use it
                 filterRect = CGRect(x: myVector.x, y: myVector.y, width: myVector.z, height: myVector.w)
+                NSLog("DIAGNOSTIC PGLAttributeRectangle.init [1] saved-branch filterRect=\(filterRect) RenderTargetSize=\(RenderTargetSize)")
             }
             applyCropRect(mappedCropRect: filterRect)
 
@@ -155,6 +157,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
 
         filterRect.origin.x = newOriginX
         filterRect.origin.y = newOriginY
+        NSLog("DIAGNOSTIC PGLAttributeRectangle.moveTo [3] startPoint=\(startPoint) newPoint=\(newPoint) filterRect=\(filterRect)")
 
         // let the parent filter do the work in CIImage.methods  see PGLCropFilter outputImage()
     }
@@ -208,6 +211,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
 //            if logMovingChange {           NSLog("PGLFilterAttributeRectangle #movingChange filterRect = \(filterRect)") }
 //            if newOriginX == 0 { fatalError(" going to zero origin in filterRect.origin" )}
             filterRect.origin = CGPoint(x:newOriginX, y: newOriginY)
+            NSLog("DIAGNOSTIC PGLAttributeRectangle.movingChange [3] startPoint=\(actualStartPoint) newPoint=\(newPoint) filterRect=\(filterRect)")
 //            if logMovingChange { NSLog("PGLFilterAttributeRectangle #movingChange orgin moved filterRect = \(filterRect)")}
 
 
@@ -254,7 +258,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
 
             }
          filterRect = filterRect.insetBy(dx: deltaX, dy: deltaY)
-//         NSLog("PGLFilterAttributeRectangle #movingCorner filterRect NOW = \(filterRect)")
+         NSLog("DIAGNOSTIC PGLAttributeRectangle.movingCorner [3] atCorner=\(atCorner) startPoint=\(actualStartPoint) newPoint=\(newPoint) filterRect=\(filterRect)")
 
     }
 

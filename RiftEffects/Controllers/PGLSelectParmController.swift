@@ -941,7 +941,7 @@ class PGLSelectParmController: PGLCommonController,
             // glass drawer now that the image is full-bleed. Its position
             // can't be nudged aside like the numeric slider - collapse the
             // drawer instead so it's reachable.
-            (parent as? PGLTwoColumnSplitController)?.collapseDrawerForPositionEditing()
+           // (parent as? PGLTwoColumnSplitController)?.collapseDrawerForPositionEditing()
 
             selectedParmControlView = parmControl(named: (tappedAttribute!.attributeName)!)
                 imageController?.selectedParmControlView = selectedParmControlView
@@ -954,13 +954,15 @@ class PGLSelectParmController: PGLCommonController,
                     else { return }
 
                     croppingFilter.cropAttribute = thisCropAttribute
-                    if imageController!.rectController == nil {
-                        // in iOS 18.1 the second display has rectController == nil
-                        // restore if needed.
-                        imageController!.addRectControl(attribute: thisCropAttribute)
-                        imageController!.setRectTintAndCornerViews(attribute: thisCropAttribute)
-                        
-                    }
+                    // addRectControl no-ops if rectController already exists (its own nil-guard),
+                    // but setRectTintAndCornerViews must run every time, not just on first creation -
+                    // it's what recomputes newInsetRectFrame from the CURRENT view.bounds/scale.
+                    // Gating it behind the same rectController==nil check as addRectControl meant
+                    // any reselect after the first open (or after a rotation) reused whatever
+                    // frameImageView.frame was left over from the previous open: thisCropAttribute's
+                    // didSet below unconditionally copies that stale frame into filterRect regardless.
+                    imageController!.addRectControl(attribute: thisCropAttribute)
+                    imageController!.setRectTintAndCornerViews(attribute: thisCropAttribute)
                     guard let activeRectController = imageController?.rectController
                         else {return }
                     activeRectController.thisCropAttribute = thisCropAttribute

@@ -65,7 +65,9 @@ class PGLRectangleController: UIViewController {
     var thisCropAttribute: PGLAttributeRectangle? {
         didSet{
             // moving UI rect frameImageView
+            NSLog("DIAGNOSTIC PGLRectangleController.thisCropAttribute [2] didSet BEFORE overwrite: oldFilterRect=\(String(describing: thisCropAttribute?.filterRect)) frameImageView.frame=\(frameImageView.frame) view.frame=\(view.frame)")
             thisCropAttribute?.filterRect = frameImageView.frame
+            NSLog("DIAGNOSTIC PGLRectangleController.thisCropAttribute [2] didSet AFTER overwrite: filterRect=\(String(describing: thisCropAttribute?.filterRect))")
         }
     }
     var croppingFilter: PGLRectangleFilter? {
@@ -153,9 +155,9 @@ class PGLRectangleController: UIViewController {
         if let newFrame = (thisCropAttribute?.filterRect) {
             // filterRect is really  the frame in the superview coordinates.
 
-//           NSLog("PGLRectangleController #updateFrame frameImageView.frame = \(frameImageView.frame)")
+            NSLog("DIAGNOSTIC PGLRectangleController.updateFrame [4] BEFORE frameImageView.frame=\(frameImageView.frame) newFrame(from filterRect)=\(newFrame)")
             frameImageView.frame = newFrame
-//            NSLog("PGLRectangleController #updateFrame changed to frameImageView.frame = \(frameImageView.frame)")
+            NSLog("DIAGNOSTIC PGLRectangleController.updateFrame [4] AFTER frameImageView.frame=\(frameImageView.frame)")
 //           frameImageView.setNeedsDisplay()
             //" If you simply change the geometry of the view, the view is typically not redrawn. Instead, its existing content is adjusted based on the value in the view’s contentMode property. Redisplaying the existing content improves performance by avoiding the need to redraw content that has not changed."
         }

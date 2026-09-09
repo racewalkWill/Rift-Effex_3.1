@@ -1764,7 +1764,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         // start with the scale of the glkView - scaleFactor = 2.. then do the flip
 
             let mappedFrame = newFrame.applying(finalTransform)
-            NSLog("PGLImageController cropAction mappedFrame \(mappedFrame) from \(newFrame)")
+            NSLog("DIAGNOSTIC PGLImageController.cropAction [5] newFrame(points)=\(newFrame) myScaleTransform=\(myScaleTransform) metalView.frame=\(String(describing: metalView?.frame)) mappedFrame(pixels,committed)=\(mappedFrame)")
 
             rectAttribute.applyCropRect(mappedCropRect: mappedFrame)
         }
@@ -1787,6 +1787,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     func setRectTintAndCornerViews(attribute: PGLAttributeRectangle) {
         if rectController != nil
             {  let newInsetRectFrame = insetRect(fromRect: self.view.bounds)
+            NSLog("DIAGNOSTIC PGLImageController.setRectTintAndCornerViews [0] view.bounds=\(self.view.bounds) RenderTargetSize=\(RenderTargetSize) myScaleTransform=\(myScaleTransform) newInsetRectFrame=\(newInsetRectFrame)")
 
             rectController!.view.frame = newInsetRectFrame
             rectController!.scaleTransform = myScaleTransform

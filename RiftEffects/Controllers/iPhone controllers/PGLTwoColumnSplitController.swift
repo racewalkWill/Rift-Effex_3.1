@@ -27,7 +27,7 @@ class PGLTwoColumnSplitController: UIViewController {
     private var collapseButton: UIButton?
 
     /// The handle strip left on screen when the drawer is collapsed.
-    private let drawerHandleThickness: CGFloat = 84.0
+    private let drawerHandleThickness: CGFloat = 44.0
 
     /// Fraction of the safe area the drawer occupies when expanded. Internal
     /// (not private) so PGLImageController can size a matching drawer-avoidance
@@ -36,9 +36,11 @@ class PGLTwoColumnSplitController: UIViewController {
     static let drawerPortraitHeightFraction: CGFloat = 0.45
     static let drawerLandscapeWidthFraction: CGFloat = 0.38
 
-    /// Pins the image to the view's own edges — full-bleed, one constraint
-    /// set, never swapped on rotation. (Previously the landscape image width
-    /// was `safeArea.heightAnchor * 5/3`; a live lldb session traced the
+    /// Pins the image to the view's own edges, full-bleed apart from the
+    /// drawer, and rebuilt by `applyLayout` for whichever of the two fixed
+    /// portrait/landscape arrangements is currently active — including on
+    /// rotation. (Previously the landscape image width was
+    /// `safeArea.heightAnchor * 5/3`; a live lldb session traced the
     /// squeezed-column bug to that math executing correctly against a wrong
     /// safe-area height after a full-screen dismiss + rotate. Removing the
     /// safe-area dependency from the image entirely makes that failure mode
@@ -66,22 +68,41 @@ class PGLTwoColumnSplitController: UIViewController {
 
     func layoutViews(_ imageView: UIView, _ controlView: UIView) {
         guard let drawerView else { return }
+        applyLayout(imageView, controlView, drawerView, portrait: isPortraitLayout, animated: false)
+    }
 
+    /// Rebuilds both the image and drawer constraints for a given
+    /// orientation. `portrait` is passed in rather than read from
+    /// `isPortraitLayout` here so every caller can decide, once, which signal
+    /// (scene geometry at load/appear time vs. this view's own bounds during
+    /// a live rotation) to trust — see `viewWillLayoutSubviews`.
+    private func applyLayout(_ imageView: UIView, _ controlView: UIView, _ drawerView: UIVisualEffectView, portrait: Bool, animated: Bool) {
         NSLayoutConstraint.deactivate(imageConstraints)
-        imageConstraints = [
-            imageView.topAnchor.constraint(equalTo: view.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ]
-        NSLayoutConstraint.activate(imageConstraints)
 
-        applyDrawerConstraints(drawerView, controlView, portrait: isPortraitLayout, animated: false)
+        if portrait {
+            imageConstraints = [
+                imageView.topAnchor.constraint(equalTo: view.topAnchor),
+                imageView.bottomAnchor.constraint(equalTo: drawerView.topAnchor),
+                imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ] }
+        else {
+            imageConstraints = [
+                imageView.topAnchor.constraint(equalTo: view.topAnchor),
+                imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                imageView.leadingAnchor.constraint(equalTo: drawerView.trailingAnchor),
+                imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ]
+        }
+        applyDrawerConstraints(drawerView, controlView, portrait: portrait, animated: animated)
+
+        NSLayoutConstraint.activate(imageConstraints)
     }
 
     /// Rebuilds the drawer's constraint set for a given orientation/collapsed
-    /// state. Only the drawer moves on rotation — the image's constraints
-    /// above are untouched by this method.
+    /// state. Called both standalone (collapse/expand toggling, where the
+    /// image doesn't need to move) and from `applyLayout`, which rebuilds the
+    /// image constraints alongside it for an orientation change.
     private func applyDrawerConstraints(_ drawerView: UIVisualEffectView, _ controlView: UIView, portrait: Bool, animated: Bool) {
         let safeArea = view.safeAreaLayoutGuide
 
@@ -164,12 +185,13 @@ class PGLTwoColumnSplitController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
 
-        guard let drawerView, let controlView = columns?.control.view else { return }
+        guard let drawerView, let controlView = columns?.control.view,
+              let imageView = columns?.imageViewer.view else { return }
 
         let portrait = view.bounds.height > view.bounds.width
         guard portrait != activeLayoutIsPortrait else { return }
 
-        applyDrawerConstraints(drawerView, controlView, portrait: portrait, animated: false)
+        applyLayout(imageView, controlView, drawerView, portrait: portrait, animated: false)
     }
 
     override func viewIsAppearing(_ animated: Bool) {
@@ -196,6 +218,12 @@ class PGLTwoColumnSplitController: UIViewController {
 
         controlView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        // The drawer only spans the safe area, not this view's full bounds, so
+        // in landscape a strip above/below it (status bar / home indicator
+        // area) shows this view's own background. Black matches the glass
+        // drawer's dark styling and the image's own letterboxing.
+        view.backgroundColor = .black
 
         view.addSubview(imageView)
 

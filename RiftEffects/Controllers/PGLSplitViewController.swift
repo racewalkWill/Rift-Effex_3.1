@@ -64,7 +64,8 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         // tiling them, so the image keeps its full width. iPad keeps the
         // storyboard's "tile" behavior.
         if traitCollection.userInterfaceIdiom == .phone {
-            preferredSplitBehavior = .overlay
+            preferredSplitBehavior = .tile
+                // .overlay
         }
 
         let myCenter =  NotificationCenter.default
