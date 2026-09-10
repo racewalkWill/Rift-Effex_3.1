@@ -34,6 +34,31 @@ enum PhotoLibSaveFormat: String {
     case HEIF = "HEIF"
 }
 
+extension NSManagedObjectContext {
+    /// Returns the cached managed object as an object usable in this context.
+    /// The write methods keep references to CD objects (storedStack, storedFilter,
+    /// storedParmImage, storedParmValue) but providerManagedObjectContext is swapped
+    /// between the viewContext and fresh background contexts as controllers appear.
+    /// Setting a relationship between objects of two different contexts makes Core Data
+    /// throw NSInvalidArgumentException and abort the app - nil checks cannot catch it.
+    /// Returns nil when the cached object cannot be used in this context (its context
+    /// was rolled back or reset, or it was never saved to the store) so callers fall
+    /// into their existing create-new paths.
+    func rehome<T: NSManagedObject>(_ cachedObject: T?) -> T? {
+        guard let cachedObject else { return nil }
+        guard let objectContext = cachedObject.managedObjectContext else {
+            // rollback/reset unregistered the object - the cached reference is dead
+            return nil
+        }
+        if objectContext === self { return cachedObject }
+        if cachedObject.objectID.isTemporaryID {
+            // unsaved insert from another context - cannot be fetched into this one
+            return nil
+        }
+        return (try? existingObject(with: cachedObject.objectID)) as? T
+    }
+}
+
 extension PGLFilterStack {
 
 
@@ -105,9 +130,10 @@ extension PGLFilterStack {
 //            let committedValues = myCDStoredStack.committedValues(forKeys: nil)
 
 
-            moContext.refresh(myCDStoredStack, mergeChanges: false)
+            myCDStoredStack.managedObjectContext?.refresh(myCDStoredStack, mergeChanges: false)
                 // refresh sets it to be a fault for reread
                 // make sure the fetchedResults are reread after this
+                // refresh through the object's own context - it may not be registered in moContext
             storedStack = nil // force creation of a new cdStack
         }
     }
@@ -157,6 +183,7 @@ extension PGLFilterStack {
 
     func writeCDStack(moContext: NSManagedObjectContext) -> CDFilterStack {
 
+        storedStack = moContext.rehome(storedStack)
         let stackState = compareSaveState(storedStack: storedStack)
 
         if stackState == .saveAsNewName {
@@ -169,6 +196,7 @@ extension PGLFilterStack {
                 // .existingStack or reNameUnTitledStack
                 // update the relationships for removed filters
                 for aDeletedFilter in removedFilters {
+                    aDeletedFilter.storedFilter = moContext.rehome(aDeletedFilter.storedFilter)
                     if let aCDStoredFilter: CDStoredFilter = aDeletedFilter.storedFilter {
                         // there is a cd relationship to remove
                         // the existing storedStack should change for .existingStack and .reNameUnTitledStack
@@ -199,6 +227,7 @@ extension PGLFilterStack {
     //        for aFilter in activeFilters {
         for filterIndex in 0..<activeFilters.count {
             let aFilter = activeFilters[filterIndex]
+            aFilter.storedFilter = moContext.rehome(aFilter.storedFilter)
             if aFilter.storedFilter == nil {
                 let theFilterStoredObject = aFilter.createCDFilterObject(moContext: moContext, stackPosition: Int16(filterIndex))
                 // moves images to cache to reduce storage
@@ -396,7 +425,7 @@ extension PGLSourceFilter {
 //                    thisStoredImageValue.inputAssets.forceSaveToNewCDVars(moContext: moContext)
                     thisStoredImageValue.inputAssets = nil
 
-                    moContext.refresh(thisStoredImageValue, mergeChanges: false)
+                    thisStoredImageValue.managedObjectContext?.refresh(thisStoredImageValue, mergeChanges: false)
 
                     anImageParm.storedParmImage = nil
                         // cause creation of new storedValue row
@@ -406,7 +435,7 @@ extension PGLSourceFilter {
         }
         for aParm in nonImageParms() {
             if let thisStoredValue = aParm.storedParmValue{
-                moContext.refresh(thisStoredValue, mergeChanges: false)
+                thisStoredValue.managedObjectContext?.refresh(thisStoredValue, mergeChanges: false)
                 aParm.storedParmValue = nil
                     // cause creation of new storedValue row
             }
@@ -437,6 +466,7 @@ extension PGLSourceFilter {
             /// create a CDParmValue for every parm that is not an image parm
 //        let parmValues = NSMutableSet()
         for aParm in nonImageParms() {
+          aParm.storedParmValue = moContext.rehome(aParm.storedParmValue)
           aParm.storeParmValue(moContext: moContext)
 
         }
@@ -588,6 +618,10 @@ extension PGLFilterAttributeImage {
         // 4EntityModel
 //        NSLog("PGLFilterAttributeImage #createNewCDImageParm filter \(String(describing: attributeName ))")
 //        let moContext = PersistentContainer.viewContext
+
+        storedParmImage = moContext.rehome(storedParmImage)
+            // a stale storedParmImage from a replaced or rolled-back context makes the
+            // inputAssets relationship assignment below throw and abort the app
 
         if self.storedParmImage == nil {
             guard let newCDImageParm =  NSEntityDescription.insertNewObject(forEntityName: "CDParmImage", into: moContext) as? CDParmImage

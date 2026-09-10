@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 90;
+	objectVersion = 110;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1001,7 +1001,7 @@
 				es,
 			);
 			mainGroup = A3BF500024D3298F00CD5114;
-			preferredProjectObjectVersion = 90;
+			preferredProjectObjectVersion = 110;
 			productRefGroup = A3BF500A24D3298F00CD5114 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1512,7 +1512,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 4.1;
 				MTL_COMPILER_FLAGS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "L-BSoftwareArtist.Rift-Effex";
@@ -1571,7 +1571,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 4.1;
 				MTL_COMPILER_FLAGS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "L-BSoftwareArtist.Rift-Effex";
