@@ -46,7 +46,7 @@ static let LogParmValues = false //false
         // example:
         //  [PGL_Parms] CILinearGradient setVectorValue(newValue:keyName:)( [1047 504] , inputPoint0 )
 
-static let LogRenderTargetSize = true
+static let LogRenderTargetSize = false
         // logs the transform value map process of RenderTargetSize / FilterCanvasSize
         //  enter in the debug
         //      po PGLSourceFilter.LogRenderTargetSize = true

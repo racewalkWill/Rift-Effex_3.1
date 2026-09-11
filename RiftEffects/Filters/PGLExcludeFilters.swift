@@ -13,13 +13,22 @@ class PGLExcludeFilters {
     // either missing documentation on their parms
     // or parms can not be generated in a visual context
     
-    static let skipFailingFilters = false  // change to false to include all filters
+    static let skipFailingFilters = true  // change to false to include all filters
         // a test case could set this to false to test for CIFilter changes in iOS releases
 
 
     static let list = [
         // revised in release 2.2 Convolution and Affine clamps removed from excluded
         // 2023/01/03
+
+// iOS27 exclude new bar code filters
+    "CICodabarBarcodeGenerator",
+    "CIEAN13BarcodeGenerator",
+    "CIInterleaved2of5BarcodeGenerator",
+    "CIQRCodeGenerator",
+    "CIRoundedRectangleStrokeGenerator",
+
+
 "CIBarcodeDescriptor",
 "CIBarcodeGenerator",
 "CIMeshGenerator",
@@ -50,7 +59,7 @@ class PGLExcludeFilters {
 
 "CIAttributedTextImageGenerator",
 "CIAztecCodeGenerator",
-"CILabDeltaE",
+// "CILabDeltaE",
 "CIQRCodeGenerator",
 "CIRoundedRectangleGenerator",
 // "CIPDF417BarcodeGenerator", restored ver 3.6.1 2025-12-13
@@ -66,7 +75,7 @@ class PGLExcludeFilters {
 // can't seem to force the vector out in code before displaying the filter
 "CIAffineClamp",
 // "CIAffineTransform", restored for ver 3.6.1 2025-12-13
-"CIAffineTile",
+// "CIAffineTile",
         ]
 
 
