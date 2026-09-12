@@ -400,8 +400,12 @@ extension PGLSourceFilter {
         // does not use the getCDParmImage(attribute:) method - that creates CDImageList if none exists..
         // we are deleting here.. don't create one to delete
 
-        if let cdImageParm = myCDParmImages.first(where: {$0.parmName == imageParmName} ) {
-            cdImageParm.inputAssets = nil // does this remove the related CDImageList row?
+        if let cdImageParm = myCDParmImages.first(where: {$0.parmName == imageParmName} ),
+           let oldImageList = cdImageParm.inputAssets {
+            // delete the row - just setting inputAssets = nil would orphan the
+            // CDImageList (the Cascade rule only fires when the CDParmImage is deleted).
+            // The delete nils cdImageParm.inputAssets through the Nullify inverse.
+            oldImageList.managedObjectContext?.delete(oldImageList)
         }
     }
 
@@ -418,15 +422,14 @@ extension PGLSourceFilter {
                 if let childInputStack = anImageParm.inputStack {
                     childInputStack.forceSaveToNewCDVars(moContext: moContext) // will clear child filters
                 }
-                if let thisStoredImageValue = anImageParm.storedParmImage {
+                if anImageParm.storedParmImage != nil {
                     NSLog("PGLSourceFilter #forceSaveToNewCDVars  \(String(describing: filterName)) ")
-                    // force the imageList inputAssets to newCDVars ??
-                    // not needed to reset..
-//                    thisStoredImageValue.inputAssets.forceSaveToNewCDVars(moContext: moContext)
-                    thisStoredImageValue.inputAssets = nil
-
-                    thisStoredImageValue.managedObjectContext?.refresh(thisStoredImageValue, mergeChanges: false)
-
+                    // Only drop the in-memory reference so the save creates new rows.
+                    // Do NOT touch the old CDParmImage.inputAssets here: setting it to nil
+                    // also nils the inverse CDImageList.parm, and a refresh of the
+                    // CDParmImage cannot revert that inverse. The severed CDImageList
+                    // then commits and syncs, so other devices import the old stack
+                    // with inputAssets = nil (image fails to load there).
                     anImageParm.storedParmImage = nil
                         // cause creation of new storedValue row
 
