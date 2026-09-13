@@ -255,7 +255,9 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
         if imageListPicker != nil {
                 /// with  a nil  target attribute just picks one image from the photoLibary
             guard let pickerViewController = imageListPicker!.set(targetAttribute: nil)
-            else { return  alwaysReturnTrue }
+            else {
+                startupImagePickFinished() // no pick will show - help can present now
+                return  alwaysReturnTrue }
             DispatchQueue.main.async { [weak self] in
                 self?.present(pickerViewController, animated: true)
             }
@@ -263,7 +265,16 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
             return alwaysReturnTrue
 
         }
+        startupImagePickFinished() // no pick will show - help can present now
         return alwaysReturnTrue
+    }
+
+    /// the startup photo pick has finished (photo chosen or canceled) and the
+    /// picker is dismissed. Now the first-startup help page can present without
+    /// blocking the picker. Called by PGLImageListPicker from the picker
+    /// dismiss completion, or directly when no picker could be presented.
+    func startupImagePickFinished() {
+        appStack.activeImageController?.showStartupHelpIfNeeded()
     }
 
 

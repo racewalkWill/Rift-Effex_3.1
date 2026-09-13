@@ -1328,13 +1328,6 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
 
 
-        if ShowHelpOnOpen {
-            // if the key does not exist then bool answers false
-            helpBtnAction(helpBtn)
-            // PGLHelpPageController will set to false after showing help
-
-        }
-     
         updateStackNameToNavigationBar()
         
         // Video
@@ -1350,6 +1343,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
          appStack.isImageControllerOpen = true
          appStack.activeImageController = self // the visible controller is the save target
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+
+        // first-startup help is NOT presented here: it would block the
+        // PGLSplitViewController.requestStartupImage photo pick presentation.
+        // PGLImageListPicker calls showStartupHelpIfNeeded() after the
+        // startup pick (photo chosen or canceled) is dismissed.
 //        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( self.appStack.parmControls)")
 //        if traitCollection.userInterfaceIdiom == .phone {
 //            // assumes that addPositionControl has created all the parmControls
@@ -1367,6 +1365,19 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 
 
     }
+    /// Show the first-startup help page. Called after the startup photo pick
+    /// (photo chosen or canceled) has been dismissed so the help presentation
+    /// does not conflict with the PHPicker presentation.
+    /// Must be called with the view in the window hierarchy - presenting from
+    /// viewDidLoad is silently dropped on iPhone.
+    func showStartupHelpIfNeeded() {
+        if ShowHelpOnOpen {
+            // if the key does not exist then bool answers false
+            helpBtnAction(helpBtn)
+            // PGLHelpPageController will set to false after showing help
+        }
+    }
+
     func releaseVars() {
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         parmController = nil

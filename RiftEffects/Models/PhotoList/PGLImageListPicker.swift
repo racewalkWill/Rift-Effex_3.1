@@ -70,7 +70,13 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
         
 
         NSLog(#function + " \(picker.description) ")
-        picker.dismiss(animated: true)
+            // startup pick case (controller is the split view): first-startup
+            // help must wait until the picker is fully dismissed - presenting
+            // it earlier blocks one of the two presentations
+        let startupSplitController = controller as? PGLSplitViewController
+        picker.dismiss(animated: true) { [weak startupSplitController] in
+            startupSplitController?.startupImagePickFinished()
+        }
         picker.delegate = nil
         
         loadImageListFromPicker(results: results, theController: controller)
