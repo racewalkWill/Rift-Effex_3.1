@@ -132,7 +132,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 
 
 
-    static let ImageLogger = OSLog(subsystem: "com.apple.Photos", category: "PGLAsset")
+//    static let ImageLogger = OSLog(subsystem: "com.apple.Photos", category: "PGLAsset")
     // MARK: Image
     /// return the CIImage
     /// moved from the PGLImageList
@@ -164,7 +164,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
                // nil on first call; image will be available on subsequent calls
       } // end imageFrom()
 
-   
+
 
         /// convert UIImage to CIImage and correct orientation to downMirrored
     @MainActor func convert2CIImage(aUIImage: UIImage) -> CIImage? {
@@ -194,6 +194,10 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 
     }
 
+    func imageAtNativeSize() -> CIImage? {
+        return self.ciImage
+    }
+
     func startImageRequestTask()  {
         Task {
             guard let cache = cache else { return }
@@ -203,7 +207,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 //                    NSLog("\(#function) process: \(ProcessInfo.processInfo.processName) time: \(Date()) result: \(String(describing: result))")
                     if let result = result {
                         if let returnUIImage = result.image {
-                            NSLog("\(#function) image recevied for \(self.asset.localIdentifier)")
+                            NSLog("\(#function) image cached for \(self.asset.localIdentifier)")
                             self.thumbnail = returnUIImage.preparingThumbnail(of: self.thumbnailSize)
                             self.ciImage = self.convert2CIImage(aUIImage: returnUIImage)
 
@@ -218,14 +222,25 @@ class PGLAsset: Hashable, Equatable, Identifiable {
                             }
 
                         }
+                    self.postRedrawFilterNotification()
                     }  // child TASK close
                 }
             } // parent TASK close
     }
 
+    func postRedrawFilterNotification() {
+        let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
+        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+    }
+
     func imageNotAvailable() -> Bool {
-        // ciImage is private just return status 
-       return ciImage == nil
+        // ciImage is private just return status
+        // imageRequestId is filled by caching the CIImage
+       return imageRequestID == nil
+    }
+
+    func imageIsAvailable() -> Bool {
+        return !imageNotAvailable()
     }
 
     func resetCenterScaler() {

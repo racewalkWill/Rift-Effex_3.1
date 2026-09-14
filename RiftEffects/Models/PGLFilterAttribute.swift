@@ -425,15 +425,20 @@ class PGLFilterAttribute {
             return
         }
         // while waiting for the real image set an empty default
-        self.set(CIImage.empty)
-        firstAssetData?.onImageReady = { [weak self] ciImage in
-            guard let self = self else { return }
-//            self.aSourceFilter.setImageValue(newValue: ciImage, keyName: myAttributeName)
-            self.set(ciImage)
-            NSLog(#function + " set imageInput: \(ciImage)" )
-            postRedrawFilterChange()
+        if firstAssetData?.imageIsAvailable() ?? false {
+            if let availableImage = firstAssetData?.imageAtNativeSize(){
+                self.set(availableImage) }
+        } else {
+                // wait for onImageReady
+            self.set(CIImage.empty)
+            firstAssetData?.onImageReady = { [weak self] ciImage in
+                guard let self = self else { return }
+                    //            self.aSourceFilter.setImageValue(newValue: ciImage, keyName: myAttributeName)
+                self.set(ciImage)
+                NSLog(#function + " set imageInput: \(ciImage)" )
+            }
         }
-
+        postRedrawFilterChange()
         if cycleStack.isEmpty() {
             setImageParmState(newState: ParmInputState.missingImageInput)
         } else {
@@ -443,7 +448,7 @@ class PGLFilterAttribute {
 //        ImageParm.inputPriorFilter
 
         _ = aSourceFilter.notifyTransitionsExist()
-        aSourceFilter.postImageChange()
+        
     }
 
     func setTargetAttributeOfUserAssetCollection() {

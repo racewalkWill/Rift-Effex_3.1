@@ -250,6 +250,7 @@ class PGLAppStack {
         let startingFilter = (PGLFilterDescriptor(defaultFilterName, PGLTransitionFilter.self))!
         newStack.setDefault(initialList: allImages, filterDescriptor: startingFilter)
         resetOutputAppStack(newStack)
+            // reset calls postStackChange()
         DoNotDraw = false
 
     }
