@@ -424,10 +424,10 @@ class PGLFilterAttribute {
         { setImageParmState(newState: ParmInputState.missingImageInput)
             return
         }
-        // while waiting for the real image set an empty default
-        if firstAssetData?.imageIsAvailable() ?? false {
-            if let availableImage = firstAssetData?.imageAtNativeSize(){
-                self.set(availableImage) }
+        // use the loaded image when available; otherwise set an empty default
+        // and wait for the cache request to deliver it
+        if let availableImage = firstAssetData?.imageAtTargetSize() ?? firstAssetData?.imageAtNativeSize() {
+            self.set(availableImage)
         } else {
                 // wait for onImageReady
             self.set(CIImage.empty)

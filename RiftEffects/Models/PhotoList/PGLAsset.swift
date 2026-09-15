@@ -235,8 +235,8 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 
     func imageNotAvailable() -> Bool {
         // ciImage is private just return status
-        // imageRequestId is filled by caching the CIImage
-       return imageRequestID == nil
+        // a request may be issued (imageRequestID set) before the image arrives
+       return ciImage == nil
     }
 
     func imageIsAvailable() -> Bool {
