@@ -176,13 +176,19 @@ class PGLFilterStack: Equatable, Hashable  {
         if( ( tabIndex >= 0 ) && (tabIndex < activeFilters.count) )
             // activeFilterIndex = - 1 means empty stack first filter was removed
             { return activeFilters[tabIndex] }
-        else {
-            return activeFilters[0]
-            // this would be an array error on empty stack
-            // but negative 1 as the tabIndex does not call this..
-            // by CIEmptyImage is displayed in #stackOutputImage
+        if let firstFilter = activeFilters.first {
+            // out of range tabIndex - answer the first filter
+            return firstFilter
         }
+            // empty stack with a stale activeFilterIndex - answer a detached
+            // placeholder instead of crashing on activeFilters[0]
+        Logger(subsystem: LogSubsystem, category: LogCategory).fault("PGLFilterStack #filterAt(tabIndex:) called on empty stack - answering placeholder filter")
+        return PGLFilterStack.emptyPlaceholderFilter
     }
+
+        /// fallback answered by filterAt(tabIndex:) on an empty stack. Not in any stack.
+        /// CIColorControls is a built-in CIFilter so the creation does not fail
+    static let emptyPlaceholderFilter: PGLSourceFilter = PGLSourceFilter(filter: "CIColorControls")!
     func moveActiveAhead() {
         //advance activeFilterIndex
         if isEmptyStack()
@@ -646,8 +652,8 @@ class PGLFilterStack: Equatable, Hashable  {
 
     func outputImage() -> CIImage? {
         // this does not do the chaining of output to input used by stackOutputImage
-        if activeFilterIndex >= 0 {
-            return activeFilters.last!.outputImage() }
+        if activeFilterIndex >= 0, let lastFilter = activeFilters.last {
+            return lastFilter.outputImage() }
         else {
             return CIImage.empty() }
     }

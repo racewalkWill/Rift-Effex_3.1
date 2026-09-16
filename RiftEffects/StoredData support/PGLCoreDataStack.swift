@@ -69,7 +69,9 @@ class CoreDataWrapper: @unchecked Sendable  {
         do {
             try container.viewContext.setQueryGenerationFrom(.current)
         } catch {
-            fatalError("###\(#function): Failed to pin viewContext to the current generation:\(error)")
+            // not fatal - continue unpinned. This fails when the store did not load;
+            // the loadPersistentStores completion above has already alerted the user
+            Logger(subsystem: LogSubsystem, category: LogNavigation).fault("###\(#function): Failed to pin viewContext to the current generation:\(error)")
         }
 
         // Observe Core Data remote change notifications.

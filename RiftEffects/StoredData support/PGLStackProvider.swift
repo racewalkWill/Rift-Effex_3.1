@@ -8,6 +8,8 @@
 
 import Foundation
 import CoreData
+import UIKit
+import os
 
 class PGLStackProvider {
     private(set) var persistentContainer: NSPersistentContainer
@@ -65,7 +67,13 @@ class PGLStackProvider {
             do {
                 try fetchedResultsController.performFetch()
             } catch {
-                fatalError("###\(#function): Failed to performFetch: \(error)")
+                // continue with an empty result set instead of crashing; alert the user
+                Logger(subsystem: LogSubsystem, category: LogNavigation).fault("###\(#function): Failed to performFetch: \(error)")
+                DispatchQueue.main.async {
+                    if let myAppDelegate = UIApplication.shared.delegate as? AppDelegate {
+                        myAppDelegate.displayDataError(error: error)
+                    }
+                }
             }
     }
 
@@ -98,7 +106,14 @@ class PGLStackProvider {
             do {
                     try fetchedResultsController.performFetch()
             } catch {
-                    fatalError("###\(#function): Failed to performFetch: \(error)") }
+                    // continue with an empty result set instead of crashing; alert the user
+                    Logger(subsystem: LogSubsystem, category: LogNavigation).fault("###\(#function): Failed to performFetch: \(error)")
+                    DispatchQueue.main.async {
+                        if let myAppDelegate = UIApplication.shared.delegate as? AppDelegate {
+                            myAppDelegate.displayDataError(error: error)
+                        }
+                    }
+            }
         }
 
     func delete(stack: FilterStack, shouldSave: Bool = true) {
@@ -171,7 +186,12 @@ class PGLStackProvider {
         fetchCountRequest.predicate = NSPredicate(value: true)
             // all rows returned
 
-        rowCount = try! persistentContainer.viewContext.count(for: fetchCountRequest)
+        do {
+            rowCount = try persistentContainer.viewContext.count(for: fetchCountRequest)
+        } catch {
+            // answer zero rows instead of crashing when the store is unavailable
+            Logger(subsystem: LogSubsystem, category: LogNavigation).error("###\(#function): Failed to count CDFilterStack rows: \(error)")
+        }
 
         return rowCount
     }

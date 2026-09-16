@@ -1249,13 +1249,16 @@ extension PGLAttributeRectangle {
 
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cdRectangle: CDAttributeRectangle
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeRectangle {
+            cdRectangle = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeRectangle")
+            }
             cdRectangle =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeRectangle", into: moContext)) as! CDAttributeRectangle)
             storedParmValue = cdRectangle
             setCDParmValueRelation()
-
-        } else {
-            cdRectangle = storedParmValue as! CDAttributeRectangle
         }
         // assign current values for coreData
         cdRectangle.xPoint = filterRect.minX
@@ -1280,15 +1283,18 @@ extension PGLAttributeRectangle {
 extension PGLFilterAttributeAffine {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cdAffine: CDAttributeAffine
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeAffine {
+            cdAffine = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeAffine")
+            }
             cdAffine =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeAffine", into: moContext)) as! CDAttributeAffine)
             storedParmValue = cdAffine
             setCDParmValueRelation()
             cdAffine.attributeName = childUIAttributeName
                 // points to RotationUI attribute
-
-        } else {
-            cdAffine = storedParmValue as! CDAttributeAffine
         }
         cdAffine.vectorX = 1
         cdAffine.vectorY = 1
@@ -1378,13 +1384,16 @@ extension PGLFilterAttributeAffine {
 extension PGLFilterAttributeAngle {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeAngle
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeAngle {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeAngle")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeAngle", into: moContext)) as! CDAttributeAngle)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeAngle
         }
         cd.doubleValue = Double(truncating: getNumberValue() ?? 0.0)
     }
@@ -1402,13 +1411,16 @@ extension PGLFilterAttributeAngle {
 extension PGLFilterAttributeAttributedString {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeAttributedString
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeAttributedString {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeAttributedString")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeAttributedString", into: moContext)) as! CDAttributeAttributedString)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeAttributedString
         }
 
 
@@ -1429,13 +1441,16 @@ extension PGLFilterAttributeAttributedString {
 extension PGLFilterAttributeColor {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeColor
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeColor {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeColor")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeColor", into: moContext)) as! CDAttributeColor)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeColor
         }
         if let myColor = getColorValue() {
             cd.redValue = Float(myColor.red)
@@ -1462,13 +1477,16 @@ extension PGLFilterAttributeColor {
 extension PGLFilterAttributeData {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeData
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeData {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeData")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeData", into: moContext)) as! CDAttributeData)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeData
         }
         guard let myData = getDataValue()
             else { return }
@@ -1498,13 +1516,16 @@ extension PGLFilterAttributeImage {
 extension PGLFilterAttributeNumber {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeNumber
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeNumber {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeNumber")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeNumber", into: moContext)) as! CDAttributeNumber)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeNumber
         }
 
         guard let myNum = getNumberValue()
@@ -1528,13 +1549,16 @@ extension PGLFilterAttributeNumber {
 extension PGLFilterAttributeString {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeString
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeString {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeString")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeString", into: moContext)) as! CDAttributeString)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeString
         }
 
         guard let myString = getStringValue()
@@ -1557,13 +1581,16 @@ extension PGLFilterAttributeString {
 extension PGLFilterAttributeTime {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeTime
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeTime {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeTime")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeTime", into: moContext)) as! CDAttributeTime)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeTime
         }
         cd.floatValue = uiSliderValue
         cd.attributeValueDelta = attributeValueDelta as NSNumber?
@@ -1583,13 +1610,16 @@ extension PGLFilterAttributeVector {
 
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeVector
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeVector {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeVector")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeVector", into: moContext)) as! CDAttributeVector)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeVector
         }
 
 
@@ -1645,13 +1675,16 @@ extension PGLNumericSliderUI {
 
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeVector
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeVector {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeVector")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeVector", into: moContext)) as! CDAttributeVector)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeVector
         }
         guard let myValue = getWeightValue()
             else { return }
@@ -1682,9 +1715,10 @@ extension PGLNumericSliderUI {
         let column = Int(truncating: storedValue.vectorY ?? 0 )
 
 
-        let weightValue = storedValue.vectorEndX
+        guard let weightValue = storedValue.vectorEndX
+            else { return }
 //        NSLog("\( String(describing: self) + "-" + #function) weightValue \(weightValue)")
-        convolutionWeights.setWeight(newValue: weightValue as! Double , row: row, column: column)
+        convolutionWeights.setWeight(newValue: Double(truncating: weightValue) , row: row, column: column)
 
 
         // did not call setVectorEndPoint.. not clear on this
@@ -1710,13 +1744,16 @@ extension PGLAttributeVectorNumericUI {
 extension PGLAttributeVectorNumeric {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeVector
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeVector {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeVector")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeVector", into: moContext)) as! CDAttributeVector)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeVector
         }
 
 
@@ -1813,13 +1850,16 @@ extension PGLScaleAffineUI {
 extension PGLTimerRateAttributeUI {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeTime
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeTime {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeTime")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeTime", into: moContext)) as! CDAttributeTime)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeTime
         }
 
         
@@ -1878,13 +1918,16 @@ extension PGLTranslateAffineUI {
 extension PGLFilterAttributeVector3 {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
         var cd: CDAttributeVector3
-        if storedParmValue == nil {
+        if let existingParmValue = storedParmValue as? CDAttributeVector3 {
+            cd = existingParmValue
+        } else {
+            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
+            if storedParmValue != nil {
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeVector3")
+            }
             cd =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeVector3", into: moContext)) as! CDAttributeVector3)
             storedParmValue = cd
             setCDParmValueRelation()
-
-        } else {
-            cd = storedParmValue as! CDAttributeVector3
         }
 
         // getVectorValue() (canvasVector) is the always-populated canonical x/y/z - startPoint
