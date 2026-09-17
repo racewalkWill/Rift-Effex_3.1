@@ -131,7 +131,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
         // future may be an array of changes.
 //        set(oldVector)  // the form of set() does some typecasting to any and back again.. in this subclass set directly
         if oldVector != nil {
-            aSourceFilter.setVectorValue(newValue: oldVector!, keyName: attributeName!)
+            aSourceFilter?.setVectorValue(newValue: oldVector!, keyName: attributeName!)
         }
     }
 
@@ -177,7 +177,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
 //        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
 //        NSLog("     newVector \(newVector) from \(mappedCropRect)")
         oldVector = self.getVectorValue()  // save old value for cancel action
-        aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)
+        aSourceFilter?.setVectorValue(newValue: newVector, keyName: attributeName!)
         // let the parent filter do the work in CIImage.methods  see PGLRectangleFilter outputImage()
         filterRect = mappedCropRect // save the rect
 

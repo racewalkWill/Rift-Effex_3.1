@@ -148,7 +148,7 @@ extension PGLAppStack {
         if let existingImageList = imageAttribute.inputCollection {
             registerRedoImageChange(imageAttribute: imageAttribute, oldImageList: existingImageList)
             let targetFilter = imageAttribute.aSourceFilter
-            targetFilter.setUserPick(attribute: imageAttribute, imageList: oldImageList)
+            targetFilter?.setUserPick(attribute: imageAttribute, imageList: oldImageList)
         }
         // UI refresh (was PGLSelectParmController.updateAfterImagePick):
         // reload the parm table and redraw the render surface.

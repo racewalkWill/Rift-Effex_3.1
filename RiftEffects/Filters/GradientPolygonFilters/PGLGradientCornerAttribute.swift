@@ -31,7 +31,7 @@ class PGLGradientCornerAttribute: PGLFilterAttributeVector {
         if attributeName != nil {
             if let newVectorValue = value as? CIVector {
                 parmInputState = .inputValueSet
-                aSourceFilter.setVectorValue(newValue: newVectorValue, keyName: attributeName!) }
+                aSourceFilter?.setVectorValue(newValue: newVectorValue, keyName: attributeName!) }
         }
     }
 

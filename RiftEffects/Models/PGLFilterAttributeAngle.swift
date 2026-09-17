@@ -43,7 +43,7 @@ class PGLFilterAttributeAngle: PGLFilterAttribute {
     override func set(_ value: Any) {
         if attributeName != nil { if let newNumber = value as? NSNumber {
             parmInputState = .inputValueSet
-            aSourceFilter.setNumberValue(newValue: newNumber, keyName: attributeName!) }
+            aSourceFilter?.setNumberValue(newValue: newNumber, keyName: attributeName!) }
 
         }
     }
@@ -63,7 +63,7 @@ class PGLFilterAttributeAngle: PGLFilterAttribute {
         let currentValue = Float(truncating: getNumberValue() ?? 0.0)
 
         let incrementValue = NSNumber ( value: currentValue + ( attributeValueDelta  ?? 0.0 ) )
-        aSourceFilter.setNumberValue(newValue: incrementValue, keyName: attributeName!)
+        aSourceFilter?.setNumberValue(newValue: incrementValue, keyName: attributeName!)
         postUIChange(attribute: self)
 
 

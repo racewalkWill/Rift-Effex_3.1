@@ -119,7 +119,7 @@ class PGLFilterAttribute {
 
    @objc var myFilter: CIFilter {
         didSet {
-             self.aSourceFilter.localFilter = myFilter // keep the two refs to the filter aligned
+             self.aSourceFilter?.localFilter = myFilter // keep the two refs to the filter aligned
         }
     }
     var attributeName: String?
@@ -156,7 +156,9 @@ class PGLFilterAttribute {
     }
 
 
-     unowned var aSourceFilter: PGLSourceFilter
+     weak var aSourceFilter: PGLSourceFilter?
+    // weak: attributes can outlive their filter (table cells, stored closures, async saves)
+    // so accesses become no-ops instead of dangling-reference crashes
     // This holds the real ciFilter in via the var PGLSourceFilter.localFilter
     // but attribute also holds the real ciFilter in myFilter var
 
@@ -164,7 +166,7 @@ class PGLFilterAttribute {
     //    ReferenceWritableKeyPath<PGLFilterAttribute, Any>
     // add attributeMin, Max and Identity? They are strings in the dict.. need conversion to floating Point
 
-    var isTransitionFilter = false  // cache at init time aSourceFilter is unowned var.
+    var isTransitionFilter = false  // cache at init time aSourceFilter is a weak var.
 
     var inputSourceMetadata: PGLAsset? // photo or filter name used as input data store
 
@@ -210,7 +212,7 @@ class PGLFilterAttribute {
   required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         initDict = attributeDict // save for creating valueParms such as PGLRotateAffineUI
         myFilter = pglFilter.localFilter
-        aSourceFilter = pglFilter  // unowned var that may be deferenced..
+        aSourceFilter = pglFilter  // weak var - nil after the filter is released
         attributeType = attributeDict[kCIAttributeType] as? String
         attributeClass = attributeDict[kCIAttributeClass] as? String
         if let rawDisplayName = attributeDict[kCIAttributeDisplayName] as? String {
@@ -227,7 +229,7 @@ class PGLFilterAttribute {
         identityValue = (attributeDict[kCIAttributeIdentity] as? NSNumber)?.floatValue // nil for affineTransform
 
         isTransitionFilter = pglFilter.isTransitionCategoryFilter()
-            // // cache at init time aSourceFilter is unowned var and may  be dereferenced
+            // // cache at init time aSourceFilter is a weak var and may become nil
 
         if attributeClass != nil {
             classForAttribute = NSClassFromString(("RiftEffects." + attributeClass!)) }
@@ -329,7 +331,7 @@ class PGLFilterAttribute {
 
     func parentParmFilterName() -> String {
         // answer name of the parent stack parm and filter
-        return  (aSourceFilter.descriptorDisplayName ?? "filter") +  ">" + (attributeDisplayName ?? "parm") 
+        return  (aSourceFilter?.descriptorDisplayName ?? "filter") +  ">" + (attributeDisplayName ?? "parm") 
     }
 
     func setUICellDescription(_ uiCell: UITableViewCell) {
@@ -447,7 +449,7 @@ class PGLFilterAttribute {
 //        ImageParm.inputChildStack
 //        ImageParm.inputPriorFilter
 
-        _ = aSourceFilter.notifyTransitionsExist()
+        _ = aSourceFilter?.notifyTransitionsExist()
         
     }
 
@@ -599,24 +601,24 @@ class PGLFilterAttribute {
 
             case AttrClass.Vector.rawValue :
                 if let newVector = value as? CIVector {
-                    aSourceFilter.setVectorValue(newValue: newVector, keyName: attributeName!)}
+                    aSourceFilter?.setVectorValue(newValue: newVector, keyName: attributeName!)}
                 // vector case usually in subclass PGLFilterAttributeVector but Flash uses rectangle extent
             //                case AttrClass.Color.rawValue : aSourceFilter.setColorValue(newValue: value as! CIColor, keyName: attributeName!)
             case  AttrClass.Data.rawValue :
                 if let data = value as? NSData {
-                    aSourceFilter.setDataValue(newValue: data, keyName: attributeName!) }
+                    aSourceFilter?.setDataValue(newValue: data, keyName: attributeName!) }
 
             case  AttrClass.Value.rawValue :
                 if let myValue = value as? NSValue {
-                    aSourceFilter.setNSValue(newValue: myValue, keyName: attributeName!) }
+                    aSourceFilter?.setNSValue(newValue: myValue, keyName: attributeName!) }
 
             case  AttrClass.Object.rawValue :
                 if let myObject = value as? NSObject {
-                    aSourceFilter.setObjectValue(newValue: myObject, keyName: attributeName!) }
+                    aSourceFilter?.setObjectValue(newValue: myObject, keyName: attributeName!) }
 
             case  AttrClass.String.rawValue :
                 if let myString = value as? NSString {
-                    aSourceFilter.setStringValue(newValue: myString, keyName: attributeName!) }
+                    aSourceFilter?.setStringValue(newValue: myString, keyName: attributeName!) }
 
             default: Logger(subsystem: LogSubsystem, category: LogCategory).fault("Error- can not set value for unknown filter attribute class in \(String(describing: self.attributeName))")
                 // raises error on a new attribute class
@@ -697,7 +699,7 @@ class PGLFilterAttribute {
 
    func logRenderTarget(newValue: String, oldValue: String, direction: String, keyName: String) {
        if PGLSourceFilter.LogRenderTargetSize {
-           Logger(subsystem: LogSubsystem, category: LogParms).debug("logRenderTarget \(self.aSourceFilter.descriptorDisplayName ?? "noFilterName") (  \(oldValue) -> \(newValue) ) \(direction) , \(keyName) )")
+           Logger(subsystem: LogSubsystem, category: LogParms).debug("logRenderTarget \(self.aSourceFilter?.descriptorDisplayName ?? "noFilterName") (  \(oldValue) -> \(newValue) ) \(direction) , \(keyName) )")
        }
    }
 
@@ -877,7 +879,7 @@ class PGLFilterAttribute {
                 if hasInputCollection() {
                     if let nextImage = inputCollection!.increment() {
 
-                        aSourceFilter.setImageValue(newValue: nextImage, keyName: attributeName!)
+                        aSourceFilter?.setImageValue(newValue: nextImage, keyName: attributeName!)
                         }
                     }
             case  AttrClass.Number.rawValue : if let numberValue = self.getNumberValue() {
@@ -928,7 +930,9 @@ class PGLFilterAttribute {
     func varyTimerAttribute() -> PGLFilterAttribute? {
             // override to answer nil in some subclasses (image etc)
 
-        if let newTimerRow = PGLTimerRateAttributeUI(pglFilter: (self.aSourceFilter), attributeDict: self.initDict, inputKey: self.attributeName!) {
+        guard let mySourceFilter = self.aSourceFilter
+            else { return nil }
+        if let newTimerRow = PGLTimerRateAttributeUI(pglFilter: mySourceFilter, attributeDict: self.initDict, inputKey: self.attributeName!) {
             newTimerRow.filterAttribute(parent: self)
                 // triggers change to animation state
 //            newTimerRow.startCellAnimationTimer()
@@ -939,11 +943,11 @@ class PGLFilterAttribute {
     func performAction(_ controller: PGLSelectParmController?) {
        
         // user has selected swipe cell action 'Vary'
-        aSourceFilter.animate(attributeTarget: self)
+        aSourceFilter?.animate(attributeTarget: self)
 
     }
     func performActionOff() {
-        aSourceFilter.attribute(removeAnimationTarget: self)
+        aSourceFilter?.attribute(removeAnimationTarget: self)
 
     }
 

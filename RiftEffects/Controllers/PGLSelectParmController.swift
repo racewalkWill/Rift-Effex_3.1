@@ -820,7 +820,7 @@ class PGLSelectParmController: PGLCommonController,
             }
         }
         if  PGLDemo.GuideMode {
-            let thisStep = PGLGuideStep(controller: "PGLSelectParmController", filter: thisCellAttribute?.aSourceFilter.filterName, parmName: thisCellAttribute?.attributeName)
+            let thisStep = PGLGuideStep(controller: "PGLSelectParmController", filter: thisCellAttribute?.aSourceFilter?.filterName, parmName: thisCellAttribute?.attributeName)
             if let guide = PGLGuide.Steps.contains(thisStep) {
                 if let theArrow = UIImage(systemName: guide.label ) {
 
@@ -1087,7 +1087,7 @@ class PGLSelectParmController: PGLCommonController,
                     completion(true)
                 }
                 if PGLDemo.GuideMode {
-                    let thisStep = PGLGuideStep(controller: "PGLSelectParmController", filter: cellDataAttribute.aSourceFilter.filterName, parmName: tappedAttribute?.attributeName)
+                    let thisStep = PGLGuideStep(controller: "PGLSelectParmController", filter: cellDataAttribute.aSourceFilter?.filterName, parmName: tappedAttribute?.attributeName)
                     thisStep.cell = anActionCell.swipeLabel
                     if PGLGuide.Steps.contains(thisStep) != nil {
                             //                            let theArrow = UIImage(systemName: guide.label )

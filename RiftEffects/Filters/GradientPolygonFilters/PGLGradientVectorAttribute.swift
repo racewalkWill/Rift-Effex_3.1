@@ -34,7 +34,7 @@ class PGLGradientVectorAttribute: PGLFilterAttributeVector {
             if let newVectorValue = value as? CIVector {
                 let simpleAttributeName = baseKeyName(compoundKeyName: attributeName!)
                 parmInputState = .inputValueSet
-                aSourceFilter.setVectorValue(newValue: newVectorValue, keyName: simpleAttributeName) }
+                aSourceFilter?.setVectorValue(newValue: newVectorValue, keyName: simpleAttributeName) }
         }
     }
 

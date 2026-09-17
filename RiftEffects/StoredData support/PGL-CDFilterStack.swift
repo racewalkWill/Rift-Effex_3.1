@@ -531,8 +531,9 @@ extension PGLFilterAttributeImage {
             return loadImageData(cdImageRow: rawImageDataRow)
         }
         if let childStack = cdImageParm.inputStack  {
-
-            let newPGLChildStack = aSourceFilter.setUpStack(onParentImageParm: self)
+            guard let mySourceFilter = aSourceFilter
+                else { return }
+            let newPGLChildStack = mySourceFilter.setUpStack(onParentImageParm: self)
 //                 aSourceFilter that is a SequencedFilters will create a PGLSequenceStack
 //                 all other filters create a normal PGLFilterStack
             newPGLChildStack.on(cdStack: childStack)
@@ -601,7 +602,7 @@ extension PGLFilterAttributeImage {
 
     func loadImageData(cdImageRow: CDImageData) {
         // image not in the PhotoLibrary. Usually pasted from clipboard
-        if !aSourceFilter.supportsImageClipboardData()  {
+        if !(aSourceFilter?.supportsImageClipboardData() ?? false)  {
             return
         }
 
@@ -643,9 +644,9 @@ extension PGLFilterAttributeImage {
                 return
             }
             newCDImageParm.parmName = self.attributeName
-            if self.aSourceFilter.storedFilter != nil {
+            if self.aSourceFilter?.storedFilter != nil {
                 // production fix in version 2.1
-                newCDImageParm.filter = self.aSourceFilter.storedFilter // creates relationship
+                newCDImageParm.filter = self.aSourceFilter?.storedFilter // creates relationship
             }
             self.storedParmImage = newCDImageParm
         }
@@ -1228,7 +1229,7 @@ extension PGLFilterAttribute {
             // just checking ....
         parmValue.pglParmClass = String(describing: (type(of:self).self))
             // this is the runtime self - a subclass of PGLFilterAttribute
-        parmValue.storedFilter = aSourceFilter.storedFilter // creates relationship
+        parmValue.storedFilter = aSourceFilter?.storedFilter // creates relationship
             // creates relation of many to 1 from the many side.
             // storedFilter may have many parmValues
 
@@ -1282,72 +1283,45 @@ extension PGLAttributeRectangle {
 
 extension PGLFilterAttributeAffine {
     @objc override func storeParmValue(moContext: NSManagedObjectContext)  {
-        var cdAffine: CDAttributeAffine
-        if let existingParmValue = storedParmValue as? CDAttributeAffine {
-            cdAffine = existingParmValue
-        } else {
-            // storedParmValue is nil or holds an unexpected entity type (cloud sync/model drift)
-            if storedParmValue != nil {
-                Logger(subsystem: LogSubsystem, category: LogNavigation).error("storeParmValue replacing stored value of unexpected type with CDAttributeAffine")
+            // six CDAttributeAffine rows per affine attribute: (vectorX, vectorY) selects the
+            // matrix component and vectorZ holds the value - setStoredValueToAttribute(_:)
+            // accumulates all six rows before building the CGAffineTransform.
+            // Update rows from a prior save in place; inserting again leaves stale
+            // duplicate rows that load in undefined order and corrupt the transform.
+        var existingRows = [CDAttributeAffine]()
+        if let priorValues = aSourceFilter?.storedFilter?.values {
+            existingRows = priorValues.compactMap( { $0 as? CDAttributeAffine })
+                .filter( { $0.attributeName == childUIAttributeName })
+        }
+
+        let components: [(x: Float, y: Float, z: Float)] = [
+            (1, 1, Float(affine.a)),
+            (1, 2, Float(affine.b)),
+            (2, 1, Float(affine.c)),
+            (2, 2, Float(affine.d)),
+            (3, 1, Float(affine.tx)),
+            (3, 2, Float(affine.ty)) ]
+
+        for component in components {
+            let matchingRows = existingRows.filter( { ($0.vectorX == component.x) && ($0.vectorY == component.y) })
+            if let firstRow = matchingRows.first {
+                firstRow.vectorZ = component.z
+                storedParmValue = firstRow
+                for extraRow in matchingRows.dropFirst() {
+                    // stale duplicate row from a prior save that inserted instead of updating
+                    moContext.delete(extraRow)
+                }
+                continue
             }
-            cdAffine =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeAffine", into: moContext)) as! CDAttributeAffine)
+            let cdAffine = ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeAffine", into: moContext)) as! CDAttributeAffine)
             storedParmValue = cdAffine
             setCDParmValueRelation()
             cdAffine.attributeName = childUIAttributeName
                 // points to RotationUI attribute
+            cdAffine.vectorX = component.x
+            cdAffine.vectorY = component.y
+            cdAffine.vectorZ = component.z
         }
-        cdAffine.vectorX = 1
-        cdAffine.vectorY = 1
-        cdAffine.vectorZ = Float(affine.a)
-
-        // if not stored.. but where is stored one to update?
-        cdAffine =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeAffine", into: moContext)) as! CDAttributeAffine)
-        storedParmValue = cdAffine
-        setCDParmValueRelation()
-        cdAffine.attributeName = childUIAttributeName
-            // points to RotationUI attribute
-
-        cdAffine.vectorX = 1
-        cdAffine.vectorY = 2
-        cdAffine.vectorZ = Float(affine.b)
-
-        cdAffine =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeAffine", into: moContext)) as! CDAttributeAffine)
-        storedParmValue = cdAffine
-        setCDParmValueRelation()
-        cdAffine.attributeName = childUIAttributeName
-            // points to RotationUI attribute
-        cdAffine.vectorX = 2
-        cdAffine.vectorY = 1
-        cdAffine.vectorZ = Float(affine.c)
-
-        cdAffine =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeAffine", into: moContext)) as! CDAttributeAffine)
-        storedParmValue = cdAffine
-        setCDParmValueRelation()
-        cdAffine.attributeName = childUIAttributeName
-            // points to RotationUI attribute
-        cdAffine.vectorX = 2
-        cdAffine.vectorY = 2
-        cdAffine.vectorZ = Float(affine.d)
-
-        cdAffine =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeAffine", into: moContext)) as! CDAttributeAffine)
-        storedParmValue = cdAffine
-        setCDParmValueRelation()
-        cdAffine.attributeName = childUIAttributeName
-            // points to RotationUI attribute
-
-        cdAffine.vectorX = 3
-        cdAffine.vectorY = 1
-        cdAffine.vectorZ = Float(affine.tx)
-
-        cdAffine =  ((NSEntityDescription.insertNewObject(forEntityName: "CDAttributeAffine", into: moContext)) as! CDAttributeAffine)
-        storedParmValue = cdAffine
-        setCDParmValueRelation()
-        cdAffine.attributeName = childUIAttributeName
-            // points to RotationUI attribute
-        cdAffine.vectorX = 3
-        cdAffine.vectorY = 2
-        cdAffine.vectorZ = Float(affine.ty)
-
     }
 
     @objc override func setStoredValueToAttribute(_ value: CDParmValue)   {
@@ -1470,7 +1444,7 @@ extension PGLFilterAttributeColor {
         blue = CGFloat(storedValue.blueValue)
         alpha = CGFloat(storedValue.alphaValue)
         let storedColor = CIColor(red: red, green: green, blue: blue, alpha: alpha)
-        aSourceFilter.setColorValue(newValue: storedColor, keyName: attributeName!)
+        aSourceFilter?.setColorValue(newValue: storedColor, keyName: attributeName!)
     }
 }
 

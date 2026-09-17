@@ -14,7 +14,8 @@ class PGLAttributeVectorNumeric: PGLFilterAttribute {
         // single affine parm attribute needs three independent settings rotate, scale, translate
 
 
-        guard let newSliderParm  = PGLAttributeVectorNumericUI(pglFilter: aSourceFilter, attributeDict: initDict, inputKey: attributeName!)
+        guard let mySourceFilter = aSourceFilter,
+              let newSliderParm  = PGLAttributeVectorNumericUI(pglFilter: mySourceFilter, attributeDict: initDict, inputKey: attributeName!)
         else { return [PGLFilterAttribute]() }
         newSliderParm.parentVectorAttribute = self
         return [ newSliderParm ]

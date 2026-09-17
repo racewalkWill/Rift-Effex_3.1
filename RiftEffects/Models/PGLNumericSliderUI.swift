@@ -27,7 +27,9 @@ class PGLNumericSliderUI: PGLFilterAttribute {
         column = matrixColumn
 
         
-        super.init(pglFilter: convolution.aSourceFilter, attributeDict: convolution.initDict, inputKey: convolution.attributeName!)
+        guard let convolutionSourceFilter = convolution.aSourceFilter
+            else { return nil }
+        super.init(pglFilter: convolutionSourceFilter, attributeDict: convolution.initDict, inputKey: convolution.attributeName!)
 
         if attributeClass == nil {
             Logger(subsystem: LogSubsystem, category: LogCategory).error ("\( String(describing: self) + "-" + #function) attributeClass is nil")

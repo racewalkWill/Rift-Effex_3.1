@@ -54,18 +54,20 @@ class PGLFilterAttributeAffine: PGLFilterAttribute {
     override func valueInterface() -> [PGLFilterAttribute] {
         // subclasses such as PGLFilterAttributeAffine implement a attributeUI collection
         // single affine parm attribute needs three independent settings rotate, scale, translate
+        guard let mySourceFilter = aSourceFilter
+            else { return valueParms }
 
-        if let rotateParm = PGLRotateAffineUI(pglFilter: aSourceFilter, attributeDict: initDict, inputKey: attributeName!)
+        if let rotateParm = PGLRotateAffineUI(pglFilter: mySourceFilter, attributeDict: initDict, inputKey: attributeName!)
         {   rotateParm.affine(parent: self)
             valueParms.append(rotateParm) // add translate & scale here
         }
 
-        if let translateParm = PGLTranslateAffineUI(pglFilter: aSourceFilter, attributeDict: initDict, inputKey: attributeName!)
+        if let translateParm = PGLTranslateAffineUI(pglFilter: mySourceFilter, attributeDict: initDict, inputKey: attributeName!)
         {   translateParm.affine(parent: self)
             valueParms.append(translateParm) // add translate & scale here
         }
 
-        if let scaleParm = PGLScaleAffineUI(pglFilter: aSourceFilter, attributeDict: initDict, inputKey: attributeName!)
+        if let scaleParm = PGLScaleAffineUI(pglFilter: mySourceFilter, attributeDict: initDict, inputKey: attributeName!)
         {   scaleParm.affine(parent: self)
             valueParms.append(scaleParm) // add translate & scale here
         }
@@ -76,7 +78,7 @@ class PGLFilterAttributeAffine: PGLFilterAttribute {
       NSLog("setAffine = \(affine)")
         parmInputState = .inputValueSet
         let nsTransform = NSValue(cgAffineTransform: affine)
-        aSourceFilter.setNSValue(newValue: nsTransform, keyName: attributeName!)
+        aSourceFilter?.setNSValue(newValue: nsTransform, keyName: attributeName!)
     }
 
 //    func setScale(vector: CIVector) {

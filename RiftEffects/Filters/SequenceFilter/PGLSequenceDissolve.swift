@@ -21,7 +21,8 @@ import os
 class PGLSequenceDissolve: PGLTransitionFilter {
 
 
-    unowned var sequenceFilter: PGLSequencedFilters!
+    weak var sequenceFilter: PGLSequencedFilters?
+        // weak: the parent sequence filter may be released before this wrapper
     var sequenceStack: PGLSequenceStack!
 
     override class func displayName() -> String? {

@@ -28,7 +28,9 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
         // single affine parm attribute needs three independent settings rotate, scale, translate
 
         var vectorUICells = super.valueInterface()
-        if let parm3 = PGLVectorNumeric3UI(pglFilter: aSourceFilter, attributeDict: initDict, inputKey: attributeName!)
+        guard let mySourceFilter = aSourceFilter
+            else { return vectorUICells }
+        if let parm3 = PGLVectorNumeric3UI(pglFilter: mySourceFilter, attributeDict: initDict, inputKey: attributeName!)
         {   parm3.zValueParent = self
             vectorUICells.append(parm3)
             return vectorUICells

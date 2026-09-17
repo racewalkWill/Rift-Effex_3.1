@@ -26,7 +26,7 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
          if attributeName != nil {
             if let myNumber = value as? NSNumber {
                 parmInputState = .inputValueSet
-                aSourceFilter.setNumberValue(newValue: myNumber, keyName: attributeName!) }
+                aSourceFilter?.setNumberValue(newValue: myNumber, keyName: attributeName!) }
         }
     }
 
@@ -50,7 +50,7 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
 //                NSLog("PGLFilterAttributeNumber incrementValueDelta attributeValueDelta = \(String(describing: attributeValueDelta))")
 //                NSLog("PGLFilterAttributeNumber incrementValueDelta newValue \(newValue)")
 
-                aSourceFilter.setNumberValue(newValue: newValue as NSNumber, keyName: attributeName!)
+                aSourceFilter?.setNumberValue(newValue: newValue as NSNumber, keyName: attributeName!)
                 postUIChange(attribute: self)
             }
 

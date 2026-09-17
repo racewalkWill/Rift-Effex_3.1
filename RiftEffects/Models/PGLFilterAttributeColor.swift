@@ -74,7 +74,7 @@ class PGLFilterAttributeColor: PGLFilterAttribute {
                 changedColor = CIColor(red: oldColor.red, green: oldColor.green, blue: oldColor.blue, alpha: newValue, colorSpace: rgbSpace)
             }
             if changedColor != nil {
-                aSourceFilter.setColorValue(newValue: changedColor!, keyName: attributeName!)
+                aSourceFilter?.setColorValue(newValue: changedColor!, keyName: attributeName!)
             }
 
 //            NSLog("PGLFilterAttribute setColor to \(changedColor)")

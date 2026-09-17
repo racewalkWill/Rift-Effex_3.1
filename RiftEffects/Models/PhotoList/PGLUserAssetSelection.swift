@@ -17,7 +17,8 @@ class PGLAlbumSource: @preconcurrency Hashable {
     var sectionSource: PHAssetCollection?
     var  assetFetch:  PHFetchResult<PHAsset>?
     var identifier: String
-    unowned var filterParm: PGLFilterAttribute?
+    weak var filterParm: PGLFilterAttribute?
+        // weak: the attribute can be released while this selection is still held
 
     lazy var albumTitle = sectionSource?.localizedTitle
 
@@ -441,7 +442,7 @@ class PGLUserAssetSelection {
 // MARK: titles
     func parmInputName() -> String {
         // answer filter name and parm name
-         let filterName = myTargetFilterAttribute?.aSourceFilter.descriptorDisplayName ?? ""
+         let filterName = myTargetFilterAttribute?.aSourceFilter?.descriptorDisplayName ?? ""
          let thisParmTitle = filterName + " " + ( myTargetFilterAttribute?.descriptiveNameDetail() ?? "")
          return thisParmTitle
     }

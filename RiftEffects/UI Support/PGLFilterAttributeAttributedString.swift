@@ -35,7 +35,7 @@ class PGLFilterAttributeAttributedString: PGLFilterAttribute {
             // create dict of font  then init attributedString with the string and the dict.
             if let myStringValue = value as? String {
                 let attributedString = NSAttributedString(string: myStringValue)
-                aSourceFilter.setAttributeStringValue(newValue: attributedString, keyName: attributeName!)
+                aSourceFilter?.setAttributeStringValue(newValue: attributedString, keyName: attributeName!)
                 parmInputState = .inputValueSet}
             }
         }
@@ -111,7 +111,7 @@ class PGLFilterAttributeData: PGLFilterAttribute {
         if attributeName != nil {
             guard let stringValue = value as? String else { return }  // guard for nil
             let valueData = stringValue.data(using: .isoLatin1) ?? Data()
-            aSourceFilter.setDataValue(newValue: valueData as NSData, keyName: attributeName!)
+            aSourceFilter?.setDataValue(newValue: valueData as NSData, keyName: attributeName!)
             parmInputState = .inputValueSet
         }
     }

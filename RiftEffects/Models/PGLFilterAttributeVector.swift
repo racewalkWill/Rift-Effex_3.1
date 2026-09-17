@@ -209,7 +209,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     /// coordinates and writes it into the actual CIFilter.
     func pushToFilter(renderSize: CGSize) {
         guard let canvasVector, attributeName != nil else { return }
-        aSourceFilter.setVectorValue(newValue: canvasVector.scaledFromCanvas(toRenderSize: renderSize), keyName: attributeName!)
+        aSourceFilter?.setVectorValue(newValue: canvasVector.scaledFromCanvas(toRenderSize: renderSize), keyName: attributeName!)
         appliedRenderSize = renderSize
     }
 
@@ -362,7 +362,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
                     setVectorStartPoint()
                     setRandomVectorEndPoint()
                 varyState = .VaryPt1Pt2 // move to next state for both from and to points set
-                aSourceFilter.startAnimation(attributeTarget: self)
+                aSourceFilter?.startAnimation(attributeTarget: self)
 //                NSLog("PGLFilterAttributeVector varyState .Initial")
 
             case .VaryPt1:
@@ -371,7 +371,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
                 varyState = .Initial
             case .VaryPt1Pt2:
 //                NSLog("PGLFilterAttributeVector varyState .VaryPt1Pt2")
-                aSourceFilter.stopAnimation(attributeTarget: self)
+                aSourceFilter?.stopAnimation(attributeTarget: self)
                  varyState = .Initial
 
             case .DissolveWrapper:
@@ -394,7 +394,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     }
 
     func removeWrapperFilter() {
-        aSourceFilter.removeWrapperFilter()
+        aSourceFilter?.removeWrapperFilter()
     }
 
 // MARK: Vector Scaling

@@ -56,7 +56,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
 
         if attributeName != nil {
             if let newImage = value as? CIImage {
-                aSourceFilter.setImageValue(newValue: newImage, keyName: attributeName!) }
+                aSourceFilter?.setImageValue(newValue: newImage, keyName: attributeName!) }
             }
     }
 
@@ -149,7 +149,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
         if resetSuccess {
             guard let currentImageResized = inputCollection?.getCurrentImage() else
             { return }
-            aSourceFilter.setImageValue(newValue: currentImageResized, keyName: self.attributeName!)
+            aSourceFilter?.setImageValue(newValue: currentImageResized, keyName: self.attributeName!)
         }
 
     }
@@ -251,7 +251,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
         // set the current video frame into the parm
         if inputCollection?.currentImageIsVideo() ?? false {
             if let ciVideoFrame =  inputCollection?.getCurrentImage() {
-                aSourceFilter.setImageValue(newValue: ciVideoFrame, keyName: attributeName!)
+                aSourceFilter?.setImageValue(newValue: ciVideoFrame, keyName: attributeName!)
             }
         }
     }

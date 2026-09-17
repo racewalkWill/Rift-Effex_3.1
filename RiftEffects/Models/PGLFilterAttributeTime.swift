@@ -35,7 +35,7 @@ class PGLFilterAttributeTime: PGLFilterAttribute {
                 // see addStepTime on the Transition filter
             uiSliderValue = newRate
             parmInputState = .inputValueSet
-            aSourceFilter.setTimerDt(lengthSeconds: newRate )
+            aSourceFilter?.setTimerDt(lengthSeconds: newRate )
         }
 
     }

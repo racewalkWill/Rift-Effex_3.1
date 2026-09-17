@@ -280,7 +280,7 @@ extension PGLFilterAttribute{
         if inputCollection == nil {
            // get the input held by the filter
             // it is being set from the stack on each render loop
-            return aSourceFilter.inputImage()
+            return aSourceFilter?.inputImage() ?? nil
         }
         return inputCollection!.getCurrentImage()
     }
