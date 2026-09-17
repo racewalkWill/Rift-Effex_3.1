@@ -114,7 +114,11 @@ static let LogRenderTargetSize = false
     }
     var detectors = [any PGLDetection]()
     lazy var thumbNail = getThumbnail() // only set when referenced need to reset on changes..
-    unowned var wrapper: PGLDissolveWrapperFilter?
+    weak var wrapper: PGLDissolveWrapperFilter?
+        // weak: a released wrapper reads back as nil instead of trapping.
+        // NOTE: setWrapper(outputFilter:detector:) is currently only called from
+        // commented-out code in PGLSelectParmController. If that feature is re-enabled
+        // the caller must hold the wrapper strongly - this reference will not keep it alive.
 private  var userDescription: String?
 
     var isAverageLuminanceNearZero = false

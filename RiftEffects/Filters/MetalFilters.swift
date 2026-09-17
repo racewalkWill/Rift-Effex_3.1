@@ -288,22 +288,21 @@ class MetalFilter: CIFilter, MetalRenderable
     
     lazy var ciMetalContext: CIContext =
     {
-        [unowned self] in
-        
+        // immediately-invoked lazy initializer: the closure runs once on first
+        // access and is then discarded, so it neither escapes nor forms a cycle.
+        // No capture list is needed and self cannot be dangling here.
         return CIContext(mtlDevice: self.device)
     }()
     
     lazy var commandQueue: any MTLCommandQueue =
     {
-        [unowned self] in
-        
+        // immediately-invoked lazy initializer - see ciMetalContext above
         return self.device.makeCommandQueue()
     }()!
     
     lazy var defaultLibrary: any MTLLibrary =
     {
-        [unowned self] in
-        
+        // immediately-invoked lazy initializer - see ciMetalContext above
         return self.device.makeDefaultLibrary()!
     }()
     
