@@ -80,6 +80,8 @@ extension PGLFilterStack {
                 mapTargetSize = CGSize(width: cdStack.globalSizeWidth, height: cdStack.globalSizeHeight)
             }
 
+            logLoadSizeDiagnostic(cdStack: cdStack)
+
 
             // read and load filters
             let sortDescription = NSSortDescriptor(key: "stackPosition", ascending: true)
@@ -103,6 +105,146 @@ extension PGLFilterStack {
             self.setFiltersStackPosition()
         }
 
+    // MARK: load diagnostic
+
+    /// DIAGNOSTIC 2026-09-18: every image the stack loads is cached and scaled to
+    /// RenderTargetSize (PGLAsset #runCacheLoad, #startImageRequestTask,
+    /// PGLImageList #scaleToFrame), so a RenderTargetSize carrying pixels where it used
+    /// to carry points multiplies the footprint of a loaded stack by the square of the
+    /// display scale. Log the sizes at load: compare RenderTargetSize against the point
+    /// size of the window, and against the size this stack was saved with.
+    func logLoadSizeDiagnostic(cdStack: CDFilterStack) {
+        let displayScale = UITraitCollection.current.displayScale
+        let savedWidth = cdStack.globalSizeWidth
+        let savedHeight = cdStack.globalSizeHeight
+        let filterCount = cdStack.filters?.count ?? 0
+        let pointWidth = displayScale > 0 ? RenderTargetSize.width / displayScale : RenderTargetSize.width
+        let pointHeight = displayScale > 0 ? RenderTargetSize.height / displayScale : RenderTargetSize.height
+
+        Logger(subsystem: LogSubsystem, category: LogMemoryRelease).notice("DIAGNOSTIC stack load '\(self.stackName, privacy: .public)' filters = \(filterCount, privacy: .public) RenderTargetSize = \(RenderTargetSize.width, privacy: .public) x \(RenderTargetSize.height, privacy: .public) savedGlobalSize = \(savedWidth, privacy: .public) x \(savedHeight, privacy: .public) displayScale = \(displayScale, privacy: .public) RenderTargetSize in points = \(pointWidth, privacy: .public) x \(pointHeight, privacy: .public)")
+    }
+
+    // MARK: release CoreData graph
+
+    /// Turn the Core Data rows this stack realized back into faults, then drop the
+    /// in-memory references to them.
+    ///
+    /// Managed objects hold each other strongly through fired relationship faults -
+    /// CDFilterStack.filters / CDStoredFilter.stack, CDStoredFilter.input /
+    /// CDParmImage.filter, CDParmImage.inputAssets / CDImageList.parm - so a realized
+    /// stack graph is a reference cycle. Releasing the PGLFilterStack and its filters is
+    /// not enough: ARC never collects a cycle, so every stack the user opens leaves its
+    /// rows in memory for the life of the process even though the contexts do not retain
+    /// their registered objects.
+    ///
+    /// refresh(_ :mergeChanges: false) turns a row into a fault, which breaks its strong
+    /// references to the related rows. The row stays valid and refires from the store on
+    /// next access - unlike NSManagedObjectContext #reset, which invalidates every
+    /// outstanding reference including any fetchedResultsController results.
+    ///
+    /// Faulting only the root CDFilterStack is not enough - the filter / parm / value
+    /// cluster still holds itself - so every row reached from the stack is faulted. The
+    /// CDImageList rows do not need to be visited: a CDImageList is only reachable
+    /// through CDParmImage.inputAssets, so faulting the CDParmImage releases it.
+    ///
+    /// Call at a teardown boundary only - see PGLAppStack #releaseTopStack - and always
+    /// after a save or a rollback. A row with unsaved changes is retained by its context
+    /// until then, and faulting it would discard the edit, so those rows are skipped.
+    ///
+    /// This is deliberately not part of releaseVars(). #removeAllFilters routes through
+    /// releaseVars() and the removed filters still need storedFilter set so the next
+    /// #writeCDStack can unlink them from the saved stack.
+    func releaseCDGraph() {
+        var cdRows = [NSManagedObject]()
+        var visitedStacks = Set<ObjectIdentifier>()
+
+        collectCDRows(into: &cdRows, visited: &visitedStacks)
+        faultCDRows(cdRows)
+
+        visitedStacks.removeAll()
+        releaseCDVars(visited: &visitedStacks)
+    }
+
+    /// Gather every Core Data row held by this stack, its filters and its child stacks.
+    ///
+    /// Walks the PGL side references only - no Core Data relationship is fired here, so a
+    /// row that a rollback already discarded cannot raise an inaccessible fault.
+    /// Child stacks are shared (an image parm and its image list can reach the same
+    /// stack) so visited guards against walking one twice.
+    fileprivate func collectCDRows(into cdRows: inout [NSManagedObject], visited: inout Set<ObjectIdentifier>) {
+        guard visited.insert(ObjectIdentifier(self)).inserted
+        else { return }
+
+        if let cdStack = storedStack {
+            cdRows.append(cdStack)
+        }
+
+        for aFilter in activeFilters + removedFilters {
+            if let cdFilter = aFilter.storedFilter {
+                cdRows.append(cdFilter)
+            }
+            for anAttribute in aFilter.attributes {
+                if let cdParmValue = anAttribute.storedParmValue {
+                    cdRows.append(cdParmValue)
+                }
+                if let cdParmImage = (anAttribute as? PGLFilterAttributeImage)?.storedParmImage {
+                    cdRows.append(cdParmImage)
+                }
+                anAttribute.inputStack?.collectCDRows(into: &cdRows, visited: &visited)
+                anAttribute.inputCollection?.inputStack?.collectCDRows(into: &cdRows, visited: &visited)
+            }
+        }
+    }
+
+    /// Refresh the collected rows into faults. Grouped by context so each refresh runs on
+    /// the queue of the context that owns the row.
+    fileprivate func faultCDRows(_ cdRows: [NSManagedObject]) {
+        var idsByContext = [ObjectIdentifier: (context: NSManagedObjectContext, rowIDs: [NSManagedObjectID])]()
+
+        for aRow in cdRows {
+            guard let context = aRow.managedObjectContext
+            else { continue }
+                // a nil context means the row was already discarded - a rolled back insert
+            idsByContext[ObjectIdentifier(context), default: (context, [NSManagedObjectID]())].rowIDs.append(aRow.objectID)
+        }
+
+        for (_, group) in idsByContext {
+            let context = group.context
+            let rowIDs = group.rowIDs
+                // pass the ids and re-resolve inside the block - a managed object is not
+                // Sendable and #performAndWait takes a @Sendable closure
+            context.performAndWait {
+                for aRowID in rowIDs {
+                    guard let aRow = context.registeredObject(for: aRowID)
+                    else { continue }
+                    if aRow.isFault || aRow.hasChanges {
+                        // already a fault, or holds an unsaved edit that a
+                        // mergeChanges: false refresh would discard
+                        continue
+                    }
+                    context.refresh(aRow, mergeChanges: false)
+                }
+            }
+        }
+    }
+
+    /// Drop the in-memory references to the Core Data rows so the faults are released when
+    /// the stack, filters and attributes are released.
+    fileprivate func releaseCDVars(visited: inout Set<ObjectIdentifier>) {
+        guard visited.insert(ObjectIdentifier(self)).inserted
+        else { return }
+
+        for aFilter in activeFilters + removedFilters {
+            for anAttribute in aFilter.attributes {
+                anAttribute.inputStack?.releaseCDVars(visited: &visited)
+                anAttribute.inputCollection?.inputStack?.releaseCDVars(visited: &visited)
+                anAttribute.storedParmValue = nil
+                (anAttribute as? PGLFilterAttributeImage)?.storedParmImage = nil
+            }
+            aFilter.storedFilter = nil
+        }
+        storedStack = nil
+    }
 
     func forceSaveToNewCDVars(moContext: NSManagedObjectContext) {
         // a filter deleted from the stack is not included in this refresh..

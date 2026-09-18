@@ -234,7 +234,9 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
     func stackProviderHasRows() -> Bool {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         let provider = PGLStackProvider(with: appDelegate!.dataWrapper.persistentContainer)
-        provider.setFetchControllerForBackgroundContext()
+        provider.setBackgroundContext()
+            // #filterStackCount is a count request - it does not need a
+            // fetchedResultsController, and this runs on every navigation
         let stackRowCount = provider.filterStackCount()
         provider.reset()
         return stackRowCount > 0

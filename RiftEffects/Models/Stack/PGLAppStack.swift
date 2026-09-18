@@ -73,8 +73,11 @@ class PGLAppStack {
         let provider = PGLStackProvider(with: appDelegate!.dataWrapper.persistentContainer )
         // set the provider with a background context
 
-         provider.setFetchControllerForBackgroundContext()
+         provider.setBackgroundContext()
             // use background becuase this is for the imageController, filter, parms controllers
+            // no fetchedResultsController: this provider only reads and writes the current
+            // stack. An app lifetime controller over every CDFilterStack row would retain
+            // all of them (and their realized graphs) for the life of the process.
         
         return provider
     }()
@@ -343,9 +346,37 @@ class PGLAppStack {
          // 2022-07-23  the line to set to nil did not fix memory
         videoMgr.resetVars()
 
+        // Release the PHCachingImageManager images. PGLAsset #runCacheLoad starts
+        // caching every asset of every image list at RenderTargetSize with
+        // .highQualityFormat / .exact, and nothing stopped it - the cache grew for the
+        // life of the process, and it holds no heap instances the memory graph lists so
+        // it does not show up in an instance count.
+        // The all-assets form is the reliable one: #stopCaching(for:targetSize:) only
+        // matches requests made at the same targetSize, and RenderTargetSize changes
+        // with rotation and with the loaded stack's saved globalSize.
+        Task { [photoMgr] in
+            await photoMgr.stopCaching()
+        }
+
+        // Fault the Core Data rows this stack realized before the filters drop their
+        // references to them - releaseCDGraph needs storedFilter, storedParmImage and
+        // storedParmValue still set to find every realized row. Without it the rows
+        // leak: they hold each other through their relationships, so ARC never
+        // collects them once the pglStack is released.
+        // The rollbackStack() above has discarded the unsaved changes that
+        // releaseCDGraph requires to be gone.
+        outputStack.releaseCDGraph()
+
+        // Drop the per asset RenderTargetSize CIImages. Also before releaseVars(),
+        // which nils the inputCollection this walk reaches the assets through.
+        outputStack.releaseCachedImages()
+
         outputStack.releaseVars()
 //        dataProvider.reset() 
-            // too drastic?  this applies to ALL retreived objects..
+            // too drastic - #reset invalidates every object retrieved through this
+            // context, including any fetchedResultsController results. The
+            // releaseCDGraph() above faults only the rows this stack realized, and a
+            // fault stays valid and refires from the store on next access.
         resetNeedsRedraw()
         currentFilter = nil
         targetAttribute = nil

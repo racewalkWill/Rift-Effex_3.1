@@ -161,6 +161,35 @@ class PGLFilterStack: Equatable, Hashable  {
         }
     }
 
+    /// Release the images cached by every asset this stack loaded.
+    ///
+    /// Each PGLAsset holds a RenderTargetSize CIImage plus a PGLCenterScaler built from
+    /// it, so a large stack holds one full size image per input image. releaseVars()
+    /// cannot do this - it also runs when an image list is merely replaced, where the
+    /// new list can share assets with the old one. See PGLAsset #releaseCachedImages.
+    ///
+    /// Call before releaseVars(), which nils the inputCollection this walk needs.
+    func releaseCachedImages() {
+        var visitedStacks = Set<ObjectIdentifier>()
+        releaseCachedImages(visited: &visitedStacks)
+    }
+
+    fileprivate func releaseCachedImages(visited: inout Set<ObjectIdentifier>) {
+        guard visited.insert(ObjectIdentifier(self)).inserted
+        else { return }  // child stacks are shared - do not walk one twice
+
+        for aFilter in activeFilters + removedFilters {
+            for anAttribute in aFilter.attributes {
+                anAttribute.inputStack?.releaseCachedImages(visited: &visited)
+                anAttribute.inputCollection?.inputStack?.releaseCachedImages(visited: &visited)
+
+                for anAsset in anAttribute.inputCollection?.imageAssets ?? [PGLAsset]() {
+                    anAsset.releaseCachedImages()
+                }
+            }
+        }
+    }
+
     // MARK: Filter access/move
     func hasAnimationFilter() -> Bool {
       return  activeFilters.contains { (aFilter: PGLSourceFilter) -> Bool in

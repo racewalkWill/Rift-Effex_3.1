@@ -77,6 +77,43 @@ class PGLStackProvider {
             }
     }
 
+    /// Create the provider's background context without a fetchedResultsController.
+    ///
+    /// For the providers that only read and write the current stack. An FRC retains its
+    /// fetchedObjects, so building one over every CDFilterStack row keeps all of those
+    /// rows - and every object graph realized from them - alive as long as the provider.
+    func setBackgroundContext() {
+        providerManagedObjectContext = persistentContainer.newBackgroundContext()
+    }
+
+    /// The distinct stack types (album names) in the store, ascending.
+    ///
+    /// Fetches dictionaries, so no managed object is registered in the context and no row
+    /// is realized. Callers need the names only - the save sheet album picker.
+    func stackTypes() -> [String] {
+        let context = providerManagedObjectContext ?? persistentContainer.viewContext
+
+        // build the request inside the block - NSFetchRequest is not Sendable
+        return context.performAndWait { () -> [String] in
+            let typeKey = "type"
+            let fetchRequest = NSFetchRequest<NSDictionary>(entityName: "CDFilterStack")
+            fetchRequest.resultType = .dictionaryResultType
+            fetchRequest.propertiesToFetch = [typeKey]
+            fetchRequest.returnsDistinctResults = true
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: typeKey, ascending: true)]
+
+            do {
+                let rows = try context.fetch(fetchRequest)
+                return rows.compactMap({ $0[typeKey] as? String }).filter({ !$0.isEmpty })
+            } catch {
+                // answer no album names instead of crashing - the save sheet still
+                // takes a typed in album name
+                Logger(subsystem: LogSubsystem, category: LogNavigation).error("###\(#function): Failed to fetch stack types: \(error)")
+                return [String]()
+            }
+        }
+    }
+
         func setFetchControllerForBackgroundContext() {
             providerManagedObjectContext = persistentContainer.newBackgroundContext()
             let fetchRequest: NSFetchRequest<CDFilterStack> = CDFilterStack.fetchRequest()

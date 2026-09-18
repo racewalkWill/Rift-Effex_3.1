@@ -75,7 +75,19 @@ class PGLAsset: Hashable, Equatable, Identifiable {
         NSLog("\(#function) start caching \(itemsToCache.count) assets")
         let appStack = (UIApplication.shared.delegate as? AppDelegate)?.appStack
         Task {
-            await appStack?.photoMgr.startCaching(for: itemsToCache, targetSize: RenderTargetSize)
+            let cacheTargetSize = RenderTargetSize
+            await appStack?.photoMgr.startCaching(for: itemsToCache, targetSize: cacheTargetSize)
+
+            // DIAGNOSTIC 2026-09-18: the PHCachingImageManager holds a decoded image per
+            // asset at cacheTargetSize (.highQualityFormat, .exact), which does not show
+            // up as a heap instance in the memory graph. Log the running count and the
+            // bytes it implies at 4 bytes per pixel, to compare against the app footprint.
+            if let photoMgr = appStack?.photoMgr {
+                let cachedCount = await photoMgr.cachedImageCount
+                let estimatedMB = (Double(cachedCount) * cacheTargetSize.width * cacheTargetSize.height * 4.0) / (1024.0 * 1024.0)
+                Logger(subsystem: LogSubsystem, category: LogMemoryRelease).notice("DIAGNOSTIC photo cache: added \(itemsToCache.count, privacy: .public) now caching \(cachedCount, privacy: .public) assets at \(cacheTargetSize.width, privacy: .public) x \(cacheTargetSize.height, privacy: .public) ~ \(estimatedMB, privacy: .public) MB")
+            }
+
             for item in itemsToCache {
                 NSLog("\(#function) startImageRequestTask for localIdentifer \(item.localIdentifier)")
                 item.startImageRequestTask()
@@ -119,6 +131,35 @@ class PGLAsset: Hashable, Equatable, Identifiable {
         assetVideo?.releaseVars()
 
         }
+
+    /// Drop the cached images. ciImage is a full RenderTargetSize CIImage and
+    /// centerScaler holds a transform built from it, so an asset still referenced
+    /// anywhere keeps that image alive.
+    ///
+    /// Deliberately not part of releaseVars(). That runs from the
+    /// PGLFilterAttribute #inputCollection didSet, so it fires every time an image
+    /// list is replaced - and #setImageCollectionInput reads imageAtTargetSize() of
+    /// the new first asset right after, which can be an asset the replaced list also
+    /// held (PGLUserAssetSelection #merge keeps the current selectedAssets). Nilling
+    /// ciImage there would blank an image still in use. Everything releaseVars()
+    /// clears is recoverable - sourceInfo is a lazy var that refetches - and ciImage
+    /// is not, short of a new PHImageManager request.
+    ///
+    /// Call at a teardown boundary only: PGLFilterStack #releaseCachedImages, reached
+    /// from PGLAppStack #releaseTopStack.
+    @MainActor func releaseCachedImages() {
+        // Cancel an in-flight request first: its completion assigns self.ciImage back
+        // on the main actor, which would restore the image after this release.
+        if let inFlightRequestID = imageRequestID {
+            let imageCache = cache
+            imageRequestID = nil
+            Task { await imageCache?.cancelImageRequest(for: inFlightRequestID) }
+        }
+        onImageReady = nil
+        centerScaler = nil
+        ciImage = nil
+        thumbnail = nil
+    }
 
 
     func isNull() -> Bool {

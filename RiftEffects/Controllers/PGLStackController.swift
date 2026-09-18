@@ -170,10 +170,10 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
 
         
         // provide the album names (aka stackTypes) for the save-sheet's album picker menu
-        if let sections = appStack.dataProvider.fetchedResultsController.sections {
-            existingStackTypes = sections.map({$0.name})
-        } else
-            { existingStackTypes = [String]() }
+        existingStackTypes = appStack.dataProvider.stackTypes()
+            // a dictionary fetch of the distinct types - was the section names of a
+            // fetchedResultsController over every CDFilterStack row, which retained
+            // all of them
     }
 
 
