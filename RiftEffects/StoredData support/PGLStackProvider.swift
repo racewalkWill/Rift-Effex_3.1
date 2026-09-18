@@ -153,26 +153,19 @@ class PGLStackProvider {
             }
         }
 
-    func delete(stack: FilterStack, shouldSave: Bool = true) {
-        guard let cdStack = providerManagedObjectContext.registeredObject(for: stack.objectID)
-                else { return }
-        guard let context = cdStack.managedObjectContext else {
-            // missing managedObjectContext occurs when in a filtered mode search and the stack is deleted successfully
-            // but remains in the filtered view. Then a second 'delete' action will not have a managedObjectContext
-            // cancel or change in the search criteria will update and not show this deleted stack
-            // annoying !!
-            return
-        }
-        let objectID = cdStack.objectID
-        context.perform { [objectID] in
-            if let object = context.registeredObject(for: objectID) ?? (try? context.existingObject(with: objectID)) {
-                context.delete(object)
-
-                if shouldSave {
-                    context.save(with: .deletePost)
-                }
+    @discardableResult
+    func delete(stack: FilterStack, shouldSave: Bool = true) -> Bool {
+        var didDelete = false
+        providerManagedObjectContext.performAndWait {
+            guard let cdStack = try? providerManagedObjectContext.existingObject(with: stack.objectID)
+            else {
+                // already gone - e.g. a second delete on a row removed once already
+                return
             }
+            providerManagedObjectContext.delete(cdStack)
+            didDelete = shouldSave ? providerManagedObjectContext.save(with: .deletePost) : true
         }
+        return didDelete
     }
 
     func rollback() {
