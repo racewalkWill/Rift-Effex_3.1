@@ -374,6 +374,17 @@ class Renderer: NSObject, MTKViewDelegate {
             // this instance's centerPoint is manipulated directly (userPan/userPinch) in
             // live drawable-pixel coordinates, not the canonical FilterCanvasSize the
             // regular attribute-UI role uses - see the comment on PGLScaleDownFrame.workingSize.
+
+            // Seat the centerPoint in those live pixels. PGLScaleDownFrame
+            // defaults centerPoint to FilterCanvasSize/2 = (520, 384), which is
+            // correct for the attribute-UI role but is read as drawable pixels
+            // here (workingSize == RenderTargetSize makes outputImageBasic's
+            // conversion identity). Left at the default, the first userPan read
+            // that canvas value as a pixel center and snapped the image to the
+            // lower-left corner of the drawable. Centering also makes the
+            // isFullScreen branch of drawBasicCentered actually draw centered
+            // rather than anchored at the CoreImage lower-left origin.
+        outputZoomPanFilter?.centerPoint = CGPoint(x: size.width / 2, y: size.height / 2)
         appStack.resetDrawableSize()
             // vector/rect parm positions no longer need reactive shifting here - they're
             // stored in FilterCanvasSize-relative coordinates and converted to RenderTargetSize

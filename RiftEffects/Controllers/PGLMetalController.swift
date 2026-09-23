@@ -371,7 +371,11 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
                 guard let startCenter = startingPanCenter
                     else { return }
                 let changeFromStartPoint = sender.translation(in: view)
-                let currentPoint = CGPoint.init(x: (startCenter.x + changeFromStartPoint.x), y: (startCenter.y - changeFromStartPoint.y))
+                    // translation is in points, centerPoint is in native drawable
+                    // pixels - see Renderer.mtkViewSize. Unscaled, the image
+                    // panned at 1/2 or 1/3 of finger speed by device scale.
+                let pointsToPixels = view.contentScaleFactor
+                let currentPoint = CGPoint.init(x: (startCenter.x + (changeFromStartPoint.x * pointsToPixels)), y: (startCenter.y - (changeFromStartPoint.y * pointsToPixels)))
                 // need to invert y axis for LLO
                viewPanFilter.centerPoint = currentPoint
             default:
