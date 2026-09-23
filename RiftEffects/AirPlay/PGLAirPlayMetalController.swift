@@ -37,6 +37,11 @@ class PGLAirPlayMetalController: PGLMetalController {
 
     //MARK: View Load/Unload
 
+    /// This controller is the root of the external display's own scene.
+    /// Registering an external display accessory here would nest an AirPlay
+    /// scene inside the AirPlay scene.
+    override var providesAirPlayAccessory: Bool { return false }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

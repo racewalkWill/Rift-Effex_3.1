@@ -226,6 +226,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       options: UIScene.ConnectionOptions
     ) -> UISceneConfiguration {
 
+            // This role branch is the iOS 26 path, where the system connects the
+            // external display scene on its own. iOS 27 connects it only for a
+            // registered scene accessory - see
+            // PGLMetalController #registerAirPlayAccessory.
         if connectingSceneSession.role == .windowExternalDisplayNonInteractive {
             let airPlayConfig = UISceneConfiguration(
                 name: "AirPlayScene",

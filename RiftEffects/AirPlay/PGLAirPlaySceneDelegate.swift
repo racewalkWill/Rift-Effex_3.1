@@ -39,6 +39,26 @@ class PGLAirPlaySceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
         NSLog("PGLAirPlaySceneDelegate: scene connected")
 
+        connectChildRenderer()
+            // makeKeyAndVisible has run viewWillAppear #setUpMetalRender, so the
+            // PGLRenderOnAirPlay exists now. Connect here as well as in
+            // #sceneWillEnterForeground - a scene connected from an iOS 27 scene
+            // accessory is already foreground and may not send that event.
+
+    }
+
+    /// Point the main Renderer at the AirPlay Renderer so the main render loop
+    /// drives the external display. Safe to call more than once.
+    func connectChildRenderer() {
+        guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
+          else { return }
+
+        if let mainRender = myAppDelegate.mainMetalController?.metalRender {
+            if let childDeviceRenderer =
+                myAppDelegate.airPlayDeviceController?.metalRender {
+                mainRender.childDeviceRenderer = childDeviceRenderer as? PGLRenderOnAirPlay
+            }
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -65,18 +85,8 @@ class PGLAirPlaySceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        myAppDelegate.airPlayDeviceController =  startViewController as? PGLMetalDeviceController
 
 
-        guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
-                  else { return }
         airPlayViewController?.setUpMetalRender()
-
-        
-        if let mainRender = myAppDelegate.mainMetalController?.metalRender {
-            if let childDeviceRenderer =
-                myAppDelegate.airPlayDeviceController?.metalRender {
-                mainRender.childDeviceRenderer = childDeviceRenderer as? PGLRenderOnAirPlay
-            }
-
-        }
+        connectChildRenderer()
 
     }
 

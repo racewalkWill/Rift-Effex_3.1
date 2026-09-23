@@ -72,6 +72,55 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 //
 //    }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        registerAirPlayAccessory()
+            // setUpMetalRender() stays in viewWillAppear - see the commented
+            // out viewDidLoad above
+    }
+
+    // MARK: AirPlay external display
+
+    /// Holds the `UISceneAccessoryRegistration` answered by
+    /// `registerSceneAccessory(_:)`. Swift does not allow `@available` on a
+    /// stored property, so the iOS 27 only type is held as AnyObject and cast
+    /// at the use site.
+    private var externalDisplayAccessory: AnyObject?
+
+    /// False in `PGLAirPlayMetalController`, which is already the external
+    /// display's own root controller and must not register a nested AirPlay
+    /// scene inside itself.
+    var providesAirPlayAccessory: Bool { return true }
+
+    /// iOS 27 no longer connects the `.windowExternalDisplayNonInteractive`
+    /// scene on its own. The scene now arrives only while a view controller
+    /// has an external display scene accessory registered, so the
+    /// UIApplicationSceneManifest entry and the role check in
+    /// AppDelegate #application(_:configurationForConnecting:options:) are not
+    /// enough by themselves. Both are still needed for iOS 26, which is the
+    /// deployment target and still uses the old automatic connection.
+    /// When several controllers register, the system presents the one belonging
+    /// to the topmost controller, so the full screen PGLMetalController takes
+    /// over from the compact one without extra bookkeeping.
+    func registerAirPlayAccessory() {
+        guard providesAirPlayAccessory,
+              externalDisplayAccessory == nil
+        else { return }
+
+        if #available(iOS 27.0, *) {
+            let sceneConfiguration = UISceneConfiguration(
+                name: "AirPlayScene",
+                sessionRole: .windowExternalDisplayNonInteractive)
+            sceneConfiguration.delegateClass = PGLAirPlaySceneDelegate.self
+
+            let accessory = UISceneAccessory.externalNonInteractive(sceneConfiguration: sceneConfiguration)
+            let registration = registerSceneAccessory(accessory)
+            externalDisplayAccessory = registration
+
+            Logger(subsystem: LogSubsystem, category: LogMetal).info("\( String(describing: self) + "-" + #function) registered, isAvailable = \(registration.isAvailable)")
+        }
+    }
+
     func setUpMetalRender() {
         // called by viewDidLoad and viewWillAppear
         guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
