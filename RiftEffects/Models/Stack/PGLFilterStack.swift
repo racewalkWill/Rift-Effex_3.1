@@ -737,13 +737,17 @@ class PGLFilterStack: Equatable, Hashable  {
             }
             let cropTo = thisWindowSize ?? RenderTargetSize
             if thisImage != nil {
-                if thisImage!.extent.isInfinite {
+                let targetRect = CGRect(origin: CGPoint.zero, size: cropTo)
+                if !targetRect.contains(thisImage!.extent) {
                     // issue CIColorDodgeBlendMode -> CIZoomBlur -> CIToneCurve
                     // -> CIColorInvert -> CIHexagonalPixellate -> CICircleSplashDistortion)
-                    // clamp and crop if infinite extent
-//                  NSLog("PGLFilterStack imageUpdate thisImage has input of infinite extent")
+                    // crop an infinite extent, and also a finite extent larger than the
+                    // render target. CIZoomBlur grows a 1178x1668 input to a finite
+                    // 10220x14471 extent; a whole-image filter next (CIColorThresholdOtsu
+                    // histogram) then renders all 148 MP every frame - GBs of memory.
+//                  NSLog("PGLFilterStack imageUpdate thisImage extent exceeds the render target")
 
-                    thisImage = thisImage!.cropForInfiniteExtent(cropSize: cropTo)
+                    thisImage = thisImage!.cropped(to: targetRect)
 //                    if doPrintCropClamp {   NSLog("PGLFilterStack imageUpdate clamped and cropped to  \(String(describing: thisImage?.extent))") }
                 }
                 filter.setInput(image: thisImage, source: nil)
