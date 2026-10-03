@@ -92,6 +92,31 @@ actor PGLCachedImageMgr {
         return requestID
     }
     
+    /// Request one image and answer the PHImageManager error instead of only logging it.
+    ///
+    /// #requestImage(for:targetSize:completion:) reports every failure as nil. This
+    /// variant keeps the PHImageErrorKey error so diagnostics (the cloud import tests)
+    /// can report why an asset did not load. A degraded (lower quality) callback is
+    /// skipped - the continuation resumes only on the final callback.
+    func requestImageResult(for asset: PGLAsset, targetSize: CGSize) async -> Result<UIImage, CachedImageManagerError> {
+        let phAsset = asset.asset
+        return await withCheckedContinuation { continuation in
+            imageManager.requestImage(for: phAsset, targetSize: targetSize, contentMode: imageContentMode, options: requestOptions) { image, info in
+                if let error = info?[PHImageErrorKey] as? (any Error) {
+                    continuation.resume(returning: .failure(.error(error)))
+                } else if let cancelled = (info?[PHImageCancelledKey] as? NSNumber)?.boolValue, cancelled {
+                    continuation.resume(returning: .failure(.cancelled))
+                } else if (info?[PHImageResultIsDegradedKey] as? NSNumber)?.boolValue ?? false {
+                    return // the final image follows in another callback
+                } else if let image = image {
+                    continuation.resume(returning: .success(image))
+                } else {
+                    continuation.resume(returning: .failure(.failed))
+                }
+            }
+        }
+    }
+
     func cancelImageRequest(for requestID: PHImageRequestID) {
         imageManager.cancelImageRequest(requestID)
     }

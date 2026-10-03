@@ -125,6 +125,7 @@
 		A3B6EC0D2E1C404400EBCE55 /* PGLMusic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B6EC0C2E1C404400EBCE55 /* PGLMusic.swift */; };
 		A3B785162B224E6F00F3DA68 /* PGLCameraViewFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B785152B224E6F00F3DA68 /* PGLCameraViewFilter.swift */; };
 		A3B785182B224FC300F3DA68 /* PGLCopyOutCIFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B785172B224FC300F3DA68 /* PGLCopyOutCIFilter.swift */; };
+		A3B85E8E307176DC00815965 /* PGLCloudImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B85E8D307176DC00815965 /* PGLCloudImportTests.swift */; };
 		A3BB63AD2F21915B001ADFE1 /* EstimatedRunTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BB63AC2F21915B001ADFE1 /* EstimatedRunTime.swift */; };
 		A3BB9E092B73ED4D0041F914 /* AVAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BB9E082B73ED4D0041F914 /* AVAssetExtension.swift */; };
 		A3BF503224D3299100CD5114 /* SurrealityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF503124D3299100CD5114 /* SurrealityUITests.swift */; };
@@ -363,6 +364,7 @@
 		A3B6EC0C2E1C404400EBCE55 /* PGLMusic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMusic.swift; sourceTree = "<group>"; };
 		A3B785152B224E6F00F3DA68 /* PGLCameraViewFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCameraViewFilter.swift; sourceTree = "<group>"; };
 		A3B785172B224FC300F3DA68 /* PGLCopyOutCIFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCopyOutCIFilter.swift; sourceTree = "<group>"; };
+		A3B85E8D307176DC00815965 /* PGLCloudImportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCloudImportTests.swift; sourceTree = "<group>"; };
 		A3BB63AC2F21915B001ADFE1 /* EstimatedRunTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstimatedRunTime.swift; sourceTree = "<group>"; };
 		A3BB9E082B73ED4D0041F914 /* AVAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAssetExtension.swift; sourceTree = "<group>"; };
 		A3BDD3CC290D95D000842B51 /* RiftEffects 2.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.2.xcdatamodel"; sourceTree = "<group>"; };
@@ -674,6 +676,7 @@
 				A3FF819E2DBC3A7600CD705C /* PGLFilterStackTests.swift */,
 				A3BF502824D3299100CD5114 /* Info.plist */,
 				A3C5A651304238D500FAFBC4 /* PGLCanvasSpaceTests.swift */,
+				A3B85E8D307176DC00815965 /* PGLCloudImportTests.swift */,
 			);
 			path = RiftEffectsTests;
 			sourceTree = "<group>";
@@ -1238,6 +1241,7 @@
 				A3FF819F2DBC3A7600CD705C /* PGLFilterStackTests.swift in Sources */,
 				A3BF515024D32D3400CD5114 /* PGLSourceFilterTests.swift in Sources */,
 				A3FF819D2DBC39F500CD705C /* PGLDataStoreTests.swift in Sources */,
+				A3B85E8E307176DC00815965 /* PGLCloudImportTests.swift in Sources */,
 			);
 		};
 		A3BF502924D3299100CD5114 /* Sources */ = {
