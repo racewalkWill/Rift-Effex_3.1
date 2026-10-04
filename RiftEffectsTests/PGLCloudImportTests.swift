@@ -402,6 +402,194 @@ struct DeviceLocalImageList: Codable {
         try publish(report: header + recorder.lines + ["\(Date()) \(summary), \(recorder.lines.count) event notifications"], named: reportName)
     }
 
+    // MARK: Orphan legacy filter delete
+
+    nonisolated static var orphanDeleteMarker: URL? {
+        try? snapshotFolder().appendingPathComponent("RUN_ORPHAN_DELETE")
+    }
+
+    nonisolated static var orphanDeleteEnabled: Bool {
+        guard let marker = orphanDeleteMarker else { return false }
+        return FileManager.default.fileExists(atPath: marker.path)
+    }
+
+    /// Report what #deleteOrphanLegacyFilters would delete - never saves.
+    @Test func orphanLegacyFilterDeleteDryRun() throws {
+        try publish(report: deleteOrphanLegacyFilters(commit: false), named: "OrphanDeleteDryRun")
+    }
+
+    /// Delete the legacy filters that belong to no stack. Enabled only by the
+    /// RUN_ORPHAN_DELETE marker in Documents/CloudImportSnapshots, removed by the run.
+    @Test(.enabled(if: PGLCloudImportTests.orphanDeleteEnabled, "push RUN_ORPHAN_DELETE to Documents/CloudImportSnapshots to enable"))
+    func orphanLegacyFilterDelete() throws {
+        if let marker = Self.orphanDeleteMarker {
+            try? FileManager.default.removeItem(at: marker)
+                // one run per marker
+        }
+        let report = deleteOrphanLegacyFilters(commit: true)
+        try publish(report: report, named: "OrphanDelete")
+        #expect(!report.contains(where: { $0.hasPrefix("SAVE FAILED") }))
+    }
+
+    /// CDStoredFilter rows with an archived ciFilter (the format before CDParmValue) and no
+    /// stack. No stack, library or child stack reaches them, so the app never loads them,
+    /// but they still sync - 89 MB of archive on 2026-10-04.
+    /// Deleted through the context, not NSBatchDeleteRequest, so the Cascade rules remove
+    /// their CDParmImage and CDImageList rows and the mirroring delegate exports the deletes.
+    /// A filter whose parm holds a child stack is skipped - the cascade would delete it.
+    func deleteOrphanLegacyFilters(commit: Bool) -> [String] {
+        let viewContext = persistentContainer.viewContext
+        var report = ["\(commit ? "DELETE" : "DRY RUN") orphan legacy filters on \(Self.deviceName()) started \(Date())"]
+
+        let request: NSFetchRequest<CDStoredFilter> = CDStoredFilter.fetchRequest()
+        request.predicate = NSPredicate(format: "stack == nil AND ciFilter != nil")
+        request.propertiesToFetch = ["ciFilterName", "stackPosition"]
+        let orphans = (try? viewContext.fetch(request)) ?? [CDStoredFilter]()
+
+        var deleted = 0
+        var skipped = 0
+        var parmImageCount = 0
+        var imageListCount = 0
+        for anOrphan in orphans {
+            let parms = (anOrphan.input as? Set<CDParmImage>) ?? Set<CDParmImage>()
+            let label = "\(anOrphan.ciFilterName ?? "nil") position \(anOrphan.stackPosition) - \(parms.count) parm images"
+            guard anOrphan.stack == nil else {
+                report.append("SKIP \(label): now belongs to a stack")
+                skipped += 1
+                continue
+            }
+            if parms.contains(where: { $0.inputStack != nil }) {
+                report.append("SKIP \(label): a parm holds a child stack")
+                skipped += 1
+                continue
+            }
+            parmImageCount += parms.count
+            imageListCount += parms.filter({ $0.inputAssets != nil }).count
+            report.append("\(commit ? "DELETE" : "WOULD DELETE") \(label)")
+            if commit {
+                viewContext.delete(anOrphan)  // Cascade deletes the parm images and their image lists
+            }
+            deleted += 1
+        }
+
+        if commit && viewContext.hasChanges {
+            do {
+                try viewContext.save()
+                report.append("store saved")
+            } catch {
+                report.append("SAVE FAILED: \(error.localizedDescription)")
+                viewContext.rollback()
+            }
+        }
+        report.insert("\(orphans.count) orphan legacy filters, \(deleted) \(commit ? "deleted" : "would delete") with \(parmImageCount) parm images and \(imageListCount) image lists, \(skipped) skipped", at: 1)
+        return report
+    }
+
+    // MARK: Stackless filter delete
+
+    nonisolated static var stacklessDeleteMarker: URL? {
+        try? snapshotFolder().appendingPathComponent("RUN_STACKLESS_DELETE")
+    }
+
+    nonisolated static var stacklessDeleteEnabled: Bool {
+        guard let marker = stacklessDeleteMarker else { return false }
+        return FileManager.default.fileExists(atPath: marker.path)
+    }
+
+    /// Report what #deleteStacklessFilters would delete - never saves.
+    @Test func stacklessFilterDeleteDryRun() throws {
+        try publish(report: deleteStacklessFilters(commit: false), named: "StacklessDeleteDryRun")
+    }
+
+    /// Delete every CDStoredFilter with no stack and everything only it reaches. Enabled
+    /// only by the RUN_STACKLESS_DELETE marker in Documents/CloudImportSnapshots, removed by the run.
+    @Test(.enabled(if: PGLCloudImportTests.stacklessDeleteEnabled, "push RUN_STACKLESS_DELETE to Documents/CloudImportSnapshots to enable"))
+    func stacklessFilterDelete() throws {
+        if let marker = Self.stacklessDeleteMarker {
+            try? FileManager.default.removeItem(at: marker)
+                // one run per marker
+        }
+        let report = deleteStacklessFilters(commit: true)
+        try publish(report: report, named: "StacklessDelete")
+        #expect(!report.contains(where: { $0.hasPrefix("SAVE FAILED") || $0.hasPrefix("ABORT") }))
+    }
+
+    /// CDStoredFilter rows with no stack - left behind when a filter is removed from a saved
+    /// stack (#writeCDStack #removeFromFilters nils the relationship, it does not delete the row).
+    /// Walks each one: its CDParmValue rows (values is a Nullify relationship, so they are
+    /// deleted explicitly), its CDParmImage rows, their CDImageList and CDImageData, and any
+    /// child stack on a parm with that stack's filters, recursively.
+    /// ABORTS without deleting anything if the walk reaches a stack that is not the child of
+    /// the parm it was reached from - that stack could be in the Library.
+    func deleteStacklessFilters(commit: Bool) -> [String] {
+        let viewContext = persistentContainer.viewContext
+        var report = ["\(commit ? "DELETE" : "DRY RUN") stackless filters on \(Self.deviceName()) started \(Date())"]
+
+        let request: NSFetchRequest<CDStoredFilter> = CDStoredFilter.fetchRequest()
+        request.predicate = NSPredicate(format: "stack == nil")
+        let stackless = (try? viewContext.fetch(request)) ?? [CDStoredFilter]()
+
+        var rows = [String: [NSManagedObject]]()  // kind : rows to delete
+        var visited = Set<NSManagedObjectID>()
+        var unsafe = [String]()
+
+        func add(_ row: NSManagedObject, kind: String) -> Bool {
+            guard visited.insert(row.objectID).inserted else { return false }
+            rows[kind, default: [NSManagedObject]()].append(row)
+            return true
+        }
+        func walk(filter: CDStoredFilter) {
+            guard add(filter, kind: "filters") else { return }
+            for aValue in (filter.values as? Set<CDParmValue>) ?? Set<CDParmValue>() {
+                _ = add(aValue, kind: "parmValues")
+            }
+            for aParm in (filter.input as? Set<CDParmImage>) ?? Set<CDParmImage>() {
+                guard add(aParm, kind: "parmImages") else { continue }
+                if let imageList = aParm.inputAssets { _ = add(imageList, kind: "imageLists") }
+                if let imageData = aParm.parmImageData { _ = add(imageData, kind: "imageData") }
+                if let childStack = aParm.inputStack {
+                    guard childStack.outputToParm?.objectID == aParm.objectID else {
+                        unsafe.append("'\(childStack.type ?? "nil") / \(childStack.title ?? "nil")' is not the child of the parm that reaches it")
+                        continue
+                    }
+                    guard add(childStack, kind: "childStacks") else { continue }
+                    report.append("  child stack '\(childStack.type ?? "nil") / \(childStack.title ?? "nil")' - \(childStack.filters?.count ?? 0) filters")
+                    for aChildFilter in (childStack.filters as? Set<CDStoredFilter>) ?? Set<CDStoredFilter>() {
+                        walk(filter: aChildFilter)
+                    }
+                }
+            }
+        }
+        for aFilter in stackless {
+            walk(filter: aFilter)
+        }
+
+        let kinds = ["filters", "childStacks", "parmImages", "imageLists", "imageData", "parmValues"]
+        let counts = kinds.map({ "\(rows[$0]?.count ?? 0) \($0)" }).joined(separator: ", ")
+        report.insert("\(stackless.count) stackless filters reach \(counts)", at: 1)
+
+        guard unsafe.isEmpty else {
+            report.append("ABORT - nothing deleted:")
+            report.append(contentsOf: unsafe.map({ "  \($0)" }))
+            return report
+        }
+        guard commit else { return report }
+
+        for aKind in kinds {
+            for aRow in rows[aKind] ?? [NSManagedObject]() where !aRow.isDeleted {
+                viewContext.delete(aRow)
+            }
+        }
+        do {
+            try viewContext.save()
+            report.append("store saved")
+        } catch {
+            report.append("SAVE FAILED: \(error.localizedDescription)")
+            viewContext.rollback()
+        }
+        return report
+    }
+
     // MARK: Legacy archived CIFilter migration
 
     /// Marker file that enables the committing migration test. Pushed to the device with
