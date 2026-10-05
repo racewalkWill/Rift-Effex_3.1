@@ -63,6 +63,7 @@
 		A35FF77C26DC324E00D78252 /* CoreDataSampleLicense.txt in Resources */ = {isa = PBXBuildFile; fileRef = A35FF77B26DC324E00D78252 /* CoreDataSampleLicense.txt */; };
 		A35FF77E26DC346200D78252 /* PGLCoreData+Defns.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35FF77D26DC346200D78252 /* PGLCoreData+Defns.swift */; };
 		A36324E825B247F7003F4C0F /* PGLExcludeFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36324E725B247F7003F4C0F /* PGLExcludeFilters.swift */; };
+		A366E9003074366E00937541 /* PGLFilterDeleteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A366E8FF3074366E00937541 /* PGLFilterDeleteTests.swift */; };
 		A367E1C430325AB700EFAA87 /* PGLGradientCornerAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A367E1C330325AB700EFAA87 /* PGLGradientCornerAttribute.swift */; };
 		A367E1C630325ABD00EFAA87 /* PGLGradientWidthAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A367E1C530325ABD00EFAA87 /* PGLGradientWidthAttribute.swift */; };
 		A369A7FC2D44622100C55438 /* PGLFilterAttributeVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A369A7FB2D44622100C55438 /* PGLFilterAttributeVector.swift */; };
@@ -299,6 +300,7 @@
 		A35FF77B26DC324E00D78252 /* CoreDataSampleLicense.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CoreDataSampleLicense.txt; sourceTree = "<group>"; };
 		A35FF77D26DC346200D78252 /* PGLCoreData+Defns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PGLCoreData+Defns.swift"; sourceTree = "<group>"; };
 		A36324E725B247F7003F4C0F /* PGLExcludeFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLExcludeFilters.swift; sourceTree = "<group>"; };
+		A366E8FF3074366E00937541 /* PGLFilterDeleteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterDeleteTests.swift; sourceTree = "<group>"; };
 		A367E1C330325AB700EFAA87 /* PGLGradientCornerAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLGradientCornerAttribute.swift; sourceTree = "<group>"; };
 		A367E1C530325ABD00EFAA87 /* PGLGradientWidthAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLGradientWidthAttribute.swift; sourceTree = "<group>"; };
 		A369A7FB2D44622100C55438 /* PGLFilterAttributeVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeVector.swift; sourceTree = "<group>"; };
@@ -677,6 +679,7 @@
 				A3BF502824D3299100CD5114 /* Info.plist */,
 				A3C5A651304238D500FAFBC4 /* PGLCanvasSpaceTests.swift */,
 				A3B85E8D307176DC00815965 /* PGLCloudImportTests.swift */,
+				A366E8FF3074366E00937541 /* PGLFilterDeleteTests.swift */,
 			);
 			path = RiftEffectsTests;
 			sourceTree = "<group>";
@@ -1239,6 +1242,7 @@
 				A3DC6E592DBBF23A00E32FAA /* PGLFilterDescriptorTests.swift in Sources */,
 				A3DC6E5B2DBC02AF00E32FAA /* PGLCategorySurvey.swift in Sources */,
 				A3FF819F2DBC3A7600CD705C /* PGLFilterStackTests.swift in Sources */,
+				A366E9003074366E00937541 /* PGLFilterDeleteTests.swift in Sources */,
 				A3BF515024D32D3400CD5114 /* PGLSourceFilterTests.swift in Sources */,
 				A3FF819D2DBC39F500CD705C /* PGLDataStoreTests.swift in Sources */,
 				A3B85E8E307176DC00815965 /* PGLCloudImportTests.swift in Sources */,

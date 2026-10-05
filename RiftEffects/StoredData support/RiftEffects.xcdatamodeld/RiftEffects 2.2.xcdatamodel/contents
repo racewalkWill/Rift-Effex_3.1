@@ -101,6 +101,6 @@
         <attribute name="stackPosition" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="input" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDParmImage" inverseName="filter" inverseEntity="CDParmImage"/>
         <relationship name="stack" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDFilterStack" inverseName="filters" inverseEntity="CDFilterStack"/>
-        <relationship name="values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDParmValue" inverseName="storedFilter" inverseEntity="CDParmValue"/>
+        <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDParmValue" inverseName="storedFilter" inverseEntity="CDParmValue"/>
     </entity>
 </model>

@@ -590,6 +590,101 @@ struct DeviceLocalImageList: Codable {
         return report
     }
 
+    // MARK: Orphan parm value and image list delete
+
+    nonisolated static var orphanRowsDeleteMarker: URL? {
+        try? snapshotFolder().appendingPathComponent("RUN_ORPHAN_ROWS_DELETE")
+    }
+
+    nonisolated static var orphanRowsDeleteEnabled: Bool {
+        guard let marker = orphanRowsDeleteMarker else { return false }
+        return FileManager.default.fileExists(atPath: marker.path)
+    }
+
+    /// Report what #deleteOrphanRows would delete - never saves.
+    @Test(.timeLimit(.minutes(10)))
+    func orphanRowsDeleteDryRun() throws {
+        try publish(report: deleteOrphanRows(commit: false), named: "OrphanRowsDeleteDryRun")
+    }
+
+    /// Delete every CDParmValue with no filter and every CDImageList with no parm image.
+    /// Enabled only by the RUN_ORPHAN_ROWS_DELETE marker in Documents/CloudImportSnapshots,
+    /// removed by the run.
+    @Test(.enabled(if: PGLCloudImportTests.orphanRowsDeleteEnabled, "push RUN_ORPHAN_ROWS_DELETE to Documents/CloudImportSnapshots to enable"),
+          .timeLimit(.minutes(20)))
+    func orphanRowsDelete() throws {
+        if let marker = Self.orphanRowsDeleteMarker {
+            try? FileManager.default.removeItem(at: marker)
+                // one run per marker
+        }
+        let report = deleteOrphanRows(commit: true)
+        try publish(report: report, named: "OrphanRowsDelete")
+        #expect(!report.contains(where: { $0.hasPrefix("SAVE FAILED") }))
+    }
+
+    /// CDParmValue rows with no storedFilter and CDImageList rows with no parm. Each entity
+    /// has that one relationship only, so these rows are reachable from nothing. Left behind
+    /// because CDStoredFilter.values is a Nullify relationship (a deleted filter leaves its
+    /// values) and by #removeOldImageList.
+    /// Runs on a background context in chunks of 2000 - each chunk is saved and the context
+    /// reset, so the ~100k rows are never all in memory. Each row is rechecked before its
+    /// delete. Deleted through the context, not NSBatchDeleteRequest, so the mirroring
+    /// delegate exports the deletes.
+    func deleteOrphanRows(commit: Bool) -> [String] {
+        let context = persistentContainer.newBackgroundContext()
+        context.transactionAuthor = appTransactionAuthorName
+        context.undoManager = nil
+        let deviceName = Self.deviceName()
+
+        return context.performAndWait { () -> [String] in
+            var report = ["\(commit ? "DELETE" : "DRY RUN") orphan parm values and image lists on \(deviceName) started \(Date())"]
+            let chunkSize = 2000
+
+            // entity name, the to-one relationship that must be nil
+            for (entityName, relationship) in [("CDParmValue", "storedFilter"), ("CDImageList", "parm")] {
+                let idRequest = NSFetchRequest<NSManagedObjectID>(entityName: entityName)
+                idRequest.resultType = .managedObjectIDResultType
+                idRequest.predicate = NSPredicate(format: "%K == nil", relationship)
+                let orphanIDs = (try? context.fetch(idRequest)) ?? [NSManagedObjectID]()
+
+                var byType = [String: Int]()
+                var deleted = 0
+                var stillLinked = 0
+                var failedChunks = 0
+                var start = 0
+                while start < orphanIDs.count {
+                    let chunk = orphanIDs[start..<min(start + chunkSize, orphanIDs.count)]
+                    start += chunkSize
+                    for anID in chunk {
+                        guard let row = try? context.existingObject(with: anID) else { continue }
+                        guard row.value(forKey: relationship) == nil else {
+                            stillLinked += 1
+                            continue
+                        }
+                        byType[row.entity.name ?? entityName, default: 0] += 1
+                        if commit { context.delete(row) }
+                        deleted += 1
+                    }
+                    if commit && context.hasChanges {
+                        do {
+                            try context.save()
+                        } catch {
+                            failedChunks += 1
+                            report.append("SAVE FAILED \(entityName) chunk at \(start - chunkSize): \(error.localizedDescription)")
+                            context.rollback()
+                        }
+                    }
+                    context.reset()  // release the chunk's rows
+                }
+                let types = byType.sorted(by: { $0.value > $1.value }).map({ "\($0.key) \($0.value)" }).joined(separator: ", ")
+                report.append("\(entityName) with no \(relationship): \(orphanIDs.count) found, \(deleted) \(commit ? "deleted" : "would delete"), \(stillLinked) skipped as linked, \(failedChunks) failed chunks")
+                report.append("    \(types)")
+            }
+            report.append("finished \(Date())")
+            return report
+        }
+    }
+
     // MARK: Legacy archived CIFilter migration
 
     /// Marker file that enables the committing migration test. Pushed to the device with

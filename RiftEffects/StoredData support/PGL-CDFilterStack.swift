@@ -334,19 +334,6 @@ extension PGLFilterStack {
             self.forceSaveToNewCDVars(moContext: moContext) // implied saveAs with the name change
             }
 
-        if stackState == .existingStack || stackState == .reNameUnTitledStack {
-                // .existingStack or reNameUnTitledStack
-                // update the relationships for removed filters
-                for aDeletedFilter in removedFilters {
-                    aDeletedFilter.storedFilter = moContext.rehome(aDeletedFilter.storedFilter)
-                    if let aCDStoredFilter: CDStoredFilter = aDeletedFilter.storedFilter {
-                        // there is a cd relationship to remove
-                        // the existing storedStack should change for .existingStack and .reNameUnTitledStack
-                        storedStack?.removeFromFilters(aCDStoredFilter)
-                    }
-                }
-            }
-
         if (stackState == .newStack || stackState == .saveAsNewName ) { // new stack needed
             storedStack = NSEntityDescription.insertNewObject(forEntityName: "CDFilterStack", into: moContext) as? CDFilterStack
             if (storedStack == nil) { fatalError("FAILED CDFilterStack NSEntityDescription.insertNewObject(forEntityName:")}
@@ -395,11 +382,68 @@ extension PGLFilterStack {
 
 
         }
+
+        if stackState == .existingStack || stackState == .reNameUnTitledStack {
+            // the saved stack is updated in place - delete the rows of the filters removed from it.
+            // Not for .saveAsNewName: forceSaveToNewCDVars has already left the removed
+            // filters on the original stack, which must keep them.
+            // After the active filters are written, so a child stack that moveInputsFrom
+            // handed to a replacing filter is already re-linked to that filter's parm.
+            deleteRemovedCDFilters(moContext: moContext)
+        }
+
             // always write the current RenderTargetSize
         storedStack!.globalSizeWidth = RenderTargetSize.width
         storedStack!.globalSizeHeight = RenderTargetSize.height
 
         return storedStack!  // force error if not set
+    }
+
+    /// Delete the CDStoredFilter rows of the filters removed from this saved stack.
+    ///
+    /// Only unlinking them (removeFromFilters) left the rows behind with no stack, holding
+    /// their CDParmImage, CDImageList and CDParmValue rows - 394 such filters on 2026-10-04.
+    /// The delete cascades to the parm images (and their image lists) and to the parm values.
+    ///
+    /// CDParmImage.inputStack is a Cascade relationship, so a child stack still attached to
+    /// a removed filter's parm would be deleted with it. A child stack that an active filter
+    /// now uses is detached first - normally the re-link in #createNewCDImageParm has
+    /// already moved it, this guards the case where it has not.
+    func deleteRemovedCDFilters(moContext: NSManagedObjectContext) {
+        var activeFilterIDs = Set<NSManagedObjectID>()
+        var activeChildStackIDs = Set<NSManagedObjectID>()
+        for anActiveFilter in activeFilters {
+            if let activeCDFilter = anActiveFilter.storedFilter {
+                activeFilterIDs.insert(activeCDFilter.objectID)
+            }
+            for anImageParm in anActiveFilter.imageParms() ?? [PGLFilterAttributeImage]() {
+                if let childCDStack = anImageParm.inputStack?.storedStack {
+                    activeChildStackIDs.insert(childCDStack.objectID)
+                }
+            }
+        }
+
+        // removedFilters and their storedFilter references are left in place: writeCDStack
+        // does not save. If the caller's save fails and rolls back, the delete is undone and
+        // the next save deletes the row again. After a successful save the deleted row has no
+        // context, so rehome answers nil and the filter is skipped.
+        for aRemovedFilter in removedFilters {
+            guard let removedCDFilter = moContext.rehome(aRemovedFilter.storedFilter),
+                  !removedCDFilter.isDeleted
+            else {
+                continue  // never saved, or already deleted by an earlier save
+            }
+            if activeFilterIDs.contains(removedCDFilter.objectID) {
+                continue  // the row is still in use by an active filter
+            }
+            for aCDParmImage in (removedCDFilter.input as? Set<CDParmImage>) ?? Set<CDParmImage>() {
+                if let childCDStack = aCDParmImage.inputStack,
+                   activeChildStackIDs.contains(childCDStack.objectID) {
+                    aCDParmImage.inputStack = nil  // keep the child stack an active filter uses
+                }
+            }
+            moContext.delete(removedCDFilter)
+        }
     }
 
 //    func restoreCDstackImageCache() {
