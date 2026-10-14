@@ -27,9 +27,37 @@ class PGLMainFilterController:  UIViewController,
 
         // MARK: ListView
      struct Item: Hashable {
+        // Identity is the stable id only - never the localized title.
+        // Core Image localizes some category names identically
+        // (hu/sk: Gradient and Transition), which made two header items equal
+        // and corrupted the diffable section snapshots.
+        let id: String
         let title: String?
         let descriptor: PGLFilterDescriptor?
             // if nil then use the title for the category
+
+        static let allHeaderID = "allHeader"
+
+        /// header row: row 0 of section 0 (allHeaderID) or a category header (categoryConstant)
+        init(headerID: String, title: String) {
+            id = headerID
+            self.title = title
+            descriptor = nil
+        }
+
+        init(descriptor: PGLFilterDescriptor) {
+            id = descriptor.filterName + "." + String(describing: descriptor.pglSourceFilterClass)
+            title = descriptor.displayName
+            self.descriptor = descriptor
+        }
+
+        static func == (lhs: Item, rhs: Item) -> Bool {
+            return lhs.id == rhs.id
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
     }
 
      var dataSource: UICollectionViewDiffableDataSource<Int, Item>! = nil
@@ -547,19 +575,33 @@ extension PGLMainFilterController: UISearchResultsUpdating {
 
         // depends on the mode of Grouped or Flat for the headers
 
-        let filterItems = matchingFilters.map { Item(title: $0.displayName, descriptor: $0)}
+        let filterItems = matchingFilters.map { Item(descriptor: $0) }
+        let allHeaderItem = Item(headerID: Item.allHeaderID, title: "Groups")
 
-        // get dataSource snapshot
-        var snapshot = NSDiffableDataSourceSnapshot<Int, Item>()
+        // Items go into sections ONLY through section snapshots, never through a
+        // full NSDiffableDataSourceSnapshot. initalFilterList() gives section 0 a
+        // section snapshot; applying full snapshots with items over it made UIKit
+        // rebase each flat diff into that outline. The two drifted apart and the
+        // rebaser crashed in
+        // -[NSDiffableDataSourceSectionSnapshot _indexesOfItems:ignoringItemsNotFound:].
+        // (applySnapshotUsingReloadData skips the rebase and leaves section 0 stale -
+        // it does not fix this.)
 
-        snapshot.appendSections([Header.AllFilter.rawValue])
-//            snapshot.insertSections([0], beforeSection: 0)
+        // Grouped layout still present: reduce to an empty section 0 first.
+        // This full snapshot sets only the section structure - it has no items.
+        let replacesGroupedLayout = dataSource.snapshot().sectionIdentifiers != [Header.AllFilter.rawValue]
+        Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLMainFilterController displaySearchResults language = \(Locale.preferredLanguages.first ?? "unknown", privacy: .public) matches = \(filterItems.count) replacesGroupedLayout = \(replacesGroupedLayout)")
+        if replacesGroupedLayout {
+            var structureSnapshot = NSDiffableDataSourceSnapshot<Int, Item>()
+            structureSnapshot.appendSections([Header.AllFilter.rawValue])
+            dataSource.apply(structureSnapshot, animatingDifferences: false)
+        }
 
-        let allHeaderItem = Item(title: "Groups", descriptor: nil)
-        snapshot.appendItems([allHeaderItem], toSection: Header.AllFilter.rawValue)
-
-        snapshot.appendItems(filterItems, toSection: Header.AllFilter.rawValue)
-        dataSource.apply(snapshot, animatingDifferences: true)
+        // the flat list replaces the whole of section 0
+        var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        sectionSnapshot.append([allHeaderItem])
+        sectionSnapshot.append(filterItems)
+        dataSource.apply(sectionSnapshot, to: Header.AllFilter.rawValue, animatingDifferences: true)
     }
 
 }
@@ -770,14 +812,15 @@ extension PGLMainFilterController {
         if mode == FilterNavigatorMode.Flat {
             headerItemTitle = "Groups"
         }
-        let headerItem = Item(title: headerItemTitle, descriptor: nil)
+        let headerItem = Item(headerID: Item.allHeaderID, title: headerItemTitle)
         headerSnapShot.append([headerItem])
         dataSource.apply(headerSnapShot, to: Header.AllFilter.rawValue)
         for section in sections {
             var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-            let categoryHeaderItem = Item(title: categories[section - 1].categoryName, descriptor: nil)
+            let category = categories[section - 1]
+            let categoryHeaderItem = Item(headerID: category.categoryConstant, title: category.categoryName)
             sectionSnapshot.append([categoryHeaderItem])
-            let filterItems = categories[section - 1 ].filterDescriptors.map {Item(title: $0.displayName, descriptor: $0)}
+            let filterItems = category.filterDescriptors.map { Item(descriptor: $0) }
             sectionSnapshot.append(filterItems, to: categoryHeaderItem)
 //            sectionSnapshot.collapse(filterItems)
             dataSource.apply(sectionSnapshot, to: section )
