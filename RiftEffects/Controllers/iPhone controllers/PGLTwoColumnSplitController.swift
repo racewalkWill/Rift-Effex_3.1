@@ -53,6 +53,20 @@ class PGLTwoColumnSplitController: UIViewController {
 
     private var isDrawerCollapsed = false
 
+    /// Optional search controller for the drawer's list (set by subclasses).
+    /// In portrait it is this controller's navigationItem search field. In
+    /// landscape the navigation bar moves the field into the bottom toolbar,
+    /// which spans the full width over the image, so the search bar is
+    /// placed instead in the drawer's top handle strip beside the collapse button.
+    var drawerSearchController: UISearchController? {
+        didSet { placeDrawerSearchBar() }
+    }
+
+    /// controlView bottom-to-drawer; swapped for bottom-to-search-bar while
+    /// the search bar is in the drawer (landscape).
+    private var controlViewBottomConstraint: NSLayoutConstraint?
+    private var drawerSearchBarConstraints: [NSLayoutConstraint] = []
+
     /// Prefer the live interface orientation; fall back to the view bounds
     /// before a window exists.
     private var isPortraitLayout: Bool {
@@ -141,6 +155,7 @@ class PGLTwoColumnSplitController: UIViewController {
         activeLayoutIsPortrait = portrait
 
         updateCollapseButton(portrait: portrait)
+        placeDrawerSearchBar()
 
         if animated {
             UIView.animate(withDuration: 0.3) { [weak self] in
@@ -154,6 +169,93 @@ class PGLTwoColumnSplitController: UIViewController {
         let collapsedSymbol = portrait ? "chevron.up" : "chevron.right"
         let expandedSymbol = portrait ? "chevron.down" : "chevron.left"
         collapseButton.setImage(UIImage(systemName: isDrawerCollapsed ? collapsedSymbol : expandedSymbol), for: .normal)
+    }
+
+    /// Moves `drawerSearchController`'s search bar between the navigation bar
+    /// (portrait, where the system shows it at the bottom) and the bottom of
+    /// the drawer (landscape). Called on every drawer constraint rebuild, so
+    /// orientation and collapse changes both apply.
+    private func placeDrawerSearchBar() {
+        guard let searchController = drawerSearchController,
+              let drawerView,
+              let portrait = activeLayoutIsPortrait
+            else { return }
+        let searchBar = searchController.searchBar
+
+        if portrait {
+            if searchBar.superview === drawerView.contentView {
+                detachSearchBarFromDrawer(searchBar)
+            }
+            if navigationItem.searchController !== searchController {
+                navigationItem.searchController = searchController
+            }
+        } else {
+            if navigationItem.searchController === searchController {
+                navigationItem.searchController = nil
+                // The navigation bar finishes releasing the search bar in a later
+                // layout pass - removing it from (or hiding it in) whatever view
+                // it is in by then. Attaching immediately left the field invisible
+                // until a drawer toggle re-attached it, so attach after that pass.
+                DispatchQueue.main.async { [weak self] in
+                    self?.attachSearchBarToDrawer(searchBar)
+                }
+            } else {
+                attachSearchBarToDrawer(searchBar)
+            }
+        }
+    }
+
+    /// Re-places the search bar after its UISearchController presents or
+    /// dismisses. Deactivating the search controller (e.g. the keyboard closing
+    /// on an empty field) re-parents or hides its bar, and nothing else re-runs
+    /// placement until the next drawer rebuild. Deferred so the search
+    /// controller finishes its own bar handling first.
+    func refreshDrawerSearchBar() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self, let searchBar = self.drawerSearchController?.searchBar else { return }
+            if self.activeLayoutIsPortrait == false {
+                self.attachSearchBarToDrawer(searchBar)
+            }
+        }
+    }
+
+    /// Landscape only: pins the search bar along the drawer's bottom edge and
+    /// ends the control view just above it.
+    private func attachSearchBarToDrawer(_ searchBar: UISearchBar) {
+        guard let drawerView, let controlView = columns?.control.view,
+              activeLayoutIsPortrait == false,
+              navigationItem.searchController == nil
+            else { return }
+        let contentView = drawerView.contentView
+
+        if searchBar.superview !== contentView {
+            searchBar.removeFromSuperview()
+            searchBar.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(searchBar)
+            controlViewBottomConstraint?.isActive = false
+            drawerSearchBarConstraints = [
+                searchBar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                searchBar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                searchBar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+                controlView.bottomAnchor.constraint(equalTo: searchBar.topAnchor)
+            ]
+            NSLayoutConstraint.activate(drawerSearchBarConstraints)
+        }
+            // the navigation bar may have faded the bar out while hosting it
+        searchBar.alpha = 1
+        searchBar.searchTextField.alpha = 1
+            // a collapsed landscape drawer is only the handle width
+        searchBar.isHidden = isDrawerCollapsed
+        contentView.layoutIfNeeded()
+    }
+
+    private func detachSearchBarFromDrawer(_ searchBar: UISearchBar) {
+        NSLayoutConstraint.deactivate(drawerSearchBarConstraints)
+        drawerSearchBarConstraints = []
+        searchBar.removeFromSuperview()
+        searchBar.translatesAutoresizingMaskIntoConstraints = true
+        searchBar.isHidden = false
+        controlViewBottomConstraint?.isActive = true
     }
 
     @objc private func toggleDrawerCollapsed() {
@@ -250,11 +352,13 @@ class PGLTwoColumnSplitController: UIViewController {
         ])
 
         effectView.contentView.addSubview(controlView)
+        let controlBottom = controlView.bottomAnchor.constraint(equalTo: effectView.contentView.bottomAnchor)
+        controlViewBottomConstraint = controlBottom
         NSLayoutConstraint.activate([
             controlView.topAnchor.constraint(equalTo: effectView.contentView.topAnchor, constant: drawerHandleThickness),
             controlView.leadingAnchor.constraint(equalTo: effectView.contentView.leadingAnchor),
             controlView.trailingAnchor.constraint(equalTo: effectView.contentView.trailingAnchor),
-            controlView.bottomAnchor.constraint(equalTo: effectView.contentView.bottomAnchor)
+            controlBottom
         ])
 
         layoutViews(imageView, controlView)

@@ -492,6 +492,13 @@ class PGLMainFilterController:  UIViewController,
             searchBar.resignFirstResponder()
         }
 
+        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+            // the keyboard Search key is disabled for an empty field, so close it here
+            if searchText.isEmpty {
+                dismissSearchKeyboard()
+            }
+        }
+
     }
 
     // MARK: - UISearchControllerDelegate
@@ -508,6 +515,8 @@ extension PGLMainFilterController: UISearchControllerDelegate {
 
         func didDismissSearchController(_ searchController: UISearchController) {
             initalFilterList()
+                // iPhone landscape: dismissal can take the search bar out of the drawer
+            (parent as? PGLTwoColumnSplitController)?.refreshDrawerSearchBar()
             Logger(subsystem: LogSubsystem, category: LogCategory).debug("UISearchControllerDelegate invoked method: \(#function).")
         }
 
@@ -568,6 +577,16 @@ extension PGLMainFilterController: UISearchResultsUpdating {
         } else
         {  // empty search string.. show everything
             displaySearchResults(matchingFilters: allFilters)
+        }
+    }
+
+    /// Closes the search keyboard. Deferred to the next run loop turn: when the
+    /// clear button empties the field, UIKit keeps the field first responder
+    /// after textDidChange returns, which undoes a synchronous resign.
+    func dismissSearchKeyboard() {
+        DispatchQueue.main.async { [weak self] in
+            self?.searchController?.searchBar.resignFirstResponder()
+            (self?.parent as? PGLTwoColumnSplitController)?.refreshDrawerSearchBar()
         }
     }
 
@@ -700,6 +719,7 @@ extension PGLMainFilterController {
                     guard let self else { return }
                     if (indexPath.section == Header.AllFilter.rawValue) && (indexPath.row == 0) {
                         /// flip FilterNavigatorMode to opposite
+                        self.dismissSearchKeyboard()
                         if self.mode == FilterNavigatorMode.Grouped {
                             self.mode = FilterNavigatorMode.Flat
                             self.displaySearchResults(matchingFilters: self.filters )

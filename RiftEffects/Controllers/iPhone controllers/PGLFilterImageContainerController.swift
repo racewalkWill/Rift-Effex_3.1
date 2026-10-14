@@ -40,6 +40,16 @@ class PGLFilterImageContainerController: PGLTwoColumnSplitController {
         }
         loadViewColumns(controller: containerFilterController!, imageViewer: containerImageController! )
 
+            // The navigation bar shows this container's navigationItem, not the
+            // child filter controller's, so forward the child's search controller.
+            // loadViewColumns loads the child view, so its viewDidLoad has
+            // already created the searchController.
+            // drawerSearchController places it in the nav bar (portrait) or the drawer (landscape)
+        drawerSearchController = containerFilterController!.navigationItem.searchController
+            // the filter list scrolls inside the child, not this container,
+            // so keep the search field visible instead of hiding on scroll
+        navigationItem.hidesSearchBarWhenScrolling = false
+
 //        setMoreBtnMenu()
 //        setTemplateBtnMenu()
         setHelpBtnMenu()
