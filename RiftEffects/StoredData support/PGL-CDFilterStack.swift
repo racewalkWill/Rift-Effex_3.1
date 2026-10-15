@@ -442,6 +442,9 @@ extension PGLFilterStack {
                     aCDParmImage.inputStack = nil  // keep the child stack an active filter uses
                 }
             }
+            // unlink now - Core Data only drops a deleted object from storedStack.filters
+            // at processPendingChanges or save, so a reload before the save would still see it
+            storedStack?.removeFromFilters(removedCDFilter)
             moContext.delete(removedCDFilter)
         }
     }
