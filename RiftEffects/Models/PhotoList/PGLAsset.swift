@@ -82,7 +82,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
             // asset at cacheTargetSize (.highQualityFormat, .exact), which does not show
             // up as a heap instance in the memory graph. Log the running count and the
             // bytes it implies at 4 bytes per pixel, to compare against the app footprint.
-            if let photoMgr = appStack?.photoMgr {
+            if LogDiagnostic, let photoMgr = appStack?.photoMgr {
                 let cachedCount = await photoMgr.cachedImageCount
                 let estimatedMB = (Double(cachedCount) * cacheTargetSize.width * cacheTargetSize.height * 4.0) / (1024.0 * 1024.0)
                 Logger(subsystem: LogSubsystem, category: LogMemoryRelease).notice("DIAGNOSTIC photo cache: added \(itemsToCache.count, privacy: .public) now caching \(cachedCount, privacy: .public) assets at \(cacheTargetSize.width, privacy: .public) x \(cacheTargetSize.height, privacy: .public) ~ \(estimatedMB, privacy: .public) MB")

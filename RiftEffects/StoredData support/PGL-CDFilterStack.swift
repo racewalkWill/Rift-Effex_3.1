@@ -114,6 +114,7 @@ extension PGLFilterStack {
     /// display scale. Log the sizes at load: compare RenderTargetSize against the point
     /// size of the window, and against the size this stack was saved with.
     func logLoadSizeDiagnostic(cdStack: CDFilterStack) {
+        guard LogDiagnostic else { return }
         let displayScale = UITraitCollection.current.displayScale
         let savedWidth = cdStack.globalSizeWidth
         let savedHeight = cdStack.globalSizeHeight

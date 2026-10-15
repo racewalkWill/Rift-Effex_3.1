@@ -23,6 +23,9 @@ let LogMigration = "PGL_Migration"
 let LogParms = "PGL_Parms"
 let LogMetal = "PGL_Metal"
 
+// set true to turn on the NSLog("DIAGNOSTIC ...") tracing output
+let LogDiagnostic = false
+
 // change in areas as needed.
 // caution on changes it is a GLOBAL
 
