@@ -25,7 +25,7 @@ class PGLExcludeFilters {
     "CICodabarBarcodeGenerator",
     "CIEAN13BarcodeGenerator",
     "CIInterleaved2of5BarcodeGenerator",
-    "CIQRCodeGenerator",
+    "CIQRCodeGenerator",  // used by "PGLQRCodeGenerator"
     "CIRoundedRectangleStrokeGenerator",
 
 

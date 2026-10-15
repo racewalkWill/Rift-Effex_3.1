@@ -72,9 +72,10 @@ class PGLSequencedFilters: PGLSourceFilter {
     }
 
     override func releaseVars() {
-        dissolve.releaseVars()
+        // optional chaining - releaseVars may be called again after dissolve and sequenceStack are nil
+        dissolve?.releaseVars()
         dissolve = nil
-        sequenceStack.releaseVars()
+        sequenceStack?.releaseVars()
         sequenceStack = nil
         super.releaseVars()
     }

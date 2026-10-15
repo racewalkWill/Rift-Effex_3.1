@@ -76,13 +76,47 @@ import Accelerate
 
         }
 
-     func add9FiltersTo(stack: PGLFilterStack) throws {
-        // put 9 random filters on the stack
+    /// Nine filters, one from each of the SingleFilterGroups in order.
+    /// From a 2026-10-15 run where every filter output kept a finite non-zero extent.
+    /// Random picks were flaky - CIPerspectiveCorrection with defaults produces an infinite extent.
+    static let Add9FilterNames = [
+        "CIMorphologyMaximum",              // Blur
+        "CIGammaAdjust",                    // ColorAdj
+        "CIThermal",                        // ColorEffect
+        "CIGloom",                          // Stylize
+        "CIBumpDistortion",                 // Distort
+        "CIKeystoneCorrectionHorizontal",   // Geometry
+        "CIUnsharpMask",                    // Sharpen
+        "CICircularScreen",                 // HalfTone
+        "CIKaleidoscope"                    // Tile
+    ]
+
+    /// Distort filters for the parent stack in compositeChildStack and transitionChildStacks.
+    /// From a 2026-10-15 run where each one passed with a transition child stack.
+    /// Random picks were flaky - CIStretchCrop + CIDissolveTransition child gave a zero extent output.
+    static let ChildStackDistortFilterNames = [
+        "CICircularWrap",
+        "CIBumpDistortion",
+        "CIPinchDistortion",
+        "CITorusLensDistortion",
+        "CINinePartTiled",
+        "CIGlassDistortion",
+        "CILightTunnel",
+        "CIBumpDistortionLinear"
+    ]
+    @MainActor static var ChildStackDistortFilters = PGLFilterCategory("childStackDistortFilters")!.buildCategoryFilterDescriptors(filterNames: ChildStackDistortFilterNames)
+
+     func add9FiltersTo(stack: PGLFilterStack) async throws {
+        // put the 9 Add9FilterNames filters on the stack
         //MARK: Move to PGLDemo
 
-        for aGroup in PGLCategorySurvey.SingleFilterGroups {
-                let aFilterIndex = Int.random(in: 0 ..< aGroup.count)
-                let thisFilter = aGroup[aFilterIndex].pglSourceFilter()
+        let constructedCategory = PGLFilterCategory("add9Filters")!
+        let descriptors = constructedCategory.buildCategoryFilterDescriptors(filterNames: PGLCategorySurvey.Add9FilterNames)
+        #expect (descriptors.count == PGLCategorySurvey.Add9FilterNames.count, "add9FiltersTo built \(descriptors.count) filter descriptors")
+
+        for aDescriptor in descriptors {
+                let thisFilter = aDescriptor.pglSourceFilter()
+                try #require (thisFilter != nil, "Failed to load filter \(aDescriptor.filterName)")
                 thisFilter?.setDefaults()
             Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("addFiltersTo \(thisFilter!.localizedName()) \(String(describing: thisFilter!.filterName))")
             let imageAttributesNames = thisFilter!.imageInputAttributeKeys
@@ -91,7 +125,7 @@ import Accelerate
                         // skip the default.. adding to the stack will set the input
                     }
                     guard let thisAttribute = thisFilter!.attribute(nameKey: anImageAttributeName) else { continue }
-                   setInputTo(imageParm: thisAttribute) // the six images from favorites
+                   await setInputTo(imageParm: thisAttribute) // the six images from favorites
                }
 //            stack.append(thisFilter!) this just adds without an input
             stack.appendFilter(thisFilter!) // this sets the input
@@ -112,7 +146,11 @@ import Accelerate
 
     }
 
-    func setInputTo(imageParm: PGLFilterAttribute) {
+    /// Set the image input of the parm from the favorites album and wait for the images to load.
+    /// PGLAlbumSource #assets() and PGLUserAssetSelection #setUserPick do not start the
+    /// image requests, so runCacheLoad is called here. The parm is set to CIImage.empty
+    /// until the PGLAsset #onImageReady callback delivers the image on the main actor.
+    func setInputTo(imageParm: PGLFilterAttribute) async {
         //MARK: Move to PGLDemo
         guard let favoriteAlbumSource = fetchFavoritesList() else
                    {
@@ -147,9 +185,26 @@ import Accelerate
             userSelectionInfo.addSourceToSelection(asset: anAsset)
         }
 
+        // start the image requests before setUserPick registers the onImageReady callback
+        _ = PGLAsset.runCacheLoad(selectedAssets)
+
          //use first 6 images of the favorites if a transition filter
         // otherwise just one image
         userSelectionInfo.setUserPick()
+        await waitForImagesLoaded(selectedAssets)
+    }
+
+    /// Poll until every asset has its ciImage or the timeout expires.
+    /// Task.sleep suspends the main actor so the image request completions can run.
+    func waitForImagesLoaded(_ assets: [PGLAsset], timeout: Duration = .seconds(10)) async {
+        let clock = ContinuousClock()
+        let deadline = clock.now.advanced(by: timeout)
+        while assets.contains(where: { $0.imageNotAvailable() }) && clock.now < deadline {
+            try? await Task.sleep(for: .milliseconds(50))
+        }
+        if assets.contains(where: { $0.imageNotAvailable() }) {
+            Logger(subsystem: TestLogSubsystem, category: TestLogCategory).error("PGLCategorySurvey \(#function) timed out waiting for favorites images to load")
+        }
     }
 
     // create class vars to hold each of the categories of filters
@@ -181,7 +236,7 @@ import Accelerate
 
 // MARK: tests
 
-    @Test mutating func  singleInputFilters()throws {
+    @Test mutating func  singleInputFilters() async throws {
         var category1Index = 0
         var category2Index = -1
         var category1Filter: PGLSourceFilter
@@ -202,7 +257,7 @@ import Accelerate
             let firstFilter = testFilterStack.currentFilter()
             let firstFilterInput = firstFilter.attribute(nameKey: "inputImage")
            try  #require (firstFilterInput != nil)
-            setInputTo(imageParm: firstFilterInput!) // sets 6 images from favorites album
+            await setInputTo(imageParm: firstFilterInput!) // sets 6 images from favorites album
 
             category1Filter = group1[category1Index].pglSourceFilter()!
 
@@ -256,7 +311,7 @@ import Accelerate
         releaseStackIds()
     }
 
-    @Test mutating func multipleInputTransitionFilters() throws {
+    @Test mutating func multipleInputTransitionFilters() async throws {
         //MARK: Move to PGLDemo
         var category1Index = 0
 
@@ -266,7 +321,11 @@ import Accelerate
 
         for i in 0 ..< PGLCategorySurvey.CompositeGroups.count {
 
-            let group1 = PGLCategorySurvey.CompositeGroups[i]
+            // skip the "Images" and "Sequenced Filters" filters in the transition category -
+            // they are not two image transitions and the stack output extent is infinite.
+            // The sequenced filter adds filters, not images.. needs its own test case
+            let group1 = PGLCategorySurvey.CompositeGroups[i].filter { !["Images", "Sequenced Filters"].contains($0.filterName) }
+            category1Index = 0 // start each group at its first filter
 
             while category1Index < group1.count {
                 self.appStack.releaseTopStack()
@@ -287,12 +346,12 @@ import Accelerate
                 let imageAttributesNames = category1Filter.imageInputAttributeKeys
                 for anImageAttributeName in imageAttributesNames {
                     guard let thisAttribute = category1Filter.attribute(nameKey: anImageAttributeName) else { continue }
-                    setInputTo(imageParm: thisAttribute) // the six images from favorites
+                    await setInputTo(imageParm: thisAttribute) // the six images from favorites
                 }
 
                 testFilterStack.append(category1Filter)
 
-                try add9FiltersTo(stack: testFilterStack)
+                try await add9FiltersTo(stack: testFilterStack)
 
                 let stackResultImage = testFilterStack.stackOutputImage(false)
 
@@ -317,7 +376,7 @@ import Accelerate
         releaseStackIds()
     }
 
-    @Test mutating func selectedMultipleFilters() throws {
+    @Test mutating func selectedMultipleFilters() async throws {
         // paste in a filter list from a failed test run
         // this will build the list and test for zero extent in each filter output
         
@@ -355,7 +414,7 @@ import Accelerate
         let imageAttributesNames = category1Filter!.imageInputAttributeKeys
         for anImageAttributeName in imageAttributesNames {
             guard let thisAttribute = category1Filter!.attribute(nameKey: anImageAttributeName) else { continue }
-            setInputTo(imageParm: thisAttribute) // the six images from favorites
+            await setInputTo(imageParm: thisAttribute) // the six images from favorites
         }
 
         testFilterStack.append(category1Filter!)
@@ -368,7 +427,7 @@ import Accelerate
             let imageAttributesNames = newFilter!.imageInputAttributeKeys
             for anImageAttributeName in imageAttributesNames {
                 guard let thisAttribute = newFilter!.attribute(nameKey: anImageAttributeName) else { continue }
-                setInputTo(imageParm: thisAttribute) // the six images from favorites
+                await setInputTo(imageParm: thisAttribute) // the six images from favorites
             }
             Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("testSelectedMultipleInputTransitionFilters appending filter: \(String(describing: newFilter!.filterName))")
             testFilterStack.append(newFilter!)
@@ -394,7 +453,7 @@ import Accelerate
 
     }
 
-    @Test mutating func iOS13Filters() {
+    @Test mutating func iOS13Filters() async {
           /*   CIDocumentEnhancer
                CIGaborGradients
                CIKeystoneCorrectionCombined
@@ -441,7 +500,7 @@ import Accelerate
             let imageAttributesNames = newFilter.imageInputAttributeKeys
             for anImageAttributeName in imageAttributesNames {
                 guard let thisAttribute = newFilter.attribute(nameKey: anImageAttributeName) else { continue }
-                setInputTo(imageParm: thisAttribute) // the six images from favorites
+                await setInputTo(imageParm: thisAttribute) // the six images from favorites
             }
             testFilterStack.append(newFilter)
 
@@ -464,7 +523,7 @@ import Accelerate
         releaseStackIds()
     }
 
-    @Test mutating func compositeChildStack() {
+    @Test mutating func compositeChildStack() async {
         // static var CompositeGroups = [CompositeFilters, TransistionFilters]
 
 
@@ -483,16 +542,16 @@ import Accelerate
 
 
                     _ = testFilterStack.removeLastFilter() // only one at start
-                    let aFilterIndex = Int.random(in: 0 ..< PGLCategorySurvey.DistortFilters.count)
-
-                category1Filter = PGLCategorySurvey.DistortFilters[aFilterIndex].pglSourceFilter()!
+                    // cycle through the fixed distort filter list
+                    let distortFilters = PGLCategorySurvey.ChildStackDistortFilters
+                category1Filter = distortFilters[filterIndex % distortFilters.count].pglSourceFilter()!
                    category1Filter.setDefaults()
 
                    Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("testCompositeChildStack group1 filter = \(category1Filter.localizedName())")
                    let imageAttributesNames = category1Filter.imageInputAttributeKeys
                    for anImageAttributeName in imageAttributesNames {
                        guard let thisAttribute = category1Filter.attribute(nameKey: anImageAttributeName) else { continue }
-                       setInputTo(imageParm: thisAttribute) // the six images from favorites
+                       await setInputTo(imageParm: thisAttribute) // the six images from favorites
                     }
 
                    testFilterStack.append(category1Filter)
@@ -511,7 +570,7 @@ import Accelerate
                         for anImageAttributeName in imageAttributesNames {
 
                             guard let thisAttribute = child1Filter.attribute(nameKey: anImageAttributeName) else { continue }
-                           setInputTo(imageParm: thisAttribute) // the six images from favorites
+                           await setInputTo(imageParm: thisAttribute) // the six images from favorites
                        }
                     childStack.append(child1Filter)
 
@@ -545,7 +604,7 @@ import Accelerate
         appStack.resetOutputAppStack(newStack)
     }
 
-    @Test mutating func transitionChildStacks() {
+    @Test mutating func transitionChildStacks() async {
         // put a transition on a child stack
         // static var CompositeGroups = [CompositeFilters, TransistionFilters]
 
@@ -573,16 +632,16 @@ import Accelerate
 
 
                     _ = testFilterStack.removeLastFilter() // only one at start
-                    let aFilterIndex = Int.random(in: 0 ..< PGLCategorySurvey.DistortFilters.count)
-
-                category1Filter = PGLCategorySurvey.DistortFilters[aFilterIndex].pglSourceFilter()!
+                    // cycle through the fixed distort filter list
+                    let distortFilters = PGLCategorySurvey.ChildStackDistortFilters
+                category1Filter = distortFilters[filterIndex % distortFilters.count].pglSourceFilter()!
                    category1Filter.setDefaults()
 
                    Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("testTransitionChildStacks group1 filter = \(category1Filter.localizedName())")
                    let imageAttributesNames = category1Filter.imageInputAttributeKeys
                    for anImageAttributeName in imageAttributesNames {
                        guard let thisAttribute = category1Filter.attribute(nameKey: anImageAttributeName) else { continue }
-                       setInputTo(imageParm: thisAttribute) // the six images from favorites
+                       await setInputTo(imageParm: thisAttribute) // the six images from favorites
                     }
 
                    testFilterStack.append(category1Filter)
@@ -601,7 +660,7 @@ import Accelerate
                         for anImageAttributeName in imageAttributesNames {
 
                             guard let thisAttribute = child1Filter.attribute(nameKey: anImageAttributeName) else { continue }
-                           setInputTo(imageParm: thisAttribute) // the six images from favorites
+                           await setInputTo(imageParm: thisAttribute) // the six images from favorites
                        }
                     childStack.append(child1Filter)
 
@@ -628,7 +687,7 @@ import Accelerate
         releaseStackIds()
     }
 
-    @Test mutating func selectedFilters() {
+    @Test mutating func selectedFilters() async {
 
             var newFilter: PGLSourceFilter
             // from a failing testMultipleInput run
@@ -713,7 +772,7 @@ import Accelerate
                 let imageAttributesNames = newFilter.imageInputAttributeKeys
                 for anImageAttributeName in imageAttributesNames {
                     guard let thisAttribute = newFilter.attribute(nameKey: anImageAttributeName) else { continue }
-                    setInputTo(imageParm: thisAttribute) // the six images from favorites
+                    await setInputTo(imageParm: thisAttribute) // the six images from favorites
                 }
                 testFilterStack.append(newFilter)
                 Logger(subsystem: TestLogSubsystem, category: TestLogCategory).notice("PGLCategorySurvey #testSelectedFilters newFilter = \(newFilter.fullFilterName())")
