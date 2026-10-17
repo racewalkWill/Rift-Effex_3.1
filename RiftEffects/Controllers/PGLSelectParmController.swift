@@ -796,7 +796,16 @@ class PGLSelectParmController: PGLCommonController,
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
 //        NSLog("PGLSelectParmController cellForRowAt cell = \(cell)")
         if parent is PGLTwoColumnSplitController {
-            cell.backgroundConfiguration = .clear()
+            // .clear() has no state styling, so a selected row would show no
+            // highlight on the glass drawer. Rebuild the clear background on
+            // each state change and add a translucent tint when selected.
+            cell.configurationUpdateHandler = { cell, state in
+                var background = UIBackgroundConfiguration.clear()
+                if state.isSelected || state.isHighlighted {
+                    background.backgroundColor = .tintColor.withAlphaComponent(0.3)
+                }
+                cell.backgroundConfiguration = background
+            }
         }
         thisCellAttribute?.setUICellDescription(cell)
         thisCellAttribute?.uiIndexPath = indexPath
