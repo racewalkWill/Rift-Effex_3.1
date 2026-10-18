@@ -217,7 +217,7 @@ class PGLMainFilterController:  UIViewController,
         configureHierarchy()
         configureDataSource()
         loadSearchController()
-        selectCurrentFilterRow()
+            // selectCurrentFilterRow runs in viewIsAppearing - stackData is not assigned yet
 
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
 
@@ -287,6 +287,15 @@ class PGLMainFilterController:  UIViewController,
             // force off any guide symbols because back navigation is running
         }
 
+    }
+
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+            // stackData is assigned and the collection view has its final bounds here
+            // replace mode is set by the stack row swipe 'Change' action
+        if stackData()?.stackMode == .replace {
+            selectCurrentFilterRow()
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -756,7 +765,17 @@ extension PGLMainFilterController {
             let disclosureOptions = UICellAccessory.OutlineDisclosureOptions(style: .cell)
             cell.accessories = [.outlineDisclosure(options: disclosureOptions)]
             if self?.parent is PGLTwoColumnSplitController {
-                cell.backgroundConfiguration = .clear()
+                // .clear() has no state styling, so the selected current filter
+                // (selectCurrentFilterRow) would show no highlight on the glass drawer.
+                // Rebuild the clear background on each state change and add a
+                // translucent tint when selected - matches PGLSelectParmController.
+                cell.configurationUpdateHandler = { cell, state in
+                    var background = UIBackgroundConfiguration.clear()
+                    if state.isSelected || state.isHighlighted {
+                        background.backgroundColor = .tintColor.withAlphaComponent(0.3)
+                    }
+                    cell.backgroundConfiguration = background
+                }
             }
         }
 
@@ -867,16 +886,35 @@ extension PGLMainFilterController {
     }
 
     func selectCurrentFilterRow() {
-            // select and show the current initial filter
-        if stackData()!.isEmptyStack() { return }
-        let currentFilter = stackData()?.currentFilter()
+            // select and show the current filter: expand its category, then select it
+        guard let viewerStack = stackData(), !viewerStack.isEmptyStack() else { return }
+        let currentFilter = viewerStack.currentFilter()
+            // match on filterName + class, the same identity Item(descriptor:) uses
+        let isCurrentFilter = { (descriptor: PGLFilterDescriptor?) -> Bool in
+            descriptor?.filterName == currentFilter.filterName
+            && descriptor?.pglSourceFilterClass == type(of: currentFilter)
+        }
+            // search the categories - currentFilter.uiPosition is not set on filters loaded from a saved stack
+            // section N holds categories[N - 1], see initalFilterList()
+        guard let categoryIndex = categories.firstIndex(where: { $0.filterDescriptors.contains(where: isCurrentFilter) })
+        else { return }
+        let section = categoryIndex + 1
+        guard dataSource.snapshot().sectionIdentifiers.contains(section) else { return }
 
-        var thePath = IndexPath(row:0, section: 0)
+        var sectionSnapshot = dataSource.snapshot(for: section)
+            // the filter rows are children of the collapsed category header (row 0)
+        guard let filterItem = sectionSnapshot.items.first(where: { isCurrentFilter($0.descriptor) }),
+              let headerItem = sectionSnapshot.parent(of: filterItem)
+        else { return }
 
-        thePath.section = currentFilter?.uiPosition.categoryIndex ?? 0
-        thePath.row = currentFilter?.uiPosition.filterIndex ?? 0
+        if !sectionSnapshot.isExpanded(headerItem) {
+                // section snapshot apply only - never mix full snapshots over the section snapshots
+            sectionSnapshot.expand([headerItem])
+            dataSource.apply(sectionSnapshot, to: section, animatingDifferences: false)
+        }
+        guard let thePath = dataSource.indexPath(for: filterItem) else { return }
 
-        filterCollectionView.selectItem(at: thePath, animated: true, scrollPosition: .centeredVertically)
+        filterCollectionView.selectItem(at: thePath, animated: false, scrollPosition: .centeredVertically)
         Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLMainFilterController selects row at \(thePath)")
 
     }

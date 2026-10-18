@@ -37,16 +37,23 @@ class PGLNavStackImageController: UINavigationController, UINavigationController
     /// PGLFilterImageContainerController / PGLParmImageController instances, so
     /// the stack grows two controllers per cycle — each holding its own
     /// PGLCompactImageController with a Metal view. Once a new container is
-    /// fully shown, the older filter/parm containers beneath it are history the
-    /// back arrow should skip anyway: remove and release them.
+    /// fully shown, the older filter/parm containers beneath it are history:
+    /// remove and release them.
+    /// The controller directly beneath the top is kept so back navigation
+    /// returns to it (parm -> filter after a 'Change' swipe) instead of
+    /// skipping to the stack. This still caps the flow at two edit containers.
     /// PGLStackImageContainerController is the base of the edit flow and kept.
     /// Runs from didShow (never willShow) so the stack is not mutated while a
     /// transition is in flight.
     private func pruneEditContainers(below topController: UIViewController) {
-        guard topController is PGLTwoColumnSplitController else { return }
+        guard topController is PGLTwoColumnSplitController,
+              let topIndex = viewControllers.firstIndex(where: { $0 === topController })
+        else { return }
+        let backController: UIViewController? = topIndex > 0 ? viewControllers[topIndex - 1] : nil
 
         let staleContainers = viewControllers.filter {
             $0 !== topController
+                && $0 !== backController
                 && $0 is PGLTwoColumnSplitController
                 && !($0 is PGLStackImageContainerController)
         }
