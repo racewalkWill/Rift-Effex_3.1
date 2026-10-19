@@ -74,7 +74,20 @@ class PGLNavStackImageController: UINavigationController, UINavigationController
         let myPoppedController =  super.popViewController(animated: animated)
         Logger(subsystem: LogSubsystem, category: LogNavigation).info( "\("#removed " + String(describing: self)) + \(myPoppedController)")
         if let pglController = myPoppedController as? PGLTwoColumnSplitController {
-            pglController.viewControllerRelease()
+            // An interactive swipe-back calls popViewController when the swipe starts.
+            // Releasing then leaves a blank screen if the swipe is cancelled and the
+            // controller stays on top. Release only after a pop actually completes.
+            if let coordinator = transitionCoordinator {
+                coordinator.animate(alongsideTransition: nil) { context in
+                    if context.isCancelled {
+                        Logger(subsystem: LogSubsystem, category: LogNavigation).info( "#popViewController cancelled - keeps \(pglController)")
+                    } else {
+                        pglController.viewControllerRelease()
+                    }
+                }
+            } else {
+                pglController.viewControllerRelease()
+            }
         }
         return myPoppedController
     }

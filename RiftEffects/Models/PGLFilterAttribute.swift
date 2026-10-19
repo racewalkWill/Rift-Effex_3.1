@@ -710,7 +710,8 @@ class PGLFilterAttribute {
 
         let answerVector = viewPointToCanvasVector(point, viewSize: viewSize)
         logRenderTarget(newValue: answerVector.description, oldValue: point.debugDescription, direction: PGLSourceFilter.RenderMapDirection.uiToFilter.rawValue, keyName: self.attributeName ?? "noAttributeName")
-        NSLog("\(String(describing:self)): mapPoint2Vector: \(point.debugDescription) -> \(answerVector.debugDescription)")
+        if PGLSourceFilter.LogParmValues {NSLog("\(String(describing:self)): mapPoint2Vector: \(point.debugDescription) -> \(answerVector.debugDescription)")
+        }
         return answerVector
     }
 

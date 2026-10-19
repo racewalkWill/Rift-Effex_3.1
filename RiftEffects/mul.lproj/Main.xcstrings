@@ -181,42 +181,6 @@
         }
       }
     },
-    "5bH-NQ-mz5.title" : {
-      "comment" : "Class = \"UIBarButtonItem\"; title = \"< Back\"; ObjectID = \"5bH-NQ-mz5\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "machine_translated",
-            "value" : "< Zpět"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "machine_translated",
-            "value" : "< Zurück"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "< Back"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "machine_translated",
-            "value" : "< Atrás"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "machine_translated",
-            "value" : "< Retour"
-          }
-        }
-      }
-    },
     "6fu-Gd-FHU.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Title\"; ObjectID = \"6fu-Gd-FHU\";",
       "extractionState" : "extracted_with_value",
