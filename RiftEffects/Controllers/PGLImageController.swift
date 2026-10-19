@@ -734,7 +734,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 guide.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: PGLTwoColumnSplitController.drawerPortraitHeightFraction)
             ]
             leadingOverride = sliderView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 104)
-            bottomOverride = sliderView.bottomAnchor.constraint(equalTo: guide.topAnchor, constant: -margin)
+            // In portrait PGLTwoColumnSplitController already ends this view at
+            // the drawer's top edge, so the drawer band does not overlap it.
+            // Pinning to guide.topAnchor double-avoided the drawer and left the
+            // sliders mid-image. Pin near this view's bottom instead; the
+            // stacked color sliders are chained above parmSlider in the
+            // storyboard, so the whole stack moves down with it.
+            bottomOverride = sliderView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -margin)
         } else {
             drawerAvoidanceGuideConstraints = [
                 guide.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
