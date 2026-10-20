@@ -1205,11 +1205,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             myUpdate in
                 // turn off the progress bar first
                 self?.hideProgressBar()
-                var message = "Video has been saved to Photos"
+                var message = String(localized: "Video has been saved to Photos", comment: "Alert message after the stack video output is saved to Photos")
                 if self?.appStack.outputStack.hasLimitedAccessPickedImages() ?? false {
                     message = PGLAppStack.LimitedAccessSaveMessage
                 }
-                let alert = UIAlertController(title: "Save Completed", message: message, preferredStyle: .alert)
+                let alert = UIAlertController(title: String(localized: "Save Completed", comment: "Alert title after the stack output is saved to Photos"), message: message, preferredStyle: .alert)
 
                 alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default) )
 

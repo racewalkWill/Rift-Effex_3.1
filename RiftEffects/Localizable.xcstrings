@@ -1893,6 +1893,35 @@
         }
       }
     },
+    "Pick Source Images" : {
+      "comment" : "Alert title when a loaded stack needs its source images picked again",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vyberte zdrojové obrázky"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ausgangsbilder auswählen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Elige las imágenes de origen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Choisissez les images source"
+          }
+        }
+      }
+    },
     "Pitch" : {
       "comment" : "Blend Text parameter display name",
       "localizations" : {
@@ -2498,6 +2527,35 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Enregistrer sous"
+          }
+        }
+      }
+    },
+    "Save Completed" : {
+      "comment" : "Alert title after the stack output is saved to Photos",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Uložení dokončeno"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sichern abgeschlossen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Guardado completado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Enregistrement terminé"
           }
         }
       }
@@ -3111,6 +3169,64 @@
         }
       }
     },
+    "The output has been saved to Photos. The source image was picked from outside the limited access 'Selected Photos' so it is not saved with the stack. Pick the source image again when the stack is opened." : {
+      "comment" : "Alert message after saving a stack whose source image was a limited Photos access pick",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Výstup byl uložen do Fotek. Zdrojový obrázek byl vybrán mimo „Vybrané fotky“ s omezeným přístupem, a proto se se zásobníkem neuloží. Po otevření zásobníku zdrojový obrázek vyberte znovu."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Das Ergebnis wurde in Fotos gesichert. Das Ausgangsbild stammt nicht aus „Ausgewählte Fotos“ (eingeschränkter Zugriff) und wird daher nicht mit dem Stapel gesichert. Wähle das Ausgangsbild erneut aus, wenn du den Stapel öffnest."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "El resultado se ha guardado en Fotos. La imagen de origen se ha elegido fuera de «Fotos seleccionadas» (acceso limitado), por lo que no se guarda con la pila. Vuelve a elegir la imagen de origen cuando abras la pila."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Le résultat a été enregistré dans Photos. L’image source a été choisie en dehors de « Photos sélectionnées » (accès limité) ; elle n’est donc pas enregistrée avec la pile de filtres. Choisissez à nouveau l’image source à l’ouverture de la pile de filtres."
+          }
+        }
+      }
+    },
+    "The source images of this stack were picked from outside the limited access 'Selected Photos' and were not saved. Pick the source images again for display." : {
+      "comment" : "Alert message when a loaded stack had limited Photos access source images that were not saved",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Zdrojové obrázky tohoto zásobníku byly vybrány mimo „Vybrané fotky“ s omezeným přístupem a nebyly uloženy. Chcete-li je zobrazit, vyberte zdrojové obrázky znovu."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Die Ausgangsbilder dieses Stapels stammen nicht aus „Ausgewählte Fotos“ (eingeschränkter Zugriff) und wurden nicht gesichert. Wähle die Ausgangsbilder erneut aus, um sie anzuzeigen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Las imágenes de origen de esta pila se han elegido fuera de «Fotos seleccionadas» (acceso limitado) y no se han guardado. Vuelve a elegir las imágenes de origen para mostrarlas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Les images source de cette pile de filtres ont été choisies en dehors de « Photos sélectionnées » (accès limité) et n’ont pas été enregistrées. Choisissez à nouveau les images source pour les afficher."
+          }
+        }
+      }
+    },
     "This cannot be undone" : {
       "comment" : "Trash alert message",
       "localizations" : {
@@ -3545,6 +3661,35 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Vidéo"
+          }
+        }
+      }
+    },
+    "Video has been saved to Photos" : {
+      "comment" : "Alert message after the stack video output is saved to Photos",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Video bylo uloženo do Fotek"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Das Video wurde in Fotos gesichert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "El video se ha guardado en Fotos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "La vidéo a été enregistrée dans Photos."
           }
         }
       }

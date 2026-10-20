@@ -1141,14 +1141,14 @@ extension PGLAppStack {
 
 
     /// Message for a saved stack whose source image was a limited Photos access pick
-    static let LimitedAccessSaveMessage = "The output has been saved to Photos. The source image was picked from outside the limited access 'Selected Photos' so it is not saved with the stack. Pick the source image again when the stack is opened."
+    static let LimitedAccessSaveMessage = String(localized: "The output has been saved to Photos. The source image was picked from outside the limited access 'Selected Photos' so it is not saved with the stack. Pick the source image again when the stack is opened.", comment: "Alert message after saving a stack whose source image was a limited Photos access pick")
 
     /// After the output is saved to Photos tell the user that a limited access
     /// source image is not saved with the stack
     func postLimitedAccessSaveNotice() {
         guard outputStack.hasLimitedAccessPickedImages() else { return }
         DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Save Completed", message: PGLAppStack.LimitedAccessSaveMessage, preferredStyle: .alert)
+            let alert = UIAlertController(title: String(localized: "Save Completed", comment: "Alert title after the stack output is saved to Photos"), message: PGLAppStack.LimitedAccessSaveMessage, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
             (UIApplication.shared.delegate as? AppDelegate)?.displayUser(alert: alert)
         }
@@ -1161,8 +1161,8 @@ extension PGLAppStack {
         limitedAccessLoadNoticePending = true
         DispatchQueue.main.async {
             self.limitedAccessLoadNoticePending = false
-            let message = "The source images of this stack were picked from outside the limited access 'Selected Photos' and were not saved. Pick the source images again for display."
-            let alert = UIAlertController(title: "Pick Source Images", message: message, preferredStyle: .alert)
+            let message = String(localized: "The source images of this stack were picked from outside the limited access 'Selected Photos' and were not saved. Pick the source images again for display.", comment: "Alert message when a loaded stack had limited Photos access source images that were not saved")
+            let alert = UIAlertController(title: String(localized: "Pick Source Images", comment: "Alert title when a loaded stack needs its source images picked again"), message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
             (UIApplication.shared.delegate as? AppDelegate)?.displayUser(alert: alert)
         }
