@@ -61,6 +61,7 @@ class PGLExcludeFilters {
 "CIAztecCodeGenerator",
 // "CILabDeltaE",
 "CIQRCodeGenerator",
+"CIRoundedQRCodeGenerator",
 "CIRoundedRectangleGenerator",
 // "CIPDF417BarcodeGenerator", restored ver 3.6.1 2025-12-13
 //"WarpItMetalFilter"
