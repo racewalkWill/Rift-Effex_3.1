@@ -751,6 +751,11 @@ extension PGLFilterAttributeImage {
     func loadInputAssets(cdImageParm: CDParmImage) {
         if let inputImageList = cdImageParm.inputAssets {
 
+            if inputImageList.attributeName == PGLLimitedAccessPickMarker {
+                // the saved source image was a limited Photos access pick - not stored
+                (UIApplication.shared.delegate as? AppDelegate)?.appStack.postLimitedAccessLoadNotice()
+            }
+
             let storedAssetStrings = inputImageList.assetIDs ?? [String]()
             let storedAlbumStrings = inputImageList.albumIds ?? [String]()
 
@@ -873,7 +878,18 @@ extension PGLFilterAttributeImage {
                 // use the inputCollection identifiers
                 localAssetIdentifiers = theAssetIdentifiers
             } else {
-                localAssetIdentifiers = self.inputCollection?.imageAssets.map({$0.localIdentifier}) ?? [String]()
+                // transient picker-only images (limited Photos mode) are not stored
+                localAssetIdentifiers = self.inputCollection?.imageAssets.filter({ !$0.isTransient }).map({$0.localIdentifier}) ?? [String]()
+            }
+
+            // limited Photos access picks are not stored - mark the list so the
+            // load path can tell the user to pick the source image again
+            let hasLimitedAccessPick = self.inputCollection?.hasTransientAssets ?? false
+            storedParmImage?.inputAssets?.attributeName = hasLimitedAccessPick ? PGLLimitedAccessPickMarker : nil
+            if hasLimitedAccessPick && localAssetIdentifiers.isEmpty {
+                // the list is only limited access picks - clear any ids stored by an earlier save
+                storedParmImage?.inputAssets?.assetIDs = [String]()
+                storedParmImage?.inputAssets?.machineName = nil
             }
 
             var storedAsLocalDevice = false
@@ -1124,6 +1140,34 @@ extension PGLAppStack {
     }
 
 
+    /// Message for a saved stack whose source image was a limited Photos access pick
+    static let LimitedAccessSaveMessage = "The output has been saved to Photos. The source image was picked from outside the limited access 'Selected Photos' so it is not saved with the stack. Pick the source image again when the stack is opened."
+
+    /// After the output is saved to Photos tell the user that a limited access
+    /// source image is not saved with the stack
+    func postLimitedAccessSaveNotice() {
+        guard outputStack.hasLimitedAccessPickedImages() else { return }
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Save Completed", message: PGLAppStack.LimitedAccessSaveMessage, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
+            (UIApplication.shared.delegate as? AppDelegate)?.displayUser(alert: alert)
+        }
+    }
+
+    /// A loaded stack had a limited Photos access source image that was not stored.
+    /// Called for each image parm with the marker - shows one alert per stack load.
+    func postLimitedAccessLoadNotice() {
+        if limitedAccessLoadNoticePending { return }
+        limitedAccessLoadNoticePending = true
+        DispatchQueue.main.async {
+            self.limitedAccessLoadNoticePending = false
+            let message = "The source images of this stack were picked from outside the limited access 'Selected Photos' and were not saved. Pick the source images again for display."
+            let alert = UIAlertController(title: "Pick Source Images", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
+            (UIApplication.shared.delegate as? AppDelegate)?.displayUser(alert: alert)
+        }
+    }
+
     func setToNewStack() {
         // save as.. command..
         // reset core data vars to nil for save as new records
@@ -1272,6 +1316,7 @@ extension PGLAppStack {
             self.basicPhotoLibChange(placeholder: creationRequest.placeholderForCreatedAsset!, stack, assetCollection)
 
         } )
+            postLimitedAccessSaveNotice()
         } catch  { userSaveErrorAlert(withError: error)}
     }
 
@@ -1315,6 +1360,7 @@ extension PGLAppStack {
             self.basicPhotoLibChange(placeholder: creationRequest.placeholderForCreatedAsset!, stack, assetCollection)
 
         } )
+            postLimitedAccessSaveNotice()
         } catch  { userSaveErrorAlert(withError: error)}
     }
 

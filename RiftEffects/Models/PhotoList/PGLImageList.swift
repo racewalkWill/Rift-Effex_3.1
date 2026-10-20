@@ -28,7 +28,8 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     fileprivate func recacheAssetIDs() {
             // objects are assets, they are the metadata from the photolibrary.. not the image
         assetIDs = [String]()
-        for anAsset in imageAssets {
+        for anAsset in imageAssets where !anAsset.isTransient {
+                // transient picker-only images are not stored
             assetIDs.append(anAsset.localIdentifier)
 
         }
@@ -66,6 +67,12 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     var nextType = NextElement.each // normally increments each image in sequence
 
 //    var isAssetList = true // hold PGLAssets.. or holds CIImages
+        /// true if any image is a limited Photos access pick outside the 'Selected Photos'.
+        /// These images are not stored with the stack.
+    var hasTransientAssets: Bool {
+        return imageAssets.contains(where: { $0.isTransient })
+    }
+
     var hasUncachedAssets: Bool {
         get{
            return imageAssets.contains(where: { $0.imageNotAvailable() })
@@ -115,7 +122,7 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
     convenience init(localPGLAssets: [PGLAsset]) {
         self.init()
         imageAssets = localPGLAssets
-        assetIDs = imageAssets.map({ $0.localIdentifier})
+            // imageAssets didSet sets assetIDs without the transient picker-only images
 
 
     }

@@ -26,7 +26,15 @@ class PGLAsset: Hashable, Equatable, Identifiable {
        // does this cause any caching memory problems??
        // because the assetCollection is held??
        // other option is to capture localIdentifier & title only
-    nonisolated(unsafe) var asset: PHAsset
+    nonisolated(unsafe) var asset: PHAsset?
+        // nil for a transient picker-only image - see init(pickerItemProvider:)
+
+        /// image source when there is no PHAsset
+    private var pickerItemProvider: NSItemProvider?
+
+        /// true when the image came from the PHPicker but is outside the limited library selection.
+        /// The image may be rendered but its id must not be stored or reused.
+    var isTransient: Bool { asset == nil }
 
     // sourceInfo not needed.. PHAsset.fetchAssets(withLocalIdentifiers already set
     lazy var sourceInfo: PHAssetCollection? =
@@ -106,7 +114,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
           {  albumId = "" }
         else { albumId = collectionId! }
         asset = sourceAsset
-        localIdentifier = asset.localIdentifier
+        localIdentifier = sourceAsset.localIdentifier
 
         guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
                         else { Logger(subsystem: LogSubsystem, category: LogCategory).fault ("PGLFilterTableController viewDidLoad fatalError AppDelegate not loaded")
@@ -123,6 +131,23 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 
     convenience init(sourceAsset: PHAsset) {
         self.init(sourceAsset, collectionId: nil, collectionLocalTitle: nil)
+    }
+
+    /// Limited library mode - the user picked a photo outside the allowed selection.
+    /// PHAsset.fetchAssets does not answer it, so the image loads from the picker
+    /// item provider. The localIdentifier is a new in-memory id, not the Photos id,
+    /// so the photo cannot be stored or reused.
+    init(pickerItemProvider: NSItemProvider) {
+        asset = nil
+        albumId = ""
+        self.pickerItemProvider = pickerItemProvider
+        localIdentifier = "picked-" + UUID().uuidString
+
+        guard let myAppDelegate =  UIApplication.shared.delegate as? AppDelegate
+                        else { Logger(subsystem: LogSubsystem, category: LogCategory).fault ("PGLAsset init fatalError AppDelegate not loaded")
+                            return
+                    }
+        cache = myAppDelegate.appStack.photoMgr
     }
 
     @MainActor func releaseVars() {
@@ -163,7 +188,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 
 
     func isNull() -> Bool {
-        return  asset.localIdentifier.hasPrefix("(null)/")
+        return  asset?.localIdentifier.hasPrefix("(null)/") ?? false
             // "(null)/L0/001" is error string
     }
 
@@ -240,33 +265,47 @@ class PGLAsset: Hashable, Equatable, Identifiable {
     }
 
     func startImageRequestTask()  {
+        if isTransient {
+            // picker-only image - load from the item provider, not the PHCachingImageManager
+            guard let provider = pickerItemProvider, let cache = cache else { return }
+            cache.loadImage(from: provider) { @Sendable returnUIImage in
+                Task { @MainActor in
+                    if let returnUIImage {
+                        self.imageLoaded(returnUIImage)
+                    }
+                    self.postRedrawFilterNotification()
+                }
+            }
+            return
+        }
         Task {
             guard let cache = cache else { return }
 //            NSLog(#function, #line)
             imageRequestID = await cache.requestImage(for: self, targetSize: RenderTargetSize) { @Sendable result in
                 Task { @MainActor in
 //                    NSLog("\(#function) process: \(ProcessInfo.processInfo.processName) time: \(Date()) result: \(String(describing: result))")
-                    if let result = result {
-                        if let returnUIImage = result.image {
-                            NSLog("\(#function) image cached for \(self.asset.localIdentifier)")
-                            self.thumbnail = returnUIImage.preparingThumbnail(of: self.thumbnailSize)
-                            self.ciImage = self.convert2CIImage(aUIImage: returnUIImage)
-
-                            self.centerScaler = self.setCenterScaler(to: self.ciImage!)
-                            if let ciImage = self.ciImage {
-                                if let resizedImage = self.imageAtTargetSize() {
-                                    self.onImageReady?(resizedImage) }
-                                else {
-                                    self.onImageReady?(ciImage) }
-
-                                }
-                            }
-
-                        }
+                    if let returnUIImage = result?.image {
+                        self.imageLoaded(returnUIImage)
+                    }
                     self.postRedrawFilterNotification()
                     }  // child TASK close
                 }
             } // parent TASK close
+    }
+
+    /// set the thumbnail, ciImage and centerScaler from a loaded image
+    private func imageLoaded(_ returnUIImage: UIImage) {
+        NSLog("\(#function) image cached for \(localIdentifier)")
+        thumbnail = returnUIImage.preparingThumbnail(of: thumbnailSize)
+        ciImage = convert2CIImage(aUIImage: returnUIImage)
+
+        if let ciImage = ciImage {
+            centerScaler = setCenterScaler(to: ciImage)
+            if let resizedImage = imageAtTargetSize() {
+                onImageReady?(resizedImage) }
+            else {
+                onImageReady?(ciImage) }
+        }
     }
 
     func postRedrawFilterNotification() {
@@ -313,7 +352,7 @@ class PGLAsset: Hashable, Equatable, Identifiable {
 
     //MARK: Video
     func isVideo() -> Bool {
-        return asset.mediaType == .video
+        return asset?.mediaType == .video
     }
 
 

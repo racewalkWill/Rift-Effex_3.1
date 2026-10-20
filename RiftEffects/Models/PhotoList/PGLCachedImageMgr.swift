@@ -68,11 +68,12 @@ actor PGLCachedImageMgr {
     @discardableResult
     func requestImage(for asset: PGLAsset, targetSize: CGSize, completion: @escaping ((image: UIImage?, isLowerQuality: Bool)?) -> Void) ->
         PHImageRequestID? {
-       let phAsset = asset.asset
-//           else {
-//                completion(nil)
-//                return nil
-//            }
+        guard let phAsset = asset.asset
+            else {
+                // transient picker-only asset - use #loadImage(from:)
+                completion(nil)
+                return nil
+            }
         NSLog("PGLCachedImageMgr requestImage: \(phAsset.localIdentifier)")
         let requestID = imageManager.requestImage(for: phAsset, targetSize: targetSize, contentMode: imageContentMode, options: requestOptions) { image, info in
             if let error = info?[PHImageErrorKey] as? (any Error) {
@@ -99,7 +100,7 @@ actor PGLCachedImageMgr {
     /// can report why an asset did not load. A degraded (lower quality) callback is
     /// skipped - the continuation resumes only on the final callback.
     func requestImageResult(for asset: PGLAsset, targetSize: CGSize) async -> Result<UIImage, CachedImageManagerError> {
-        let phAsset = asset.asset
+        guard let phAsset = asset.asset else { return .failure(.failed) }
         return await withCheckedContinuation { continuation in
             imageManager.requestImage(for: phAsset, targetSize: targetSize, contentMode: imageContentMode, options: requestOptions) { image, info in
                 if let error = info?[PHImageErrorKey] as? (any Error) {
@@ -114,6 +115,23 @@ actor PGLCachedImageMgr {
                     continuation.resume(returning: .failure(.failed))
                 }
             }
+        }
+    }
+
+    /// Load a picker-only image. In limited library mode a photo picked outside the
+    /// allowed selection has no PHAsset, only the PHPickerResult item provider.
+    /// Not cached by the PHCachingImageManager; the PGLAsset keeps the decoded ciImage.
+    /// nonisolated - no actor state is used and the non-Sendable provider stays with the caller.
+    nonisolated func loadImage(from provider: NSItemProvider, completion: @escaping @Sendable (UIImage?) -> Void) {
+        guard provider.canLoadObject(ofClass: UIImage.self) else {
+            completion(nil)
+            return
+        }
+        provider.loadObject(ofClass: UIImage.self) { object, error in
+            if let error = error {
+                logger.error("CachedImageManager loadImage error: \(error.localizedDescription)")
+            }
+            completion(object as? UIImage)
         }
     }
 

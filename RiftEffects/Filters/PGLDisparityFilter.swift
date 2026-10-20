@@ -108,13 +108,17 @@ class PGLDisparityFilter: PGLRectangleFilter {
 
         if userPickList.isEmpty() { return }
         let newImage = userPickList.firstImageBasic()
-        guard let inputAsset = userPickList.firstAsset()
-         else { return }
+        guard let inputAsset = userPickList.firstAsset(),
+              let inputPHAsset = inputAsset.asset
+         else {
+            // transient picker-only asset has no PHAsset depth data
+            hasDisparity = false
+            return }
 
         let options = PHContentEditingInputRequestOptions()
         options.isNetworkAccessAllowed = true
 
-        inputAsset.asset.requestContentEditingInput(with: options, completionHandler: { input, info in
+        inputPHAsset.requestContentEditingInput(with: options, completionHandler: { input, info in
             guard let input = input
                 else {
                 Logger(subsystem: LogSubsystem, category: LogCategory).info( ("contentEditingInput not loaded"))

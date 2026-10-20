@@ -66,6 +66,8 @@ class PGLAppStack {
     var cancellable: (any Cancellable)?
     var appStackUndoManager = UndoManager()
     var runTimeSeconds: Int = 0  // length of PGLCaptureOutput saved video
+    var limitedAccessLoadNoticePending = false
+        // one load notice for all the image parms of a stack load - see postLimitedAccessLoadNotice()
 
     lazy var dataProvider: PGLStackProvider = {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate

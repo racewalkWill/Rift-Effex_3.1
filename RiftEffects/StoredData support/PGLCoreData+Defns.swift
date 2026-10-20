@@ -33,6 +33,12 @@ let appStackName = "RiftEffects"
 /// The value is a UUID persisted in the local (non-syncing) UserDefaults, so it
 /// stays unique to this physical install and is safe to read from any thread /
 /// Core Data context. It is intentionally not derived from iCloud state.
+/// Stored in CDImageList.attributeName when the image list held a limited Photos
+/// access image picked outside the 'Selected Photos'. That image is not stored, so
+/// on load the user is told to pick the source image again.
+/// CDImageList.attributeName was otherwise unused - no model or CloudKit schema change.
+let PGLLimitedAccessPickMarker = "limitedAccessPick"
+
 let PGLCurrentDeviceIDKey = "PGLCurrentDeviceID"
 var PGLCurrentDeviceID: String {
     if let existing = UserDefaults.standard.string(forKey: PGLCurrentDeviceIDKey) {

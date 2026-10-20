@@ -309,7 +309,7 @@ class PGLUserAssetSelection {
 
     func removeSourceFromSelection(aPGLAsset: PGLAsset) {
         let selectedId = aPGLAsset.localIdentifier
-        selectedAssets.removeAll(where: {$0.asset.localIdentifier == selectedId})
+        selectedAssets.removeAll(where: {$0.localIdentifier == selectedId})
         }
 
 

@@ -112,7 +112,7 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
         }
 
         // =========== end new picker
-        var identifiers:[String] = selection.keys.map(\.description)
+        let identifiers:[String] = selection.keys.map(\.description)
 
         // start full access mode
         let fetchAssetResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: nil)
@@ -120,12 +120,23 @@ class PGLImageListPicker:  PHPickerViewControllerDelegate {
 
         NSLog("didFinish identifiers = \(identifiers) in fetchResult \(fetchAssetResult)")
 
-        identifiers = [String]()
-            // reset - not all identifiers are fetched in limited Photos mode
+        var fetchedById = [String: PHAsset]()
         for fetchAsset in fetchAssetResult.objects {
-            identifiers.append(fetchAsset.localIdentifier)
+            fetchedById[fetchAsset.localIdentifier] = fetchAsset
         }
-        let selectedImageList = PGLImageList(localAssetIDs: identifiers, albumIds: [String]())
+
+        // keep the picker selection order
+        var pickedAssets = [PGLAsset]()
+        for pickedId in selectedAssetIdentifiers {
+            if let phAsset = fetchedById[pickedId] {
+                pickedAssets.append(PGLAsset(sourceAsset: phAsset))
+            } else if let pickedResult = selection[pickedId] {
+                // limited Photos mode - picked outside the allowed selection so no PHAsset.
+                // Use the image from the item provider but do not keep its id
+                pickedAssets.append(PGLAsset(pickerItemProvider: pickedResult.itemProvider))
+            }
+        }
+        let selectedImageList = PGLImageList(localPGLAssets: PGLAsset.runCacheLoad(pickedAssets))
 
         pickingImageList =  selectedImageList
 

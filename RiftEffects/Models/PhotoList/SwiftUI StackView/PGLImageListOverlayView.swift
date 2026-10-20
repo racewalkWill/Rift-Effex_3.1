@@ -197,12 +197,12 @@ struct PGLAssetRowView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 4) {
-                if pglAsset.asset.mediaType == .video {
+                if pglAsset.asset?.mediaType == .video {
                     Label("Video", systemImage: "video")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                if let date = pglAsset.asset.creationDate {
+                if let date = pglAsset.asset?.creationDate {
                     Text(DateFormatter.localizedString(from: date, dateStyle: .short, timeStyle: .none))
                         .font(.caption)
                         .foregroundColor(.white.opacity(0.8))

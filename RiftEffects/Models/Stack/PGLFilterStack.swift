@@ -1150,3 +1150,17 @@ class PGLFilterStack: Equatable, Hashable  {
 }
 
 
+
+extension PGLFilterStack {
+    /// true if any image input in this stack or its child stacks is a limited Photos
+    /// access pick outside the 'Selected Photos'. These images are not stored with the stack.
+    func hasLimitedAccessPickedImages() -> Bool {
+        for aFilter in activeFilters {
+            for anImageParm in aFilter.imageParms() ?? [PGLFilterAttributeImage]() {
+                if anImageParm.inputCollection?.hasTransientAssets ?? false { return true }
+                if anImageParm.inputStack?.hasLimitedAccessPickedImages() ?? false { return true }
+            }
+        }
+        return false
+    }
+}

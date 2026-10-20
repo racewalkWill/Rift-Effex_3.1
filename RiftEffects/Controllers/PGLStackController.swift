@@ -759,11 +759,14 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
             postStackNameChange()
         }
 
-        // post notification to the imageController
-        let notifier = Notification(name: PGLStackSavePerform)
-        NotificationCenter.default.post(notifier)
-
-        dismiss(animated: true)
+        // dismiss the save sheet first, then post notification to the imageController.
+        // Save alerts (limited access notice, save errors) present on the front view
+        // controller - if the save runs while the sheet is dismissing the alert is
+        // presented on the sheet whose view is leaving the window and is not shown.
+        dismiss(animated: true) {
+            let notifier = Notification(name: PGLStackSavePerform)
+            NotificationCenter.default.post(notifier)
+        }
         saveStackHostingController = nil
     }
 

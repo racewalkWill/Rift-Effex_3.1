@@ -132,8 +132,8 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
             AVVideoAllowWideColorKey: true,
             AVVideoColorPropertiesKey: videoColorProperties,
             kCVPixelBufferPixelFormatTypeKey as String: NSNumber(value: kCVPixelFormatType_64RGBAHalf),
-            kCVPixelBufferWidthKey as String: NSNumber(value: parentAsset.asset.pixelWidth),
-            kCVPixelBufferHeightKey as String: NSNumber(value: parentAsset.asset.pixelHeight)
+            kCVPixelBufferWidthKey as String: NSNumber(value: parentAsset.asset?.pixelWidth ?? 0),
+            kCVPixelBufferHeightKey as String: NSNumber(value: parentAsset.asset?.pixelHeight ?? 0)
         ] 
 
         return AVPlayerItemVideoOutput(outputSettings: outPutSettings)
@@ -249,7 +249,8 @@ class PGLAssetVideoPlayer: Equatable, Hashable {
     }
 
     func setUpVideoPlayAssets() {
-        let thePHAsset = parentAsset.asset
+        guard let thePHAsset = parentAsset.asset
+            else { return } // transient picker-only asset has no PHAsset video
         let options = videoRequestOptions()
         options.progressHandler  = { progress, error, stop, info in
             if let error = error {
