@@ -374,9 +374,9 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="GCd-EU-ad0" firstAttribute="leading" secondItem="0fZ-8j-UZl" secondAttribute="leading" constant="117" id="eDU-q1-xZp"/>
+                            <constraint firstItem="GCd-EU-ad0" firstAttribute="leading" secondItem="0fZ-8j-UZl" secondAttribute="leadingMargin" id="eDU-q1-xZp"/>
                             <constraint firstItem="ob8-yd-AlQ" firstAttribute="top" secondItem="GCd-EU-ad0" secondAttribute="bottom" constant="8" symbolic="YES" id="qbs-Ze-nGB"/>
-                            <constraint firstAttribute="trailing" secondItem="GCd-EU-ad0" secondAttribute="trailing" constant="115" id="saQ-3h-6yj"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="GCd-EU-ad0" secondAttribute="trailing" id="saQ-3h-6yj"/>
                             <constraint firstItem="GCd-EU-ad0" firstAttribute="top" secondItem="6FL-Ff-X7c" secondAttribute="bottom" constant="20" id="xeG-Tb-wcd"/>
                         </constraints>
                     </view>

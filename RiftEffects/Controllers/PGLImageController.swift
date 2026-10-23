@@ -442,11 +442,13 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     func displayPrivacyPolicy(_ sender: UIBarButtonItem) {
         let infoPrivacyController = storyboard!.instantiateViewController(
             withIdentifier: "infoPrivacy") as! PGLInfoPrivacyController
+            // the navigation bar holds the close button
+        let navController = UINavigationController(rootViewController: infoPrivacyController)
 
         if ( parent is PGLStackImageContainerController ) {
-            infoPrivacyController.modalPresentationStyle = .popover
+            navController.modalPresentationStyle = .popover
                 // specify anchor point?
-            guard let popOverPresenter = infoPrivacyController.popoverPresentationController
+            guard let popOverPresenter = navController.popoverPresentationController
             else { return }
             popOverPresenter.canOverlapSourceViewRect = true // or barButtonItem
                                                              // popOverPresenter.popoverLayoutMargins // default is 10 points inset from device edges
@@ -459,10 +461,9 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
             sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
 
             popOverPresenter.barButtonItem = moreBtn
-            present(infoPrivacyController, animated: true )
+            present(navController, animated: true )
         } else {
                 // on the iPad.. just present full size
-            let navController = UINavigationController(rootViewController: infoPrivacyController)
             present(navController, animated: true)
         }
     }

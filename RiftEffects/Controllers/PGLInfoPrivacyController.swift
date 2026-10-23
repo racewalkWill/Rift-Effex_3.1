@@ -17,6 +17,10 @@ class PGLInfoPrivacyController: UIViewController {
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
         PrivacyText.attributedText = readPrivacyPolicy()
         self.navigationItem.title = "https:\\\\rifteffex.com"
+            // explicit close - the iPhone landscape sheet does not dismiss on swipe down
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction { [weak self] _ in
+            self?.dismiss(animated: true)
+        })
 
         // Do any additional setup after loading the view.
     }
@@ -36,7 +40,24 @@ class PGLInfoPrivacyController: UIViewController {
             Logger(subsystem: LogSubsystem, category: LogCategory).error("Privacy Policy read error \(error.localizedDescription)")
 
         }
-        return policyText
+        return adaptedForDevice(policyText)
+    }
+
+    /// The RTF files carry no text color (imports as black - invisible in dark mode)
+    /// and a negative right indent (\ri-1634, ~82 pt) that leaves almost no line width
+    /// on an iPhone. Use the dynamic label color and remove the tail indent.
+    func adaptedForDevice(_ policyText: NSAttributedString) -> NSAttributedString {
+        let adapted = NSMutableAttributedString(attributedString: policyText)
+        let fullRange = NSRange(location: 0, length: adapted.length)
+        adapted.addAttribute(.foregroundColor, value: UIColor.label, range: fullRange)
+        adapted.enumerateAttribute(.paragraphStyle, in: fullRange) { value, range, _ in
+            guard let style = value as? NSParagraphStyle,
+                  let mutableStyle = style.mutableCopy() as? NSMutableParagraphStyle
+            else { return }
+            mutableStyle.tailIndent = 0
+            adapted.addAttribute(.paragraphStyle, value: mutableStyle, range: range)
+        }
+        return adapted
     }
 
     @IBOutlet weak var PrivacyText: UITextView!
