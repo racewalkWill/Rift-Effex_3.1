@@ -102,6 +102,13 @@ class PGLDemo {
                 let newbieList = PGLDemo.RandomImageList.clone(toParm: imageParm)
 
                 newbieList.randomPrune(imageParm: imageParm)
+                    // the PGLAssets are shared with PGLDemo.RandomImageList - a released
+                    // stack (PGLAppStack #releaseTopStack) clears their images, so reload
+                let emptyAssets = newbieList.imageAssets.filter { $0.imageNotAvailable() }
+                if !emptyAssets.isEmpty {
+                    Logger(subsystem: LogSubsystem, category: LogCategory).debug ("setDemoImageInputs reloading \(emptyAssets.count, privacy: .public) released assets")
+                    _ = newbieList.runCacheLoad(emptyAssets)
+                }
                 if newbieList.isEmpty() {
                     Logger(subsystem: LogSubsystem, category: LogCategory).error("PGLDemo #setInputTo no images in list")
                 }

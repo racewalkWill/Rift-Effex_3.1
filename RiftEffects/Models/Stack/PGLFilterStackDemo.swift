@@ -181,6 +181,13 @@ extension PGLSourceFilter {
 
                         // now prune down  the newbie list if needed
                     newbieList.randomPrune(imageParm: imageParm)
+                        // the PGLAssets are shared with PGLDemo.RandomImageList - a released
+                        // stack (PGLAppStack #releaseTopStack) clears their images, so reload
+                    let emptyAssets = newbieList.imageAssets.filter { $0.imageNotAvailable() }
+                    if !emptyAssets.isEmpty {
+                        Logger(subsystem: LogSubsystem, category: LogCategory).debug ("setDemoImageInputs reloading \(emptyAssets.count, privacy: .public) released assets")
+                        _ = newbieList.runCacheLoad(emptyAssets)
+                    }
                     imageParm.setImageCollectionInput(cycleStack: newbieList)
                 }
 
