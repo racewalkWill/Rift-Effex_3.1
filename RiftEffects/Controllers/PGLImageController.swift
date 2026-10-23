@@ -518,7 +518,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     func confirmTrashDisplayStack(_ sender: UIBarButtonItem)  {
 
         let discardAction = UIAlertAction(title: NSLocalizedString("Start Over", comment: "Trash alert action"),
-                                          style: .destructive) { (action) in
+                                          style: .default) { (action) in
             self.trashOldStartNewStack()
                 //            self.hideViewReleaseStack()
 
@@ -558,6 +558,11 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         alert.addAction(removeImages)
 
         alert.addAction(cancelAction)
+
+            // emphasize 'Start Over' as the highlighted tint-color button.
+            // .default style - red .destructive text on grey was hard to read on iPhone.
+            // System colors keep it readable in light & dark mode.
+        alert.preferredAction = discardAction
 
             // On iPad, action sheets must be presented from a popover.
         alert.popoverPresentationController?.barButtonItem = sender
