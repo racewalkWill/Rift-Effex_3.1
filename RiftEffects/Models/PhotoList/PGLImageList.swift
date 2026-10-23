@@ -320,11 +320,10 @@ class PGLImageList: @preconcurrency CustomStringConvertible {
             allowedAssetCount = PGLDemo.MaxListSize }
 
 
-        while (assetIDs.count > allowedAssetCount) {
-            let randomIndex = Int.random(in: 0 ..< assetIDs.count)
-            assetIDs.remove(at: randomIndex)
-            imageAssets.remove(at: randomIndex)
-            // update userSelection too !
+        // prune on imageAssets - assetIDs is derived from imageAssets by didSet
+        // and omits transient picks, so its count can be smaller than imageAssets
+        if imageAssets.count > allowedAssetCount {
+            imageAssets = Array(imageAssets.shuffled().prefix(allowedAssetCount))
         }
 //        setUserSelection(toAttribute: imageParm)
     }

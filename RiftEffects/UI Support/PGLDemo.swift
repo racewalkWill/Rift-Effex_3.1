@@ -68,24 +68,6 @@ class PGLDemo {
     }
 
         // MARK: Demo
-    func fetchFavoritesList(onImageParm: PGLFilterAttribute) ->  PGLAlbumSource? {
-
-        if PGLDemo.FavoritesAlbumList == nil {
-            let userFavorites = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumFavorites , options: nil)
-
-
-            if let theFavoriteAlbum = userFavorites.firstObject {
-                let fetchResultAssets = PHAsset.fetchAssets(in: theFavoriteAlbum , options: nil)
-                let theInfo =  PGLAlbumSource(targetAttribute: onImageParm, theFavoriteAlbum,fetchResultAssets)
-                    //                                          init(_ assetAlbum: PHAssetCollection, _ result: PHFetchResult<PHAsset>? ))
-                    // init(_ assetAlbum: PHAssetCollection, _ result: PHFetchResult<PHAsset>? )
-                PGLDemo.FavoritesAlbumList = theInfo
-            }
-        }
-        return PGLDemo.FavoritesAlbumList
-
-    }
-
     func addFiltersTo(stack: PGLFilterStack) {
             // put NumOfFilters random filters on the stack
             // filters from random groups in singleFilterGroups
@@ -127,58 +109,6 @@ class PGLDemo {
             }
     }
 
-    func setRandomImagesFromFavorites(imageParm: PGLFilterAttribute) {
-        guard let favoriteAlbumSource = fetchFavoritesList(onImageParm: imageParm) else
-        {
-            DispatchQueue.main.async {
-                    // put back on the main UI loop for the user alert
-                let alert = UIAlertController(title: "Favorites Album", message: "Favorites is empty. Add or select images for random filter inputs.", preferredStyle: .alert)
-
-                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
-                    Logger(subsystem: LogSubsystem, category: LogCategory).error("PGLDemo #setInputTo Favorites album is empty")
-                }))
-                let myAppDelegate =  UIApplication.shared.delegate as! AppDelegate
-                myAppDelegate.displayUser(alert: alert)
-            }
-            return
-        }
-        favoriteAlbumSource.filterParm = imageParm
-        let favoriteAssets = favoriteAlbumSource.assets() // converts to PGLAsset
-                                                          // mix it up with photos
-
-        var selectedAssets = [PGLAsset]()
-        var allowedAssetCount = 1
-        if imageParm.isTransitionFilter
-        { allowedAssetCount = PGLDemo.MaxListSize }
-        let maxIndex = favoriteAssets!.count
-        if maxIndex == 0 {
-                // may be limited access to photo lib
-            return
-        }
-
-            // ensure an image is only picked once.
-        var pickedIndexes = [Int]()
-        let maxLoopCount = allowedAssetCount * 2
-            // stop at some point
-        var whileLoopCount = 0
-        while (selectedAssets.count <= allowedAssetCount) && (whileLoopCount <= maxLoopCount) {
-            let randomIndex = Int.random(in: 0 ..< maxIndex)
-            if pickedIndexes.contains(randomIndex) {
-                    // skip to next  loop for new random
-                continue }
-            pickedIndexes.append(randomIndex)
-            selectedAssets.append(favoriteAssets![randomIndex])
-            whileLoopCount += 1
-        }
-
-        let randomAssetIDs = selectedAssets.map(\.localIdentifier)
-
-
-        let newImageList = PGLImageList(localAssetIDs: randomAssetIDs, albumIds: [String]() )
-        imageParm.setImageCollectionInput(cycleStack: newImageList)
-
-    }
-
     static func fetchFavoritesList() ->  PGLAlbumSource? {
 
         if PGLDemo.FavoritesAlbumList == nil {
@@ -205,40 +135,20 @@ class PGLDemo {
         else { alertFavoritesError()
             return PGLImageList()
         }
-        let favoriteAssets = favoriteAlbumSource.assets() // converts to PGLAsset
-        // mix it up with photo
-        var selectedAssets = [PGLAsset]()
-        var allowedAssetCount = 1
-        allowedAssetCount = PGLDemo.MaxListSize
-        let maxIndex = favoriteAssets!.count
-        if maxIndex == 0 {
+        guard let favoriteAssets = favoriteAlbumSource.assets(), !favoriteAssets.isEmpty
+        else {
                 // may be limited access to photo lib
             return PGLImageList()
         }
 
-            // ensure an image is only picked once.
-        var pickedIndexes = [Int]()
-        let maxLoopCount = allowedAssetCount * 2
-            // stop at some point
-        var whileLoopCount = 0
-        while (selectedAssets.count <= allowedAssetCount) && (whileLoopCount <= maxLoopCount) {
-            let randomIndex = Int.random(in: 0 ..< maxIndex)
-            if pickedIndexes.contains(randomIndex) {
-                    // skip to next  loop for new random
-                continue }
-            pickedIndexes.append(randomIndex)
-            selectedAssets.append(favoriteAssets![randomIndex])
-            whileLoopCount += 1
-        }
-
+            // shuffle so each image is picked at most once
+            // takes all favorites if there are fewer than MaxListSize
+        let selectedAssets = favoriteAssets.shuffled().prefix(PGLDemo.MaxListSize)
         let randomAssetIDs = selectedAssets.map(\.localIdentifier)
-
 
         let newImageList = PGLImageList(localAssetIDs: randomAssetIDs, albumIds: [String]() )
 
         return newImageList
-//        imageParm.setImageCollectionInput(cycleStack: newImageList)
-
     }
 
     static func alertFavoritesError() {
@@ -367,8 +277,11 @@ class PGLDemo {
             // triggers PGLImageController to set view.isHidden to false
             // show the new results !
 
-        let goToStack = Notification(name: PGLLoadedDataStack)
-        NotificationCenter.default.post(goToStack)
+
+        let notificationRedrawFilter = Notification(name: PGLRedrawFilterChange)
+        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+            // trigger several frames of redraw
+
 
 //        let optimizeStack = Notification(name: PGLOptimizeStack)
 //        NotificationCenter.default.post(optimizeStack)
