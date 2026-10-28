@@ -61,6 +61,30 @@
             "state" : "machine_translated",
             "value" : "Dégradé à 3 côtés pour la fusion avec masque. Génère la forme du masque."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sfumatura a 3 lati per la fusione con maschera. Genera la forma della maschera"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "マスク付きブレンド用の3辺グラデーション。マスクの形状を生成します"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gradiente de 3 lados para mesclagem com máscara. Gera a forma da máscara"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "用于蒙版混合的三边渐变。生成蒙版形状"
+          }
         }
       }
     },
@@ -90,6 +114,30 @@
             "state" : "machine_translated",
             "value" : "Dégradé à 4 côtés"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sfumatura a 4 lati"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "4辺グラデーション"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gradiente de 4 Lados"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "四边渐变"
+          }
         }
       }
     },
@@ -118,6 +166,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Dégradé à 4 côtés pour la fusion avec masque. Génère la forme du masque."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sfumatura a 4 lati per la fusione con maschera. Genera la forma della maschera"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "マスク付きブレンド用の4辺グラデーション。マスクの形状を生成します"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gradiente de 4 lados para mesclagem com máscara. Gera a forma da máscara"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "用于蒙版混合的四边渐变。生成蒙版形状"
           }
         }
       }
@@ -149,6 +221,30 @@
             "state" : "translated",
             "value" : "Ajouter"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aggiungi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "追加"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Adicionar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "添加"
+          }
         }
       }
     },
@@ -179,6 +275,30 @@
             "state" : "machine_translated",
             "value" : "Ajouter un filtre"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aggiungi filtro"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "フィルタを追加"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Adicionar Filtro"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "添加滤镜"
+          }
         }
       }
     },
@@ -207,6 +327,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Album :"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Album:"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "アルバム:"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Álbum:"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "相簿："
           }
         }
       }
@@ -237,6 +381,30 @@
             "state" : "translated",
             "value" : "Tout"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tutti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "すべて"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Todos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "全部"
+          }
         }
       }
     },
@@ -265,6 +433,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Démo de fusion"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Demo fusione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ブレンドのデモ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Demo de Mesclagem"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "混合演示"
           }
         }
       }
@@ -295,6 +487,30 @@
             "state" : "machine_translated",
             "value" : "Fusion de texte"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fusione testo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "テキストブレンド"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Mesclagem de Texto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "文本混合"
+          }
         }
       }
     },
@@ -323,6 +539,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Fusion avec effet de bosse"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fusione con rigonfiamento"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "膨らみブレンド"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Mesclagem com Abaulamento"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "凸起混合"
           }
         }
       }
@@ -353,6 +593,30 @@
             "state" : "machine_translated",
             "value" : "Annuler"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Annulla"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "キャンセル"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cancelar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "取消"
+          }
         }
       }
     },
@@ -382,6 +646,30 @@
             "state" : "machine_translated",
             "value" : "Centre"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Centro"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "中心"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Centro"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "中心"
+          }
         }
       }
     },
@@ -410,6 +698,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Changer"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cambia"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "変更"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Alterar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "更改"
           }
         }
       }
@@ -441,6 +753,30 @@
             "state" : "machine_translated",
             "value" : "Changer l’image"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cambia immagine"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "画像を変更"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Alterar Imagem"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "更改图像"
+          }
         }
       }
     },
@@ -469,6 +805,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Presse-papiers"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Appunti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "クリップボード"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Área de Transferência"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "剪贴板"
           }
         }
       }
@@ -499,6 +859,30 @@
             "state" : "machine_translated",
             "value" : "Couleur"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Colore"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "色"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cor"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "颜色"
+          }
         }
       }
     },
@@ -527,6 +911,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Couleur 1"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Colore 1"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "色 1"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cor 1"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "颜色 1"
           }
         }
       }
@@ -557,6 +965,30 @@
             "state" : "machine_translated",
             "value" : "Couleur 2"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Colore 2"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "色 2"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cor 2"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "颜色 2"
+          }
         }
       }
     },
@@ -585,6 +1017,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Composition de texte"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Composizione testo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "テキスト合成"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Composição de texto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "文本合成"
           }
         }
       }
@@ -615,6 +1071,30 @@
             "state" : "machine_translated",
             "value" : "Copier"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Copia"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "コピー"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Copiar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "拷贝"
+          }
         }
       }
     },
@@ -643,6 +1123,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Supprimer"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Elimina"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "削除"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Apagar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "删除"
           }
         }
       }
@@ -674,6 +1178,30 @@
             "state" : "machine_translated",
             "value" : "Supprimer le filtre"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Elimina filtro"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "フィルタを削除"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Apagar filtro"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "删除滤镜"
+          }
         }
       }
     },
@@ -702,6 +1230,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Bouton « Démo » dans la barre pour des exemples avec des images de vos favoris"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pulsante Demo nella barra per esempi con immagini dai tuoi Preferiti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "バーの“デモ”ボタンで、“お気に入り”の画像を使ったサンプルを表示"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Botão “Demo” da barra para exemplos com imagens dos seus Favoritos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "栏中的“演示”按钮可使用你的个人收藏中的图像生成示例"
           }
         }
       }
@@ -732,6 +1284,30 @@
             "state" : "machine_translated",
             "value" : "Durée d’affichage"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Durata visualizzazione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "表示時間"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tempo de exibição"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "显示时长"
+          }
         }
       }
     },
@@ -760,6 +1336,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Wrapper de fondu"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Wrapper dissolvenza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ディゾルブラッパー"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Wrapper de dissolução"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "溶解包装器"
           }
         }
       }
@@ -790,6 +1390,30 @@
             "state" : "machine_translated",
             "value" : "Démo de contours"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Demo bordi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "エッジのデモ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Demo de bordas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "边缘演示"
+          }
         }
       }
     },
@@ -819,6 +1443,30 @@
             "state" : "translated",
             "value" : "Modifier"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Modifica"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "編集"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Editar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "编辑"
+          }
         }
       }
     },
@@ -844,6 +1492,30 @@
           }
         },
         "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Effex"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Effex"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Effex"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Effex"
+          }
+        },
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Effex"
@@ -876,6 +1548,30 @@
             "state" : "machine_translated",
             "value" : "Vide"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vuoto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "空"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vazio"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "空"
+          }
         }
       }
     },
@@ -904,6 +1600,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Agrandissement et panoramique"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ingrandimento e panoramica"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "拡大とパン"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ampliação e panorâmica"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "放大与平移"
           }
         }
       }
@@ -934,6 +1654,30 @@
             "state" : "machine_translated",
             "value" : "Durée du fondu"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Durata dissolvenza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "フェード時間"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Duração do Esmaecimento"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "渐变时长"
+          }
         }
       }
     },
@@ -962,6 +1706,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Fondu de caractéristiques"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dissolvenza elementi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "特徴ディゾルブ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dissolução de Elementos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "特征溶解"
           }
         }
       }
@@ -992,6 +1760,30 @@
             "state" : "machine_translated",
             "value" : "Nom de la police"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nome font"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "フォント名"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nome da Fonte"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "字体名称"
+          }
         }
       }
     },
@@ -1020,6 +1812,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Taille de police"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dimensione font"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "フォントサイズ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tamanho da Fonte"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "字体大小"
           }
         }
       }
@@ -1050,6 +1866,30 @@
             "state" : "machine_translated",
             "value" : "Guide"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Guida"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ガイド"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Guia"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "指南"
+          }
         }
       }
     },
@@ -1079,6 +1919,30 @@
             "state" : "machine_translated",
             "value" : "Hauteur"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Altezza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "高さ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Altura"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "高度"
+          }
         }
       }
     },
@@ -1106,6 +1970,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Bonjour, le monde !"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ciao, mondo!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "こんにちは、世界！"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Olá, mundo!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "你好，世界！"
           }
         }
       }
@@ -1136,6 +2024,30 @@
             "state" : "machine_translated",
             "value" : "Aide..."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aiuto…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ヘルプ…"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ajuda…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "帮助…"
+          }
         }
       }
     },
@@ -1164,6 +2076,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Image"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Immagine"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "画像"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Imagem"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "图像"
           }
         }
       }
@@ -1194,6 +2130,30 @@
             "state" : "machine_translated",
             "value" : "Images"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Immagini"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "画像"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Imagens"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "图像"
+          }
         }
       }
     },
@@ -1222,6 +2182,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Démo de kaléidoscope"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Demo caleidoscopio"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "万華鏡デモ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Demo de Caleidoscópio"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "万花筒演示"
           }
         }
       }
@@ -1252,6 +2236,30 @@
             "state" : "machine_translated",
             "value" : "Fondu Ken Burns"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dissolvenza Ken Burns"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ken Burnsディゾルブ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dissolução Ken Burns"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ken Burns 溶解"
+          }
         }
       }
     },
@@ -1280,6 +2288,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Fondu de style Ken Burns"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dissolvenza in stile Ken Burns"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ken Burns風ディゾルブ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dissolução no estilo Ken Burns"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ken Burns 风格溶解"
           }
         }
       }
@@ -1310,6 +2342,30 @@
             "state" : "machine_translated",
             "value" : "Bibliothèque"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Libreria"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ライブラリ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Biblioteca"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "资料库"
+          }
         }
       }
     },
@@ -1338,6 +2394,83 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Bibliothèque..."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Libreria…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ライブラリ…"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Biblioteca…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "资料库…"
+          }
+        }
+      }
+    },
+    "Make" : {
+      "comment" : "Swipe action label - generates a random filter stack",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vytvořit"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Erstellen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Crear"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Créer"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Crea"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "作成"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Criar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "生成"
           }
         }
       }
@@ -1368,6 +2501,30 @@
             "state" : "machine_translated",
             "value" : "Masque"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Maschera"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "マスク"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Máscara"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "蒙版"
+          }
         }
       }
     },
@@ -1396,6 +2553,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Kuwahara Metal"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Kuwahara Metal"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal Kuwahara"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Kuwahara Metal"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal Kuwahara"
           }
         }
       }
@@ -1426,6 +2607,30 @@
             "state" : "machine_translated",
             "value" : "Bruit de Perlin Metal"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rumore di Perlin Metal"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal Perlinノイズ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ruído de Perlin Metal"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal Perlin 噪声"
+          }
         }
       }
     },
@@ -1454,6 +2659,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Pixélisation Metal"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pixelizzazione Metal"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metalピクセル化"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pixelização Metal"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Metal 像素化"
           }
         }
       }
@@ -1484,6 +2713,30 @@
             "state" : "machine_translated",
             "value" : "Mélange"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Miscela"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ミックス"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Mistura"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "混合"
+          }
         }
       }
     },
@@ -1512,6 +2765,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Musique"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Musica"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ミュージック"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Música"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "音乐"
           }
         }
       }
@@ -1542,6 +2819,30 @@
             "state" : "machine_translated",
             "value" : "Octaves"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ottave"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "オクターブ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Oitavas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "八度"
+          }
         }
       }
     },
@@ -1570,6 +2871,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "OK"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "OK"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "OK"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "OK"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "好"
           }
         }
       }
@@ -1600,6 +2925,30 @@
             "state" : "translated",
             "value" : "Ouvrir"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Apri"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "開く"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Abrir"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "打开"
+          }
         }
       }
     },
@@ -1628,6 +2977,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Optimiser"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ottimizza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "最適化"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Otimizar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "优化"
           }
         }
       }
@@ -1658,10 +3031,88 @@
             "state" : "machine_translated",
             "value" : "Panoramique et zoom"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Panoramica e zoom"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "パン・ズーム"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Panorâmica e Zoom"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "平移缩放"
+          }
         }
       }
     },
     "Pans and Zooms the image in continous vary loops" : {
+      "comment" : "Pan Zoom custom filter description",
+      "extractionState" : "stale",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posouvá a zoomuje obrázek v nepřetržitě se měnících smyčkách"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Schwenkt und zoomt das Bild in fortlaufend variierenden Schleifen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aplica paneo y zoom a la imagen en bucles de variación continua."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Effectue un panoramique et un zoom sur l’image en boucles variant en continu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Applica panoramica e zoom all’immagine in cicli di variazione continua"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "連続的に変化するループで画像をパン・ズームします"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aplica panorâmica e zoom à imagem em ciclos de variação contínua"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "以持续变化的循环平移和缩放图像"
+          }
+        }
+      }
+    },
+    "Pans and zooms the image in continuously varying loops" : {
       "comment" : "Pan Zoom custom filter description",
       "localizations" : {
         "cs" : {
@@ -1686,6 +3137,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Effectue un panoramique et un zoom sur l’image en boucles variant en continu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Applica panoramica e zoom all’immagine in cicli di variazione continua"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "連続的に変化するループで画像をパン・ズームします"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aplica panorâmica e zoom à imagem em ciclos de variação contínua"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "以持续变化的循环平移和缩放图像"
           }
         }
       }
@@ -1716,6 +3191,30 @@
             "state" : "machine_translated",
             "value" : "Coller"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Incolla"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ペースト"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Colar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "粘贴"
+          }
         }
       }
     },
@@ -1744,6 +3243,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Coller une image depuis le presse-papiers"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Incolla l’immagine dagli Appunti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "クリップボードから画像をペースト"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Colar imagem da Área de Transferência"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "从剪贴板粘贴图像"
           }
         }
       }
@@ -1774,6 +3297,30 @@
             "state" : "machine_translated",
             "value" : "Persistance"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Persistenza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "持続性"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Persistência"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "持续度"
+          }
         }
       }
     },
@@ -1802,6 +3349,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Segmentation des personnes"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Segmentazione persone"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "人物セグメンテーション"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Segmentação de Pessoas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "人物分割"
           }
         }
       }
@@ -1832,6 +3403,30 @@
             "state" : "machine_translated",
             "value" : "Sélecteur de photos"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Selezione foto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "写真ピッカー"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Seletor de Fotos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "照片选择器"
+          }
         }
       }
     },
@@ -1860,6 +3455,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Photos"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Foto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "写真"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fotos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "照片"
           }
         }
       }
@@ -1890,6 +3509,30 @@
             "state" : "machine_translated",
             "value" : "Choisissez une image dans la Bibliothèque. Touchez le filtre Effex. Balayez le filtre pour ouvrir les Réglages."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "SCEGLI un’immagine dalla Libreria. TOCCA un filtro Effex. SCORRI sul filtro per aprire le Impostazioni."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ライブラリから画像を選択します。Effexフィルタをタップします。フィルタをスワイプして設定を開きます。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ESCOLHA uma imagem da Biblioteca. TOQUE em um filtro Effex. DESLIZE o filtro para abrir os Ajustes."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "从资料库中选取一张图像。轻点 Effex 滤镜。轻扫滤镜以打开设置。"
+          }
         }
       }
     },
@@ -1918,6 +3561,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Choisissez les images source"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Scegli le immagini sorgente"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ソース画像を選択"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Escolher Imagens de Origem"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "选取源图像"
           }
         }
       }
@@ -1948,6 +3615,30 @@
             "state" : "machine_translated",
             "value" : "Tangage"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Beccheggio"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ピッチ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Inclinação"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "俯仰"
+          }
         }
       }
     },
@@ -1976,6 +3667,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Angle de tangage en radians."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Angolo di beccheggio in radianti."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ピッチ角（ラジアン）。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ângulo de inclinação em radianos."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "俯仰角（以弧度为单位）。"
           }
         }
       }
@@ -2006,6 +3721,30 @@
             "state" : "machine_translated",
             "value" : "Hauteur de pixel"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Altezza pixel"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ピクセルの高さ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Altura do Pixel"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "像素高度"
+          }
         }
       }
     },
@@ -2034,6 +3773,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Largeur de pixel"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Larghezza pixel"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ピクセルの幅"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Largura do Pixel"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "像素宽度"
           }
         }
       }
@@ -2064,6 +3827,30 @@
             "state" : "machine_translated",
             "value" : "Positionner le texte"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posiziona il testo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "テキストを配置"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posicionar o texto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "定位文本"
+          }
         }
       }
     },
@@ -2092,6 +3879,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Politique de confidentialité"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Informativa sulla privacy"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "プライバシーポリシー"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Política de Privacidade"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "隐私政策"
           }
         }
       }
@@ -2122,6 +3933,30 @@
             "state" : "machine_translated",
             "value" : "Rayon"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Raggio"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "半径"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Raio"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "半径"
+          }
         }
       }
     },
@@ -2150,6 +3985,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Aléatoire"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Casuale"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ランダム"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Aleatório"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "随机"
           }
         }
       }
@@ -2180,6 +4039,30 @@
             "state" : "machine_translated",
             "value" : "Filtres aléatoires"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtri casuali"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ランダムフィルタ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtros Aleatórios"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "随机滤镜"
+          }
         }
       }
     },
@@ -2208,6 +4091,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Enregistrer l’écran"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Registra"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "録画"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gravar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "录制"
           }
         }
       }
@@ -2238,6 +4145,30 @@
             "state" : "machine_translated",
             "value" : "Rétablir"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ripeti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "やり直す"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Refazer"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "重做"
+          }
         }
       }
     },
@@ -2266,6 +4197,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Réduction dans un cadre plus petit"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Riduzione a un riquadro più piccolo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "小さいフレームに縮小"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Reduz para um quadro menor"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "缩小至更小的画框"
           }
         }
       }
@@ -2296,6 +4251,30 @@
             "state" : "machine_translated",
             "value" : "Supprimer les filtres"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rimuovi filtri"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "フィルタを削除"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Remover Filtros"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "移除滤镜"
+          }
         }
       }
     },
@@ -2324,6 +4303,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Supprimer les images"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rimuovi immagini"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "画像を削除"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Remover Imagens"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "移除图像"
           }
         }
       }
@@ -2354,6 +4357,30 @@
             "state" : "machine_translated",
             "value" : "Rift-Effex n’est pas autorisé à utiliser la caméra."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rift-Effex non ha l’autorizzazione per usare la fotocamera."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rift-Effexにはカメラを使用する権限がありません。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "O Rift-Effex não tem permissão para usar a câmera."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rift-Effex 没有使用相机的权限。"
+          }
         }
       }
     },
@@ -2382,6 +4409,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Feuille de route"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Percorso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ロードマップ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Roteiro"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "路线图"
           }
         }
       }
@@ -2412,6 +4463,30 @@
             "state" : "machine_translated",
             "value" : "Roulis"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rollio"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ロール"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rolagem"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "横滚"
+          }
         }
       }
     },
@@ -2440,6 +4515,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Flou par saillance"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sfocatura per salienza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "顕著性ブラー"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Desfoque por Saliência"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "显著性模糊"
           }
         }
       }
@@ -2470,6 +4569,30 @@
             "state" : "machine_translated",
             "value" : "Filtre de carte de saillance"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtro mappa di salienza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "顕著性マップフィルタ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtro de Mapa de Saliência"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "显著性图滤镜"
+          }
         }
       }
     },
@@ -2498,6 +4621,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Enregistrer"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salva"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "保存"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salvar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "存储"
           }
         }
       }
@@ -2528,6 +4675,30 @@
             "state" : "machine_translated",
             "value" : "Enregistrer sous"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salva come"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "別名で保存"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salvar Como"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "存储为"
+          }
         }
       }
     },
@@ -2556,6 +4727,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Enregistrement terminé"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salvataggio completato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "保存完了"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salvamento Concluído"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "存储完成"
           }
         }
       }
@@ -2586,6 +4781,30 @@
             "state" : "machine_translated",
             "value" : "Enregistrez la pile de filtres"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salva pila"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "スタックを保存"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salvar Pilha"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "存储堆栈"
+          }
         }
       }
     },
@@ -2614,6 +4833,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Enregistrer..."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salva…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "保存…"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salvar…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "存储…"
           }
         }
       }
@@ -2644,6 +4887,30 @@
             "state" : "machine_translated",
             "value" : "Échelle"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Scala"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "スケール"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Escala"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "缩放"
+          }
         }
       }
     },
@@ -2672,6 +4939,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Facteur d’échelle"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fattore di scala"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "スケール係数"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fator de Escala"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "缩放系数"
           }
         }
       }
@@ -2702,6 +4993,30 @@
             "state" : "translated",
             "value" : "Secondes :"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Secondi:"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "秒数:"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Segundos:"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "秒数："
+          }
         }
       }
     },
@@ -2730,6 +5045,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Démo de séquence"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Demo sequenza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "シーケンスのデモ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Demo de Sequência"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "序列演示"
           }
         }
       }
@@ -2760,6 +5099,30 @@
             "state" : "machine_translated",
             "value" : "Fondu de séquence"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dissolvenza sequenza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "シーケンスディゾルブ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dissolução de Sequência"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "序列溶解"
+          }
         }
       }
     },
@@ -2788,6 +5151,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Séquence de filtres"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtri in sequenza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "シーケンスフィルタ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtros em Sequência"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "序列滤镜"
           }
         }
       }
@@ -2818,6 +5205,30 @@
             "state" : "machine_translated",
             "value" : "Réglages"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Impostazioni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "設定"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ajustes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "设置"
+          }
         }
       }
     },
@@ -2846,6 +5257,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Réglages – Balayez vers « Varier » pour faire évoluer les valeurs dans le temps."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Impostazioni: scorri fino a “Varia” per far variare i valori nel tempo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "設定 - “変化”までスワイプすると、値が時間とともに変化します"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ajustes - Deslize até “Variar” para alterar os valores ao longo do tempo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "设置 - 轻扫至“变化”以使数值随时间变化"
           }
         }
       }
@@ -2876,6 +5311,30 @@
             "state" : "translated",
             "value" : "Simple"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Singolo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "単一"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Individual"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "单个"
+          }
         }
       }
     },
@@ -2905,11 +5364,89 @@
             "state" : "machine_translated",
             "value" : "Recommencer"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ricomincia"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "最初からやり直す"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Recomeçar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "重新开始"
+          }
+        }
+      }
+    },
+    "Swipe 'Make' to add random filters. Select photos for random input on Parms 'Library' command" : {
+      "comment" : "Random Filters custom filter description. 'Make' and 'Library' are swipe action labels and must match their translations",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Přejetím přes „Vytvořit“ přidáte náhodné filtry. Fotografie jako náhodný vstup vyberete příkazem „Knihovna“ na obrazovce parametrů"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Streiche über „Erstellen“, um Zufallsfilter hinzuzufügen. Wähle Fotos als zufällige Eingabe mit dem Befehl „Bibliothek“ auf dem Parameter-Bildschirm"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Desliza «Crear» para agregar filtros aleatorios. Selecciona fotos como entrada aleatoria con el comando «Biblioteca» en la pantalla de parámetros."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Balayez « Créer » pour ajouter des filtres aléatoires. Sélectionnez des photos comme entrée aléatoire avec la commande « Bibliothèque » de l’écran des paramètres."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Scorri su “Crea” per aggiungere filtri casuali. Seleziona le foto da usare come input casuale con il comando “Libreria” dei parametri"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "“作成”までスワイプすると、ランダムなフィルタが追加されます。パラメータの“ライブラリ”コマンドで、ランダム入力用の写真を選択します"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Deslize até “Criar” para adicionar filtros aleatórios. Selecione fotos como entrada aleatória com o comando “Biblioteca” dos parâmetros"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "轻扫至“生成”以添加随机滤镜。使用参数中的“资料库”命令选择照片作为随机输入"
+          }
         }
       }
     },
     "Swipe 'Make' to add random filters. Select photos for random input on Parms 'Pick' command" : {
       "comment" : "Random Filters custom filter description",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -2933,6 +5470,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Balayez « Make » pour ajouter des filtres aléatoires. Sélectionnez des photos comme entrée aléatoire avec la commande « Pick » de l’écran des paramètres."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Scorri su “Crea” per aggiungere filtri casuali. Seleziona le foto da usare come input casuale con il comando “Scegli” dei parametri"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "“作成”までスワイプすると、ランダムなフィルタが追加されます。パラメータの“選択”コマンドで、ランダム入力用の写真を選択します"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Deslize até “Criar” para adicionar filtros aleatórios. Selecione fotos como entrada aleatória com o comando “Escolher” dos parâmetros"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "轻扫至“生成”以添加随机滤镜。使用参数中的“选取”命令选择照片作为随机输入"
           }
         }
       }
@@ -2963,6 +5524,30 @@
             "state" : "machine_translated",
             "value" : "Balayez vers la gauche sur « Ouvrir » pour accéder aux Réglages de ce filtre  -->"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "SCORRI a sinistra su “Apri” per le Impostazioni di quel filtro  -->"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "「開く」を左にスワイプして、そのフィルタの設定へ  -->"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "DESLIZE para a esquerda em “Abrir” para acessar os Ajustes do filtro  -->"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "向左轻扫“打开”以进入该滤镜的设置  -->"
+          }
         }
       }
     },
@@ -2991,6 +5576,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Touchez « Guide » et suivez les étapes du pointeur."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tocca “Guida” e segui i passaggi del puntatore"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "“ガイド”をタップして、ポインタの手順に従ってください"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Toque em “Guia” e siga as etapas do ponteiro"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "轻点“指南”并按照指针步骤操作"
           }
         }
       }
@@ -3021,6 +5630,30 @@
             "state" : "machine_translated",
             "value" : "Touchez à nouveau une ligne pour la mettre en surbrillance et afficher uniquement l’image Effex du filtre sélectionné -->"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "TOCCA di nuovo una riga per evidenziarla e visualizzare solo l’immagine Effex del filtro selezionato -->"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "行をもう一度タップすると、その行がハイライトされ、選択したフィルタのEffex画像のみが表示されます -->"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "TOQUE novamente em uma linha para destacá-la e ver apenas a imagem Effex do filtro selecionado -->"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "再次轻点某一行以将其高亮显示，并仅查看所选滤镜的 Effex 图像 -->"
+          }
         }
       }
     },
@@ -3049,6 +5682,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Touchez le bouton « Info » de l’image pour ouvrir le sélecteur de photos -->"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "TOCCA il pulsante “Info” dell’immagine per aprire la selezione foto -->"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "画像の“情報”ボタンをタップすると、写真ピッカーが開きます -->"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "TOQUE no botão “Info” da imagem para abrir o seletor de fotos -->"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "轻点图像的“信息”按钮以打开照片选择器 -->"
           }
         }
       }
@@ -3079,6 +5736,30 @@
             "state" : "machine_translated",
             "value" : "Touchez la ligne Image, puis balayez vers « +Effex » pour une image d’un autre filtre, ou vers « Bibliothèque » pour une image de la bibliothèque enregistrée  -->"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "TOCCA la riga Immagine - SCORRI verso “+Effex” per un’immagine da un altro filtro. Oppure verso “Libreria” per un’immagine dalla Libreria salvata  -->"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "“画像”の行をタップ - “+Effex”にスワイプすると別のフィルタの画像を、“ライブラリ”にスワイプすると保存済みライブラリの画像を使用できます  -->"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "TOQUE na linha Imagem - DESLIZE até “+Effex” para usar uma imagem de outro filtro. Ou até “Biblioteca” para usar uma imagem da Biblioteca salva  -->"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "轻点“图像”行 - 轻扫到“+Effex”以使用另一个滤镜的图像，或轻扫到“资料库”以使用已存储资料库中的图像  -->"
+          }
         }
       }
     },
@@ -3107,6 +5788,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Touchez le bouton « Enregistrer » dans la barre pour ouvrir les champs de texte."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "TOCCA il pulsante “Salva” nella barra per aprire i campi di testo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "バーの“保存”ボタンをタップすると、テキストボックスが開きます"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "TOQUE no botão “Salvar” da barra para abrir as caixas de texto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "轻点栏中的“存储”按钮以打开文本框"
           }
         }
       }
@@ -3137,6 +5842,30 @@
             "state" : "machine_translated",
             "value" : "Texte"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Testo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "テキスト"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Texto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "文本"
+          }
         }
       }
     },
@@ -3165,6 +5894,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Position du texte"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posizione testo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "テキストの位置"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posição do Texto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "文本位置"
           }
         }
       }
@@ -3195,6 +5948,30 @@
             "state" : "machine_translated",
             "value" : "Le résultat a été enregistré dans Photos. L’image source a été choisie en dehors de « Photos sélectionnées » (accès limité) ; elle n’est donc pas enregistrée avec la pile de filtres. Choisissez à nouveau l’image source à l’ouverture de la pile de filtres."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Il risultato è stato salvato in Foto. L’immagine di origine è stata scelta al di fuori di “Foto selezionate” (accesso limitato), quindi non viene salvata con la pila. Scegli di nuovo l’immagine di origine quando apri la pila."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "出力結果を“写真”に保存しました。ソース画像はアクセスが制限された“選択した写真”の外から選択されたため、スタックと一緒には保存されません。スタックを開いたときにソース画像を選択し直してください。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "O resultado foi salvo no app Fotos. A imagem de origem foi escolhida fora de “Fotos Selecionadas” (acesso limitado) e, por isso, não é salva com a pilha. Escolha a imagem de origem novamente ao abrir a pilha."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "输出结果已存储到“照片”。源图像选自受限访问的“所选照片”之外，因此不会随堆栈一起存储。打开堆栈时，请重新选取源图像。"
+          }
         }
       }
     },
@@ -3224,6 +6001,30 @@
             "state" : "machine_translated",
             "value" : "Les images source de cette pile de filtres ont été choisies en dehors de « Photos sélectionnées » (accès limité) et n’ont pas été enregistrées. Choisissez à nouveau les images source pour les afficher."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Le immagini di origine di questa pila sono state scelte al di fuori di “Foto selezionate” (accesso limitato) e non sono state salvate. Scegli di nuovo le immagini di origine per visualizzarle."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "このスタックのソース画像はアクセスが制限された“選択した写真”の外から選択されたため、保存されていません。表示するにはソース画像を選択し直してください。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "As imagens de origem desta pilha foram escolhidas fora de “Fotos Selecionadas” (acesso limitado) e não foram salvas. Escolha as imagens de origem novamente para exibi-las."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "此堆栈的源图像选自受限访问的“所选照片”之外，因此未存储。请重新选取源图像以进行显示。"
+          }
         }
       }
     },
@@ -3252,6 +6053,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Cette action est irréversible."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Questa azione non può essere annullata"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "この操作は取り消せません"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Esta ação não pode ser desfeita"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "此操作无法撤销"
           }
         }
       }
@@ -3283,6 +6108,30 @@
             "state" : "translated",
             "value" : "Temps"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tempo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "時間"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tempo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "时间"
+          }
         }
       }
     },
@@ -3311,6 +6160,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Titre :"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Titolo:"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "タイトル:"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Título:"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "标题："
           }
         }
       }
@@ -3341,6 +6214,30 @@
             "state" : "machine_translated",
             "value" : "Démo de tons"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Demo toni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "トーンのデモ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Demo de Tons"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "色调演示"
+          }
         }
       }
     },
@@ -3369,6 +6266,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Touchez le bouton « + » d’Effex pour ajouter un autre filtre Effex après le filtre sélectionné -->"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "TOCCA il pulsante “+” di Effex per aggiungere un altro filtro Effex dopo il filtro selezionato -->"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Effexの“+”ボタンをタップすると、選択したフィルタの後に別のEffexフィルタを追加できます -->"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "TOQUE no botão “+” de Effex para adicionar outro filtro Effex após o filtro selecionado -->"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "轻点 Effex 的“+”按钮，在所选滤镜后添加另一个 Effex 滤镜 -->"
           }
         }
       }
@@ -3399,6 +6320,30 @@
             "state" : "machine_translated",
             "value" : "Touchez la ou les photos pour les sélectionner, puis sur « Terminé »."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tocca le foto per selezionarle, poi tocca “Fine”"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "写真をタップして選択し、“完了”をタップします"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Toque nas fotos para selecioná-las e depois em “OK”"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "轻点照片进行选择，然后轻点“完成”"
+          }
         }
       }
     },
@@ -3427,6 +6372,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Supprimer"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Elimina"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "削除"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Apagar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "删除"
           }
         }
       }
@@ -3457,6 +6426,30 @@
             "state" : "machine_translated",
             "value" : "Bouton « Supprimer » – Recommencez et effacez tout, OU conservez les images sélectionnées et supprimez tous les filtres, OU conservez tous les filtres Effex sans images."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pulsante “Elimina”: ricomincia e scarta tutto, OPPURE mantieni le immagini selezionate e rimuovi tutti i filtri, OPPURE mantieni tutti i filtri Effex senza immagini "
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "“削除”ボタン: 最初からやり直してすべて破棄するか、選択した画像を残してすべてのフィルタを削除するか、または画像なしですべてのEffexフィルタを残します "
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Botão “Apagar”: recomece e descarte tudo OU mantenha as imagens selecionadas e remova todos os filtros OU mantenha todos os filtros Effex sem imagens "
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "“删除”按钮：重新开始并丢弃所有内容，或者保留所选图像并移除所有滤镜，或者保留所有 Effex 滤镜但不保留图像 "
+          }
         }
       }
     },
@@ -3485,6 +6478,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Dégradé triangulaire"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sfumatura triangolare"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "三角形グラデーション"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gradiente Triangular"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "三角渐变"
           }
         }
       }
@@ -3515,6 +6532,30 @@
             "state" : "machine_translated",
             "value" : "Saisissez les noms du titre et de l’album. Touchez le bouton « Enregistrer » pour enregistrer une copie dans Photos. Les images source ne sont pas modifiées."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Digita il titolo e il nome dell’album. TOCCA il pulsante “Salva” per salvare una copia in Foto. Le immagini originali non vengono modificate"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "タイトルとアルバム名を入力します。“保存”ボタンをタップすると、コピーが“写真”に保存されます。元の画像は変更されません"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Digite o título e o nome do álbum. TOQUE no botão “Salvar” para salvar uma cópia em Fotos. As imagens originais não são alteradas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "输入标题和相簿名称。轻点“存储”按钮可将拷贝存储到“照片”。源图像不会被更改"
+          }
         }
       }
     },
@@ -3543,6 +6584,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Impossible de capturer des médias"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Impossibile acquisire contenuti multimediali"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "メディアをキャプチャできません"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Não é possível capturar mídia"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "无法捕捉媒体"
           }
         }
       }
@@ -3573,6 +6638,30 @@
             "state" : "machine_translated",
             "value" : "Impossible de reprendre"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Impossibile riprendere"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "再開できません"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Não é possível retomar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "无法恢复"
+          }
         }
       }
     },
@@ -3601,6 +6690,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Annuler"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Annulla"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "取り消す"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Desfazer"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "撤销"
           }
         }
       }
@@ -3632,6 +6745,30 @@
             "state" : "translated",
             "value" : "Varier"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Varia"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "変化"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Variar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "变化"
+          }
         }
       }
     },
@@ -3662,6 +6799,30 @@
             "state" : "machine_translated",
             "value" : "Vidéo"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Video"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ビデオ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vídeo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "视频"
+          }
         }
       }
     },
@@ -3690,6 +6851,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "La vidéo a été enregistrée dans Photos."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Il video è stato salvato in Foto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ビデオは“写真”に保存されました"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "O vídeo foi salvo em Fotos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "视频已存储到“照片”"
           }
         }
       }
@@ -3720,6 +6905,30 @@
             "state" : "machine_translated",
             "value" : "Largeur"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Larghezza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "幅"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Largura"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "宽度"
+          }
         }
       }
     },
@@ -3748,6 +6957,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Lacet"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Imbardata"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ヨー"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Guinada"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "偏航"
           }
         }
       }
@@ -3778,6 +7011,30 @@
             "state" : "machine_translated",
             "value" : "Angle de lacet en radians."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Angolo di imbardata in radianti."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ヨー角（ラジアン単位）。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ângulo de guinada em radianos."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "偏航角（以弧度为单位）。"
+          }
         }
       }
     },
@@ -3806,6 +7063,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Position Z"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posizione Z"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Z位置"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Posição Z"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Z 位置"
           }
         }
       }

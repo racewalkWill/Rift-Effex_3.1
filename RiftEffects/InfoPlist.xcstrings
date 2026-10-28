@@ -34,6 +34,30 @@
             "state" : "machine_translated",
             "value" : "RiftEffects"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RiftEffects"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RiftEffects"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RiftEffects"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RiftEffects"
+          }
         }
       }
     },
@@ -69,6 +93,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Lire de la musique de votre bibliothèque Apple Music pour accompagner vos photos"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Riproduci musica dalla libreria di Apple Music come accompagnamento alle foto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "写真のBGMとしてApple Musicライブラリの音楽を再生します"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Reproduzir músicas da biblioteca do Apple Music para acompanhar as fotos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "播放 Apple Music 资料库中的音乐，为照片配乐"
           }
         }
       }
@@ -106,6 +154,30 @@
             "state" : "machine_translated",
             "value" : "La caméra est utilisée avec le filtre VideoCam et son image peut être enregistrée avec l’enregistrement de l’écran"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "La fotocamera viene utilizzata con il filtro VideoCam e la sua immagine può essere registrata con Registrazione schermo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "カメラはVideoCamフィルタで使用され、その映像は画面収録で記録できます"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "A câmera é usada com o filtro VideoCam e a imagem pode ser gravada com a Gravação de Tela"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "相机用于 VideoCam 滤镜，其画面可通过屏幕录制进行录制"
+          }
         }
       }
     },
@@ -142,6 +214,30 @@
             "state" : "machine_translated",
             "value" : "Le micro est utilisé pour vos commentaires audio avec le filtre VideoCam pendant l’enregistrement de l’écran"
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Il microfono viene utilizzato per i tuoi commenti audio con il filtro VideoCam durante la Registrazione schermo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "マイクは、画面収録中にVideoCamフィルタで音声コメントを録音するために使用されます"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "O microfone é usado para seus comentários em áudio com o filtro VideoCam durante a Gravação de Tela"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "麦克风用于在屏幕录制期间配合 VideoCam 滤镜录制你的语音解说"
+          }
         }
       }
     },
@@ -177,6 +273,30 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "L’app affichera vos photos et leur appliquera des filtres d’effets visuels."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "L’app mostrerà le tue foto e vi applicherà filtri di effetti visivi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "このアプリは写真を表示し、視覚効果フィルタを適用します。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "O app exibirá suas fotos e aplicará filtros de efeitos visuais a elas."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "此 App 将显示你的照片，并为其应用视觉效果滤镜。"
           }
         }
       }

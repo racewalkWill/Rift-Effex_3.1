@@ -2,37 +2,61 @@
   "sourceLanguage" : "en",
   "strings" : {
     "sgM-cI-Ja2.accessibilityLabel" : {
-      "comment" : "Class = \"UIView\"; accessibilityLabel = \"metalController\"; ObjectID = \"sgM-cI-Ja2\";",
+      "comment" : "Class = \"UIView\"; accessibilityLabel = \"Image Preview\"; ObjectID = \"sgM-cI-Ja2\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "machine_translated",
-            "value" : "Kontroler Metal"
+            "value" : "Náhled obrázku"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "machine_translated",
-            "value" : "Metal-Controller"
+            "value" : "Bildvorschau"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "metalController"
+            "value" : "Image Preview"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "machine_translated",
-            "value" : "Controlador Metal"
+            "value" : "Vista previa de la imagen"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "machine_translated",
-            "value" : "Contrôleur Metal"
+            "value" : "Aperçu de l’image"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Anteprima immagine"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "画像プレビュー"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Pré-visualização da Imagem"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "图像预览"
           }
         }
       }

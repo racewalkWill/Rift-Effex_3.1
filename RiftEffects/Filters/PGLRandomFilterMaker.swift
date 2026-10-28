@@ -17,14 +17,14 @@ class PGLRandomFilterMaker: PGLTransitionFilter {
 
     override class func localizedDescription(filterName: String) -> String {
         // custom subclasses should override
-       return NSLocalizedString("Swipe 'Make' to add random filters. Select photos for random input on Parms 'Pick' command", comment: "Random Filters custom filter description")
+       return NSLocalizedString("Swipe 'Make' to add random filters. Select photos for random input on Parms 'Library' command", comment: "Random Filters custom filter description. 'Make' and 'Library' are swipe action labels and must match their translations")
     }
 
 
     override func cellFilterAction(stackController: PGLStackController, indexPath: IndexPath) -> [UIContextualAction] {
         var normalSwipeActions = super.cellFilterAction(stackController: stackController, indexPath: indexPath)
 
-        let makeRandomFiltersAction =  UIContextualAction(style: .normal, title: "Make") { [weak self] (_, _, completion) in
+        let makeRandomFiltersAction =  UIContextualAction(style: .normal, title: NSLocalizedString("Make", comment: "Swipe action label - generates a random filter stack")) { [weak self] (_, _, completion) in
             guard let self = self
                 else { return  }
 

@@ -236,6 +236,10 @@
 		584DC7122DEC990700DDFE38 /* PGLAirPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLAirPlaySceneDelegate.swift; sourceTree = "<group>"; };
 		A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCompactPresentationController.swift; sourceTree = "<group>"; };
 		A30464D12DC4F60C00809D4A /* PGLMaximumScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLMaximumScale.swift; sourceTree = "<group>"; };
+		A307F93A30911C8D000B8E82 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Root.strings; sourceTree = "<group>"; };
+		A307F93B30911C95000B8E82 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Root.strings"; sourceTree = "<group>"; };
+		A307F93C30911C99000B8E82 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Root.strings"; sourceTree = "<group>"; };
+		A307F93D30911C9D000B8E82 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Root.strings; sourceTree = "<group>"; };
 		A30BF4322CEA503A0062C84C /* PGLRandomParms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLRandomParms.swift; sourceTree = "<group>"; };
 		A313B1E12AE3298B007AE850 /* PGLVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLVideo.swift; sourceTree = "<group>"; };
 		A3167D112ED255750029FA92 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -1005,6 +1009,10 @@
 				cs,
 				fr,
 				es,
+				it,
+				"pt-BR",
+				"zh-Hans",
+				ja,
 			);
 			mainGroup = A3BF500024D3298F00CD5114;
 			preferredProjectObjectVersion = 110;
@@ -1346,6 +1354,10 @@
 				A359503B300D7F0E00FBE753 /* cs */,
 				A359503C300D7F1500FBE753 /* fr */,
 				A359503D300D7F1B00FBE753 /* es */,
+				A307F93A30911C8D000B8E82 /* it */,
+				A307F93B30911C95000B8E82 /* pt-BR */,
+				A307F93C30911C99000B8E82 /* zh-Hans */,
+				A307F93D30911C9D000B8E82 /* ja */,
 			);
 			name = Root.strings;
 			path = "Settings 2.bundle";

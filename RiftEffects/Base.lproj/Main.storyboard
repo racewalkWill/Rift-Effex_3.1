@@ -184,7 +184,7 @@
                             </slider>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <accessibility key="accessibilityConfiguration" identifier="ParmHolderView" label="ParmHolderView"/>
+                        <accessibility key="accessibilityConfiguration" identifier="ParmHolderView"/>
                         <constraints>
                             <constraint firstItem="zCg-lU-rqI" firstAttribute="trailing" secondItem="a5o-Sr-vCZ" secondAttribute="trailing" id="BUK-hR-ePM"/>
                             <constraint firstItem="zCg-lU-rqI" firstAttribute="top" secondItem="xpj-gS-MzU" secondAttribute="bottom" constant="19" id="ELx-ch-3qT"/>
@@ -206,14 +206,14 @@
                             <barButtonItem title="Random" image="plus.viewfinder" catalog="system" width="24" id="q7I-R2-kMZ" userLabel="TemplateBtn"/>
                         </leftBarButtonItems>
                         <rightBarButtonItems>
-                            <barButtonItem title="toggleAnimationPause" width="24" hidden="YES" id="Jl0-kr-4aK">
+                            <barButtonItem title="Pause Animation" width="24" hidden="YES" id="Jl0-kr-4aK">
                                 <imageReference key="image" image="playpause" catalog="system"/>
                                 <connections>
                                     <action selector="toggleAnimationPause:" destination="Cot-0o-SSg" id="K1q-UK-aj4"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Help" image="questionmark.square.dashed" catalog="system" width="24" id="yZ4-j9-t2a" userLabel="Help"/>
-                            <barButtonItem title="New" image="trash" catalog="system" width="24" id="SFn-i1-DR7">
+                            <barButtonItem title="Start Over" image="trash" catalog="system" width="24" id="SFn-i1-DR7">
                                 <connections>
                                     <action selector="newStackActionBtn:" destination="Cot-0o-SSg" id="5ZK-Is-TWK"/>
                                 </connections>
@@ -338,7 +338,7 @@
                     <view key="view" clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" id="x6N-gO-MIH" customClass="MTKView">
                         <rect key="frame" x="0.0" y="0.0" width="1180" height="820"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <accessibility key="accessibilityConfiguration" identifier="metalController" label="metalController"/>
+                        <accessibility key="accessibilityConfiguration" identifier="metalController" label="Image Preview"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JQY-gG-Uvs" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -404,7 +404,7 @@
                                 <rect key="frame" x="-4" y="687" width="338" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
-                                    <barButtonItem title="Item" image="photo.stack" catalog="system" id="yqS-fU-NEA" userLabel="ImageListOverviewBtn">
+                                    <barButtonItem title="Image List" image="photo.stack" catalog="system" id="yqS-fU-NEA" userLabel="ImageListOverviewBtn">
                                         <connections>
                                             <action selector="imageListBtnAction:" destination="VjG-Q1-3mN" id="fqB-6T-Ma9"/>
                                         </connections>
@@ -415,12 +415,12 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="9kO-c4-rac"/>
-                                    <barButtonItem title="upChevron" image="chevron.up" catalog="system" id="A6h-K5-gwp">
+                                    <barButtonItem title="Previous Filter" image="chevron.up" catalog="system" id="A6h-K5-gwp">
                                         <connections>
                                             <action selector="upChevronAction:" destination="VjG-Q1-3mN" id="VfL-sr-0rU"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="downChevron" image="chevron.down" catalog="system" id="arH-zW-cxm">
+                                    <barButtonItem title="Next Filter" image="chevron.down" catalog="system" id="arH-zW-cxm">
                                         <connections>
                                             <action selector="downChevronAction:" destination="VjG-Q1-3mN" id="YMv-Ub-Fte"/>
                                         </connections>
@@ -711,19 +711,19 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="jtF-en-p9N">
                         <rightBarButtonItems>
-                            <barButtonItem title="toggleAnimationPause" hidden="YES" id="eKf-rs-nX2">
+                            <barButtonItem title="Pause Animation" hidden="YES" id="eKf-rs-nX2">
                                 <imageReference key="image" image="playpause" catalog="system" symbolScale="default"/>
                                 <connections>
                                     <action selector="toggleAnimationPause:" destination="rQx-tc-9ix" id="1gB-i6-Wp2"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Help" image="questionmark.square.dashed" catalog="system" id="S4t-N0-6IZ" userLabel="Help"/>
-                            <barButtonItem title="New" image="trash" catalog="system" id="kGD-tX-jU3">
+                            <barButtonItem title="Start Over" image="trash" catalog="system" id="kGD-tX-jU3">
                                 <connections>
                                     <action selector="newStackBtnClick:" destination="rQx-tc-9ix" id="OlJ-Kr-q1c"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="recordBtn" image="recordingtape" catalog="system" hidden="YES" id="23q-Si-nMo">
+                            <barButtonItem title="Record" image="recordingtape" catalog="system" hidden="YES" id="23q-Si-nMo">
                                 <connections>
                                     <action selector="recordBtnAction:" destination="rQx-tc-9ix" id="xWx-vc-bnc"/>
                                 </connections>
@@ -952,21 +952,21 @@
                                     <action selector="editBtnAction:" destination="z1U-K0-aGb" id="2B7-0f-MJ9"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="More Btn" image="rectangle.stack.badge.plus" catalog="system" id="X6h-Dm-yVE"/>
+                            <barButtonItem title="More" image="rectangle.stack.badge.plus" catalog="system" id="X6h-Dm-yVE"/>
                             <barButtonItem title="Random" image="plus.viewfinder" catalog="system" id="0Zt-QC-w2E"/>
-                            <barButtonItem title="toggleAnimationPause" hidden="YES" id="qG0-1L-lmY">
+                            <barButtonItem title="Pause Animation" hidden="YES" id="qG0-1L-lmY">
                                 <imageReference key="image" image="playpause" catalog="system" symbolScale="default"/>
                                 <connections>
                                     <action selector="toggleAnimationPause:" destination="z1U-K0-aGb" id="F2w-zC-ktU"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Help" image="questionmark.square.dashed" catalog="system" id="Cgl-oe-TKV" userLabel="Help"/>
-                            <barButtonItem title="New" image="trash" catalog="system" id="pEQ-Uh-ooY">
+                            <barButtonItem title="Start Over" image="trash" catalog="system" id="pEQ-Uh-ooY">
                                 <connections>
                                     <action selector="newTrashBtnAction:" destination="z1U-K0-aGb" id="x9H-dK-0aK"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Record Btn" image="recordingtape" catalog="system" hidden="YES" id="GQ9-os-Nsh">
+                            <barButtonItem title="Record" image="recordingtape" catalog="system" hidden="YES" id="GQ9-os-Nsh">
                                 <connections>
                                     <action selector="recordBtnAction:" destination="z1U-K0-aGb" id="U25-R0-a4y"/>
                                 </connections>
