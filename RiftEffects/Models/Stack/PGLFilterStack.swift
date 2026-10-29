@@ -486,9 +486,12 @@ class PGLFilterStack: Equatable, Hashable  {
     
     func replaceFilter(at: Int, newFilter: PGLSourceFilter) {
         if isEmptyStack(){
-            append(newFilter)
+            // nothing to replace - activeFilterIndex may be a stale -1
+            // after removeAllFilters/removeLastFilter. append sets the index
+            append(newFilter)   // append does postFilterChangeRedraw()
+            return
         }
-        if at < activeFilters.count  {
+        if (at >= 0) && (at < activeFilters.count)  {
             // in range
             let oldFilter = activeFilters[at]
             moveInputsFrom(oldFilter, newFilter)
