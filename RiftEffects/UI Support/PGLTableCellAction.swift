@@ -15,6 +15,7 @@ enum CellActionType {
     case addCell
     case cancel
     case addANDcommand
+    case link
     case unknown
 }
 @MainActor
@@ -32,6 +33,7 @@ class PGLTableCellAction {
     let actionTargetAttribute: PGLFilterAttribute
     var performAction2 = false // some classes have two swipe cells to trigger different actions on same attribute
     var performDissolveWrapper = false  // adds a dissolve from face to face to a point parm
+    var performLink = false  // Link/Unlink of kCIInputCenterKey parms across the stack
 
     init(action: String, newAttribute: PGLFilterAttribute?, canPerformAction: Bool, targetAttribute: PGLFilterAttribute) {
         swipeLabel = action
@@ -42,6 +44,7 @@ class PGLTableCellAction {
     }
 
     func cellAction() -> CellActionType {
+        if performLink { return .link }
         if isCancelCell() && performAction2 { return .command}
             // PGLAttributeRectangle cancel is a command
         if isCancelCell() {return .cancel}

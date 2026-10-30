@@ -39,7 +39,9 @@ class PGLFilterAttributeVectorUI: PGLFilterAttributeVector {
         if attributeName != nil {
             if let newVectorValue = value as? CIVector {
                 parmInputState = .inputValueSet
-                aSourceFilter?.setVectorValue(newValue: newVectorValue, keyName: attributeName!) }
+                aSourceFilter?.setVectorValue(newValue: newVectorValue, keyName: attributeName!)
+                propagateLink(newVectorValue)
+            }
         }
     }
 
@@ -49,6 +51,7 @@ class PGLFilterAttributeVectorUI: PGLFilterAttributeVector {
 ///    parent default is to show all vectorAttributes
     override func shouldHidePosition(userSelected: Bool) -> Bool {
             // userSelected means should NOT HIDE
-            return !userSelected
+            // linked targets follow the master - always hide
+            return isLinkTarget || !userSelected
         }
 }

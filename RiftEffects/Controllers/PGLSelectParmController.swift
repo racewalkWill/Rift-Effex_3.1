@@ -1062,6 +1062,10 @@ class PGLSelectParmController: PGLCommonController,
         tappedAttribute = getTappedAttribute(indexPath: indexPath)
         appStack.targetAttribute = tappedAttribute
 
+        if let centerParm = cellDataAttribute as? PGLFilterAttributeVector, centerParm.isLinkableCenter() {
+            appStack.pruneCenterLinks()
+            centerParm.hasCenterLinkCandidates = !appStack.centerLinkCandidates(excluding: centerParm).isEmpty
+        }
         let newActionCells = cellDataAttribute.cellAction()
             // newActionCells may be segue, message command, addCell
             // some may have both the message and addCell
@@ -1185,6 +1189,24 @@ class PGLSelectParmController: PGLCommonController,
                 }
                  contextActions.append(myAction)
 
+            case .link:
+                let myAction = UIContextualAction(style: .normal, title: anActionCell.localizedLabel) { [weak self] (_, _, completion) in
+                    guard let self = self,
+                          let centerParm = cellDataAttribute as? PGLFilterAttributeVector
+                        else { completion(false)
+                            return }
+                    self.imageController?.hideSliders()
+                    if centerParm.isLinked {
+                        centerParm.unlinkAll()
+                        self.centerLinkChanged()
+                    } else {
+                        self.presentCenterLinkPicker(master: centerParm, sourceIndexPath: indexPath)
+                    }
+                    completion(true)
+                }
+                myAction.backgroundColor = .systemIndigo
+                contextActions.append(myAction)
+
             case .unknown:
                 Logger(subsystem: LogSubsystem, category: LogCategory).error( "PGLSelectParmController tableView trailingSwipe action fatalError(unknown cell action")
                 
@@ -1193,6 +1215,49 @@ class PGLSelectParmController: PGLCommonController,
 
         }
         return UISwipeActionsConfiguration(actions: contextActions)
+    }
+
+    // MARK: Center Link
+
+    /// Link swipe action - pick the center parms that follow master.
+    /// A single candidate links directly, otherwise an action sheet lists the candidates and Link All.
+    func presentCenterLinkPicker(master: PGLFilterAttributeVector, sourceIndexPath: IndexPath) {
+        let candidates = appStack.centerLinkCandidates(excluding: master)
+        if candidates.isEmpty { return }
+        if candidates.count == 1 {
+            master.link(target: candidates[0])
+            centerLinkChanged()
+            return
+        }
+        let alert = UIAlertController(title: NSLocalizedString("Link Center", comment: "action sheet title - link center points of filters"),
+                                      message: NSLocalizedString("The linked center moves with this center.", comment: "action sheet message - link center points"),
+                                      preferredStyle: .actionSheet)
+        for aCandidate in candidates {
+            alert.addAction(UIAlertAction(title: aCandidate.parentParmFilterName(), style: .default) { [weak self] _ in
+                master.link(target: aCandidate)
+                self?.centerLinkChanged()
+            })
+        }
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Link All", comment: "action sheet button - link every center point to this one"), style: .default) { [weak self] _ in
+            for aCandidate in candidates {
+                master.link(target: aCandidate)
+            }
+            self?.centerLinkChanged()
+        })
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: .cancel))
+
+        if let popover = alert.popoverPresentationController {
+            // iPad presents the action sheet as a popover from the swiped cell
+            let sourceCell = parmsTableView.cellForRow(at: sourceIndexPath)
+            popover.sourceView = sourceCell ?? parmsTableView
+            popover.sourceRect = sourceCell?.bounds ?? parmsTableView.bounds
+        }
+        present(alert, animated: true)
+    }
+
+    /// refresh the parm cells link description
+    func centerLinkChanged() {
+        parmsTableView.reloadData()
     }
 
     func pickLibraryChildStack() {

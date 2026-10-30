@@ -105,6 +105,41 @@ extension PGLFilterStack {
             self.setFiltersStackPosition()
         }
 
+    // MARK: center links
+
+    /// rebuild the center links of this stack and its child stacks from the
+    /// CDAttributeVector linkMaster relationships. Call after on(cdStack:) completes.
+    /// A link to a master outside of this stack graph is skipped - the next save nullifies it.
+    func resolveCenterLinks() {
+        let centerParms = centerLinkParms()
+        var parmForRow = [NSManagedObjectID: PGLFilterAttributeVector]()
+        for aParm in centerParms {
+            if let cdVector = aParm.storedParmValue as? CDAttributeVector {
+                parmForRow[cdVector.objectID] = aParm
+            }
+        }
+        for aParm in centerParms {
+            guard let cdMaster = (aParm.storedParmValue as? CDAttributeVector)?.linkMaster,
+                  let masterParm = parmForRow[cdMaster.objectID]
+            else { continue }
+            masterParm.link(target: aParm)
+        }
+    }
+
+    /// write the in memory center links to the CDAttributeVector linkMaster relationships.
+    /// Call after writeCDStack(moContext:) so every center parm has its storedParmValue row.
+    func storeCenterLinks() {
+        for aParm in centerLinkParms() {
+            guard let cdVector = aParm.storedParmValue as? CDAttributeVector
+            else { continue }
+            let cdMaster = aParm.linkMaster?.storedParmValue as? CDAttributeVector
+            if cdVector.linkMaster !== cdMaster {
+                // only assign on change - avoids dirtying unchanged rows for CloudKit export
+                cdVector.linkMaster = cdMaster
+            }
+        }
+    }
+
     // MARK: load diagnostic
 
     /// DIAGNOSTIC 2026-09-18: every image the stack loads is cached and scaled to
@@ -1104,6 +1139,9 @@ extension PGLAppStack {
             return
         }
         let myCDStack = initialStack.writeCDStack(moContext: dataViewContext)
+        pruneCenterLinks()
+        initialStack.storeCenterLinks()
+            // after all filters are written - a link may point to a parm row written later in the stack
 
         let didSave = dataProvider.saveStack(aStack: myCDStack, in: dataViewContext , shouldSave: true )
 

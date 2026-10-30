@@ -293,6 +293,7 @@ class PGLAppStack {
 
         let userPickedStack = PGLFilterStack.init()
         userPickedStack.on(cdStack: newCDStack)
+        userPickedStack.resolveCenterLinks()
 
         resetOutputAppStack(userPickedStack)
     }
@@ -329,6 +330,8 @@ class PGLAppStack {
         else { return }
         let userPickedStack = PGLFilterStack.init()
         userPickedStack.on(cdStack: newCDStack)
+        userPickedStack.resolveCenterLinks()
+            // only the links inside the picked stack - links of the current stack keep their unsaved state
         NSLog("PGLAppStack loadChildStack onParm \(onParm)")
 
         let isSequenceStackload = onParm.loadChildStackToSequenceStack(inAppStack: self, userPickLibraryStack: userPickedStack)
@@ -627,6 +630,28 @@ class PGLAppStack {
         // reset the array of stack sections
         stackSectionArray = stackSectionsBasic(filterIndents: flatAnswer)
         return flatAnswer
+    }
+
+    // MARK: center links
+
+    /// center parms of the whole app stack, including child stacks, that centerParm may link to
+    func centerLinkCandidates(excluding centerParm: PGLFilterAttributeVector) -> [PGLFilterAttributeVector] {
+        return outputStack.centerLinkParms().filter { $0 !== centerParm }
+    }
+
+    /// unlink any link to a center parm that is no longer in the app stack
+    /// - a filter removed with its child stack, or a stale undo.
+    func pruneCenterLinks() {
+        let activeParms = outputStack.centerLinkParms()
+        let activeIds = Set(activeParms.map { ObjectIdentifier($0) })
+        for aParm in activeParms {
+            if let master = aParm.linkMaster, !activeIds.contains(ObjectIdentifier(master)) {
+                master.unlink(target: aParm)
+            }
+            for aTarget in aParm.linkTargets where !activeIds.contains(ObjectIdentifier(aTarget)) {
+                aParm.unlink(target: aTarget)
+            }
+        }
     }
 
     func filterAt(indexPath: IndexPath) -> PGLFilterIndent {

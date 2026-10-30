@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24512" systemVersion="25C56" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="1.6">
+    <entity name="CDAttributeAffine" representedClassName="CDAttributeAffine" parentEntity="CDParmValue" syncable="YES">
+        <attribute name="vectorAngle" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="vectorLength" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="vectorX" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="vectorY" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="vectorZ" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDAttributeAngle" representedClassName="CDAttributeAngle" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="doubleValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDAttributeAttributedString" representedClassName="CDAttributeAttributedString" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="attribute" optional="YES" attributeType="String"/>
+        <attribute name="stringValue" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="CDAttributeColor" representedClassName="CDAttributeColor" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="alphaValue" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="blueValue" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="greenValue" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="redValue" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDAttributeData" representedClassName="CDAttributeData" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="binaryValue" optional="YES" attributeType="Binary"/>
+    </entity>
+    <entity name="CDAttributeNumber" representedClassName="CDAttributeNumber" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="doubleValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDAttributeRectangle" representedClassName="CDAttributeRectangle" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="height" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="width" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="xPoint" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="yPoint" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDAttributeRotateAffine" representedClassName="CDAttributeRotateAffine" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="rotationAngle" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDAttributeScaleAffine" representedClassName="CDAttributeScaleAffine" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="scaleX" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="scaleY" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDAttributeString" representedClassName="CDAttributeString" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="stringValue" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="CDAttributeTime" representedClassName="CDAttributeTime" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="floatValue" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDAttributeVector" representedClassName="CDAttributeVector" parentEntity="CDParmValue" syncable="YES" codeGenerationType="class">
+        <attribute name="vectorEndX" optional="YES" attributeType="Float" usesScalarValueType="NO"/>
+        <attribute name="vectorEndY" optional="YES" attributeType="Float" usesScalarValueType="NO"/>
+        <attribute name="vectorX" optional="YES" attributeType="Float" usesScalarValueType="NO"/>
+        <attribute name="vectorY" optional="YES" attributeType="Float" usesScalarValueType="NO"/>
+        <relationship name="linkMaster" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDAttributeVector" inverseName="linkTargets" inverseEntity="CDAttributeVector"/>
+        <relationship name="linkTargets" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDAttributeVector" inverseName="linkMaster" inverseEntity="CDAttributeVector"/>
+    </entity>
+    <entity name="CDAttributeVector3" representedClassName="CDAttributeVector3" parentEntity="CDAttributeVector" syncable="YES" codeGenerationType="class">
+        <attribute name="vectorZ" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDFilterStack" representedClassName="CDFilterStack" syncable="YES" codeGenerationType="class">
+        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="exportAlbumIdentifier" optional="YES" attributeType="String"/>
+        <attribute name="exportAlbumName" optional="YES" attributeType="String"/>
+        <attribute name="globalSizeHeight" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="globalSizeWidth" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="modified" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="thumbnail" optional="YES" attributeType="Binary" valueTransformerName="" customClassName="UIImage"/>
+        <attribute name="title" attributeType="String" defaultValueString="Glance"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="filters" optional="YES" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="CDStoredFilter" inverseName="stack" inverseEntity="CDStoredFilter"/>
+        <relationship name="outputToParm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDParmImage" inverseName="inputStack" inverseEntity="CDParmImage"/>
+    </entity>
+    <entity name="CDImageData" representedClassName="CDImageData" syncable="YES" codeGenerationType="class">
+        <attribute name="imageData" optional="YES" attributeType="Binary"/>
+        <attribute name="imageDataType" attributeType="String" defaultValueString="UIImage"/>
+        <relationship name="parmImage" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CDParmImage" inverseName="parmImageData" inverseEntity="CDParmImage"/>
+    </entity>
+    <entity name="CDImageList" representedClassName="CDImageList" syncable="YES">
+        <attribute name="albumIds" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="NSArray&lt;NSString&gt; "/>
+        <attribute name="assetIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="NSArray&lt;NSString&gt; "/>
+        <attribute name="attributeName" optional="YES" attributeType="String"/>
+        <attribute name="machineName" optional="YES" attributeType="String"/>
+        <relationship name="parm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDParmImage" inverseName="inputAssets" inverseEntity="CDParmImage"/>
+    </entity>
+    <entity name="CDParmImage" representedClassName="CDParmImage" syncable="YES" codeGenerationType="class">
+        <attribute name="parmName" optional="YES" attributeType="String"/>
+        <relationship name="filter" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDStoredFilter" inverseName="input" inverseEntity="CDStoredFilter"/>
+        <relationship name="inputAssets" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CDImageList" inverseName="parm" inverseEntity="CDImageList"/>
+        <relationship name="inputStack" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CDFilterStack" inverseName="outputToParm" inverseEntity="CDFilterStack"/>
+        <relationship name="parmImageData" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CDImageData" inverseName="parmImage" inverseEntity="CDImageData"/>
+    </entity>
+    <entity name="CDParmValue" representedClassName="CDParmValue" isAbstract="YES" syncable="YES" codeGenerationType="class">
+        <attribute name="attributeName" attributeType="String" defaultValueString="empty"/>
+        <attribute name="attributeValueDelta" optional="YES" attributeType="Float" usesScalarValueType="NO"/>
+        <attribute name="pglParmClass" attributeType="String" defaultValueString="PGLFilterAttribute"/>
+        <attribute name="varyStepCounter" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="varyTotalFrames" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="storedFilter" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDStoredFilter" inverseName="values" inverseEntity="CDStoredFilter"/>
+    </entity>
+    <entity name="CDStoredFilter" representedClassName="CDStoredFilter" syncable="YES">
+        <attribute name="ciFilter" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="CIFilter"/>
+        <attribute name="ciFilterName" optional="YES" attributeType="String"/>
+        <attribute name="pglSourceFilterClass" attributeType="String" defaultValueString="PGLSourceFilter"/>
+        <attribute name="stackPosition" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="input" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDParmImage" inverseName="filter" inverseEntity="CDParmImage"/>
+        <relationship name="stack" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDFilterStack" inverseName="filters" inverseEntity="CDFilterStack"/>
+        <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDParmValue" inverseName="storedFilter" inverseEntity="CDParmValue"/>
+    </entity>
+</model>

@@ -773,6 +773,12 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
 
 
+    /// remove the kCIInputCenterKey parm from any center link group.
+    /// Called when the filter is removed or replaced in its stack.
+    func unlinkCenterParm() {
+        (attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector)?.unlinkAll()
+    }
+
      // MARK: input source
     func attribute(nameKey: String) -> PGLFilterAttribute? {
         if let sourceIndex = attributes.firstIndex(where: {$0.attributeName == nameKey})
