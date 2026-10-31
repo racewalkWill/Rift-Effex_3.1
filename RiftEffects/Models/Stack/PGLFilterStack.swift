@@ -359,6 +359,21 @@ class PGLFilterStack: Equatable, Hashable  {
     }
    
     
+    /// replace keeps the center point link when the new filter has a matching kCIInputCenterKey parm.
+    /// A master center first passes its value to the new center so its targets do not jump;
+    /// a target center snaps to its master when it joins.
+    fileprivate func moveCenterLinks(_ oldFilter: PGLSourceFilter, _ newFilter: PGLSourceFilter) {
+        guard let oldCenter = oldFilter.attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector,
+              oldCenter.isLinked,
+              let newCenter = newFilter.attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector,
+              newCenter.isLinkable()
+        else { return }
+        if oldCenter.isLinkMaster, let masterValue = oldCenter.getVectorValue() {
+            newCenter.set(masterValue)
+        }
+        oldCenter.moveLinks(to: newCenter)
+    }
+
     fileprivate func moveInputsFrom(_ oldFilter: PGLSourceFilter, _ newFilter: PGLSourceFilter) {
         // strictly this should only be used when replacing a filter
         // keep as many inputs as possible.
@@ -377,7 +392,8 @@ class PGLFilterStack: Equatable, Hashable  {
 
                 newAttribute.inputCollection = inputAttribute.inputCollection
                 newAttribute.setTargetAttributeOfUserAssetCollection()
-                newAttribute.setImageParmState(newState: inputAttribute.inputParmType() )
+                newAttribute.setImageParmState(newState: inputAttribute.parmInputState )
+                    // the own state - inputParmType() of a linked target answers its master's state
                 newAttribute.inputStack = inputAttribute.inputStack
                 newAttribute.inputSource = inputAttribute.inputSource
                 newAttribute.inputSourceDescription = inputAttribute.inputSourceDescription
@@ -385,6 +401,9 @@ class PGLFilterStack: Equatable, Hashable  {
                 // does NOT setup clones
                 // therefore it does not call
                 // setImageCollectionInput
+
+                inputAttribute.moveLinks(to: newAttribute)
+                    // image links follow the input - before the old filter unlinkParms()
 
                 reusedInputKeys.append(anImageKey)
                 }
@@ -495,7 +514,8 @@ class PGLFilterStack: Equatable, Hashable  {
             // in range
             let oldFilter = activeFilters[at]
             moveInputsFrom(oldFilter, newFilter)
-
+            moveCenterLinks(oldFilter, newFilter)
+                // before unlinkParms() drops the links of the old filter
 
             removedFilters.append(oldFilter)
             oldFilter.stackPosition = -1

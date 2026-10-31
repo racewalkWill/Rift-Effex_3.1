@@ -1036,6 +1036,23 @@ class PGLFilterAttribute {
         }
     }
 
+    /// move the links of this parm to newParm - the matching parm of a replacing filter.
+    /// Call after the inputs and input state of this parm are moved to newParm.
+    /// A target that can not follow newParm shows its own input again.
+    func moveLinks(to newParm: PGLFilterAttribute) {
+        if let master = linkMaster {
+            master.unlink(target: self, restoreTarget: false)
+            master.link(target: newParm, fromStore: true)
+        }
+        for aTarget in linkTargets {
+            unlink(target: aTarget, restoreTarget: false)
+            newParm.link(target: aTarget, fromStore: true)
+            if aTarget.linkMaster !== newParm {
+                aTarget.didUnlinkFromMaster()
+            }
+        }
+    }
+
     /// hook - called on the target before it joins a master
     func willBecomeLinkTarget() { }
 
