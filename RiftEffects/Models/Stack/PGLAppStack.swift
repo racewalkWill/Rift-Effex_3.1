@@ -293,7 +293,7 @@ class PGLAppStack {
 
         let userPickedStack = PGLFilterStack.init()
         userPickedStack.on(cdStack: newCDStack)
-        userPickedStack.resolveCenterLinks()
+        userPickedStack.resolveParmLinks()
 
         resetOutputAppStack(userPickedStack)
     }
@@ -330,7 +330,7 @@ class PGLAppStack {
         else { return }
         let userPickedStack = PGLFilterStack.init()
         userPickedStack.on(cdStack: newCDStack)
-        userPickedStack.resolveCenterLinks()
+        userPickedStack.resolveParmLinks()
             // only the links inside the picked stack - links of the current stack keep their unsaved state
         NSLog("PGLAppStack loadChildStack onParm \(onParm)")
 
@@ -632,17 +632,24 @@ class PGLAppStack {
         return flatAnswer
     }
 
-    // MARK: center links
+    // MARK: parm links
 
-    /// center parms of the whole app stack, including child stacks, that centerParm may link to
-    func centerLinkCandidates(excluding centerParm: PGLFilterAttributeVector) -> [PGLFilterAttributeVector] {
-        return outputStack.centerLinkParms().filter { $0 !== centerParm }
+    /// parms of the whole app stack, including child stacks, that master may link to
+    func linkCandidates(for master: PGLFilterAttribute) -> [PGLFilterAttribute] {
+        return outputStack.linkableParms().filter { ($0 !== master) && master.canLink(to: $0) }
     }
 
-    /// unlink any link to a center parm that is no longer in the app stack
+    /// parms that could drive target - for an image input, the image inputs with photos to share
+    func linkMasterCandidates(for target: PGLFilterAttribute) -> [PGLFilterAttribute] {
+        return outputStack.linkableParms().filter {
+            ($0 !== target) && !$0.isLinkTarget && $0.canBeLinkMaster() && $0.canLink(to: target)
+        }
+    }
+
+    /// unlink any link to a parm that is no longer in the app stack
     /// - a filter removed with its child stack, or a stale undo.
-    func pruneCenterLinks() {
-        let activeParms = outputStack.centerLinkParms()
+    func pruneParmLinks() {
+        let activeParms = outputStack.linkableParms()
         let activeIds = Set(activeParms.map { ObjectIdentifier($0) })
         for aParm in activeParms {
             if let master = aParm.linkMaster, !activeIds.contains(ObjectIdentifier(master)) {

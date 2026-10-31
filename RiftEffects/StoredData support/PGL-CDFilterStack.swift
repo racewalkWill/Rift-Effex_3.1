@@ -105,38 +105,32 @@ extension PGLFilterStack {
             self.setFiltersStackPosition()
         }
 
-    // MARK: center links
+    // MARK: parm links
 
-    /// rebuild the center links of this stack and its child stacks from the
-    /// CDAttributeVector linkMaster relationships. Call after on(cdStack:) completes.
+    /// rebuild the parm links of this stack and its child stacks from the linkMaster
+    /// relationships of the CDAttributeVector and CDParmImage rows. Call after on(cdStack:) completes.
     /// A link to a master outside of this stack graph is skipped - the next save nullifies it.
-    func resolveCenterLinks() {
-        let centerParms = centerLinkParms()
-        var parmForRow = [NSManagedObjectID: PGLFilterAttributeVector]()
-        for aParm in centerParms {
-            if let cdVector = aParm.storedParmValue as? CDAttributeVector {
-                parmForRow[cdVector.objectID] = aParm
+    func resolveParmLinks() {
+        let linkParms = linkableParms()
+        var parmForRow = [NSManagedObjectID: PGLFilterAttribute]()
+        for aParm in linkParms {
+            if let parmRow = aParm.linkRow() {
+                parmForRow[parmRow.objectID] = aParm
             }
         }
-        for aParm in centerParms {
-            guard let cdMaster = (aParm.storedParmValue as? CDAttributeVector)?.linkMaster,
-                  let masterParm = parmForRow[cdMaster.objectID]
+        for aParm in linkParms {
+            guard let masterRow = aParm.storedLinkMasterRow(),
+                  let masterParm = parmForRow[masterRow.objectID]
             else { continue }
-            masterParm.link(target: aParm)
+            masterParm.link(target: aParm, fromStore: true)
         }
     }
 
-    /// write the in memory center links to the CDAttributeVector linkMaster relationships.
-    /// Call after writeCDStack(moContext:) so every center parm has its storedParmValue row.
-    func storeCenterLinks() {
-        for aParm in centerLinkParms() {
-            guard let cdVector = aParm.storedParmValue as? CDAttributeVector
-            else { continue }
-            let cdMaster = aParm.linkMaster?.storedParmValue as? CDAttributeVector
-            if cdVector.linkMaster !== cdMaster {
-                // only assign on change - avoids dirtying unchanged rows for CloudKit export
-                cdVector.linkMaster = cdMaster
-            }
+    /// write the in memory parm links to the linkMaster relationships.
+    /// Call after writeCDStack(moContext:) so every linked parm has its row.
+    func storeParmLinks() {
+        for aParm in linkableParms() {
+            aParm.storeLinkMaster(aParm.linkMaster?.linkRow())
         }
     }
 
@@ -1139,8 +1133,8 @@ extension PGLAppStack {
             return
         }
         let myCDStack = initialStack.writeCDStack(moContext: dataViewContext)
-        pruneCenterLinks()
-        initialStack.storeCenterLinks()
+        pruneParmLinks()
+        initialStack.storeParmLinks()
             // after all filters are written - a link may point to a parm row written later in the stack
 
         let didSave = dataProvider.saveStack(aStack: myCDStack, in: dataViewContext , shouldSave: true )
@@ -1515,6 +1509,66 @@ extension PGLFilterAttribute {
         parmValue.varyTotalFrames = Int64(varyTotalFrames)
 
         
+    }
+
+    // MARK: parm link rows
+    /// the row that holds the linkMaster relationship of this parm - nil if parm links are not stored
+    @objc func linkRow() -> NSManagedObject? {
+        return nil
+    }
+
+    /// the stored master row of this parm
+    @objc func storedLinkMasterRow() -> NSManagedObject? {
+        return nil
+    }
+
+    /// set the linkMaster relationship of this parm row to masterRow
+    @objc func storeLinkMaster(_ masterRow: NSManagedObject?) {
+        // subclasses with stored links override
+    }
+}
+
+extension PGLFilterAttributeVector {
+    // center point links are stored on the CDAttributeVector rows
+
+    @objc override func linkRow() -> NSManagedObject? {
+        return storedParmValue as? CDAttributeVector
+    }
+
+    @objc override func storedLinkMasterRow() -> NSManagedObject? {
+        return (storedParmValue as? CDAttributeVector)?.linkMaster
+    }
+
+    @objc override func storeLinkMaster(_ masterRow: NSManagedObject?) {
+        guard let cdVector = storedParmValue as? CDAttributeVector
+            else { return }
+        let cdMaster = masterRow as? CDAttributeVector
+        if cdVector.linkMaster !== cdMaster {
+            // only assign on change - avoids dirtying unchanged rows for CloudKit export
+            cdVector.linkMaster = cdMaster
+        }
+    }
+}
+
+extension PGLFilterAttributeImage {
+    // image input links are stored on the CDParmImage rows
+
+    @objc override func linkRow() -> NSManagedObject? {
+        return storedParmImage
+    }
+
+    @objc override func storedLinkMasterRow() -> NSManagedObject? {
+        return storedParmImage?.linkMaster
+    }
+
+    @objc override func storeLinkMaster(_ masterRow: NSManagedObject?) {
+        guard let cdParmImage = storedParmImage
+            else { return }
+        let cdMaster = masterRow as? CDParmImage
+        if cdParmImage.linkMaster !== cdMaster {
+            // only assign on change - avoids dirtying unchanged rows for CloudKit export
+            cdParmImage.linkMaster = cdMaster
+        }
     }
 }
 

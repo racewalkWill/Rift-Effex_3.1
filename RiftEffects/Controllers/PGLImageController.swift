@@ -2087,7 +2087,7 @@ extension PGLImageController: UIGestureRecognizerDelegate {
 
         // expected that one is ULO and the other is LLO point
         let tappedAttribute = appStack.targetAttribute
-        if (tappedAttribute as? PGLFilterAttributeVector)?.isLinkTarget ?? false {
+        if tappedAttribute?.isLinkTarget ?? false {
             // a linked center follows its master - do not drag it
             return
         }

@@ -21,7 +21,7 @@ extension PGLFilterAttribute {
 //            NSLog(#function + ": estimatedVaryTime: \(estimatedVaryTime)")
 //        }
         var estimatedListTime: Double = 0.0
-        if hasInputCollection(), let list = inputCollection, let mySourceFilter = aSourceFilter {
+        if hasInputCollection(), let list = statusImageList, let mySourceFilter = aSourceFilter {
             let sizeCount = Double(list.maxAssetsOrImagesCount())
             // transition filters use dt to increment filter time in steps up in range of 0..1
             // smaller dt is longer cycle

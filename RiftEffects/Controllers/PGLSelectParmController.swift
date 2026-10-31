@@ -1062,9 +1062,12 @@ class PGLSelectParmController: PGLCommonController,
         tappedAttribute = getTappedAttribute(indexPath: indexPath)
         appStack.targetAttribute = tappedAttribute
 
-        if let centerParm = cellDataAttribute as? PGLFilterAttributeVector, centerParm.isLinkableCenter() {
-            appStack.pruneCenterLinks()
-            centerParm.hasCenterLinkCandidates = !appStack.centerLinkCandidates(excluding: centerParm).isEmpty
+        if cellDataAttribute.isLinkable() || cellDataAttribute.isLinked {
+            appStack.pruneParmLinks()
+            // a parm that can be a master picks its targets, otherwise it picks the master it follows
+            cellDataAttribute.hasLinkCandidates = cellDataAttribute.canBeLinkMaster()
+                ? !appStack.linkCandidates(for: cellDataAttribute).isEmpty
+                : !appStack.linkMasterCandidates(for: cellDataAttribute).isEmpty
         }
         let newActionCells = cellDataAttribute.cellAction()
             // newActionCells may be segue, message command, addCell
@@ -1191,16 +1194,17 @@ class PGLSelectParmController: PGLCommonController,
 
             case .link:
                 let myAction = UIContextualAction(style: .normal, title: anActionCell.localizedLabel) { [weak self] (_, _, completion) in
-                    guard let self = self,
-                          let centerParm = cellDataAttribute as? PGLFilterAttributeVector
+                    guard let self = self
                         else { completion(false)
                             return }
                     self.imageController?.hideSliders()
-                    if centerParm.isLinked {
-                        centerParm.unlinkAll()
-                        self.centerLinkChanged()
+                    if cellDataAttribute.isLinked {
+                        cellDataAttribute.unlinkAll()
+                        self.parmLinkChanged()
+                    } else if cellDataAttribute.canBeLinkMaster() {
+                        self.presentLinkPicker(master: cellDataAttribute, sourceIndexPath: indexPath)
                     } else {
-                        self.presentCenterLinkPicker(master: centerParm, sourceIndexPath: indexPath)
+                        self.presentLinkFollowPicker(target: cellDataAttribute, sourceIndexPath: indexPath)
                     }
                     completion(true)
                 }
@@ -1217,32 +1221,32 @@ class PGLSelectParmController: PGLCommonController,
         return UISwipeActionsConfiguration(actions: contextActions)
     }
 
-    // MARK: Center Link
+    // MARK: Parm Link
 
-    /// Link swipe action - pick the center parms that follow master.
+    /// Link swipe action - pick the parms that follow master - center points or image inputs.
     /// A single candidate links directly, otherwise an action sheet lists the candidates and Link All.
-    func presentCenterLinkPicker(master: PGLFilterAttributeVector, sourceIndexPath: IndexPath) {
-        let candidates = appStack.centerLinkCandidates(excluding: master)
+    func presentLinkPicker(master: PGLFilterAttribute, sourceIndexPath: IndexPath) {
+        let candidates = appStack.linkCandidates(for: master)
         if candidates.isEmpty { return }
         if candidates.count == 1 {
             master.link(target: candidates[0])
-            centerLinkChanged()
+            parmLinkChanged()
             return
         }
-        let alert = UIAlertController(title: NSLocalizedString("Link Center", comment: "action sheet title - link center points of filters"),
-                                      message: NSLocalizedString("The linked center moves with this center.", comment: "action sheet message - link center points"),
+        let alert = UIAlertController(title: master.linkPickerTitle(),
+                                      message: master.linkPickerMessage(),
                                       preferredStyle: .actionSheet)
         for aCandidate in candidates {
             alert.addAction(UIAlertAction(title: aCandidate.parentParmFilterName(), style: .default) { [weak self] _ in
                 master.link(target: aCandidate)
-                self?.centerLinkChanged()
+                self?.parmLinkChanged()
             })
         }
         alert.addAction(UIAlertAction(title: NSLocalizedString("Link All", comment: "action sheet button - link every center point to this one"), style: .default) { [weak self] _ in
             for aCandidate in candidates {
                 master.link(target: aCandidate)
             }
-            self?.centerLinkChanged()
+            self?.parmLinkChanged()
         })
         alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: .cancel))
 
@@ -1255,8 +1259,38 @@ class PGLSelectParmController: PGLCommonController,
         present(alert, animated: true)
     }
 
+    /// Link swipe action on a parm that can not be a master - such as an image input with no photos.
+    /// Pick the master it follows. A single candidate links directly.
+    func presentLinkFollowPicker(target: PGLFilterAttribute, sourceIndexPath: IndexPath) {
+        let candidates = appStack.linkMasterCandidates(for: target)
+        if candidates.isEmpty { return }
+        if candidates.count == 1 {
+            candidates[0].link(target: target)
+            parmLinkChanged()
+            return
+        }
+        let alert = UIAlertController(title: target.linkPickerTitle(),
+                                      message: target.linkFollowPickerMessage(),
+                                      preferredStyle: .actionSheet)
+        for aCandidate in candidates {
+            alert.addAction(UIAlertAction(title: aCandidate.parentParmFilterName(), style: .default) { [weak self] _ in
+                aCandidate.link(target: target)
+                self?.parmLinkChanged()
+            })
+        }
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: .cancel))
+
+        if let popover = alert.popoverPresentationController {
+            // iPad presents the action sheet as a popover from the swiped cell
+            let sourceCell = parmsTableView.cellForRow(at: sourceIndexPath)
+            popover.sourceView = sourceCell ?? parmsTableView
+            popover.sourceRect = sourceCell?.bounds ?? parmsTableView.bounds
+        }
+        present(alert, animated: true)
+    }
+
     /// refresh the parm cells link description
-    func centerLinkChanged() {
+    func parmLinkChanged() {
         parmsTableView.reloadData()
     }
 

@@ -143,6 +143,10 @@ class PGLTransitionFilter: PGLRectangleFilter {
             aParmKey != sourceKey })
             {
                 if let nextImageAttribute = attribute(nameKey: nextImageParmKey) {
+                    if nextImageAttribute.isLinkTarget {
+                        // shows the images of its link master - leave the source list and the target alone
+                        return
+                    }
 //                    NSLog("PGLTransitionFilter setImageListClone(cycleStack: nextImageAttribute = \(nextImageAttribute)")
                     if nextImageAttribute .isSingluar() {
 //                        NSLog("PGLTransitionFilter setImageListClone(cycleStack: nextImageAttribute isSingluar - return")

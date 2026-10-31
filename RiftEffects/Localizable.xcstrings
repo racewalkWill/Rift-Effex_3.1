@@ -2634,6 +2634,59 @@
         }
       }
     },
+    "Link Image" : {
+      "comment" : "action sheet title - link image inputs of filters",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Propojit obrázek"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Bild verknüpfen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vincular imagen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Lier l’image"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Collega immagine"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "画像をリンク"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vincular imagem"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "链接图像"
+          }
+        }
+      }
+    },
     "Linked to %@" : {
       "comment" : "parm cell subtitle - center point drives the listed filters",
       "localizations" : {
@@ -6240,6 +6293,59 @@
         }
       }
     },
+    "The linked input shows the images of this input." : {
+      "comment" : "action sheet message - link image inputs",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Propojený vstup zobrazuje obrázky tohoto vstupu."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Die verknüpfte Eingabe zeigt die Bilder dieser Eingabe."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "La entrada vinculada muestra las imágenes de esta entrada."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "L’entrée liée affiche les images de cette entrée."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "L’input collegato mostra le immagini di questo input."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "リンクされた入力には、この入力の画像が表示されます。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "A entrada vinculada mostra as imagens desta entrada."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "已链接的输入会显示此输入的图像。"
+          }
+        }
+      }
+    },
     "The output has been saved to Photos. The source image was picked from outside the limited access 'Selected Photos' so it is not saved with the stack. Pick the source image again when the stack is opened." : {
       "comment" : "Alert message after saving a stack whose source image was a limited Photos access pick",
       "localizations" : {
@@ -6395,6 +6501,59 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "此操作无法撤销"
+          }
+        }
+      }
+    },
+    "This input shows the images of the linked input." : {
+      "comment" : "action sheet message - an empty image input picks the image input it follows",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Tento vstup zobrazuje obrázky propojeného vstupu."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Diese Eingabe zeigt die Bilder der verknüpften Eingabe."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Esta entrada muestra las imágenes de la entrada vinculada."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cette entrée affiche les images de l’entrée liée."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Questo input mostra le immagini dell’input collegato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "この入力には、リンクされた入力の画像が表示されます。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Esta entrada mostra as imagens da entrada vinculada."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "此输入会显示已链接输入的图像。"
           }
         }
       }

@@ -155,6 +155,12 @@ class PGLFilterAttribute {
         }
     }
 
+    /// the image list that answers status - isSingular, isMultiple, isEmpty, count.
+    /// A linked image target answers the list of its master - see PGLFilterAttributeImage
+    var statusImageList: PGLImageList? {
+        return inputCollection
+    }
+
 
      weak var aSourceFilter: PGLSourceFilter?
     // weak: attributes can outlive their filter (table cells, stored closures, async saves)
@@ -240,6 +246,7 @@ class PGLFilterAttribute {
         }
 
     func releaseVars() {
+        unlinkAll(restoreSelf: false)
         inputCollection?.releaseVars()
         inputCollection = nil 
         inputStack = nil
@@ -366,7 +373,7 @@ class PGLFilterAttribute {
 
     
     func postListSizeChange( newList: PGLImageList) {
-        guard let myCurrentList = inputCollection
+        guard let myCurrentList = statusImageList
         else { if newList.isMultiple()  {
                     postTransitionFilterAdd()   }
                 return }
@@ -390,7 +397,7 @@ class PGLFilterAttribute {
 
     func removeTransitionCounts() {
         // if filter is removed then remove its transition counts
-        guard let myCurrentList = inputCollection
+        guard let myCurrentList = statusImageList
             else { return }
         if myCurrentList.isMultiple() {
             postTransitionFilterRemove()
@@ -399,7 +406,7 @@ class PGLFilterAttribute {
 
     func addTransitionCounts() {
         // if filter is added then post its transition increment
-        guard let myCurrentList = inputCollection
+        guard let myCurrentList = statusImageList
             else { return }
         if myCurrentList.isMultiple() {
             postTransitionFilterAdd()
@@ -827,7 +834,7 @@ class PGLFilterAttribute {
     }
     func hasInputCollection() -> Bool {
         // more than one input image exists
-        if let theSize = inputCollection?.maxAssetsOrImagesCount() {
+        if let theSize = statusImageList?.maxAssetsOrImagesCount() {
             return theSize > 1
         }
         return false
@@ -853,12 +860,12 @@ class PGLFilterAttribute {
 
         if hasInputCollection()
             // this answers false if only one image in the collection
-            { return inputCollection!.isSingular()}
+            { return statusImageList?.isSingular() ?? false }
         else { return false }
     }
 
     func hasOnePhoto() -> Bool {
-        if let myList = inputCollection {
+        if let myList = statusImageList {
              return myList.isSingular()}
         else { return false }
     }
@@ -878,7 +885,7 @@ class PGLFilterAttribute {
         switch attributeClass! {
             case  AttrClass.Image.rawValue :
                 if hasInputCollection() {
-                    if let nextImage = inputCollection!.increment() {
+                    if let nextImage = inputCollection?.increment() {
 
                         aSourceFilter?.setImageValue(newValue: nextImage, keyName: attributeName!)
                         }
@@ -962,6 +969,141 @@ class PGLFilterAttribute {
         NotificationCenter.default.post(name: updateNotification.name, object: nil, userInfo: ["varyTimerChange" : -1 as AnyObject])
     }
 
+
+    // MARK: Parm Link
+    // Linked parms form a star - one master drives one or more targets.
+    // Subclasses that support links (PGLFilterAttributeVector center points,
+    // PGLFilterAttributeImage image inputs) override isLinkable() and the hooks below.
+    // Both directions are weak to avoid filter <-> filter retain cycles.
+
+    weak var linkMaster: PGLFilterAttribute?
+    private var linkTargetTable = NSHashTable<PGLFilterAttribute>.weakObjects()
+    /// set by PGLSelectParmController before cellAction() - true if the app stack holds
+    /// other parms this parm could link to
+    var hasLinkCandidates = false
+
+    var linkTargets: [PGLFilterAttribute] { linkTargetTable.allObjects }
+    var isLinkMaster: Bool { linkTargetTable.count > 0 }
+    var isLinkTarget: Bool { linkMaster != nil }
+    var isLinked: Bool { isLinkMaster || isLinkTarget }
+
+    /// true if this parm can take part in a link as master or target
+    func isLinkable() -> Bool {
+        return false
+    }
+
+    /// true if this parm can drive targets - may need more than isLinkable(), such as images to share
+    func canBeLinkMaster() -> Bool {
+        return isLinkable()
+    }
+
+    /// true if target is the same kind of parm as this master
+    func canLink(to target: PGLFilterAttribute) -> Bool {
+        return false
+    }
+
+    /// make target follow this parm. A target leaves any prior link group first.
+    /// fromStore true restores a saved link - a master image parm whose photos are not on
+    /// this device keeps its link instead of losing it on the next save.
+    func link(target: PGLFilterAttribute, fromStore: Bool = false) {
+        guard target !== self, !isLinkTarget, isLinkable(), target.isLinkable(), canLink(to: target)
+            else { return }
+        guard fromStore || canBeLinkMaster()
+            else { return }
+            // a target can not be a master - no chains
+        target.unlinkAll()
+        target.willBecomeLinkTarget()
+        target.linkMaster = self
+        linkTargetTable.add(target)
+        didLink(target: target)
+    }
+
+    func unlink(target: PGLFilterAttribute, restoreTarget: Bool = true) {
+        target.linkMaster = nil
+        linkTargetTable.remove(target)
+        if restoreTarget {
+            target.didUnlinkFromMaster()
+        }
+    }
+
+    /// remove this parm from its link group, as master or as target.
+    /// restoreSelf false skips this parm's own restore - used on release.
+    /// Targets of this parm live in other filters and are always restored.
+    func unlinkAll(restoreSelf: Bool = true) {
+        linkMaster?.unlink(target: self, restoreTarget: restoreSelf)
+        for aTarget in linkTargets {
+            unlink(target: aTarget)
+        }
+    }
+
+    /// hook - called on the target before it joins a master
+    func willBecomeLinkTarget() { }
+
+    /// hook - called on the master after target joins - sync the target to the master value
+    func didLink(target: PGLFilterAttribute) { }
+
+    /// hook - called on the target after it leaves its master
+    func didUnlinkFromMaster() { }
+
+    /// name of this parm in link descriptions on the parm cells
+    func linkDisplayName() -> String {
+        return aSourceFilter?.descriptorDisplayName ?? "filter"
+    }
+
+    /// adds the link symbol and the "Linked to" / "Follows" subtitle to a parm cell
+    func applyLinkDescription(to content: inout UIListContentConfiguration) {
+        if isLinkMaster {
+            content.image = UIImage(systemName: "link.circle.fill")
+            content.imageProperties.tintColor = .tintColor
+            let targetNames = linkTargets.map { $0.linkDisplayName() }
+            let format = NSLocalizedString("Linked to %@", comment: "parm cell subtitle - center point drives the listed filters")
+            content.secondaryText = String(format: format, targetNames.formatted(.list(type: .and)))
+        } else if let master = linkMaster {
+            content.image = UIImage(systemName: "link")
+            content.imageProperties.tintColor = .tintColor
+            let format = NSLocalizedString("Follows %@", comment: "parm cell subtitle - center point follows the named filter")
+            content.secondaryText = String(format: format, master.linkDisplayName())
+        }
+    }
+
+    /// literal keys so the compiler extracts the Link swipe labels into Localizable.xcstrings.
+    /// PGLTableCellAction.localizedLabel looks them up by the English swipeLabel.
+    static let linkSwipeLabels = [
+        NSLocalizedString("Link", comment: "Swipe action label - link this center point to the center points of other filters"),
+        NSLocalizedString("Unlink", comment: "Swipe action label - remove the center point link")
+    ]
+
+    func linkAction(_ label: String) -> PGLTableCellAction {
+        let newLinkAction = PGLTableCellAction(action: label, newAttribute: nil, canPerformAction: true, targetAttribute: self)
+        newLinkAction.performLink = true
+        return newLinkAction
+    }
+
+    /// the Link or Unlink swipe action for this parm, or nil if it has neither
+    func linkCellAction() -> PGLTableCellAction? {
+        if isLinked {
+            return linkAction("Unlink")
+        }
+        if hasLinkCandidates && (canBeLinkMaster() || isLinkable()) {
+            // a master links its targets - a parm that can not be a master follows a master
+            return linkAction("Link")
+        }
+        return nil
+    }
+
+    /// title and message of the link picker action sheet
+    func linkPickerTitle() -> String {
+        return NSLocalizedString("Link Center", comment: "action sheet title - link center points of filters")
+    }
+
+    func linkPickerMessage() -> String {
+        return NSLocalizedString("The linked center moves with this center.", comment: "action sheet message - link center points")
+    }
+
+    /// action sheet message when this parm picks the master it follows
+    func linkFollowPickerMessage() -> String {
+        return linkPickerMessage()
+    }
 
     func cellAction() -> [PGLTableCellAction] {
         //[(action:String,newCell:PGLFilterAttribute?) ]

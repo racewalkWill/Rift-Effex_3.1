@@ -500,7 +500,7 @@ class PGLFilterStack: Equatable, Hashable  {
             removedFilters.append(oldFilter)
             oldFilter.stackPosition = -1
                 // filter relationship change will be updated at save time
-            oldFilter.unlinkCenterParm()
+            oldFilter.unlinkParms()
 
             activeFilters[at] = newFilter
             newFilter.stackPosition = at
@@ -525,7 +525,7 @@ class PGLFilterStack: Equatable, Hashable  {
                 if removedFilter != nil {
                     removedFilters.append(removedFilter!)
                     removedFilter?.stackPosition = -1
-                    removedFilter?.unlinkCenterParm()
+                    removedFilter?.unlinkParms()
                 }
                 if let thisTransitionFilter = removedFilter as? PGLTransitionFilter {
                     thisTransitionFilter.removeTransitionCounts()
@@ -545,7 +545,7 @@ class PGLFilterStack: Equatable, Hashable  {
                     removedFilter = activeFilters.removeLast()
                     removedFilters.append(removedFilter!)
                     removedFilter!.stackPosition = -1
-                    removedFilter!.unlinkCenterParm()
+                    removedFilter!.unlinkParms()
 
                     activeFilterIndex = activeFilters.count - 1 // zero based index
             }
@@ -631,7 +631,7 @@ class PGLFilterStack: Equatable, Hashable  {
 
                 removedFilters.append(oldFilter)
                 oldFilter.stackPosition = -1
-                oldFilter.unlinkCenterParm()
+                oldFilter.unlinkParms()
 
                 if oldFilter.isTransitionCategoryFilter() {
                     if !oldFilter.allImageParmsMissingInput() {
@@ -922,25 +922,24 @@ class PGLFilterStack: Equatable, Hashable  {
 
     // MARK: center link parms
 
-    /// every linkable kCIInputCenterKey parm of this stack and its child stacks.
+    /// every linkable parm of this stack and its child stacks - center points and image inputs.
     /// Side effect free - unlike addChildFilters it does not post a redraw.
-    func centerLinkParms() -> [PGLFilterAttributeVector] {
+    func linkableParms() -> [PGLFilterAttribute] {
         var visitedStacks = Set<ObjectIdentifier>()
-        var answer = [PGLFilterAttributeVector]()
-        centerLinkParms(into: &answer, visited: &visitedStacks)
+        var answer = [PGLFilterAttribute]()
+        linkableParms(into: &answer, visited: &visitedStacks)
         return answer
     }
 
-    fileprivate func centerLinkParms(into answer: inout [PGLFilterAttributeVector], visited: inout Set<ObjectIdentifier>) {
+    fileprivate func linkableParms(into answer: inout [PGLFilterAttribute], visited: inout Set<ObjectIdentifier>) {
         guard visited.insert(ObjectIdentifier(self)).inserted
         else { return }
         for aFilter in activeFilters {
             for anAttribute in aFilter.attributes {
-                anAttribute.inputStack?.centerLinkParms(into: &answer, visited: &visited)
-            }
-            if let centerParm = aFilter.attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector,
-               centerParm.isLinkableCenter() {
-                answer.append(centerParm)
+                anAttribute.inputStack?.linkableParms(into: &answer, visited: &visited)
+                if anAttribute.isLinkable() {
+                    answer.append(anAttribute)
+                }
             }
         }
     }

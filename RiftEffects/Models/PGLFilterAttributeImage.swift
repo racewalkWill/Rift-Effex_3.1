@@ -89,7 +89,10 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     }
 
     override func inputParmType() -> ParmInputState {
-
+        if let master = linkMaster {
+            // a linked target answers the input state of its master
+            return master.inputParmType()
+        }
         return parmInputState
     }
     
@@ -99,7 +102,9 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     var newDescriptionString = self.attributeDisplayName ?? ""
     let sourceString = inputSourceDescription ?? ""
 
-    if inputStack != nil {
+    if let master = linkMaster {
+        newDescriptionString = newDescriptionString + " -> " + master.parentParmFilterName()
+    } else if inputStack != nil {
         newDescriptionString = newDescriptionString + " -> " + (inputStack?.outputFilterName() ?? "")
     } else {
         if sourceString.isEmpty {
@@ -139,6 +144,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
             content.image = PGLFilterAttribute.CropSymbool
       
     }
+    applyLinkDescription(to: &content)
 
     uiCell.contentConfiguration = content
 
@@ -156,8 +162,9 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     
 
     func imageInputIsEmpty() -> Bool {
-        if inputCollection == nil { return true }
-        return inputCollection!.isEmpty()
+        guard let statusList = statusImageList
+            else { return true }
+        return statusList.isEmpty()
     }
 
     func filterInputActionCell() -> PGLFilterAttribute? {
@@ -189,6 +196,10 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
             // empty no actions
             //can't change input from prior filter so no cell action swipe cells
         }
+        if isLinkTarget {
+            // a target shows the images of its master - only Unlink
+            return [linkAction("Unlink")]
+        }
         let newPickAction = PGLTableCellAction(action: "Library", newAttribute: filterInputActionCell(), canPerformAction: true, targetAttribute: self)
         newPickAction.performAction2 = true
         // performAction2 will execute if true and it will not execute performAction
@@ -205,6 +216,9 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
             // this will segue to filterBranch.. opens the filterController
             allActions.append(newAction) }
 
+        if let imageLinkAction = linkCellAction() {
+            allActions.append(imageLinkAction)
+        }
         return allActions
     }
 
@@ -239,16 +253,151 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
 
     func sourceImageAlbums() -> [String]? {
 
-        if let sources = inputCollection?.sourceImageAlbums() {
+        if let sources = statusImageList?.sourceImageAlbums() {
             return sources
         }
         else { return nil }
+    }
+
+    // MARK: Image Link
+    /// A linked target shows the images of its master's PGLImageList - see PGLFilterAttribute MARK: Parm Link.
+    /// Every image write to a filter passes PGLSourceFilter #setImageValue, which forwards a master's
+    /// new image to its targets and ignores any other write to a linked target.
+    /// The target keeps its own inputCollection while linked - it is not released, since a clone list
+    /// may share PGLAssets with another parm - and the target shows it again on unlink.
+    private var isReceivingLinkedImage = false
+
+    override var inputCollection: PGLImageList? {
+        didSet {
+            // the master list changed - targets re-check their transition state against it
+            for aTarget in linkTargets {
+                _ = aTarget.aSourceFilter?.notifyTransitionsExist()
+            }
+        }
+    }
+
+    override var statusImageList: PGLImageList? {
+        if let master = linkMaster {
+            return master.statusImageList
+        }
+        return inputCollection
+    }
+
+    override func isLinkable() -> Bool {
+        if (self is PGLFilterAttrSequenceStack) || (aSourceFilter is PGLSequencedFilters) {
+            // sequence stacks deliver their own images
+            return false
+        }
+        if inputStack != nil {
+            // input from a child stack
+            return false
+        }
+        switch parmInputState {
+            case .inputPhoto, .missingImageInput:
+                break
+            default:
+                // prior filter or child stack input
+                return false
+        }
+        if (attributeName == kCIInputImageKey) && ((aSourceFilter?.stackPosition ?? 0) > 0) {
+            // the stack feeds the prior filter output into this input on every frame
+            return false
+        }
+        return true
+    }
+
+    /// a master needs images to share
+    override func canBeLinkMaster() -> Bool {
+        guard isLinkable(), parmInputState == .inputPhoto
+            else { return false }
+        return !(inputCollection?.isEmpty() ?? true)
+    }
+
+    override func canLink(to target: PGLFilterAttribute) -> Bool {
+        return target is PGLFilterAttributeImage
+    }
+
+    override func willBecomeLinkTarget() {
+        // transition state is re-checked against the master list after the link
+        postTransitionFilterRemove()
+    }
+
+    override func didLink(target: PGLFilterAttribute) {
+        guard let imageTarget = target as? PGLFilterAttributeImage
+            else { return }
+        if let currentImage = getImageValue() {
+            imageTarget.receiveLinkedImage(currentImage)
+        }
+        _ = imageTarget.aSourceFilter?.notifyTransitionsExist()
+    }
+
+    /// show the own images of this parm again
+    override func didUnlinkFromMaster() {
+        postTransitionFilterRemove()
+        if let ownList = inputCollection, !ownList.isEmpty() {
+            set(ownList.getCurrentImage())
+        } else {
+            set(CIImage.empty())
+        }
+        _ = aSourceFilter?.notifyTransitionsExist()
+    }
+
+    override func linkDisplayName() -> String {
+        // image links may join two inputs of the same filter - show the parm name too
+        return parentParmFilterName()
+    }
+
+    override func linkPickerTitle() -> String {
+        return NSLocalizedString("Link Image", comment: "action sheet title - link image inputs of filters")
+    }
+
+    override func linkPickerMessage() -> String {
+        return NSLocalizedString("The linked input shows the images of this input.", comment: "action sheet message - link image inputs")
+    }
+
+    override func linkFollowPickerMessage() -> String {
+        return NSLocalizedString("This input shows the images of the linked input.", comment: "action sheet message - an empty image input picks the image input it follows")
+    }
+
+    /// true if PGLSourceFilter #setImageValue should ignore a write to this parm
+    func blocksImageWrite() -> Bool {
+        return isLinkTarget && !isReceivingLinkedImage
+    }
+
+    /// write the master's image into the filter of this target
+    func receiveLinkedImage(_ image: CIImage) {
+        guard let myAttributeName = attributeName
+            else { return }
+        isReceivingLinkedImage = true
+        defer { isReceivingLinkedImage = false }
+        aSourceFilter?.setImageValue(newValue: image, keyName: myAttributeName)
+    }
+
+    /// called by PGLSourceFilter #setImageValue after this master's image changed
+    func propagateLinkedImage(_ image: CIImage) {
+        guard isLinkMaster
+            else { return }
+        for aTarget in linkTargets {
+            (aTarget as? PGLFilterAttributeImage)?.receiveLinkedImage(image)
+        }
+    }
+
+    override func increment() {
+        if isLinkTarget {
+            // the master increments the shared list
+            return
+        }
+        super.increment()
     }
 
     // MARK: Video
 /// videoFrameChange
      func updateVideoFrame() {
         // set the current video frame into the parm
+        if isLinkTarget {
+            // the master pushes its video frames to the linked targets
+            return
+        }
         if inputCollection?.currentImageIsVideo() ?? false {
             if let ciVideoFrame =  inputCollection?.getCurrentImage() {
                 aSourceFilter?.setImageValue(newValue: ciVideoFrame, keyName: attributeName!)

@@ -375,6 +375,7 @@
 		A3BB9E082B73ED4D0041F914 /* AVAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAssetExtension.swift; sourceTree = "<group>"; };
 		A3BDD3CC290D95D000842B51 /* RiftEffects 2.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.2.xcdatamodel"; sourceTree = "<group>"; };
 		A3C0FFEE0000000000002301 /* RiftEffects 2.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.3.xcdatamodel"; sourceTree = "<group>"; };
+		A3C0FFEE0000000000002401 /* RiftEffects 2.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.4.xcdatamodel"; sourceTree = "<group>"; };
 		A3BF500924D3298F00CD5114 /* RiftEffects.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RiftEffects.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3BF502224D3299100CD5114 /* RiftEffectsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RiftEffectsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3BF502824D3299100CD5114 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1746,8 +1747,9 @@
 			children = (
 				A3BDD3CC290D95D000842B51 /* RiftEffects 2.2.xcdatamodel */,
 				A3C0FFEE0000000000002301 /* RiftEffects 2.3.xcdatamodel */,
+				A3C0FFEE0000000000002401 /* RiftEffects 2.4.xcdatamodel */,
 			);
-			currentVersion = A3C0FFEE0000000000002301 /* RiftEffects 2.3.xcdatamodel */;
+			currentVersion = A3C0FFEE0000000000002401 /* RiftEffects 2.4.xcdatamodel */;
 			path = RiftEffects.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

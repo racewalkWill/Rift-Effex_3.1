@@ -58,15 +58,9 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     var appliedRenderSize: CGSize?
 
     //MARK: center link
-    /// Linked kCIInputCenterKey parms form a star - one master drives one or more targets.
+    /// Linked kCIInputCenterKey parms - see PGLFilterAttribute MARK: Parm Link.
     /// Targets follow every master set(_:), including the per-frame Vary steps.
-    /// Both directions are weak to avoid filter <-> filter retain cycles.
-    weak var linkMaster: PGLFilterAttributeVector?
-    private var linkTargetTable = NSHashTable<PGLFilterAttributeVector>.weakObjects()
     private var isPropagatingLink = false
-    /// set by PGLSelectParmController before cellAction() - true if the app stack holds
-    /// other center parms this parm could link to
-    var hasCenterLinkCandidates = false
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
@@ -214,46 +208,31 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     }
 
     // MARK: Center Link
-    var linkTargets: [PGLFilterAttributeVector] { linkTargetTable.allObjects }
-    var isLinkMaster: Bool { linkTargetTable.count > 0 }
-    var isLinkTarget: Bool { linkMaster != nil }
-    var isLinked: Bool { isLinkMaster || isLinkTarget }
 
     /// only kCIInputCenterKey parms in canvas coordinates may be linked
     func isLinkableCenter() -> Bool {
         return (attributeName == kCIInputCenterKey) && usesCanvasCoordinates()
     }
 
-    /// make target follow this parm. A target leaves any prior link group,
-    /// stops its own Vary and snaps to the current value of this master.
-    func link(target: PGLFilterAttributeVector) {
-        guard target !== self, isLinkableCenter(), target.isLinkableCenter()
-            else { return }
-        if isLinkTarget {
-            // a target can not be a master - no chains
-            return
+    override func isLinkable() -> Bool {
+        return isLinkableCenter()
+    }
+
+    override func canLink(to target: PGLFilterAttribute) -> Bool {
+        return target is PGLFilterAttributeVector
+    }
+
+    /// a target follows the master - stop its own Vary
+    override func willBecomeLinkTarget() {
+        if hasAnimation() {
+            performActionOff()
         }
-        target.unlinkAll()
-        if target.hasAnimation() {
-            target.performActionOff()
-        }
-        target.linkMaster = self
-        linkTargetTable.add(target)
+    }
+
+    /// snap the new target to the current value of this master
+    override func didLink(target: PGLFilterAttribute) {
         if let currentValue = getVectorValue() {
             target.set(currentValue)
-        }
-    }
-
-    func unlink(target: PGLFilterAttributeVector) {
-        target.linkMaster = nil
-        linkTargetTable.remove(target)
-    }
-
-    /// remove this parm from its link group, as master or as target
-    func unlinkAll() {
-        linkMaster?.unlink(target: self)
-        for aTarget in linkTargets {
-            unlink(target: aTarget)
         }
     }
 
@@ -266,11 +245,6 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         for aTarget in linkTargets {
             aTarget.set(newValue)
         }
-    }
-
-    override func releaseVars() {
-        unlinkAll()
-        super.releaseVars()
     }
 
     /// linked targets follow the master - hide the position control so it is not dragged
@@ -338,36 +312,13 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
       content.imageProperties.tintColor = .secondaryLabel
         content.image = UIImage(systemName: "plus.circle")
 
-        if isLinkMaster {
-            content.image = UIImage(systemName: "link.circle.fill")
-            content.imageProperties.tintColor = .tintColor
-            let targetNames = linkTargets.map { $0.aSourceFilter?.descriptorDisplayName ?? "filter" }
-            let format = NSLocalizedString("Linked to %@", comment: "parm cell subtitle - center point drives the listed filters")
-            content.secondaryText = String(format: format, targetNames.formatted(.list(type: .and)))
-        } else if let master = linkMaster {
-            content.image = UIImage(systemName: "link")
-            content.imageProperties.tintColor = .tintColor
-            let format = NSLocalizedString("Follows %@", comment: "parm cell subtitle - center point follows the named filter")
-            content.secondaryText = String(format: format, master.aSourceFilter?.descriptorDisplayName ?? "filter")
-        }
+        applyLinkDescription(to: &content)
 
       uiCell.contentConfiguration = content
 
     }
 
     // MARK: Swipe actions Vector
-    /// literal keys so the compiler extracts the Link swipe labels into Localizable.xcstrings.
-    /// PGLTableCellAction.localizedLabel looks them up by the English swipeLabel.
-    static let linkSwipeLabels = [
-        NSLocalizedString("Link", comment: "Swipe action label - link this center point to the center points of other filters"),
-        NSLocalizedString("Unlink", comment: "Swipe action label - remove the center point link")
-    ]
-
-    fileprivate func linkAction(_ label: String) -> PGLTableCellAction {
-        let newLinkAction = PGLTableCellAction(action: label, newAttribute: nil, canPerformAction: true, targetAttribute: self)
-        newLinkAction.performLink = true
-        return newLinkAction
-    }
 
     fileprivate func addCancelAction(_ allActions: inout [PGLTableCellAction]) {
         // point 1 &/or point 2 set so allow Cancel
@@ -459,8 +410,8 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             return [linkAction("Unlink")]
         }
         var allActions = super.cellAction()
-        if isLinkableCenter() && (hasCenterLinkCandidates || isLinkMaster) {
-            allActions.append(linkAction(isLinkMaster ? "Unlink" : "Link"))
+        if let centerLinkAction = linkCellAction() {
+            allActions.append(centerLinkAction)
         }
         return allActions
     }

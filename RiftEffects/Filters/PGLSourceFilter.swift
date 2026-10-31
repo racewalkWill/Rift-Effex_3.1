@@ -274,7 +274,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
             // does it have more than one image
             guard let singleImageAttribute = attributesWithInput.first
                 else { return false}
-            guard let singleList = singleImageAttribute.inputCollection
+            guard let singleList = singleImageAttribute.statusImageList
                 else { return false }
             if singleList.isMultiple() {
                     singleImageAttribute.postTransitionFilterAdd()
@@ -579,6 +579,10 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 //        guard let newImage = inputList.first() else {
 //            return // cache may not have returned yet from the PHPhoto librar
 //        }
+        if attribute(nameKey: attributeName)?.isLinkTarget ?? false {
+            // a linked target shows the images of its master - do not clone into the other parms
+            return
+        }
         let newImage = inputList.first() ?? CIImage.empty()
         setImageValue(newValue: (newImage), keyName: attributeName)
         setImageListClone(imageList: inputList, sourceKey: attributeName)
@@ -643,7 +647,13 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 //        NSLog("PGLFilterClasses #setImageValue key = \(keyName)")
 //        newValue.clampedToExtent()        // test changing all inputs to the same extent
 
+        // image links - a linked target only takes the images of its master
+        let imageParm = attribute(nameKey: keyName) as? PGLFilterAttributeImage
+        if imageParm?.blocksImageWrite() ?? false {
+            return
+        }
         localFilter.setValue( newValue, forKey: keyName)
+        imageParm?.propagateLinkedImage(newValue)
 //        logParm(#function, newValue.debugDescription, keyName)
         /*
          var sizedInput: CIImage
@@ -773,10 +783,12 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
 
 
-    /// remove the kCIInputCenterKey parm from any center link group.
+    /// remove the parms of this filter from any link group - center points and image inputs.
     /// Called when the filter is removed or replaced in its stack.
-    func unlinkCenterParm() {
-        (attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector)?.unlinkAll()
+    func unlinkParms() {
+        for anAttribute in attributes {
+            anAttribute.unlinkAll()
+        }
     }
 
      // MARK: input source
