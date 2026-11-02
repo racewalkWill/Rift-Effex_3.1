@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 import simd
 import PhotosUI
 import os
@@ -1224,7 +1225,7 @@ class PGLSelectParmController: PGLCommonController,
     // MARK: Parm Link
 
     /// Link swipe action - pick the parms that follow master - center points or image inputs.
-    /// A single candidate links directly, otherwise an action sheet lists the candidates and Link All.
+    /// A single candidate links directly, otherwise a multi-select sheet lists the candidates with Select All.
     func presentLinkPicker(master: PGLFilterAttribute, sourceIndexPath: IndexPath) {
         let candidates = appStack.linkCandidates(for: master)
         if candidates.isEmpty { return }
@@ -1233,30 +1234,48 @@ class PGLSelectParmController: PGLCommonController,
             parmLinkChanged()
             return
         }
-        let alert = UIAlertController(title: master.linkPickerTitle(),
-                                      message: master.linkPickerMessage(),
-                                      preferredStyle: .actionSheet)
-        for aCandidate in candidates {
-            alert.addAction(UIAlertAction(title: aCandidate.parentParmFilterName(), style: .default) { [weak self] _ in
-                master.link(target: aCandidate)
+        // multi-select sheet - an action sheet closes on the first tap, so it can not pick several targets
+        let candidateForId = Dictionary(uniqueKeysWithValues: candidates.map { (ObjectIdentifier($0), $0) })
+        let sheetCandidates = candidates.map {
+            PGLLinkPickerSheet.Candidate(id: ObjectIdentifier($0),
+                                         name: $0.parentParmFilterName(),
+                                         inLinkAll: master.linkAllIncludes($0))
+                // points of the master's own filter are listed but not in Select All
+        }
+        let sheet = PGLLinkPickerSheet(
+            title: master.linkPickerTitle(),
+            message: master.linkPickerMessage(),
+            candidates: sheetCandidates,
+            onCancel: { [weak self] in
+                self?.dismiss(animated: true)
+            },
+            onLink: { [weak self] selectedIds in
+                for anId in selectedIds {
+                    if let aTarget = candidateForId[anId] {
+                        master.link(target: aTarget)
+                    }
+                }
+                self?.dismiss(animated: true)
                 self?.parmLinkChanged()
             })
-        }
-        alert.addAction(UIAlertAction(title: NSLocalizedString("Link All", comment: "action sheet button - link every center point to this one"), style: .default) { [weak self] _ in
-            for aCandidate in candidates {
-                master.link(target: aCandidate)
-            }
-            self?.parmLinkChanged()
-        })
-        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: .cancel))
 
-        if let popover = alert.popoverPresentationController {
-            // iPad presents the action sheet as a popover from the swiped cell
+        let hosting = UIHostingController(rootView: sheet)
+        // popover from the swiped cell on iPad, an edge attached sheet on iPhone
+        hosting.modalPresentationStyle = .popover
+        let preferredSize = PGLLinkPickerSheet.Layout.preferredSize(candidateCount: candidates.count)
+        hosting.preferredContentSize = preferredSize
+
+        if let popOverPresenter = hosting.popoverPresentationController {
             let sourceCell = parmsTableView.cellForRow(at: sourceIndexPath)
-            popover.sourceView = sourceCell ?? parmsTableView
-            popover.sourceRect = sourceCell?.bounds ?? parmsTableView.bounds
+            popOverPresenter.sourceView = sourceCell ?? parmsTableView
+            popOverPresenter.sourceRect = sourceCell?.bounds ?? parmsTableView.bounds
+
+            let sheetPresentation = popOverPresenter.adaptiveSheetPresentationController
+            sheetPresentation.prefersEdgeAttachedInCompactHeight = true
+            sheetPresentation.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+            sheetPresentation.detents = [.medium(), .large()]
         }
-        present(alert, animated: true)
+        present(hosting, animated: true)
     }
 
     /// Link swipe action on a parm that can not be a master - such as an image input with no photos.

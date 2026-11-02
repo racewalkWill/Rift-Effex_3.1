@@ -177,6 +177,7 @@
 		A3BF514724D32A3400CD5114 /* PGLFilterCIAbstract.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF50C924D32A3400CD5114 /* PGLFilterCIAbstract.swift */; };
 		A3BF515024D32D3400CD5114 /* PGLSourceFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF514A24D32D3400CD5114 /* PGLSourceFilterTests.swift */; };
 		A3BF515924D32D7400CD5114 /* GlanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BF515724D32D7400CD5114 /* GlanceUITests.swift */; };
+		A3BFD99A3099527300B5FAD1 /* PGLLinkPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BFD9993099527300B5FAD1 /* PGLLinkPickerSheet.swift */; };
 		A3C11A8B29E9D9F5001D0831 /* PGLPersonSegmentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C11A8A29E9D9F5001D0831 /* PGLPersonSegmentation.swift */; };
 		A3C278972BAF071200BE40C1 /* PGLTriangleGradientFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C278962BAF071200BE40C1 /* PGLTriangleGradientFilter.swift */; };
 		A3C5A6503042358800FAFBC4 /* PGLCanvasSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C5A64F3042358800FAFBC4 /* PGLCanvasSpace.swift */; };
@@ -374,8 +375,6 @@
 		A3BB63AC2F21915B001ADFE1 /* EstimatedRunTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstimatedRunTime.swift; sourceTree = "<group>"; };
 		A3BB9E082B73ED4D0041F914 /* AVAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAssetExtension.swift; sourceTree = "<group>"; };
 		A3BDD3CC290D95D000842B51 /* RiftEffects 2.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.2.xcdatamodel"; sourceTree = "<group>"; };
-		A3C0FFEE0000000000002301 /* RiftEffects 2.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.3.xcdatamodel"; sourceTree = "<group>"; };
-		A3C0FFEE0000000000002401 /* RiftEffects 2.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.4.xcdatamodel"; sourceTree = "<group>"; };
 		A3BF500924D3298F00CD5114 /* RiftEffects.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RiftEffects.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3BF502224D3299100CD5114 /* RiftEffectsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RiftEffectsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3BF502824D3299100CD5114 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -430,6 +429,9 @@
 		A3BF50C924D32A3400CD5114 /* PGLFilterCIAbstract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLFilterCIAbstract.swift; sourceTree = "<group>"; };
 		A3BF514A24D32D3400CD5114 /* PGLSourceFilterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLSourceFilterTests.swift; sourceTree = "<group>"; };
 		A3BF515724D32D7400CD5114 /* GlanceUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlanceUITests.swift; sourceTree = "<group>"; };
+		A3BFD9993099527300B5FAD1 /* PGLLinkPickerSheet.swift */ = {isa = PBXFileReference; path = PGLLinkPickerSheet.swift; sourceTree = "<group>"; };
+		A3C0FFEE0000000000002301 /* RiftEffects 2.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.3.xcdatamodel"; sourceTree = "<group>"; };
+		A3C0FFEE0000000000002401 /* RiftEffects 2.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.4.xcdatamodel"; sourceTree = "<group>"; };
 		A3C11A8A29E9D9F5001D0831 /* PGLPersonSegmentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLPersonSegmentation.swift; sourceTree = "<group>"; };
 		A3C278962BAF071200BE40C1 /* PGLTriangleGradientFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLTriangleGradientFilter.swift; sourceTree = "<group>"; };
 		A3C5A64F3042358800FAFBC4 /* PGLCanvasSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCanvasSpace.swift; sourceTree = "<group>"; };
@@ -806,6 +808,7 @@
 				A34DE10C25D050AF005DC3DD /* PGLHelpSinglePage.swift */,
 				A303930E27AADED800E2A3D4 /* PGLCompactPresentationController.swift */,
 				A325406E302E6A54005B55F4 /* PGLSaveStackSheet.swift */,
+				A3BFD9993099527300B5FAD1 /* PGLLinkPickerSheet.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1143,6 +1146,7 @@
 				A3167D142ED255CF0029FA92 /* PGLWindowSceneDelegate.swift in Sources */,
 				A3BF513B24D32A3400CD5114 /* GridViewCell.swift in Sources */,
 				A3EFC14B2B2372CE00D30A18 /* PGLCameraInterface.swift in Sources */,
+				A3BFD99A3099527300B5FAD1 /* PGLLinkPickerSheet.swift in Sources */,
 				A3BF512F24D32A3400CD5114 /* PGLFilterAttribute.swift in Sources */,
 				A3BF50DC24D32A3400CD5114 /* PGLBumpBlend.swift in Sources */,
 				A3BF510624D32A3400CD5114 /* PGLSplitViewController.swift in Sources */,

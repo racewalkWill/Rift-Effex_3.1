@@ -209,13 +209,33 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
 
     // MARK: Center Link
 
-    /// only kCIInputCenterKey parms in canvas coordinates may be linked
-    func isLinkableCenter() -> Bool {
-        return (attributeName == kCIInputCenterKey) && usesCanvasCoordinates()
+    /// point parms may be linked - kCIInputCenterKey and every Position / Position3 vector
+    /// whose value is a point in canvas coordinates.
+    /// Offset vectors are displacements, not points, and are not linked.
+    func isLinkablePoint() -> Bool {
+        guard usesCanvasCoordinates()
+            else { return false }
+            // excludes Tone Curve expand, weights and affine UI vectors
+        if (self is PGLGradientCornerAttribute) || (self is PGLGradientVectorAttribute) {
+            // polygon corners and gradient points write the filter directly - no link propagation
+            return false
+        }
+        if attributeName == kCIInputCenterKey {
+            // some centers (PGLScaleFrame, PGLTriangleGradientFilter) carry no attributeType
+            return true
+        }
+        return (attributeType == AttrType.Position.rawValue)
+            || (attributeType == AttrType.Position3.rawValue)
     }
 
     override func isLinkable() -> Bool {
-        return isLinkableCenter()
+        return isLinkablePoint()
+    }
+
+    /// Link All skips the other points of the master's own filter -
+    /// linking them would collapse the filter's points onto each other
+    override func linkAllIncludes(_ candidate: PGLFilterAttribute) -> Bool {
+        return candidate.aSourceFilter !== aSourceFilter
     }
 
     override func canLink(to target: PGLFilterAttribute) -> Bool {
@@ -232,7 +252,8 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     /// snap the new target to the current value of this master
     override func didLink(target: PGLFilterAttribute) {
         if let currentValue = getVectorValue() {
-            target.set(currentValue)
+            target.set(CIVector(x: currentValue.x, y: currentValue.y))
+                // x,y only - a 3D master (PGLFilterAttributeVector3) must not push z into a 2D target
         }
     }
 

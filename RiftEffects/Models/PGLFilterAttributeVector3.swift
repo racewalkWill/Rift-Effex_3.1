@@ -53,6 +53,8 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
             zValue = newZValue
             canvasVector = CIVector(x: newXYvector.x, y: newXYvector.y, z: newZValue)
             pushToFilter(renderSize: RenderTargetSize)
+            propagateLink(CIVector(x: newXYvector.x, y: newXYvector.y))
+                // x,y only - each 3D target keeps its own z, 2D targets get a point
     }
 
     func set3ValueVector(_ newZValue: CGFloat) {

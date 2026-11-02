@@ -359,19 +359,24 @@ class PGLFilterStack: Equatable, Hashable  {
     }
    
     
-    /// replace keeps the center point link when the new filter has a matching kCIInputCenterKey parm.
-    /// A master center first passes its value to the new center so its targets do not jump;
-    /// a target center snaps to its master when it joins.
-    fileprivate func moveCenterLinks(_ oldFilter: PGLSourceFilter, _ newFilter: PGLSourceFilter) {
-        guard let oldCenter = oldFilter.attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector,
-              oldCenter.isLinked,
-              let newCenter = newFilter.attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector,
-              newCenter.isLinkable()
-        else { return }
-        if oldCenter.isLinkMaster, let masterValue = oldCenter.getVectorValue() {
-            newCenter.set(masterValue)
+    /// replace keeps the point links (centers and other Position points) when the new filter has
+    /// a matching linkable parm of the same attributeName.
+    /// A master point first passes its value to the new point so its targets do not jump;
+    /// a target point snaps to its master when it joins.
+    fileprivate func movePointLinks(_ oldFilter: PGLSourceFilter, _ newFilter: PGLSourceFilter) {
+        for anOldAttribute in oldFilter.attributes {
+            guard let oldPoint = anOldAttribute as? PGLFilterAttributeVector,
+                  oldPoint.isLinked,
+                  let pointName = oldPoint.attributeName,
+                  let newPoint = newFilter.attribute(nameKey: pointName) as? PGLFilterAttributeVector,
+                  newPoint.isLinkable()
+            else { continue }
+            if oldPoint.isLinkMaster, let masterValue = oldPoint.getVectorValue() {
+                newPoint.set(CIVector(x: masterValue.x, y: masterValue.y))
+                    // x,y only - a 3D new point keeps its own z
+            }
+            oldPoint.moveLinks(to: newPoint)
         }
-        oldCenter.moveLinks(to: newCenter)
     }
 
     fileprivate func moveInputsFrom(_ oldFilter: PGLSourceFilter, _ newFilter: PGLSourceFilter) {
@@ -514,7 +519,7 @@ class PGLFilterStack: Equatable, Hashable  {
             // in range
             let oldFilter = activeFilters[at]
             moveInputsFrom(oldFilter, newFilter)
-            moveCenterLinks(oldFilter, newFilter)
+            movePointLinks(oldFilter, newFilter)
                 // before unlinkParms() drops the links of the old filter
 
             removedFilters.append(oldFilter)

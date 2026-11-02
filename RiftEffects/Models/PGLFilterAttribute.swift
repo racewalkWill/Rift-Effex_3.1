@@ -1108,13 +1108,18 @@ class PGLFilterAttribute {
         return nil
     }
 
+    /// true if Link All in the link picker should link candidate - subclasses may skip some
+    func linkAllIncludes(_ candidate: PGLFilterAttribute) -> Bool {
+        return true
+    }
+
     /// title and message of the link picker action sheet
     func linkPickerTitle() -> String {
-        return NSLocalizedString("Link Center", comment: "action sheet title - link center points of filters")
+        return NSLocalizedString("Link Point", comment: "action sheet title - link point parms of filters")
     }
 
     func linkPickerMessage() -> String {
-        return NSLocalizedString("The linked center moves with this center.", comment: "action sheet message - link center points")
+        return NSLocalizedString("The linked point moves with this point.", comment: "action sheet message - link point parms")
     }
 
     /// action sheet message when this parm picks the master it follows
