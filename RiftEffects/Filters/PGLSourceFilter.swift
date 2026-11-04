@@ -86,6 +86,13 @@ static let LogRenderTargetSize = false
 
     var isImageInputType = false
     weak var oldImageInput: CIImage?
+
+    /// output of this filter in the current frame, sized as the stack feeds it to the next filter.
+    /// Set by PGLFilterStack #imageUpdate, read by image inputs linked to #outputLink
+    var stackSizedOutput: CIImage?
+
+    /// link master for the output of this filter - see PGLFilterAttributeOutput
+    lazy var outputLink: PGLFilterAttributeOutput? = PGLFilterAttributeOutput(pglFilter: self, attributeDict: PGLFilterAttributeOutput.outputAttributeDict, inputKey: kCIOutputImageKey)
     var storedFilter: CDStoredFilter? // managedObject - write/read to Core Data
     var imageInputCache: [String :CIImage?] = [:]
 
@@ -190,6 +197,8 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         for anAttribute in attributes {
             anAttribute.releaseVars()
         }
+        outputLink?.releaseVars()
+        stackSizedOutput = nil
 //        storedFilter = nil
 
     }
@@ -783,12 +792,15 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
 
 
 
-    /// remove the parms of this filter from any link group - center points and image inputs.
-    /// Called when the filter is removed or replaced in its stack.
+    /// remove the parms of this filter from any link group - center points, image inputs
+    /// and the filter output. Called when the filter is removed or replaced in its stack.
     func unlinkParms() {
         for anAttribute in attributes {
             anAttribute.unlinkAll()
         }
+        outputLink?.unlinkAll()
+            // the inputs that followed this output show their own input again
+        stackSizedOutput = nil
     }
 
      // MARK: input source
@@ -1012,23 +1024,35 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         var contextActions = [UIContextualAction]()
         var myAction: UIContextualAction!
 
-        myAction = UIContextualAction(style: .normal, title: NSLocalizedString("Open", comment: "Swipe action label")) { [weak self] (_, _, completion) in
-            guard self != nil
-                       else { return  }
-            stackController.appStack.viewerStack.activeFilterIndex = indexPath.row
-               // not needed? viewerStack may change.. row is not the index (indented issue on child stack)
+        // Open moved to the row select - PGLStackController #didSelectRowAt
+        // Link the output of this filter to image inputs of later filters
+        if let myOutputLink = outputLink {
+            if myOutputLink.isLinkMaster {
+                myAction = UIContextualAction(style: .normal, title: NSLocalizedString("Unlink", comment: "Swipe action label - remove the center point link")) { [weak self] (_, _, completion) in
+                    guard let self = self
+                        else { completion(false)
+                            return }
+                    Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLStackController trailingSwipeActionsConfigurationForRowAt Unlink output")
+                    self.outputLink?.unlinkAll()
+                    stackController.outputLinkChanged()
+                    completion(true)
+                }
+                myAction.backgroundColor = .systemIndigo
+                contextActions.append(myAction)
+            } else if !stackController.appStack.outputLinkCandidates(for: myOutputLink).isEmpty {
+                myAction = UIContextualAction(style: .normal, title: NSLocalizedString("Link", comment: "Swipe action label - link this center point to the center points of other filters")) { [weak self] (_, _, completion) in
+                    guard let self = self, let thisOutputLink = self.outputLink
+                        else { completion(false)
+                            return }
+                    Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLStackController trailingSwipeActionsConfigurationForRowAt Link output")
+                    stackController.presentOutputLinkPicker(master: thisOutputLink, sourceIndexPath: indexPath)
+                    completion(true)
+                }
+                myAction.backgroundColor = .systemIndigo
+                contextActions.append(myAction)
+            }
+        }
 
-           // set appStack and stack indexes to the selected filter
-           let cellObject = stackController.appStack.flatCellFilters[indexPath.row]
-
-           _ = stackController.appStack.moveTo(filterIndent: cellObject) // this is also setting the activeFilterIndes..
-
-           Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLStackController trailingSwipeActionsConfigurationForRowAt Open")
-                stackController.segueToParmController()
-                completion(true)
-               }
-        contextActions.append(myAction)
-        
         myAction = UIContextualAction(style: .normal, title: NSLocalizedString("Change", comment: "Swipe action label")) { [weak self] (_, _, completion) in
             guard self != nil
                else { return  }

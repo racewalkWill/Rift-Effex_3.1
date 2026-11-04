@@ -636,18 +636,51 @@ class PGLAppStack {
 
     /// parms of the whole app stack, including child stacks, that master may link to
     func linkCandidates(for master: PGLFilterAttribute) -> [PGLFilterAttribute] {
-        return outputStack.linkableParms().filter { ($0 !== master) && master.canLink(to: $0) }
-    }
-
-    /// parms that could drive target - for an image input, the image inputs with photos to share
-    func linkMasterCandidates(for target: PGLFilterAttribute) -> [PGLFilterAttribute] {
         return outputStack.linkableParms().filter {
-            ($0 !== target) && !$0.isLinkTarget && $0.canBeLinkMaster() && $0.canLink(to: target)
+            ($0 !== master) && master.canLink(to: $0) && isLinkInFrameOrder(master: master, target: $0)
         }
     }
 
+    /// image inputs that the output of a filter may feed - the Link swipe of a stack filter row
+    func outputLinkCandidates(for master: PGLFilterAttributeOutput) -> [PGLFilterAttribute] {
+        guard master.canBeLinkMaster()
+            else { return [PGLFilterAttribute]() }
+        return linkCandidates(for: master)
+    }
+
+    /// parms that could drive target - for an image input, the image inputs with photos to share
+    /// and the outputs of earlier filters
+    func linkMasterCandidates(for target: PGLFilterAttribute) -> [PGLFilterAttribute] {
+        return outputStack.linkableParms().filter {
+            ($0 !== target) && !$0.isLinkTarget && $0.canBeLinkMaster() && $0.canLink(to: target)
+                && isLinkInFrameOrder(master: $0, target: target)
+        }
+    }
+
+    /// true if the master is rendered before the target in each frame.
+    /// Only a filter output master has an order - the target filter, or a filter that holds the
+    /// target in a child stack, must come after the source filter in the stack of the source.
+    /// A link back up the stack would feed last frame's output into an earlier filter, and the
+    /// CIImage recipe would grow on every frame.
+    func isLinkInFrameOrder(master: PGLFilterAttribute, target: PGLFilterAttribute) -> Bool {
+        guard let outputMaster = master as? PGLFilterAttributeOutput
+            else { return true }
+        guard let sourceFilter = outputMaster.aSourceFilter,
+              let targetFilter = target.aSourceFilter,
+              let sourcePath = outputStack.filterPath(to: sourceFilter),
+              let sourceStep = sourcePath.last,
+              let targetPath = outputStack.filterPath(to: targetFilter)
+            else { return false }
+        if sourcePath.contains(where: { $0.stack is PGLSequenceStack }) {
+            // a sequence stack renders one of its filters at a time
+            return false
+        }
+        return targetPath.contains { ($0.stack === sourceStep.stack) && ($0.index > sourceStep.index) }
+    }
+
     /// unlink any link to a parm that is no longer in the app stack
-    /// - a filter removed with its child stack, or a stale undo.
+    /// - a filter removed with its child stack, or a stale undo -
+    /// and any filter output link that a filter move put out of frame order.
     func pruneParmLinks() {
         let activeParms = outputStack.linkableParms()
         let activeIds = Set(activeParms.map { ObjectIdentifier($0) })
@@ -656,6 +689,9 @@ class PGLAppStack {
                 master.unlink(target: aParm)
             }
             for aTarget in aParm.linkTargets where !activeIds.contains(ObjectIdentifier(aTarget)) {
+                aParm.unlink(target: aTarget)
+            }
+            for aTarget in aParm.linkTargets where !isLinkInFrameOrder(master: aParm, target: aTarget) {
                 aParm.unlink(target: aTarget)
             }
         }
@@ -744,6 +780,8 @@ class PGLAppStack {
             }
 
         }
+        pruneParmLinks()
+            // a filter output link may now point back up the stack
     }
 
     

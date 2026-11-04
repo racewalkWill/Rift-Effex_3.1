@@ -18,7 +18,8 @@ let PGLSaveStackAction = NSNotification.Name(rawValue: "PGLSaveStackAction")
 class PGLStackController: UITableViewController, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate {
     // tableview of the filters in the stack
     // opens on cell select the masterFilterController to pick new filter
-    // on swipe cell "Parms" opens parmController to change filter parms
+    // on cell select opens parmController to change filter parms
+    // swipe cell Link feeds the filter output to image inputs of later filters
     // edit order by drag or delete a filter in the edit mode
 
     var appStack: PGLAppStack!
@@ -244,7 +245,8 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
 
         let bottomIndexPath = IndexPath(row: bottomRow - 1, section: sectionCount - 1)
         tableView.selectRow(at: bottomIndexPath, animated: true, scrollPosition: .bottom)
-        tableView(tableView, didSelectRowAt: bottomIndexPath)
+        moveToFilterRow(at: bottomIndexPath)
+            // not didSelectRowAt - a row select now opens the parm controller
 
     }
 
@@ -520,6 +522,15 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
                 //            cell.accessoryType = .detailDisclosureButton
         } else { cell.accessoryType = .none}
 
+        if aFilterIndent.filter.outputLink?.isLinkMaster ?? false {
+            // the output of this filter feeds linked image inputs
+            let linkSymbol = UIImageView(image: UIImage(systemName: "link.circle.fill"))
+            linkSymbol.tintColor = .tintColor
+            cell.accessoryView = linkSymbol
+        } else {
+            cell.accessoryView = nil
+        }
+
         return cell
     }
 
@@ -546,7 +557,52 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
 //        NotificationCenter.default.post(name: notificationRedrawFilter.name, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
     }
 
+    /// row select opens the parm controller of the filter - was the 'Open' swipe action.
+    /// The trailing swipe now holds Link.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if isSwipeActionActive || tableView.isEditing {
+            // a tap that closes the swipe actions does not open the filter
+            return
+        }
+        if indexPath.section == StackSections.header.rawValue {
+            // no segue naviation on header cells
+            return
+        }
+        if !appStack.isIndexPathInRangeForFlattendFilters(indexPath: indexPath) {
+            return // nothing here
+        }
+        let cellIndent = appStack.flatCellFilters[indexPath.row]
+        let oldActiveRow = appStack.activeFilterCellRow()
+        // set appStack and stack indexes to the selected filter
+        _ = appStack.moveTo(filterIndent: cellIndent)
+        for aRow in [oldActiveRow, indexPath.row].compactMap({ $0 }) where aRow < appStack.flatCellFilters.count {
+            // the output filter symbol may move to the selected row
+            if let aCell = tableView.cellForRow(at: IndexPath(row: aRow, section: StackSections.filters.rawValue)) {
+                setCellImageView(appStack.flatCellFilters[aRow], aCell)
+            }
+        }
+        Logger(subsystem: LogSubsystem, category: LogCategory).info("PGLStackController didSelectRowAt Open")
+        postRedrawFilterChange()
+        setShiftBtnState()
+        segueToParmController()
+    }
+
+    /// true while the trailing swipe actions of a row show
+    var isSwipeActionActive = false
+
+    override func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
+        super.tableView(tableView, willBeginEditingRowAt: indexPath)
+        isSwipeActionActive = true
+    }
+
+    override func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        super.tableView(tableView, didEndEditingRowAt: indexPath)
+        isSwipeActionActive = false
+    }
+
+    /// select the filter of the row without opening its parms - toggles the single filter image.
+    /// The row select before the 'Open' swipe moved to didSelectRowAt; used by the guide mode start.
+    func moveToFilterRow(at indexPath: IndexPath) {
 
         if indexPath.section == StackSections.header.rawValue {
             // no segue naviation on header cells
@@ -973,9 +1029,71 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
 
         let cellFilter: PGLFilterIndent =  appStack.flatCellFilters[indexPath.row]
         let thisSourceFilter = cellFilter.filter
+        appStack.pruneParmLinks()
+            // the Link or Unlink swipe answers the current links
         contextActions = thisSourceFilter.cellFilterAction(stackController: self, indexPath: indexPath)
 
          return UISwipeActionsConfiguration(actions: contextActions)
+    }
+
+    // MARK: Output Link
+
+    /// Link swipe action of a filter row - pick the image inputs of later filters that show
+    /// the output of this filter. A single candidate links directly.
+    func presentOutputLinkPicker(master: PGLFilterAttributeOutput, sourceIndexPath: IndexPath) {
+        let candidates = appStack.outputLinkCandidates(for: master)
+        if candidates.isEmpty { return }
+        if candidates.count == 1 {
+            master.link(target: candidates[0])
+            outputLinkChanged()
+            return
+        }
+        let candidateForId = Dictionary(uniqueKeysWithValues: candidates.map { (ObjectIdentifier($0), $0) })
+        let sheetCandidates = candidates.map {
+            PGLLinkPickerSheet.Candidate(id: ObjectIdentifier($0),
+                                         name: $0.parentParmFilterName(),
+                                         inLinkAll: master.linkAllIncludes($0))
+        }
+        let sheet = PGLLinkPickerSheet(
+            title: master.linkPickerTitle(),
+            message: master.linkPickerMessage(),
+            candidates: sheetCandidates,
+            onCancel: { [weak self] in
+                self?.dismiss(animated: true)
+            },
+            onLink: { [weak self] selectedIds in
+                for anId in selectedIds {
+                    if let aTarget = candidateForId[anId] {
+                        master.link(target: aTarget)
+                    }
+                }
+                self?.dismiss(animated: true)
+                self?.outputLinkChanged()
+            })
+
+        let hosting = UIHostingController(rootView: sheet)
+        // popover from the swiped row on iPad, an edge attached sheet on iPhone
+        hosting.modalPresentationStyle = .popover
+        let preferredSize = PGLLinkPickerSheet.Layout.preferredSize(candidateCount: candidates.count)
+        hosting.preferredContentSize = preferredSize
+
+        if let popOverPresenter = hosting.popoverPresentationController {
+            let sourceCell = tableView.cellForRow(at: sourceIndexPath)
+            popOverPresenter.sourceView = sourceCell ?? tableView
+            popOverPresenter.sourceRect = sourceCell?.bounds ?? tableView.bounds
+
+            let sheetPresentation = popOverPresenter.adaptiveSheetPresentationController
+            sheetPresentation.prefersEdgeAttachedInCompactHeight = true
+            sheetPresentation.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+            sheetPresentation.detents = [.medium(), .large()]
+        }
+        present(hosting, animated: true)
+    }
+
+    /// refresh the link symbols of the filter rows and redraw the output
+    func outputLinkChanged() {
+        updateDisplay()
+        postRedrawFilterChange()
     }
 
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {

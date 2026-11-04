@@ -93,6 +93,7 @@
 		A38735AB2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */; };
 		A38D76AB2DBAF42B00318585 /* Swift TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */; };
 		A38E6FF52DD0EBD300E050DC /* PGLFilterIndent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38E6FF42DD0EBD300E050DC /* PGLFilterIndent.swift */; };
+		A38E89E3309BBA57001B93CC /* PGLOutputLinkStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38E89E2309BBA57001B93CC /* PGLOutputLinkStoreTests.swift */; };
 		A38F9D76250442B800B58F6B /* CVPixelBufferExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */; };
 		A39193612F1AD223000B6F23 /* UndoSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39193602F1AD223000B6F23 /* UndoSupport.swift */; };
 		A3921FCA2F89479F000A9ABE /* PGLCachedImageMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3921FC92F89479F000A9ABE /* PGLCachedImageMgr.swift */; };
@@ -336,6 +337,7 @@
 		A38735AA2CDBDF78000EE038 /* PGLEffexButtonsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLEffexButtonsHeader.swift; sourceTree = "<group>"; };
 		A38D76AA2DBAF42B00318585 /* Swift TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Swift TestPlan.xctestplan"; sourceTree = "<group>"; };
 		A38E6FF42DD0EBD300E050DC /* PGLFilterIndent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterIndent.swift; sourceTree = "<group>"; };
+		A38E89E2309BBA57001B93CC /* PGLOutputLinkStoreTests.swift */ = {isa = PBXFileReference; path = PGLOutputLinkStoreTests.swift; sourceTree = "<group>"; };
 		A38F9D75250442B800B58F6B /* CVPixelBufferExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVPixelBufferExtension.swift; sourceTree = "<group>"; };
 		A39193602F1AD223000B6F23 /* UndoSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoSupport.swift; sourceTree = "<group>"; };
 		A3921FC92F89479F000A9ABE /* PGLCachedImageMgr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCachedImageMgr.swift; sourceTree = "<group>"; };
@@ -429,9 +431,10 @@
 		A3BF50C924D32A3400CD5114 /* PGLFilterCIAbstract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLFilterCIAbstract.swift; sourceTree = "<group>"; };
 		A3BF514A24D32D3400CD5114 /* PGLSourceFilterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGLSourceFilterTests.swift; sourceTree = "<group>"; };
 		A3BF515724D32D7400CD5114 /* GlanceUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlanceUITests.swift; sourceTree = "<group>"; };
-		A3BFD9993099527300B5FAD1 /* PGLLinkPickerSheet.swift */ = {isa = PBXFileReference; path = PGLLinkPickerSheet.swift; sourceTree = "<group>"; };
+		A3BFD9993099527300B5FAD1 /* PGLLinkPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLLinkPickerSheet.swift; sourceTree = "<group>"; };
 		A3C0FFEE0000000000002301 /* RiftEffects 2.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.3.xcdatamodel"; sourceTree = "<group>"; };
 		A3C0FFEE0000000000002401 /* RiftEffects 2.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.4.xcdatamodel"; sourceTree = "<group>"; };
+		A3C0FFEE0000000000002501 /* RiftEffects 2.5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RiftEffects 2.5.xcdatamodel"; sourceTree = "<group>"; };
 		A3C11A8A29E9D9F5001D0831 /* PGLPersonSegmentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLPersonSegmentation.swift; sourceTree = "<group>"; };
 		A3C278962BAF071200BE40C1 /* PGLTriangleGradientFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLTriangleGradientFilter.swift; sourceTree = "<group>"; };
 		A3C5A64F3042358800FAFBC4 /* PGLCanvasSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLCanvasSpace.swift; sourceTree = "<group>"; };
@@ -688,6 +691,7 @@
 				A3C5A651304238D500FAFBC4 /* PGLCanvasSpaceTests.swift */,
 				A3B85E8D307176DC00815965 /* PGLCloudImportTests.swift */,
 				A366E8FF3074366E00937541 /* PGLFilterDeleteTests.swift */,
+				A38E89E2309BBA57001B93CC /* PGLOutputLinkStoreTests.swift */,
 			);
 			path = RiftEffectsTests;
 			sourceTree = "<group>";
@@ -1255,6 +1259,7 @@
 				A3C5A652304238D500FAFBC4 /* PGLCanvasSpaceTests.swift in Sources */,
 				A3DC6E592DBBF23A00E32FAA /* PGLFilterDescriptorTests.swift in Sources */,
 				A3DC6E5B2DBC02AF00E32FAA /* PGLCategorySurvey.swift in Sources */,
+				A38E89E3309BBA57001B93CC /* PGLOutputLinkStoreTests.swift in Sources */,
 				A3FF819F2DBC3A7600CD705C /* PGLFilterStackTests.swift in Sources */,
 				A366E9003074366E00937541 /* PGLFilterDeleteTests.swift in Sources */,
 				A3BF515024D32D3400CD5114 /* PGLSourceFilterTests.swift in Sources */,
@@ -1752,8 +1757,9 @@
 				A3BDD3CC290D95D000842B51 /* RiftEffects 2.2.xcdatamodel */,
 				A3C0FFEE0000000000002301 /* RiftEffects 2.3.xcdatamodel */,
 				A3C0FFEE0000000000002401 /* RiftEffects 2.4.xcdatamodel */,
+				A3C0FFEE0000000000002501 /* RiftEffects 2.5.xcdatamodel */,
 			);
-			currentVersion = A3C0FFEE0000000000002401 /* RiftEffects 2.4.xcdatamodel */;
+			currentVersion = A3C0FFEE0000000000002501 /* RiftEffects 2.5.xcdatamodel */;
 			path = RiftEffects.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

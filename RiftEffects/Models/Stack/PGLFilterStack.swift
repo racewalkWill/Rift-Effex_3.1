@@ -521,6 +521,11 @@ class PGLFilterStack: Equatable, Hashable  {
             moveInputsFrom(oldFilter, newFilter)
             movePointLinks(oldFilter, newFilter)
                 // before unlinkParms() drops the links of the old filter
+            if let oldOutputLink = oldFilter.outputLink, oldOutputLink.isLinkMaster,
+               let newOutputLink = newFilter.outputLink {
+                // the inputs that followed the old filter output follow the new filter output
+                oldOutputLink.moveLinks(to: newOutputLink)
+            }
 
             removedFilters.append(oldFilter)
             oldFilter.stackPosition = -1
@@ -760,6 +765,8 @@ class PGLFilterStack: Equatable, Hashable  {
                 continue // stack changed by up/down navigation so bail
             }
             filter = activeFilters[index]
+            filter.stackSizedOutput = nil
+                // a skipped filter serves no stale output to linked inputs
             if imageInputIsEmpty(atFilterIndex: index) {
                 if renderOnImageUpdate(stackInputImage: thisImage) {
                     // sequenceStack always will answer false and provide update
@@ -769,19 +776,7 @@ class PGLFilterStack: Equatable, Hashable  {
             }
             let cropTo = thisWindowSize ?? RenderTargetSize
             if thisImage != nil {
-                let targetRect = CGRect(origin: CGPoint.zero, size: cropTo)
-                if !targetRect.contains(thisImage!.extent) {
-                    // issue CIColorDodgeBlendMode -> CIZoomBlur -> CIToneCurve
-                    // -> CIColorInvert -> CIHexagonalPixellate -> CICircleSplashDistortion)
-                    // crop an infinite extent, and also a finite extent larger than the
-                    // render target. CIZoomBlur grows a 1178x1668 input to a finite
-                    // 10220x14471 extent; a whole-image filter next (CIColorThresholdOtsu
-                    // histogram) then renders all 148 MP every frame - GBs of memory.
-//                  NSLog("PGLFilterStack imageUpdate thisImage extent exceeds the render target")
-
-                    thisImage = thisImage!.cropped(to: targetRect)
-//                    if doPrintCropClamp {   NSLog("PGLFilterStack imageUpdate clamped and cropped to  \(String(describing: thisImage?.extent))") }
-                }
+                thisImage = croppedToRenderTarget(thisImage!, cropTo: cropTo)
                 filter.setInput(image: thisImage, source: nil)
 
                 if filter.hasImageParmMissingInput() && thisImage != CIImage.empty() {
@@ -803,6 +798,8 @@ class PGLFilterStack: Equatable, Hashable  {
                 thisImage = filter.scaleOutput(ciOutput: newOutputImage, stackCropRect: CGRect(origin: CGPoint.zero, size: cropTo))
                     // most filters do not implement scaleOutput
                     // crop in the PGLRectangleFilter scales the crop to fill the extent
+                filter.stackSizedOutput = croppedToRenderTarget(thisImage!, cropTo: cropTo)
+                    // the same image the next filter receives - read by image inputs linked to the filter output
 
             } else {
                thisImage = inputImage
@@ -813,6 +810,22 @@ class PGLFilterStack: Equatable, Hashable  {
 
         return thisImage ?? CIImage.empty()
       
+    }
+
+    /// crop an image that does not fit the render target - the sizing of a filter input in #imageUpdate
+    func croppedToRenderTarget(_ image: CIImage, cropTo: CGSize) -> CIImage {
+        let targetRect = CGRect(origin: CGPoint.zero, size: cropTo)
+        if targetRect.contains(image.extent) {
+            return image
+        }
+        // issue CIColorDodgeBlendMode -> CIZoomBlur -> CIToneCurve
+        // -> CIColorInvert -> CIHexagonalPixellate -> CICircleSplashDistortion)
+        // crop an infinite extent, and also a finite extent larger than the
+        // render target. CIZoomBlur grows a 1178x1668 input to a finite
+        // 10220x14471 extent; a whole-image filter next (CIColorThresholdOtsu
+        // histogram) then renders all 148 MP every frame - GBs of memory.
+//      NSLog("PGLFilterStack imageUpdate thisImage extent exceeds the render target")
+        return image.cropped(to: targetRect)
     }
 
     func clampCropForNegativeX(input: CIImage?) -> CIImage? {
@@ -966,7 +979,34 @@ class PGLFilterStack: Equatable, Hashable  {
                     answer.append(anAttribute)
                 }
             }
+            if let anOutputLink = aFilter.outputLink, anOutputLink.isLinkable() {
+                answer.append(anOutputLink)
+            }
         }
+    }
+
+    /// the stack and filter index of each step from this stack down to filter - nil if filter is
+    /// not in this stack or its child stacks. The last step holds the filter itself.
+    func filterPath(to filter: PGLSourceFilter) -> [(stack: PGLFilterStack, index: Int)]? {
+        var visitedStacks = Set<ObjectIdentifier>()
+        return filterPath(to: filter, visited: &visitedStacks)
+    }
+
+    fileprivate func filterPath(to filter: PGLSourceFilter, visited: inout Set<ObjectIdentifier>) -> [(stack: PGLFilterStack, index: Int)]? {
+        guard visited.insert(ObjectIdentifier(self)).inserted
+        else { return nil }
+        for (index, aFilter) in activeFilters.enumerated() {
+            if aFilter === filter {
+                return [(stack: self, index: index)]
+            }
+            for anAttribute in aFilter.attributes {
+                if let childPath = anAttribute.inputStack?.filterPath(to: filter, visited: &visited) {
+                    // the child stack renders inside this filter
+                    return [(stack: self, index: index)] + childPath
+                }
+            }
+        }
+        return nil
     }
 
     func stackRowCount() -> Int {

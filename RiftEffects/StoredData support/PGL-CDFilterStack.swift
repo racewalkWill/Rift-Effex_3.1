@@ -1558,7 +1558,8 @@ extension PGLFilterAttributeImage {
     }
 
     @objc override func storedLinkMasterRow() -> NSManagedObject? {
-        return storedParmImage?.linkMaster
+        // a master image parm, or (model 2.5) the filter whose output this input shows
+        return storedParmImage?.linkMaster ?? storedParmImage?.outputLinkMaster
     }
 
     @objc override func storeLinkMaster(_ masterRow: NSManagedObject?) {
@@ -1569,6 +1570,28 @@ extension PGLFilterAttributeImage {
             // only assign on change - avoids dirtying unchanged rows for CloudKit export
             cdParmImage.linkMaster = cdMaster
         }
+        let cdOutputMaster = masterRow as? CDStoredFilter
+        if cdParmImage.outputLinkMaster !== cdOutputMaster {
+            cdParmImage.outputLinkMaster = cdOutputMaster
+        }
+    }
+}
+
+extension PGLFilterAttributeOutput {
+    // a filter output link is stored on the target CDParmImage.outputLinkMaster (model 2.5)
+    // pointing at the CDStoredFilter row of the source filter
+
+    @objc override func linkRow() -> NSManagedObject? {
+        return aSourceFilter?.storedFilter
+    }
+
+    @objc override func storedLinkMasterRow() -> NSManagedObject? {
+        // an output is only a master
+        return nil
+    }
+
+    @objc override func storeLinkMaster(_ masterRow: NSManagedObject?) {
+        // an output is only a master - the targets hold the relationship
     }
 }
 

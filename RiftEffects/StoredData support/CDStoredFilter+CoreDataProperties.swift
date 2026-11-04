@@ -25,6 +25,8 @@ extension CDStoredFilter {
     @NSManaged public var input: NSSet?
     @NSManaged public var stack: CDFilterStack?
     @NSManaged public var values: NSSet?
+    @NSManaged public var outputLinkTargets: NSSet?
+        // model 2.5 - inverse of CDParmImage.outputLinkMaster, the image inputs that show this filter output
 
 }
 

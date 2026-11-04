@@ -2743,6 +2743,59 @@
         }
       }
     },
+    "Link Output" : {
+      "comment" : "link picker title - the output image of a filter feeds image inputs of later filters",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Propojit výstup"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ausgabe verknüpfen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vincular salida"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Lier la sortie"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Collega output"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "出力をリンク"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vincular saída"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "链接输出"
+          }
+        }
+      }
+    },
     "Link Point" : {
       "comment" : "action sheet title - link point parms of filters",
       "localizations" : {
@@ -3328,6 +3381,7 @@
     },
     "Open" : {
       "comment" : "Swipe action label",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -3428,6 +3482,59 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "优化"
+          }
+        }
+      }
+    },
+    "Output" : {
+      "comment" : "link picker - the output image of a filter",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Výstup"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ausgabe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salida"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sortie"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Output"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "出力"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Saída"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "输出"
           }
         }
       }
@@ -6506,6 +6613,59 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "已链接的输入会显示此输入的图像。"
+          }
+        }
+      }
+    },
+    "The linked inputs show the output of this filter." : {
+      "comment" : "link picker message - the output image of a filter feeds image inputs of later filters",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Propojené vstupy zobrazují výstup tohoto filtru."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Die verknüpften Eingaben zeigen die Ausgabe dieses Filters."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Las entradas vinculadas muestran la salida de este filtro."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Les entrées liées affichent la sortie de ce filtre."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gli input collegati mostrano l’output di questo filtro."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "リンクされた入力には、このフィルタの出力が表示されます。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "As entradas vinculadas mostram a saída deste filtro."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "已链接的输入会显示此滤镜的输出。"
           }
         }
       }

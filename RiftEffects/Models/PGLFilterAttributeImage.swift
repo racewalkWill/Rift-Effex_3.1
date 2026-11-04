@@ -162,6 +162,10 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     
 
     func imageInputIsEmpty() -> Bool {
+        if linkMaster is PGLFilterAttributeOutput {
+            // the linked filter output is the input - it has no image list
+            return false
+        }
         guard let statusList = statusImageList
             else { return true }
         return statusList.isEmpty()
@@ -314,7 +318,8 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     }
 
     override func canLink(to target: PGLFilterAttribute) -> Bool {
-        return target is PGLFilterAttributeImage
+        // a filter output is only a master - never a target
+        return (target is PGLFilterAttributeImage) && !(target is PGLFilterAttributeOutput)
     }
 
     override func willBecomeLinkTarget() {
@@ -382,6 +387,22 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
         }
     }
 
+    /// the last linked filter output written to this target - skips a rewrite of the same image
+    private weak var lastLinkedOutput: CIImage?
+
+    override func updateFromInputStack() {
+        if let outputMaster = linkMaster as? PGLFilterAttributeOutput {
+            // the master filter rendered earlier in this frame - see PGLFilterStack #imageUpdate
+            let linkedImage = outputMaster.sizedOutput()
+            if linkedImage !== lastLinkedOutput {
+                lastLinkedOutput = linkedImage
+                receiveLinkedImage(linkedImage)
+            }
+            return
+        }
+        super.updateFromInputStack()
+    }
+
     override func increment() {
         if isLinkTarget {
             // the master increments the shared list
@@ -438,3 +459,67 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
 
 
 } // end PGLFilterAttributeImage
+
+/// The output image of a filter as a link master - drives one or more image inputs of later filters.
+/// Owned by PGLSourceFilter #outputLink; it is not in the filter attributes, so it shows no parm cell.
+/// PGLFilterStack #imageUpdate caches the sized output of each filter (PGLSourceFilter #stackSizedOutput)
+/// and each target reads it in #updateFromInputStack before its filter renders.
+/// PGLAppStack #isLinkInFrameOrder keeps the targets downstream of the source in the frame.
+class PGLFilterAttributeOutput: PGLFilterAttributeImage {
+
+    static let outputAttributeDict: [String: Any] = [
+        kCIAttributeClass: AttrClass.Image.rawValue,
+        kCIAttributeType: kCIAttributeTypeImage
+    ]
+
+    override func set(_ value: Any) {
+        // the filter output is not an input key of the CIFilter
+    }
+
+    override func inputParmType() -> ParmInputState {
+        // targets answer the state of their master - the output of an earlier filter
+        return .inputPriorFilter
+    }
+
+    override func isLinkable() -> Bool {
+        guard let myFilter = aSourceFilter
+            else { return false }
+        // sequenced filters show one child filter at a time
+        return !(myFilter is PGLSequencedFilters)
+    }
+
+    override func canBeLinkMaster() -> Bool {
+        // a filter always has an output to share
+        return isLinkable()
+    }
+
+    override func canLink(to target: PGLFilterAttribute) -> Bool {
+        // not an input of its own filter
+        return super.canLink(to: target) && (target.aSourceFilter !== aSourceFilter)
+    }
+
+    /// the output of the filter sized by the stack in this frame - empty until the stack renders it
+    func sizedOutput() -> CIImage {
+        return aSourceFilter?.stackSizedOutput ?? CIImage.empty()
+    }
+
+    override func didLink(target: PGLFilterAttribute) {
+        if let currentOutput = aSourceFilter?.stackSizedOutput {
+            (target as? PGLFilterAttributeImage)?.receiveLinkedImage(currentOutput)
+        }
+        // otherwise the target reads the output on the next frame
+        _ = target.aSourceFilter?.notifyTransitionsExist()
+    }
+
+    override func parentParmFilterName() -> String {
+        return (aSourceFilter?.descriptorDisplayName ?? "filter") + ">" + NSLocalizedString("Output", comment: "link picker - the output image of a filter")
+    }
+
+    override func linkPickerTitle() -> String {
+        return NSLocalizedString("Link Output", comment: "link picker title - the output image of a filter feeds image inputs of later filters")
+    }
+
+    override func linkPickerMessage() -> String {
+        return NSLocalizedString("The linked inputs show the output of this filter.", comment: "link picker message - the output image of a filter feeds image inputs of later filters")
+    }
+}
