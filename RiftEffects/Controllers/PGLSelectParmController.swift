@@ -825,7 +825,10 @@ class PGLSelectParmController: PGLCommonController,
                 case .rectangleInput:
                     cell.accessoryType = .disclosureIndicator
                 default:
-                    cell.accessoryType = .detailDisclosureButton
+                    // only image parms respond to the accessory button - it opens the photo picker
+                    // see accessoryButtonTappedForRowWith. Other parms have no accessory action
+                    let isImageParm = thisCellAttribute?.attributeClass == "CIImage"
+                    cell.accessoryType = isImageParm ? .detailDisclosureButton : .none
 //                    cell.backgroundConfiguration?.backgroundColor = .systemBackground
             }
         }
@@ -1705,7 +1708,34 @@ class PGLTableCellSlider: UITableViewCell {
         didSet {
             sliderControl.isEnabled = false
             // enable when the cell is highlighted or selected
+
+            // the storyboard slider has no constraints - frame layout in #layoutSubviews
+            sliderControl.translatesAutoresizingMaskIntoConstraints = true
         }
+    }
+
+    /// space between the title label and the slider
+    private let sliderLabelSpacing: CGFloat = 8.0
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // textLabel is laid out by the cell (Value1 style, indentation) so the slider
+        // follows it - from the label trailing edge to the content view trailing margin
+        guard let slider = sliderControl else { return }
+        let content = contentView.bounds
+        let margins = contentView.layoutMargins
+
+        var sliderMinX = margins.left + (CGFloat(indentationLevel) * indentationWidth)
+        if let label = textLabel, !(label.text?.isEmpty ?? true) {
+            let labelWidth = ceil(label.sizeThatFits(CGSize(width: content.width, height: content.height)).width)
+            sliderMinX = label.frame.minX + min(labelWidth, label.frame.width) + sliderLabelSpacing
+        }
+        let sliderMaxX = content.width - margins.right
+        let sliderHeight = slider.intrinsicContentSize.height
+        slider.frame = CGRect(x: sliderMinX,
+                              y: (content.height - sliderHeight) / 2.0,
+                              width: max(sliderMaxX - sliderMinX, 0.0),
+                              height: sliderHeight)
     }
 
 

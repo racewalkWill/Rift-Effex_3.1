@@ -180,6 +180,8 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
 
 
     override func viewWillAppear(_ animated: Bool) {
+        // parm links may have changed in the PGLSelectParmController
+        refreshLinkIndicators()
 
 //        appStack.postSelectActiveStackRow()
         if traitCollection.horizontalSizeClass == .compact {
@@ -522,16 +524,33 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
                 //            cell.accessoryType = .detailDisclosureButton
         } else { cell.accessoryType = .none}
 
-        if aFilterIndent.filter.outputLink?.isLinkMaster ?? false {
-            // the output of this filter feeds linked image inputs
-            let linkSymbol = UIImageView(image: UIImage(systemName: "link.circle.fill"))
-            linkSymbol.tintColor = .tintColor
+        setCellLinkIndicator(aFilterIndent, cell)
+
+        return cell
+    }
+
+    /// blue circle "L" on the filter row when the filter output or any parm
+    /// is a link master or link target
+    fileprivate func setCellLinkIndicator(_ aFilterIndent: PGLFilterIndent, _ cell: UITableViewCell) {
+        if aFilterIndent.filter.hasLinks {
+            let linkSymbol = UIImageView(image: UIImage(systemName: "l.circle.fill"))
+            linkSymbol.tintColor = .systemBlue
             cell.accessoryView = linkSymbol
         } else {
             cell.accessoryView = nil
         }
+    }
 
-        return cell
+    /// parm links change in the PGLSelectParmController - refresh the indicators
+    /// of the visible rows without a reload that would drop the row selection
+    func refreshLinkIndicators() {
+        for anIndexPath in tableView.indexPathsForVisibleRows ?? [] {
+            guard anIndexPath.section == StackSections.filters.rawValue,
+                  appStack.isIndexPathInRangeForFlattendFilters(indexPath: anIndexPath),
+                  let aCell = tableView.cellForRow(at: anIndexPath)
+            else { continue }
+            setCellLinkIndicator(appStack.filterAt(indexPath: anIndexPath), aCell)
+        }
     }
 
 

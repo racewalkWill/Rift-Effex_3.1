@@ -93,6 +93,13 @@ static let LogRenderTargetSize = false
 
     /// link master for the output of this filter - see PGLFilterAttributeOutput
     lazy var outputLink: PGLFilterAttributeOutput? = PGLFilterAttributeOutput(pglFilter: self, attributeDict: PGLFilterAttributeOutput.outputAttributeDict, inputKey: kCIOutputImageKey)
+
+    /// true if the filter output or any parm is a link master or link target.
+    /// Shown as the link indicator on the filter row of the PGLStackController
+    var hasLinks: Bool {
+        if outputLink?.isLinkMaster ?? false { return true }
+        return attributes.contains { $0.isLinked }
+    }
     var storedFilter: CDStoredFilter? // managedObject - write/read to Core Data
     var imageInputCache: [String :CIImage?] = [:]
 
