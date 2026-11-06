@@ -233,6 +233,7 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
         appStack.resetCellFilters() // updates the flattened cell filter array
 
          tableView.reloadData()
+         if let myButtonHeader { setGuideModeState(myButtonHeader) } // iPhone drawer header is outside the table
          setShiftBtnState()
          updateNavigationBar()
                  //         highlightViewerStackCells()
@@ -276,7 +277,10 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
         segueToParmController()
     }
     
-    func addToolBarButtons(toController: UIViewController) {
+    /// Creates the Single/All and filter up/down chevron items. The state
+    /// methods (setShiftBtnState, setChevronState) update these same items
+    /// wherever they are installed.
+    func makeToolBarButtons() -> [UIBarButtonItem] {
         // removed reduant button filterShiftBtn
 
         filterShiftBtn = UIBarButtonItem(title: "", style: .plain, target: self , action: #selector(singleFilterOutput))
@@ -297,9 +301,15 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
 
         downChevronBtn.image = UIImage(systemName:"chevron.down")
         toolBarSpacer = UIBarButtonItem.fixedSpace(15.0)
-        toController.setToolbarItems([ filterShiftBtn, toolBarSpacer, upChevronBtn, downChevronBtn], animated: true) // removed  elements  filterShiftBtntoolBarSpacer
         setShiftBtnState()
         setChevronState()
+        return [ filterShiftBtn, toolBarSpacer, upChevronBtn, downChevronBtn] // removed  elements  filterShiftBtntoolBarSpacer
+    }
+
+    /// iPad: the buttons go in the navigation toolbar.
+    /// iPhone uses PGLTwoColumnSplitController.setDrawerHandleItems instead.
+    func addToolBarButtons(toController: UIViewController) {
+        toController.setToolbarItems(makeToolBarButtons(), animated: true)
     }
 
     @objc func singleFilterOutput() {
@@ -702,14 +712,24 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
         tableView.register(effexButtonsCellNib , forHeaderFooterViewReuseIdentifier: PGLEffexButtonsHeader.reuseIdentifer)
     }
 
+    static let buttonsHeaderHeight: CGFloat = 50
+
+    /// iPhone: the buttons header is a fixed strip in PGLTwoColumnSplitController's
+    /// drawer above the table (see `makeDrawerButtonsHeader`). As a pinned
+    /// plain-table section header it sat transparent over the glass drawer and
+    /// the filter rows scrolled visibly underneath the buttons.
+    private var isButtonsHeaderInDrawer: Bool {
+        parent is PGLTwoColumnSplitController
+    }
+
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             return 0
         }
         if section == 1 {
-            return 50
+            return isButtonsHeaderInDrawer ? 0 : Self.buttonsHeaderHeight
         }
-        return 0 
+        return 0
     }
 
     override func tableView( _ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -717,12 +737,32 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
             return nil
         }
         if section == 1 {
+            if isButtonsHeaderInDrawer { return nil }
+            return makeButtonsHeader()
+        }
+        return nil // no other headers
+    }
+
+    /// The buttons header for the parent drawer to show above the table.
+    /// Kept in myButtonHeader so updateDisplay can refresh its GuideMode state.
+    func makeDrawerButtonsHeader() -> PGLEffexButtonsHeader? {
+        myButtonHeader = makeButtonsHeader()
+        return myButtonHeader
+    }
+
+    private func makeButtonsHeader() -> PGLEffexButtonsHeader? {
             if  let myButtonHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: PGLEffexButtonsHeader.reuseIdentifer) as? PGLEffexButtonsHeader {
 
                 myButtonHeader.addFilterBtn.addTarget(self, action: #selector(addFilterToStack ), for: .touchUpInside)
                 myButtonHeader.editFiltersBtn.addTarget(self, action: #selector(toggleEditing ), for: .touchUpInside)
                 myButtonHeader.imageListBtn.addTarget(self, action: #selector(showImageList ), for: .touchUpInside)
+                setGuideModeState(myButtonHeader)
+                return myButtonHeader
+            }
+        return nil
+    }
 
+    private func setGuideModeState(_ myButtonHeader: PGLEffexButtonsHeader) {
                 if PGLDemo.GuideMode {
                     myButtonHeader.arrowBtn.isHidden = false // always on during GuideMode
                     myButtonHeader.backgroundColor = .systemYellow
@@ -733,11 +773,8 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
 //                        }
                 } else {
                     myButtonHeader.arrowBtn.isHidden = true
+                    myButtonHeader.backgroundColor = nil // the drawer header is not re-dequeued when GuideMode ends
                 }
-                return myButtonHeader
-            }
-        }
-        return nil // no other headers
     }
 
 

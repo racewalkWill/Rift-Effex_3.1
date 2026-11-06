@@ -26,6 +26,15 @@ class PGLTwoColumnSplitController: UIViewController {
     private var drawerView: UIVisualEffectView?
     private var collapseButton: UIButton?
 
+    /// Optional bar button items in the drawer's top handle strip, leading
+    /// of the collapse button (see `setDrawerHandleItems`).
+    private var drawerToolbar: UIToolbar?
+
+    /// Optional fixed strip below the handle strip and above the control view
+    /// (see `setDrawerHeaderView`).
+    private var drawerHeaderView: UIView?
+    private var controlViewTopConstraint: NSLayoutConstraint?
+
     /// The handle strip left on screen when the drawer is collapsed.
     private let drawerHandleThickness: CGFloat = 44.0
 
@@ -155,6 +164,10 @@ class PGLTwoColumnSplitController: UIViewController {
         activeLayoutIsPortrait = portrait
 
         updateCollapseButton(portrait: portrait)
+            // a collapsed portrait drawer keeps the full-width handle strip,
+            // a collapsed landscape drawer is only the handle width
+        drawerToolbar?.isHidden = isDrawerCollapsed && !portrait
+        drawerHeaderView?.isHidden = isDrawerCollapsed && !portrait
         placeDrawerSearchBar()
 
         if animated {
@@ -258,6 +271,70 @@ class PGLTwoColumnSplitController: UIViewController {
         controlViewBottomConstraint?.isActive = true
     }
 
+    /// Shows bar button items in the drawer's top handle strip, between the
+    /// leading edge and the collapse button. Call after `loadViewColumns`,
+    /// which creates the drawer. The handle strip is already reserved above
+    /// the control view, so the control view layout does not change.
+    func setDrawerHandleItems(_ items: [UIBarButtonItem]) {
+        guard let drawerView, let collapseButton else { return }
+
+        let toolbar = drawerToolbar ?? {
+            let newToolbar = UIToolbar()
+            newToolbar.translatesAutoresizingMaskIntoConstraints = false
+            newToolbar.tintColor = .white
+                // transparent - the drawer glass is the background
+            let appearance = UIToolbarAppearance()
+            appearance.configureWithTransparentBackground()
+            newToolbar.standardAppearance = appearance
+            newToolbar.compactAppearance = appearance
+            newToolbar.scrollEdgeAppearance = appearance
+            newToolbar.compactScrollEdgeAppearance = appearance
+
+            let contentView = drawerView.contentView
+            contentView.addSubview(newToolbar)
+            NSLayoutConstraint.activate([
+                newToolbar.topAnchor.constraint(equalTo: contentView.topAnchor),
+                newToolbar.heightAnchor.constraint(equalToConstant: drawerHandleThickness),
+                newToolbar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                newToolbar.trailingAnchor.constraint(equalTo: collapseButton.leadingAnchor)
+            ])
+            drawerToolbar = newToolbar
+            return newToolbar
+        }()
+
+            // no Liquid Glass capsule behind the items - avoids glass on the drawer glass
+        for anItem in items {
+            anItem.hidesSharedBackground = true
+        }
+        toolbar.setItems(items, animated: false)
+        if let activeLayoutIsPortrait {
+            toolbar.isHidden = isDrawerCollapsed && !activeLayoutIsPortrait
+        }
+    }
+
+    /// Shows a fixed view between the handle strip and the control view, which
+    /// now starts below it - so the control view's content (e.g. table rows)
+    /// can't scroll underneath. Call after `loadViewColumns`.
+    func setDrawerHeaderView(_ headerView: UIView, height: CGFloat) {
+        guard let drawerView else { return }
+        let contentView = drawerView.contentView
+
+        drawerHeaderView?.removeFromSuperview()
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(headerView)
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: drawerHandleThickness),
+            headerView.heightAnchor.constraint(equalToConstant: height),
+            headerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        ])
+        drawerHeaderView = headerView
+        controlViewTopConstraint?.constant = drawerHandleThickness + height
+        if let activeLayoutIsPortrait {
+            headerView.isHidden = isDrawerCollapsed && !activeLayoutIsPortrait
+        }
+    }
+
     @objc private func toggleDrawerCollapsed() {
         guard let drawerView, let controlView = columns?.control.view else { return }
         isDrawerCollapsed.toggle()
@@ -354,8 +431,10 @@ class PGLTwoColumnSplitController: UIViewController {
         effectView.contentView.addSubview(controlView)
         let controlBottom = controlView.bottomAnchor.constraint(equalTo: effectView.contentView.bottomAnchor)
         controlViewBottomConstraint = controlBottom
+        let controlTop = controlView.topAnchor.constraint(equalTo: effectView.contentView.topAnchor, constant: drawerHandleThickness)
+        controlViewTopConstraint = controlTop
         NSLayoutConstraint.activate([
-            controlView.topAnchor.constraint(equalTo: effectView.contentView.topAnchor, constant: drawerHandleThickness),
+            controlTop,
             controlView.leadingAnchor.constraint(equalTo: effectView.contentView.leadingAnchor),
             controlView.trailingAnchor.constraint(equalTo: effectView.contentView.trailingAnchor),
             controlBottom
@@ -374,6 +453,10 @@ class PGLTwoColumnSplitController: UIViewController {
             viewControllerReleaseBasic(aPGLController: columns!.control)
             viewControllerReleaseBasic(aPGLController: columns!.imageViewer)
         }
+        drawerToolbar?.removeFromSuperview()
+        drawerToolbar = nil
+        drawerHeaderView?.removeFromSuperview()
+        drawerHeaderView = nil
         collapseButton?.removeFromSuperview()
         collapseButton = nil
         drawerView?.removeFromSuperview()

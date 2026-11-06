@@ -69,8 +69,14 @@ class PGLStackImageContainerController: PGLTwoColumnSplitController, @MainActor 
 
 //        setEditBtnMenu(hasClipBoardImages: false) // default
 
-        // no toolbar on the stackImageContainerController so  toolbar buttons don't show
-//        containerStackController?.addToolBarButtons(toController: self)
+        // no toolbar on the stackImageContainerController - the Single/All and
+        // filter up/down buttons go in the drawer's handle strip instead
+        if let containerStackController {
+            setDrawerHandleItems(containerStackController.makeToolBarButtons())
+            if let buttonsHeader = containerStackController.makeDrawerButtonsHeader() {
+                setDrawerHeaderView(buttonsHeader, height: PGLStackController.buttonsHeaderHeight)
+            }
+        }
 
         updateNavigationBar()
 //        setNeedsStatusBarAppearanceUpdate()
