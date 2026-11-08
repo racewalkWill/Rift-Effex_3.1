@@ -22,18 +22,15 @@ import Accelerate
     var favoritesAlbumList: PGLAlbumSource?
     var appStack: PGLAppStack!
     let saveOutputToPhotoLib = false  // change to true as needed
-    lazy var dataProvider: PGLStackProvider = {
-       let appDelegate = UIApplication.shared.delegate as? AppDelegate
-       let provider = PGLStackProvider(with: appDelegate!.dataWrapper.persistentContainer)
-        provider.setFetchControllerForBackgroundContext()
-       return provider
-   }()
+    let dataProvider: PGLStackProvider
+        // in-memory store - the device store and CloudKit are never touched
     var deleteStackIds = [NSManagedObjectID]()
 
     
 //    override func setUpWithError() throws {
     init() async throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        dataProvider = try PGLInMemoryStore.makeProvider(name: "PGLCategorySurvey")
         favoritesAlbumList = fetchFavoritesList()
         // ensure the PGLImageController is open and can do the saveToPhotosLibrary
 

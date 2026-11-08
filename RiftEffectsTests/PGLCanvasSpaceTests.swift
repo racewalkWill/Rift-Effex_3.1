@@ -153,8 +153,8 @@ import UIKit
         // separately-stored zValue) because storeParmValue read x/y from `startPoint`,
         // which is nil outside the vary/animation flow. setStoredValueToAttribute then
         // bailed out entirely (dropping z too) whenever x/y were missing.
-        let appDelegate = try #require(UIApplication.shared.delegate as? AppDelegate)
-        let moContext = appDelegate.dataWrapper.persistentContainer.viewContext
+        let container = try PGLInMemoryStore.makeContainer(name: "PGLCanvasSpaceTests")
+        let moContext = container.viewContext
 
         let filter = try #require(PGLSourceFilter(filter: "CISpotLight"))
         let attribute = try #require(filter.attribute(nameKey: "inputLightPosition") as? PGLFilterAttributeVector3)
@@ -189,8 +189,8 @@ import UIKit
         // Regression test for the load-side half of the same bug: a record saved by the
         // old buggy code (or before this fix) with vectorX/vectorY nil must still restore z,
         // rather than the whole setStoredValueToAttribute bailing out and losing everything.
-        let appDelegate = try #require(UIApplication.shared.delegate as? AppDelegate)
-        let moContext = appDelegate.dataWrapper.persistentContainer.viewContext
+        let container = try PGLInMemoryStore.makeContainer(name: "PGLCanvasSpaceTests")
+        let moContext = container.viewContext
 
         let legacyRecord = NSEntityDescription.insertNewObject(forEntityName: "CDAttributeVector3", into: moContext) as! CDAttributeVector3
         legacyRecord.vectorX = nil
@@ -216,8 +216,8 @@ import UIKit
         // canvasVector entirely - so the base class's resizeFrom used to silently no-op on
         // load (it checked canvasVector, which this subclass never populates), leaving
         // centerPoint in stale live-space-at-save-time coordinates after a reload.
-        let appDelegate = try #require(UIApplication.shared.delegate as? AppDelegate)
-        let moContext = appDelegate.dataWrapper.persistentContainer.viewContext
+        let container = try PGLInMemoryStore.makeContainer(name: "PGLCanvasSpaceTests")
+        let moContext = container.viewContext
 
         let descriptor = try #require(PGLFilterDescriptor("CILanczosScaleTransform", PGLScaleDownFrame.self))
         let filter = try #require(descriptor.pglSourceFilter() as? PGLScaleDownFrame)

@@ -25,12 +25,8 @@ import CoreData
     var testCIImage: CIImage!
     var activeFilterCount = 0
     var cleanUpDeleteList = [NSManagedObjectID]()
-    lazy var dataProvider: PGLStackProvider = {
-       let appDelegate = UIApplication.shared.delegate as? AppDelegate
-       let provider = PGLStackProvider(with: appDelegate!.dataWrapper.persistentContainer)
-        provider.setFetchControllerForBackgroundContext()
-       return provider
-   }()
+    let dataProvider: PGLStackProvider
+        // in-memory store - the device store and CloudKit are never touched
 
        static func imageListTestObject() -> PGLImageList {
             let assetIDs = [PhotoId.burst1.rawValue, PhotoId.burst2.rawValue , PhotoId.timeLapse1.rawValue, PhotoId.timeLapse2.rawValue, PhotoId.timeLapse3.rawValue, PhotoId.timeLapse4.rawValue]
@@ -43,6 +39,12 @@ import CoreData
 
    //  override func setUp() {
     init()  async throws {
+
+        dataProvider = try PGLInMemoryStore.makeProvider(name: "PGLFilterStackTests")
+        let appStackProvider = PGLStackProvider(with: dataProvider.persistentContainer)
+        appStackProvider.setBackgroundContext()
+        testAppStack.dataProvider = appStackProvider
+            // #writeCDStacks saves through the appStack provider - same in-memory store
 
        filterStack = testAppStack.viewerStack
         // filterStack gets one default filter

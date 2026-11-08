@@ -22,17 +22,7 @@ import CoreData
     var context: NSManagedObjectContext { container.viewContext }
 
     init() throws {
-        let appDelegate = try #require(UIApplication.shared.delegate as? AppDelegate)
-        let model = appDelegate.dataWrapper.persistentContainer.managedObjectModel
-            // the same model instance - a second copy would register the entity classes twice
-        container = NSPersistentContainer(name: "PGLFilterDeleteTests", managedObjectModel: model)
-        let description = NSPersistentStoreDescription(url: URL(fileURLWithPath: "/dev/null"))
-            // SQLite at /dev/null is an in-memory store
-        description.shouldAddStoreAsynchronously = false
-        container.persistentStoreDescriptions = [description]
-        var loadError: (any Error)?
-        container.loadPersistentStores { _, error in loadError = error }
-        if let loadError { throw loadError }
+        container = try PGLInMemoryStore.makeContainer(name: "PGLFilterDeleteTests")
     }
 
     // MARK: helpers
