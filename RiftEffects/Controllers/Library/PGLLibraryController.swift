@@ -41,13 +41,13 @@ class PGLLibraryController:  UIViewController, NSFetchedResultsControllerDelegat
 
     enum StackSorting {
         case albumTitle
-        case createdDate
+        case modifiedDate
     }
 
     fileprivate let sectionHeaderElementKind = "SectionHeader"
     let searchBar = UISearchBar(frame: .zero)
     var rightCompletionBtn: UIBarButtonItem?
-    private var stackSort = StackSorting.albumTitle
+    private var stackSort = StackSorting.modifiedDate
     private var sortItem: UIBarButtonItem?
     var selectedStackIds = [NSManagedObjectID]()
     var singleMode = true  // select only one stack at a time
@@ -58,7 +58,8 @@ class PGLLibraryController:  UIViewController, NSFetchedResultsControllerDelegat
         navigationItem.title = NSLocalizedString("Library", comment: "Library screen title")
         configureHierarchy()
         configureDataSource()
-        setCategoryData()
+        applyCurrentSort()
+            // first display uses the default stackSort - modifiedDate
         collectionView.allowsMultipleSelection = !singleMode
     }
 
@@ -91,7 +92,7 @@ extension PGLLibraryController {
         let completionBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
         rightCompletionBtn = completionBtn
         let sortItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(toggleStackSort))
-        sortItem.isSelected = (stackSort == .createdDate)
+        sortItem.isSelected = (stackSort == .modifiedDate)
             // highlighted while the date-created sort is active
         self.sortItem = sortItem
         navigationItem.rightBarButtonItems = [completionBtn, sortItem]
@@ -225,36 +226,60 @@ extension PGLLibraryController {
         else
         { matchingStacks = dataProvider.fetchedStacks }
 
-        applySnapShot(stacks: matchingStacks)
+        // show the matches in the active sort order
+        if stackSort == .modifiedDate {
+            applyDateSortedSnapShot(stacks: matchingStacks ?? [])
+        } else {
+            applySnapShot(stacks: matchingStacks ?? [])
+        }
 
     }
 
 // MARK: Sort
     @objc func toggleStackSort() {
-        if stackSort == .createdDate {
-            sortByAlbumDefault()
-            // this resets the stackSort to the new value
+        stackSort = (stackSort == .modifiedDate) ? .albumTitle : .modifiedDate
+        applyCurrentSort()
+            // keeps any search text filter in the new sort order
+    }
+
+    func applyCurrentSort() {
+        // rebuild the list in the active sort order
+        if let searchText = searchBar.text, !searchText.isEmpty {
+            // an active search shows only the matches - performQuery uses stackSort
+            performQuery(with: searchText)
+            collectionView.collectionViewLayout.invalidateLayout()
+                // the layout section style follows stackSort
+            sortItem?.isSelected = (stackSort == .modifiedDate)
+            return
+        }
+        if stackSort == .modifiedDate {
+            sortByDate()
         } else {
-             sortByDateCreated()
-            // this resets the stackSort to the new value
+            sortByAlbumDefault()
         }
     }
 
-    @objc func sortByDateCreated() {
+    @objc func sortByDate() {
         // Sort all stacks by date modified (newest first) into a single
         // un-sectioned list, mirroring the PGLOpenStackController sort.
         guard let allStacks = dataProvider.fetchedStacks else { return }
-        let sortedStacks = allStacks.sorted {
+        stackSort = StackSorting.modifiedDate
+            // set before apply so the layout builds the vertical section
+        applyDateSortedSnapShot(stacks: allStacks)
+        collectionView.collectionViewLayout.invalidateLayout()
+        sortItem?.isSelected = true
+    }
+
+    fileprivate func applyDateSortedSnapShot(stacks: [FilterStack]) {
+        // newest modified first in a single un-sectioned list
+        // used by the date sort and by searches while the date sort is active
+        let sortedStacks = stacks.sorted {
             ($0.modified ?? Date.distantPast) > ($1.modified ?? Date.distantPast)
         }
         var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
         snapshot.appendSections([0])
         snapshot.appendItems(sortedStacks)
-        stackSort = StackSorting.createdDate
-            // set before apply so the layout builds the vertical section
         dataSource.apply(snapshot, animatingDifferences: true)
-        collectionView.collectionViewLayout.invalidateLayout()
-        sortItem?.isSelected = true
     }
 
     @objc func sortByAlbumDefault() {
@@ -307,8 +332,8 @@ extension PGLLibraryController {
 extension PGLLibraryController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            if let matchingStacks = dataProvider.fetchedStacks {
-                applySnapShot(stacks: matchingStacks) }
+            applyCurrentSort()
+                // cleared search returns to the active sort order
             }
         else {
             performQuery(with: searchText)
@@ -347,7 +372,7 @@ extension PGLLibraryController {
                 contentConfiguration.textProperties.font = PGLAppearance.sectionHeaderFont
                 contentConfiguration.textProperties.color = UIColor.label
 
-                if self.stackSort == .createdDate {
+                if self.stackSort == .modifiedDate {
                     contentConfiguration.text = ""
                         // single date-sorted list.. omit section header titles
                 } else if let firstInSectionItem = currentSnapshot.itemIdentifiers(inSection: sectionID).first {
@@ -371,7 +396,7 @@ extension PGLLibraryController {
         let sectionProvider = { [weak self] (sectionIndex: Int,
                                  layoutEnvironment: (any NSCollectionLayoutEnvironment)) -> NSCollectionLayoutSection? in
             guard let self = self else { return nil }
-            if self.stackSort == .createdDate {
+            if self.stackSort == .modifiedDate {
                 // date sort shows a single column of full width rows
                 // no orthogonal scrolling, no section header
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),

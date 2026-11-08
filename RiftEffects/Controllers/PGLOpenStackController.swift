@@ -24,12 +24,12 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
 
     enum StackSorting {
         case albumTitle
-        case createdDate
+        case modifiedDate
     }
 
     static let tableViewCellIdentifier = "stackCell"
     private static let nibName = "StackCell"
-    private var stackSort = StackSorting.albumTitle
+    private var stackSort = StackSorting.modifiedDate
     private var sortItem: UIBarButtonItem?
 
     var notifications = [Any]() // an opaque type is returned from addObservor
@@ -76,16 +76,16 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
 
 
 
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .medium
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .short
         dateFormatter.locale = Locale.current
 
 
         configureHierarchy()
         configureDataSource()
         configureNavigationItem()
-        let snapshot = initialSnapShot()
-        dataSource.apply(snapshot, animatingDifferences: false)
+        applyCurrentSort()
+            // first display uses the default stackSort - modifiedDate
         dataSource.dataProvider = dataProvider
 //         NSLog("PGLOpenStackViewControler viewDidLoad completed")
 
@@ -135,8 +135,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
                 myUpdate in
                 guard let self = self else { return}
                     Logger(subsystem: LogSubsystem, category: LogNavigation).info("PGLOpenStackViewController  notificationBlock PGLRemoteChange")
-                let snapshot = self.initialSnapShot()
-                self.dataSource.apply(snapshot, animatingDifferences: false)
+                self.applyCurrentSort()
              }
         publishers.append(cancellable!)
 
@@ -217,7 +216,7 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
            navigationItem.title = filterOpenTitle
            let editingItem = UIBarButtonItem(title: tableView.isEditing ? NSLocalizedString("Delete", comment: "Edit mode delete button") : NSLocalizedString("Edit", comment: "Edit mode toggle button"), style: .plain, target: self, action: #selector(toggleEditing))
            let sortItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(toggleStackSort))
-           sortItem.isSelected = (stackSort == .createdDate)
+           sortItem.isSelected = (stackSort == .modifiedDate)
                // highlighted while the date-created sort is active
            self.sortItem = sortItem
            navigationItem.rightBarButtonItems = [editingItem, sortItem]
@@ -227,30 +226,49 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
            }
 
     @objc func toggleStackSort() {
-        if stackSort == .createdDate {
-            sortByAlbumDefault()
-            // this resets the stackSort to the new value
+        stackSort = (stackSort == .modifiedDate) ? .albumTitle : .modifiedDate
+        applyCurrentSort()
+            // keeps any search text filter in the new sort order
+    }
+
+    func applyCurrentSort() {
+        // rebuild the list in the active sort order
+        // reloads must not reset a date sort back to album sections
+        if let searchText = searchBar.text, !searchText.isEmpty {
+            // an active search shows only the matches - performTitleQuery uses stackSort
+            performTitleQuery(with: searchText)
+            sortItem?.isSelected = (stackSort == .modifiedDate)
+            return
+        }
+        if stackSort == .modifiedDate {
+            sortByDate()
         } else {
-             sortByDateCreated()
-            // this resets the stackSort to the new value
+            sortByAlbumDefault()
         }
     }
 
-    @objc func sortByDateCreated() {
+    @objc func sortByDate() {
         // Sort all stacks by date modified (newest first) into a single
         // un-sectioned list, mirroring the search query display.
         guard let allStacks = dataProvider.fetchedStacks else { return }
-        let sortedStacks = allStacks.sorted {
+        let snapshot = dateSortedSnapshot(stacks: allStacks)
+        dataSource.showHeaderText = false
+            // single list.. omit section header titles
+        dataSource.apply(snapshot, animatingDifferences: true)
+        stackSort = StackSorting.modifiedDate
+        sortItem?.isSelected = true
+    }
+
+    func dateSortedSnapshot(stacks: [FilterStack]) -> NSDiffableDataSourceSnapshot<Int, FilterStack> {
+        // newest modified first in a single un-sectioned list
+        // used by the date sort and by searches while the date sort is active
+        let sortedStacks = stacks.sorted {
             ($0.modified ?? Date.distantPast) > ($1.modified ?? Date.distantPast)
         }
         var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
         snapshot.appendSections([0])
         snapshot.appendItems(sortedStacks)
-        dataSource.showHeaderText = false
-            // single list.. omit section header titles
-        dataSource.apply(snapshot, animatingDifferences: true)
-        stackSort = StackSorting.createdDate
-        sortItem?.isSelected = true
+        return snapshot
     }
 
     @objc func sortByAlbumDefault() {
@@ -376,10 +394,8 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
              //   to determine whether its contents are still valid.
              // the UI on the other hand is updating the whole list..
 
-            let allStacks =  myController.initialSnapShot()
-            showHeaderText = true
-                // show header titles
-            apply(allStacks, animatingDifferences: true)
+            myController.applyCurrentSort()
+                // keeps the date or album order the user has chosen
         }
 
         func insertStack(_ myController: PGLOpenStackController, theCDStack: FilterStack) {
@@ -543,8 +559,10 @@ extension PGLOpenStackController {
         }
     }
 
-    func initialSnapShot() -> NSDiffableDataSourceSnapshot<Int, FilterStack> {
-
+    func initialSnapShot(matching: [FilterStack]? = nil) -> NSDiffableDataSourceSnapshot<Int, FilterStack> {
+        // album sections in the PGLStackProvider order - type & created
+        // matching limits the rows to search results; sections without a match are omitted
+        let matchingSet = matching.map({ Set($0) })
         var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
 
         if let sections = dataProvider.fetchedResultsController.sections {
@@ -555,7 +573,11 @@ extension PGLOpenStackController {
                 /// delete the app to remove the cache
                 guard let sectionStacks = thisSection.objects as? [CDFilterStack]
                 else { continue}
-                let structStacks = sectionStacks.map({ ($0 .asFilterStackStruct() ) })
+                var structStacks = sectionStacks.map({ ($0 .asFilterStackStruct() ) })
+                if let matchingSet {
+                    structStacks = structStacks.filter({ matchingSet.contains($0) })
+                    if structStacks.isEmpty { continue }
+                }
                 snapshot.appendSections([index])
                 snapshot.appendItems(structStacks)
             }  // for loop that will continue on error in objects
@@ -653,10 +675,8 @@ extension PGLOpenStackController: @preconcurrency NSFetchedResultsControllerDele
 extension PGLOpenStackController: UISearchBarDelegate {
         func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
             if searchText.count == 0 {
-               let allStacks =  initialSnapShot()
-                dataSource.showHeaderText = true
-                    // show header titles
-                dataSource.apply(allStacks, animatingDifferences: true)
+                applyCurrentSort()
+                    // cleared search returns to the active sort order
             } else {
                 performTitleQuery(with: searchText)}
         }
@@ -674,12 +694,18 @@ extension PGLOpenStackController: UISearchBarDelegate {
              else
              { matchingStacks = dataProvider.fetchedStacks }
 
-                var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
-                snapshot.appendSections([0])
-                snapshot.appendItems(matchingStacks)
-                dataSource.showHeaderText = false
-                    // single header .. omit header title
+                // show the matches in the active sort order
+                let snapshot: NSDiffableDataSourceSnapshot<Int, FilterStack>
+                if stackSort == .modifiedDate {
+                    snapshot = dateSortedSnapshot(stacks: matchingStacks ?? [])
+                    dataSource.showHeaderText = false
+                        // single header .. omit header title
+                } else {
+                    snapshot = initialSnapShot(matching: matchingStacks ?? [])
+                    dataSource.showHeaderText = true
+                        // album sections .. show header titles
+                }
                 dataSource.apply(snapshot, animatingDifferences: true)
-                
+
         }
 }  // end extension UISearchBarDelegate
