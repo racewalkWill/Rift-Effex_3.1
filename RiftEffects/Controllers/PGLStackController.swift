@@ -825,6 +825,17 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
             onCancel: { [weak self] in
                 self?.dismiss(animated: true)
             },
+            onVideoToggle: { [weak self] isVideo in
+                // grow/shrink the popover or edge-attached sheet to show/hide the timer wheel
+                guard let hosting = self?.saveStackHostingController else { return }
+                let newSize = PGLSaveStackSheet.Layout.preferredSize(showsVideoRow: showsRunSeconds, showsWheel: isVideo)
+                hosting.preferredContentSize = newSize
+                if let sheetPresentation = hosting.popoverPresentationController?.adaptiveSheetPresentationController {
+                    sheetPresentation.animateChanges {
+                        sheetPresentation.detents = [.custom { _ in newSize.height }]
+                    }
+                }
+            },
             onSave: { [weak self] title, album, seconds in
                 self?.saveStack(title: title, album: album, seconds: showsRunSeconds ? seconds : nil)
             })
@@ -834,7 +845,7 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
 
         // present small, like popUpFilterDescription below, instead of a full-window sheet
         hosting.modalPresentationStyle = .popover
-        let preferredSize = PGLSaveStackSheet.Layout.preferredSize(showsRunSeconds: showsRunSeconds)
+        let preferredSize = PGLSaveStackSheet.Layout.preferredSize(showsVideoRow: showsRunSeconds, showsWheel: false)
         hosting.preferredContentSize = preferredSize
 
         if let popOverPresenter = hosting.popoverPresentationController {

@@ -10,18 +10,22 @@ import SwiftUI
 
 /// Modal replacement for the old inline "title/album/save" table rows in PGLStackController.
 /// Presented via UIHostingController from PGLStackController#presentSaveStackSheet(), sized to
-/// Layout.preferredSize(showsRunSeconds:) so the dialog stays small instead of covering the window.
+/// Layout.preferredSize(showsVideoRow:showsWheel:) so the dialog stays small instead of covering the window.
 struct PGLSaveStackSheet: View {
     @State private var titleText: String
     @State private var albumText: String
-    @State private var secondsText: String
+    @State private var isVideo = false   // false saves a single frame (zero seconds)
+    @State private var minutes: Int
+    @State private var seconds: Int
 
     let originalTitle: String
     let originalAlbum: String
     let existingAlbums: [String]
     let showsRunSeconds: Bool
     let isNewStack: Bool
+    let maxMinutes: Int
     let onCancel: () -> Void
+    let onVideoToggle: (_ isVideo: Bool) -> Void
     let onSave: (_ title: String, _ album: String, _ seconds: Int?) -> Void
 
     init(originalTitle: String,
@@ -31,6 +35,7 @@ struct PGLSaveStackSheet: View {
          estimatedSeconds: Int,
          isNewStack: Bool,
          onCancel: @escaping () -> Void,
+         onVideoToggle: @escaping (_ isVideo: Bool) -> Void,
          onSave: @escaping (_ title: String, _ album: String, _ seconds: Int?) -> Void) {
         self.originalTitle = originalTitle
         self.originalAlbum = originalAlbum
@@ -38,10 +43,16 @@ struct PGLSaveStackSheet: View {
         self.showsRunSeconds = showsRunSeconds
         self.isNewStack = isNewStack
         self.onCancel = onCancel
+        self.onVideoToggle = onVideoToggle
         self.onSave = onSave
         _titleText = State(initialValue: originalTitle)
         _albumText = State(initialValue: originalAlbum)
-        _secondsText = State(initialValue: showsRunSeconds ? String(estimatedSeconds) : "")
+        // timer wheel defaults to the estimated run time
+        let estimate = max(estimatedSeconds, 0)
+        _minutes = State(initialValue: estimate / 60)
+        _seconds = State(initialValue: estimate % 60)
+        // never clip a long estimate off the end of the minutes wheel
+        self.maxMinutes = max(59, estimate / 60)
     }
 
     private var isDirty: Bool {
@@ -51,7 +62,8 @@ struct PGLSaveStackSheet: View {
     }
 
     /// Layout constants shared with PGLStackController#presentSaveStackSheet(), which uses
-    /// Layout.preferredSize(showsRunSeconds:) to size the popover/sheet to match this content.
+    /// Layout.preferredSize(showsVideoRow:showsWheel:) to size the popover/sheet to match this content.
+    /// The size changes when the Video toggle shows or hides the timer wheel (see onVideoToggle).
     enum Layout {
         static let labelWidth: CGFloat = 70
         static let fieldWidth: CGFloat = 230       // ~30 characters at body text size
@@ -63,13 +75,18 @@ struct PGLSaveStackSheet: View {
         static let topPadding: CGFloat = 16
         static let bottomPadding: CGFloat = 20     // bottom field sits ~20pt above the dialog's bottom edge
         static let navigationBarHeight: CGFloat = 44
+        static let wheelHeight: CGFloat = 120
+        static let wheelColumnWidth: CGFloat = 100
 
-        static func preferredSize(showsRunSeconds: Bool) -> CGSize {
-            let rowCount = showsRunSeconds ? 3 : 2
-            let contentHeight = topPadding
+        static func preferredSize(showsVideoRow: Bool, showsWheel: Bool) -> CGSize {
+            let rowCount = showsVideoRow ? 3 : 2
+            var contentHeight = topPadding
                 + CGFloat(rowCount) * rowHeight
                 + CGFloat(rowCount - 1) * verticalRowSpacing
                 + bottomPadding
+            if showsVideoRow && showsWheel {
+                contentHeight += verticalRowSpacing + wheelHeight
+            }
             let width = horizontalPadding * 2 + bookmarkColumnWidth + rowSpacing + labelWidth + fieldWidth
             return CGSize(width: width, height: contentHeight + navigationBarHeight)
         }
@@ -106,14 +123,22 @@ struct PGLSaveStackSheet: View {
                 if showsRunSeconds {
                     HStack(spacing: Layout.rowSpacing) {
                         Color.clear.frame(width: Layout.bookmarkColumnWidth, height: 1)
-                        Text(NSLocalizedString("Seconds:", comment: "Stack run seconds field label"))
+                        Text(NSLocalizedString("Video", comment: "Save stack as video toggle label"))
                             .frame(width: Layout.labelWidth, alignment: .leading)
-                        TextField("", text: $secondsText)
-                            .textFieldStyle(.roundedBorder)
-                            .frame(width: Layout.fieldWidth)
-                            .keyboardType(.numberPad)
+                        Toggle("", isOn: $isVideo.animation())
+                            .labelsHidden()
+                            .frame(width: Layout.fieldWidth, alignment: .trailing)
+                    }
+                    .frame(height: Layout.rowHeight)
+
+                    if isVideo {
+                        timerWheel
+                            .transition(.opacity)
                     }
                 }
+            }
+            .onChange(of: isVideo) { _, newValue in
+                onVideoToggle(newValue)
             }
             .padding(.horizontal, Layout.horizontalPadding)
             .padding(.top, Layout.topPadding)
@@ -127,10 +152,39 @@ struct PGLSaveStackSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(isDirty ? NSLocalizedString("Save As", comment: "Save As button title")
                                    : NSLocalizedString("Save", comment: "Save button title")) {
-                        onSave(titleText, albumText, Int(secondsText))
+                        // Video off saves a single frame as zero seconds
+                        onSave(titleText, albumText, isVideo ? minutes * 60 + seconds : 0)
                     }
                 }
             }
         }
+    }
+
+    /// minutes : seconds wheels for the video length.
+    /// Two wheel Pickers because UIDatePicker .countDownTimer only offers hours and minutes.
+    private var timerWheel: some View {
+        HStack(spacing: 0) {
+            Picker(NSLocalizedString("Minutes", comment: "Video length minutes wheel"), selection: $minutes) {
+                ForEach(0...maxMinutes, id: \.self) { value in
+                    Text(String(format: NSLocalizedString("%d min", comment: "Video length minutes wheel row"), value))
+                        .tag(value)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(width: Layout.wheelColumnWidth)
+            .clipped()
+
+            Picker(NSLocalizedString("Seconds", comment: "Video length seconds wheel"), selection: $seconds) {
+                ForEach(0...59, id: \.self) { value in
+                    Text(String(format: NSLocalizedString("%d sec", comment: "Video length seconds wheel row"), value))
+                        .tag(value)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(width: Layout.wheelColumnWidth)
+            .clipped()
+        }
+        .frame(height: Layout.wheelHeight)
+        .frame(maxWidth: .infinity)
     }
 }
