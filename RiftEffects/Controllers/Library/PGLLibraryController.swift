@@ -241,11 +241,11 @@ extension PGLLibraryController {
     }
 
     @objc func sortByDateCreated() {
-        // Sort all stacks by date created (newest first) into a single
+        // Sort all stacks by date modified (newest first) into a single
         // un-sectioned list, mirroring the PGLOpenStackController sort.
         guard let allStacks = dataProvider.fetchedStacks else { return }
         let sortedStacks = allStacks.sorted {
-            ($0.created ?? Date.distantPast) > ($1.created ?? Date.distantPast)
+            ($0.modified ?? Date.distantPast) > ($1.modified ?? Date.distantPast)
         }
         var snapshot = NSDiffableDataSourceSnapshot<Int, FilterStack>()
         snapshot.appendSections([0])

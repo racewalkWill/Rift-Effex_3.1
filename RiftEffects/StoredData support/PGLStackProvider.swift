@@ -24,7 +24,11 @@ class PGLStackProvider {
     }
         /// was fetchedStacks: [CDFilterStack ] array
         ///  now [FilterStack] struct array
-    lazy var fetchedStacks = fetchedResultsController.fetchedObjects?.map({ ($0 .asFilterStackStruct() ) })
+        ///  Rebuilt on each read - not lazy. The FRC delegate keeps fetchedObjects current
+        ///  with saves and inserts; a lazy copy froze the struct values (stale modified dates).
+    var fetchedStacks: [FilterStack]? {
+        fetchedResultsController.fetchedObjects?.map({ ($0 .asFilterStackStruct() ) })
+    }
 
     func setFetchControllerForStackViewContext() {
         providerManagedObjectContext = persistentContainer.viewContext
