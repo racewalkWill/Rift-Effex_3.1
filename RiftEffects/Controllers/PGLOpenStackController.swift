@@ -364,7 +364,39 @@ class PGLOpenStackController: UIViewController , UITableViewDelegate, UITableVie
         // dataSource deletes from the UITableViewDiffableDataSource
         // then deletes from the database
 
-     
+    // MARK: Delete Menu
+
+    func tableView(_ tableView: UITableView,
+                   contextMenuConfigurationForRowAt indexPath: IndexPath,
+                   point: CGPoint) -> UIContextMenuConfiguration? {
+        // multi-row delete uses the edit mode selection instead
+        if tableView.isEditing { return nil }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
+
+            let deleteAction = self.deleteAction(indexPath: indexPath)
+            return UIMenu(title: "", children: [deleteAction] )
+        }
+    }
+
+    func performDelete(_ indexPath: IndexPath) {
+        guard let cdStack = dataSource.itemIdentifier(for: indexPath)
+        else {return}
+        // dataSource.delete deletes from the database and posts the library menu & release stack notifications
+        dataSource.delete(cdStack: cdStack)
+
+        var currentSnapShot = dataSource.snapshot()
+        currentSnapShot.deleteItems([cdStack])
+        dataSource.apply(currentSnapShot,animatingDifferences: true)
+    }
+
+    func deleteAction(indexPath: IndexPath) -> UIAction {
+        return UIAction(title: NSLocalizedString("Delete", comment: ""),
+                        image: UIImage(systemName: "trash"),
+                        attributes: .destructive) { action in
+            self.performDelete(indexPath)
+        }
+    }
+
 
     class DataSource: UITableViewDiffableDataSource<Int, FilterStack> {
 
