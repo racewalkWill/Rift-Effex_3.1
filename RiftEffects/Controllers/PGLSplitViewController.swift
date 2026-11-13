@@ -227,8 +227,46 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
                 // showsSecondaryOnlyButton  not needed for full screen of the PGLImageController
                 // now doubleTap on the PGLImageController opens full screen of the PGLMetalController
 //            }
+        updateDuoPortraitColumnWidths()
         super.viewWillLayoutSubviews()
 
+    }
+
+    // MARK: iPhone Duo column widths
+
+    /// iPhone Duo unfolded in portrait is the only phone layout that is
+    /// horizontally regular with height > width. UIKit's automatic
+    /// supplementary width (min 320pt) takes about half the screen there,
+    /// leaving the image column too narrow. iPad and Plus/Max landscape
+    /// keep the automatic widths.
+    private func updateDuoPortraitColumnWidths() {
+        let size = view.bounds.size
+        let isDuoPortrait = traitCollection.userInterfaceIdiom == .phone
+            && traitCollection.horizontalSizeClass == .regular
+            && size.height > size.width
+
+        let widthFraction: CGFloat = isDuoPortrait ? 0.35 : UISplitViewController.automaticDimension
+        let minimumWidth: CGFloat = isDuoPortrait ? 240 : UISplitViewController.automaticDimension
+
+        // assign only on change so setting these inside layout can't loop
+        if preferredSupplementaryColumnWidthFraction != widthFraction {
+            preferredSupplementaryColumnWidthFraction = widthFraction
+        }
+        if minimumSupplementaryColumnWidth != minimumWidth {
+            minimumSupplementaryColumnWidth = minimumWidth
+        }
+
+        // UIKit only honors preferredSplitBehavior .tile when the library +
+        // stack + image columns all fit side by side. Otherwise it falls back
+        // to overlay, covering the image with the stack column.
+        // Lower the image column minimum to the space left after both sidebars
+        // so tile can be chosen.
+        let secondaryMinimum: CGFloat = isDuoPortrait
+            ? max(0, size.width - primaryColumnWidth - minimumWidth)
+            : UISplitViewController.automaticDimension
+        if minimumSecondaryColumnWidth != secondaryMinimum {
+            minimumSecondaryColumnWidth = secondaryMinimum
+        }
     }
 
     func stackProviderHasRows() -> Bool {

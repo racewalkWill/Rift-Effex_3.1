@@ -775,6 +775,7 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
                     myButtonHeader.arrowBtn.isHidden = true
                     myButtonHeader.backgroundColor = nil // the drawer header is not re-dequeued when GuideMode ends
                 }
+                myButtonHeader.setNeedsLayout() // re-center the buttons for the arrow shown/hidden
     }
 
 
