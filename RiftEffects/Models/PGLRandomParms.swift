@@ -23,12 +23,17 @@ extension PGLFilterAttributeNumber {
         ///  pick a random value in the middle third of the minValue to arbitrary maxValue
         ///  maxValue is not difined.. sliderMaxValue may be defined
         ///  may use defaultValue if defined
+        ///   set  in the middle range 20 % to 80% of the min to max
+        if let definedMinValue = sliderMinValue, let definedMaxValue = sliderMaxValue
+        {
+            let valueRangeOffset = (definedMinValue - definedMinValue) / 5
 
-        if let myminValue = minValue, let mymaxValue = sliderMaxValue {
-            let randomValue: Float =  Float.random(in: myminValue...mymaxValue)
-            set(randomValue)
+                let randomValue: Float =  Float.random(in: (definedMinValue + valueRangeOffset)...(definedMaxValue - valueRangeOffset))
+                set(randomValue)
+            NSLog("PGLFilterAttributeNumber \(String(describing: myFilter)) \(String(describing: attributeName)) #setRandomValue = \(randomValue) ")
+            }
+
         }
-    }
 }
 
 extension PGLFilterAttributeVector {
@@ -38,12 +43,15 @@ extension PGLFilterAttributeVector {
         ///  may use defaultValue if defined
 
         if defaultValue == nil {
-
-            let maxWidth = FilterCanvasSize.width / 2
-            let maxHeight = FilterCanvasSize.height / 2
-            let randomValue: CGFloat = CGFloat.random(in: 0...maxWidth)
-            let randomValue2: CGFloat = CGFloat.random(in: 0...maxHeight)
+            // to middle part
+            let maxWidth = FilterCanvasSize.width * 0.75
+            let maxHeight = FilterCanvasSize.height * 0.75
+            let minWidth = maxWidth / 3
+            let minHeight = maxHeight / 3
+            let randomValue: CGFloat = CGFloat.random(in: minWidth...maxWidth)
+            let randomValue2: CGFloat = CGFloat.random(in: minHeight...maxHeight)
             let newRandom = CIVector(x: randomValue, y: randomValue2)
+            NSLog("PGLFilterAttributeVector \(String(describing: myFilter)) \(String(describing: attributeName)) #setRandomValue = \(newRandom) ")
             set(newRandom)
         }
         else { super.setRandomValue() }

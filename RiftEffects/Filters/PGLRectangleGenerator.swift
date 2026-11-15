@@ -18,7 +18,14 @@ class PGLRectangleGenerator: PGLRectangleFilter {
         // should not need this but.. we do
         
         let extentKey = "inputExtent"
-        if let inputExtentAttribute = attribute(nameKey: extentKey){
+        if let extentAttribute = cropAttribute {
+            // the PGLAttributeRectangle init has already resolved the initial rect
+            // (saved value, or default inset rect for a zero or undefined vector default).
+            // Apply it to the filter the same as the OK swipe action so the initial display uses it.
+            // Setting the raw CIAttributeDefault here would overwrite that rect.
+            extentAttribute.applyCropRect(mappedCropRect: extentAttribute.filterRect)
+        }
+        else if let inputExtentAttribute = attribute(nameKey: extentKey){
 
 //            CIVector
 //            Printing description of defaultValue:

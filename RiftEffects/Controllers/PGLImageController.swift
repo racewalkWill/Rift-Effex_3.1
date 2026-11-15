@@ -1501,6 +1501,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                     if let rectAttribute = parmAttribute as? PGLAttributeRectangle {
                             addRectControl(attribute: rectAttribute)
                             setRectTintAndCornerViews(attribute: rectAttribute)
+                            applyOverlayDefault(rectAttribute: rectAttribute)
 
                     //rectController!.view.isHidden = false   // constraints still work?
                     }
@@ -1539,6 +1540,19 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 //        thisRectController.thisCropAttribute = aRectInputFilter.cropAttribute
         showRectView(setIsHidden: false)
         
+    }
+
+    func applyOverlayDefault(rectAttribute: PGLAttributeRectangle) {
+        // the rect overlay frame is the default extent value.
+        // On first display of the filter with no user or stored value
+        // apply the overlay frame to the filter the same as the OK swipe action
+        // so the filter renders with the overlay rect before the Extent cell is tapped.
+        // assumes setRectTintAndCornerViews has set the overlay frame
+        guard !rectAttribute.isCropped, !rectAttribute.isOverlayValueSet,
+              rectController != nil, metalController?.view != nil
+        else { return }
+        cropAction(rectAttribute: rectAttribute)
+        rectAttribute.isOverlayValueSet = true
     }
 
     func toggleViewControls(hide: Bool, uiTypeToShow: AttrUIType?) {

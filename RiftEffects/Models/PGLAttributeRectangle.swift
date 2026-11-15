@@ -30,6 +30,7 @@ class PGLAttributeRectangle: PGLFilterAttribute {
    
     var oldVector: CIVector?
     var isCropped = false
+    var isOverlayValueSet = false  // true after the rect overlay frame is applied as the initial value
     var imageParmState = ParmInputState.rectangleInput
 
 
@@ -52,6 +53,12 @@ class PGLAttributeRectangle: PGLFilterAttribute {
             }
             applyCropRect(mappedCropRect: filterRect)
 
+        }
+        else {
+            // no vector default defined - use the same default inset rect and set it as the initial value
+            filterRect = CGRect(origin: CGPoint.zero, size: RenderTargetSize) .insetBy(dx: 200.0, dy: 200.0)
+            if LogDiagnostic { NSLog("DIAGNOSTIC PGLAttributeRectangle.init [1] nil-vector-branch filterRect=\(filterRect) RenderTargetSize=\(RenderTargetSize)") }
+            applyCropRect(mappedCropRect: filterRect)
         }
         if let rectangleFilter = pglFilter as? PGLRectangleFilter {
             rectangleFilter.cropAttribute = self

@@ -361,7 +361,7 @@
 		A3A90BEA2F6E099A00BB9B57 /* PGLStackRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLStackRow.swift; sourceTree = "<group>"; };
 		A3ABF28D2B194DD3006286B2 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		A3AD94752B7CF96E00125E74 /* PGLTwoColumnSplitController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLTwoColumnSplitController.swift; sourceTree = "<group>"; };
-		A3AEF08D30A0F233006CA7E5 /* PGLInMemoryStore.swift */ = {isa = PBXFileReference; path = PGLInMemoryStore.swift; sourceTree = "<group>"; };
+		A3AEF08D30A0F233006CA7E5 /* PGLInMemoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLInMemoryStore.swift; sourceTree = "<group>"; };
 		A3AF392B25B61D850035A5FF /* PGLSaliencyBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLSaliencyBlur.swift; sourceTree = "<group>"; };
 		A3AF92D82D4007BB001E4785 /* PGLFilterAttributeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeImage.swift; sourceTree = "<group>"; };
 		A3AF92DA2D400921001E4785 /* PGLFilterAttributeAngle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGLFilterAttributeAngle.swift; sourceTree = "<group>"; };
