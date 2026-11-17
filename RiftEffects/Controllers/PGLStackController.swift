@@ -33,7 +33,6 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
     var longPressStart: IndexPath?
     var segueStarted = false  // set to true during prepareFor segue
 
-    var existingStackTypes: [String]!
     var saveStackHostingController: UIViewController?
     var myButtonHeader: PGLEffexButtonsHeader?
 
@@ -168,13 +167,6 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
             }
         }
         registerCellNibs()
-
-        
-        // provide the album names (aka stackTypes) for the save-sheet's album picker menu
-        existingStackTypes = appStack.dataProvider.stackTypes()
-            // a dictionary fetch of the distinct types - was the section names of a
-            // fetchedResultsController over every CDFilterStack row, which retained
-            // all of them
     }
 
 
@@ -816,10 +808,15 @@ class PGLStackController: UITableViewController, UINavigationControllerDelegate,
         }
 
         let myStack = appStack.outputStack
+        // provide the album names (aka stackTypes) for the save-sheet's album picker menu.
+        // Fetched on each presentation so an album typed in on a previous save is listed.
+        // A dictionary fetch of the distinct types - was the section names of a
+        // fetchedResultsController over every CDFilterStack row, which retained all of them
+        let existingAlbums = appStack.dataProvider.stackTypes()
         let sheet = PGLSaveStackSheet(
             originalTitle: myStack.stackName,
             originalAlbum: myStack.stackType,
-            existingAlbums: existingStackTypes,
+            existingAlbums: existingAlbums,
             showsRunSeconds: showsRunSeconds,
             estimatedSeconds: runTimeSeconds,
             isNewStack: myStack.storedStack == nil,

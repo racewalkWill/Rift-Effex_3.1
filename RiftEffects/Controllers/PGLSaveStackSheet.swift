@@ -55,10 +55,20 @@ struct PGLSaveStackSheet: View {
         self.maxMinutes = max(59, estimate / 60)
     }
 
+    // user entered text without leading/trailing whitespace - so "Album " and "Album"
+    // are the same album name in the store and in the album picker menu
+    private var trimmedTitle: String {
+        titleText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var trimmedAlbum: String {
+        albumText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     private var isDirty: Bool {
         // a stack that has never been saved has nothing to "Save As" a divergent copy of
         guard !isNewStack else { return false }
-        return titleText != originalTitle || albumText != originalAlbum
+        return trimmedTitle != originalTitle || trimmedAlbum != originalAlbum
     }
 
     /// Layout constants shared with PGLStackController#presentSaveStackSheet(), which uses
@@ -153,7 +163,7 @@ struct PGLSaveStackSheet: View {
                     Button(isDirty ? NSLocalizedString("Save As", comment: "Save As button title")
                                    : NSLocalizedString("Save", comment: "Save button title")) {
                         // Video off saves a single frame as zero seconds
-                        onSave(titleText, albumText, isVideo ? minutes * 60 + seconds : 0)
+                        onSave(trimmedTitle, trimmedAlbum, isVideo ? minutes * 60 + seconds : 0)
                     }
                 }
             }
