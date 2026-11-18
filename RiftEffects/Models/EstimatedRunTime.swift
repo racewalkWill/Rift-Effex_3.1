@@ -46,6 +46,13 @@ extension PGLFilterAttribute {
 
 
     }
+
+    /// play length of the video when the only input image is a single video.
+    /// Kept separate from estimateParmRunSeconds so the filter can use the longest
+    /// of several single video inputs - they play concurrently, not in sequence
+    func estimateSingleVideoSeconds() -> Double {
+        return statusImageList?.singleVideoSeconds() ?? 0.0
+    }
 }
 
 extension PGLFilterStack {
@@ -71,14 +78,31 @@ extension PGLImageList {
         return runSeconds
     }
 
+    /// play length of the video when the list holds only a single video asset.
+    /// nil for a multiple element list or a single still image
+    func singleVideoSeconds() -> Double? {
+        guard isSingular(),
+              let onlyAsset = firstAsset(),
+              onlyAsset.isVideo(),
+              let phAsset = onlyAsset.asset
+        else { return nil }
+            // PHAsset.duration is metadata - available before the video player loads
+        let seconds = phAsset.duration
+        if seconds.isInfinite || seconds.isNaN || seconds <= 0 { return nil }
+        return seconds
+    }
+
 }
 
 extension PGLSourceFilter {
     func  estimateStackRunSeconds() -> Double {
         var filterRunTime: Double = 0.0
+        var longestVideoSeconds: Double = 0.0
         for aParm in attributes {
             filterRunTime += aParm.estimateParmRunSeconds(userEnteredSeconds: userLengthSeconds)
+                // single video inputs play concurrently - use the longest, not the sum
+            longestVideoSeconds = max(longestVideoSeconds, aParm.estimateSingleVideoSeconds())
         }
-        return filterRunTime
+        return filterRunTime + longestVideoSeconds
     }
 }
