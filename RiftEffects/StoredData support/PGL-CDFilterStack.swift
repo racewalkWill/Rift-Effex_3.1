@@ -1856,7 +1856,14 @@ extension PGLFilterAttributeNumber {
         guard let myNum = getNumberValue()
         else { return }
 
-        cd.doubleValue = myNum.doubleValue
+        if usesCanvasDistance() {
+            // getNumberValue() answers canvas units; persist the RenderTargetSize-relative distance
+            // to match globalSizeWidth/Height - resizeFrom(savedSize:) converts it back on load.
+            // Older stacks stored the raw pixel value at their saved size, which reads the same way.
+            cd.doubleValue = myNum.doubleValue * Double(canvasUniformFitScale(size: RenderTargetSize))
+        } else {
+            cd.doubleValue = myNum.doubleValue
+        }
             // double used to preserve precision.
 
 

@@ -132,9 +132,10 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
     // MARK: Geometry mapping layer
 
     /// corners converted from canonical (FilterCanvasSize-relative) to RenderTargetSize-relative
-    /// coordinates - the space the actual CILinearGradient geometry below is computed in. Uses
-    /// a per-axis stretch, so this conversion must happen before (not after) any geometry that
-    /// depends on angles/perpendicularity, since a non-uniform stretch does not preserve them.
+    /// coordinates - the space the actual CILinearGradient geometry below is computed in. The
+    /// mapping is a per-axis stretch in FullScreenAspectFillMode, so this conversion must happen
+    /// before (not after) any geometry that depends on angles/perpendicularity, since a
+    /// non-uniform stretch does not preserve them.
     private func renderCorners() -> [CGPoint] {
         let transform = canvasToRenderTransform(renderSize: RenderTargetSize)
         return corners.map { $0.applying(transform) }
@@ -170,7 +171,7 @@ class PGLTriangleGradientFilter: PGLSourceFilter, PGLCenterPoint {
             normalY = -normalY
         }
 
-        let halfWidth = canvasScalar(gradientWidth, renderSize: RenderTargetSize) / 2
+        let halfWidth = canvasFitScalar(gradientWidth, renderSize: RenderTargetSize) / 2
         let point0 = CGPoint(x: midpoint.x - normalX * halfWidth, y: midpoint.y - normalY * halfWidth)
         let point1 = CGPoint(x: midpoint.x + normalX * halfWidth, y: midpoint.y + normalY * halfWidth)
 

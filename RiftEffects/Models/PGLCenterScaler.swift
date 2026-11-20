@@ -50,6 +50,8 @@ class PGLCenterScaler {
         displayTransform = translateToZeroOrigin
             .concatenating(scaleTransform)
             .concatenating(centerTransform)
+        // TEMP [PointShift] logging - the image's uniform fit for comparison with pushToFilter
+//        NSLog("[PointShift] centerScaler aspectFit imageExtent=\(imageExtent) renderSize=\(dSize) uniformScale=\(uniformScale) fitRect=\(CGRect(x: shiftX, y: shiftY, width: scaledWidth, height: scaledHeight))")
         }
 
     func setAspectFillTransform (imageExtent: CGRect) {
@@ -67,6 +69,8 @@ class PGLCenterScaler {
         let scaleTransform = CGAffineTransform.init(scaleX: xScale, y: yScale)
 
         displayTransform = translateToZeroOrigin.concatenating(scaleTransform)
+        // TEMP [PointShift] logging - aspect fill stretches per axis, like the point parms
+//        NSLog("[PointShift] centerScaler aspectFill imageExtent=\(imageExtent) renderSize=\(newSize) xScale=\(xScale) yScale=\(yScale)")
     }
 
     func imageForTargetSize(image: CIImage) -> CIImage {

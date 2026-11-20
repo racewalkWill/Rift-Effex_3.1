@@ -15,18 +15,57 @@ import CoreImage
 /// independent of navigation history, rotation, and which view last resized.
 let FilterCanvasSize = CGSize(width: 1040, height: 768)
 
-/// Per-axis stretch from `FilterCanvasSize` into `renderSize`. Both spaces share the same
-/// lower-left origin (CoreImage LLO working rect), so no translate term is needed.
-func canvasToRenderTransform(renderSize: CGSize) -> CGAffineTransform {
+/// Uniform scale that fits `FilterCanvasSize` inside `renderSize` - the same aspect-fit
+/// PGLCenterScaler applies to images, so a point keeps its position relative to the image
+/// when the render size changes shape (rotation, double-tap full screen).
+/// In FullScreenAspectFillMode images are stretched per axis, so this answers the x-axis
+/// stretch to match the per-axis canvasToRenderTransform below.
+@MainActor
+func canvasFitScale(renderSize: CGSize) -> CGFloat {
     guard FilterCanvasSize.width > 0, FilterCanvasSize.height > 0 else {
+        return 1.0
+    }
+    if FullScreenAspectFillMode {
+        return renderSize.width / FilterCanvasSize.width
+    }
+    return canvasUniformFitScale(size: renderSize)
+}
+
+/// The aspect-fit scale of `FilterCanvasSize` inside `size`, ignoring FullScreenAspectFillMode.
+/// Persistence of Distance number parms uses this so a saved value converts back exactly
+/// and renders the same pixel distance at the size it was saved at.
+func canvasUniformFitScale(size: CGSize) -> CGFloat {
+    guard FilterCanvasSize.width > 0, FilterCanvasSize.height > 0,
+          size.width > 0, size.height > 0 else {
+        return 1.0
+    }
+    return min(size.width / FilterCanvasSize.width, size.height / FilterCanvasSize.height)
+}
+
+/// Maps `FilterCanvasSize` into `renderSize` for display - aspect-fit (uniform scale and
+/// centered) like PGLCenterScaler.setAspectFitTransform, or a per-axis stretch in
+/// FullScreenAspectFillMode like PGLCenterScaler.setAspectFillTransform.
+/// Both spaces share the same lower-left origin (CoreImage LLO working rect).
+/// Persistence does NOT use this - see CIVector.scaledFromCanvas(toRenderSize:).
+@MainActor
+func canvasToRenderTransform(renderSize: CGSize) -> CGAffineTransform {
+    guard FilterCanvasSize.width > 0, FilterCanvasSize.height > 0,
+          renderSize.width > 0, renderSize.height > 0 else {
         return .identity
     }
-    let sx = renderSize.width / FilterCanvasSize.width
-    let sy = renderSize.height / FilterCanvasSize.height
-    return CGAffineTransform(scaleX: sx, y: sy)
+    if FullScreenAspectFillMode {
+        let sx = renderSize.width / FilterCanvasSize.width
+        let sy = renderSize.height / FilterCanvasSize.height
+        return CGAffineTransform(scaleX: sx, y: sy)
+    }
+    let scale = canvasFitScale(renderSize: renderSize)
+    let shiftX = (renderSize.width - FilterCanvasSize.width * scale) * 0.5
+    let shiftY = (renderSize.height - FilterCanvasSize.height * scale) * 0.5
+    return CGAffineTransform(a: scale, b: 0, c: 0, d: scale, tx: shiftX, ty: shiftY)
 }
 
 /// Inverse of `canvasToRenderTransform(renderSize:)`.
+@MainActor
 func renderToCanvasTransform(renderSize: CGSize) -> CGAffineTransform {
     guard renderSize.width > 0, renderSize.height > 0 else {
         return .identity
@@ -35,6 +74,42 @@ func renderToCanvasTransform(renderSize: CGSize) -> CGAffineTransform {
 }
 
 extension CIVector {
+    /// Maps a canvas-space vector into `renderSize`-space for display - the value given to
+    /// the CIFilter. Uses `canvasToRenderTransform(renderSize:)` so points keep their position
+    /// relative to the aspect-fit image. The z component (a radius/distance) and rect sizes
+    /// scale by `canvasFitScale(renderSize:)`.
+    @MainActor
+    func fittedFromCanvas(toRenderSize renderSize: CGSize) -> CIVector {
+        canvasMapped(canvasToRenderTransform(renderSize: renderSize))
+    }
+
+    /// Inverse of `fittedFromCanvas(toRenderSize:)`.
+    @MainActor
+    func fittedToCanvas(fromRenderSize renderSize: CGSize) -> CIVector {
+        canvasMapped(renderToCanvasTransform(renderSize: renderSize))
+    }
+
+    /// `transform` is scale + translate only (no rotation) - z scales by the x factor `a`.
+    private func canvasMapped(_ transform: CGAffineTransform) -> CIVector {
+        switch count {
+            case 2:
+                let point = CGPoint(x: x, y: y).applying(transform)
+                return CIVector(x: point.x, y: point.y)
+            case 3:
+                let point = CGPoint(x: x, y: y).applying(transform)
+                return CIVector(x: point.x, y: point.y, z: z * transform.a)
+            case 4:
+                return CIVector(cgRect: cgRectValue.applying(transform))
+            default:
+                return self
+        }
+    }
+
+    /// Persistence only: a per-axis stretch into `renderSize` (the saved globalSize space).
+    /// storeParmValue writes this and resizeFrom(savedSize:) reverses it with the same
+    /// per-axis stretch, so saved and CloudKit values keep their meaning. Display uses
+    /// `fittedFromCanvas(toRenderSize:)` instead.
+    ///
     /// Scales a canvas-space vector into `renderSize`-space. Handles 2-component points,
     /// 3-component points (the z component is a radius/distance, scaled by the x-axis
     /// factor rather than silently dropped), and 4-component rects.
@@ -82,51 +157,59 @@ extension CIVector {
 }
 
 /// Maps a canvas-space vector to a point in a UIKit view of `viewSize` (upper-left origin,
-/// y-down) - the on-screen center for a draggable position marker.
+/// y-down) - the on-screen center for a draggable position marker. Uses the same fit as
+/// `fittedFromCanvas(toRenderSize:)` so the marker sits where the filter draws the point.
+@MainActor
 func canvasVectorToViewPoint(_ vector: CIVector, viewSize: CGSize) -> CGPoint {
     guard FilterCanvasSize.width > 0, FilterCanvasSize.height > 0 else {
         return .zero
     }
-    let x = vector.x * viewSize.width / FilterCanvasSize.width
-    let y = viewSize.height - (vector.y * viewSize.height / FilterCanvasSize.height)
-    return CGPoint(x: x, y: y)
+    let lloPoint = CGPoint(x: vector.x, y: vector.y).applying(canvasToRenderTransform(renderSize: viewSize))
+    return CGPoint(x: lloPoint.x, y: viewSize.height - lloPoint.y)
 }
 
 /// Inverse of `canvasVectorToViewPoint(_:viewSize:)` - maps a UIKit view point (e.g. where the
 /// user dropped a drag gesture) back into canvas-space CIVector coordinates.
+@MainActor
 func viewPointToCanvasVector(_ point: CGPoint, viewSize: CGSize) -> CIVector {
     guard viewSize.width > 0, viewSize.height > 0 else {
         return CIVector(x: 0, y: 0)
     }
-    let x = point.x * FilterCanvasSize.width / viewSize.width
-    let flippedY = viewSize.height - point.y
-    let y = flippedY * FilterCanvasSize.height / viewSize.height
-    return CIVector(x: x, y: y)
+    let lloPoint = CGPoint(x: point.x, y: viewSize.height - point.y)
+    let canvasPoint = lloPoint.applying(renderToCanvasTransform(renderSize: viewSize))
+    return CIVector(x: canvasPoint.x, y: canvasPoint.y)
 }
 
 /// Maps a canvas-space rect (LLO) to a UIKit view rect (ULO) for `viewSize`.
+@MainActor
 func canvasRectToViewRect(_ rect: CGRect, viewSize: CGSize) -> CGRect {
     guard FilterCanvasSize.width > 0, FilterCanvasSize.height > 0 else {
         return .zero
     }
-    let sx = viewSize.width / FilterCanvasSize.width
-    let sy = viewSize.height / FilterCanvasSize.height
-    let x = rect.origin.x * sx
-    let flippedY = viewSize.height - (rect.origin.y + rect.height) * sy
-    return CGRect(x: x, y: flippedY, width: rect.width * sx, height: rect.height * sy)
+    let lloRect = rect.applying(canvasToRenderTransform(renderSize: viewSize))
+    return CGRect(x: lloRect.origin.x, y: viewSize.height - lloRect.maxY,
+                  width: lloRect.width, height: lloRect.height)
 }
 
 /// Inverse of `canvasRectToViewRect(_:viewSize:)`.
+@MainActor
 func viewRectToCanvasRect(_ rect: CGRect, viewSize: CGSize) -> CGRect {
     guard viewSize.width > 0, viewSize.height > 0 else {
         return .zero
     }
-    let sx = FilterCanvasSize.width / viewSize.width
-    let sy = FilterCanvasSize.height / viewSize.height
-    let flippedY = viewSize.height - (rect.origin.y + rect.height)
-    return CGRect(x: rect.origin.x * sx, y: flippedY * sy, width: rect.width * sx, height: rect.height * sy)
+    let lloRect = CGRect(x: rect.origin.x, y: viewSize.height - rect.maxY,
+                         width: rect.width, height: rect.height)
+    return lloRect.applying(renderToCanvasTransform(renderSize: viewSize))
 }
 
+/// Scales a canvas-space scalar distance (e.g. a gradient width or radius) into `renderSize`-space
+/// for display - matches the scale `fittedFromCanvas(toRenderSize:)` applies to points.
+@MainActor
+func canvasFitScalar(_ value: CGFloat, renderSize: CGSize) -> CGFloat {
+    return value * canvasFitScale(renderSize: renderSize)
+}
+
+/// Persistence only - pairs with CIVector.scaledFromCanvas(toRenderSize:).
 /// Scales a canvas-space scalar distance (e.g. a gradient width or radius) into `renderSize`-space.
 /// Uses the x-axis factor alone - see the comment on CIVector.scaledFromCanvas(toRenderSize:)
 /// for why a single consistent axis (not min(sx,sy)) is required for exact round-tripping.

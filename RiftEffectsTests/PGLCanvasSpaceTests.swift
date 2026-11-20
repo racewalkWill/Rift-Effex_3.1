@@ -42,6 +42,101 @@ import UIKit
         #expect(abs(rendered.y - vector.y) < 0.001)
     }
 
+    @Test func fittedCanvasToRenderRoundTrip() {
+        for renderSize in renderSizes {
+            let vector = CIVector(x: 130, y: 1125, z: 40)
+            let rendered = vector.fittedFromCanvas(toRenderSize: renderSize)
+            let backToCanvas = rendered.fittedToCanvas(fromRenderSize: renderSize)
+            #expect(abs(backToCanvas.x - vector.x) < 0.001)
+            #expect(abs(backToCanvas.y - vector.y) < 0.001)
+            #expect(abs(backToCanvas.z - vector.z) < 0.001)
+        }
+    }
+
+    /// The "zoom star" rotation report: the Zoom Blur center must keep its position relative
+    /// to the aspect-fit input image when the render size rotates.
+    @Test func fittedPointKeepsImageRelativePositionAcrossRotation() {
+        let imageExtent = CGRect(x: 0, y: 0, width: 1179, height: 786)
+        let canvasCenter = CIVector(x: 510.33, y: 495.16)
+        let landscape = CGSize(width: 1542, height: 1179)
+        let portrait = CGSize(width: 1179, height: 1604)
+
+        func imageRelative(_ renderSize: CGSize) -> CGPoint {
+            // same fit as PGLCenterScaler.setAspectFitTransform (without its rounding)
+            let scale = min(renderSize.width / imageExtent.width, renderSize.height / imageExtent.height)
+            let fitRect = CGRect(x: (renderSize.width - imageExtent.width * scale) / 2,
+                                 y: (renderSize.height - imageExtent.height * scale) / 2,
+                                 width: imageExtent.width * scale, height: imageExtent.height * scale)
+            let rendered = canvasCenter.fittedFromCanvas(toRenderSize: renderSize)
+            return CGPoint(x: (rendered.x - fitRect.minX) / fitRect.width,
+                           y: (rendered.y - fitRect.minY) / fitRect.height)
+        }
+        let landscapeRelative = imageRelative(landscape)
+        let portraitRelative = imageRelative(portrait)
+        #expect(abs(landscapeRelative.x - portraitRelative.x) < 0.001)
+        #expect(abs(landscapeRelative.y - portraitRelative.y) < 0.001)
+    }
+
+    @Test func fittedUsesPerAxisStretchInAspectFillMode() {
+        let savedMode = FullScreenAspectFillMode
+        defer { FullScreenAspectFillMode = savedMode }
+        FullScreenAspectFillMode = true
+        let vector = CIVector(x: 100, y: 200)
+        let renderSize = CGSize(width: FilterCanvasSize.width * 2, height: FilterCanvasSize.height * 3)
+        let rendered = vector.fittedFromCanvas(toRenderSize: renderSize)
+        #expect(abs(rendered.x - 200) < 0.001)
+        #expect(abs(rendered.y - 600) < 0.001)
+    }
+
+    /// Sixfold Rotated Tile inputWidth is a Distance parm - it must scale with the aspect-fit
+    /// image so each tile covers the same part of the image after rotation.
+    @Test func distanceParmScalesWithFitAcrossRotation() throws {
+        let savedSize = RenderTargetSize
+        defer { RenderTargetSize = savedSize }
+        let filter = try #require(PGLSourceFilter(filter: "CISixfoldRotatedTile"))
+        let width = try #require(filter.attribute(nameKey: kCIInputWidthKey) as? PGLFilterAttributeNumber)
+        #expect(width.usesCanvasDistance())
+
+        let landscape = CGSize(width: 1542, height: 1179)
+        let portrait = CGSize(width: 1179, height: 1604)
+        RenderTargetSize = landscape
+        width.set(NSNumber(value: 100.0))
+        width.applyRenderSize(landscape)
+        let landscapeValue = try #require(filter.localFilter.value(forKey: kCIInputWidthKey) as? NSNumber).doubleValue
+        width.applyRenderSize(portrait)
+        let portraitValue = try #require(filter.localFilter.value(forKey: kCIInputWidthKey) as? NSNumber).doubleValue
+
+        #expect(abs(landscapeValue - 100.0 * canvasUniformFitScale(size: landscape)) < 0.001)
+        #expect(abs(portraitValue - 100.0 * canvasUniformFitScale(size: portrait)) < 0.001)
+        // the canvas value seen by the slider and storage is unchanged by the render size
+        #expect(width.getNumberValue()?.doubleValue == 100.0)
+    }
+
+    /// storeParmValue writes canvas * fit(RenderTargetSize); load sets that value then
+    /// resizeFrom(savedSize: globalSize) divides by fit(savedSize).
+    @Test func distanceParmStoredValueRoundTrips() throws {
+        let filter = try #require(PGLSourceFilter(filter: "CISixfoldRotatedTile"))
+        let width = try #require(filter.attribute(nameKey: kCIInputWidthKey) as? PGLFilterAttributeNumber)
+        for saveSize in renderSizes {
+            let stored = 75.0 * Double(canvasUniformFitScale(size: saveSize))
+            width.set(NSNumber(value: stored))
+            width.resizeFrom(savedSize: saveSize)
+            #expect(abs((width.getNumberValue()?.doubleValue ?? 0) - 75.0) < 0.001)
+        }
+    }
+
+    @Test func viewRectRoundTrip() {
+        for viewSize in renderSizes {
+            let rect = CGRect(x: 100, y: 150, width: 300, height: 200)
+            let viewRect = canvasRectToViewRect(rect, viewSize: viewSize)
+            let backToCanvas = viewRectToCanvasRect(viewRect, viewSize: viewSize)
+            #expect(abs(backToCanvas.origin.x - rect.origin.x) < 0.001)
+            #expect(abs(backToCanvas.origin.y - rect.origin.y) < 0.001)
+            #expect(abs(backToCanvas.width - rect.width) < 0.001)
+            #expect(abs(backToCanvas.height - rect.height) < 0.001)
+        }
+    }
+
     @Test func viewPointRoundTrip() {
         for viewSize in renderSizes {
             let vector = CIVector(x: 200, y: 300)

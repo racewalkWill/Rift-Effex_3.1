@@ -94,9 +94,13 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
             // live RenderTargetSize pixels. This is identity when workingSize == RenderTargetSize
             // (the internal zoom/pan filter role, kept in sync by its owner) and a real
             // conversion when workingSize == FilterCanvasSize (the regular attribute-UI role).
-            let liveCenter = centerPoint.applying(CGAffineTransform(
-                scaleX: workingSize.width > 0 ? RenderTargetSize.width / workingSize.width : 1,
-                y: workingSize.height > 0 ? RenderTargetSize.height / workingSize.height : 1))
+            // The canvas role uses the same aspect-fit mapping as the other vector parms.
+            let liveTransform = (workingSize == FilterCanvasSize)
+                ? canvasToRenderTransform(renderSize: RenderTargetSize)
+                : CGAffineTransform(
+                    scaleX: workingSize.width > 0 ? RenderTargetSize.width / workingSize.width : 1,
+                    y: workingSize.height > 0 ? RenderTargetSize.height / workingSize.height : 1)
+            let liveCenter = centerPoint.applying(liveTransform)
             scaledImage = positionOutput(ciOutput: scaledImage!, inFrame: fullScreenRect, newCenterPoint: liveCenter)
         }
         // Blend the image over an opaque background image.

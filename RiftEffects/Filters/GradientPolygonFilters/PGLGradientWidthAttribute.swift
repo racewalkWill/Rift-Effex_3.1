@@ -16,6 +16,11 @@ class PGLGradientWidthAttribute: PGLFilterAttributeNumber {
 
     // PGLFilterAttributeNumber.valueString() force-casts getValue() as! Double,
     // so getValue() (not just getNumberValue()) must be overridden here.
+    /// gradientWidth is already canvas-relative - PGLTriangleGradientFilter scales it with canvasFitScalar
+    override func usesCanvasDistance() -> Bool {
+        return false
+    }
+
     override func getValue() -> Any? {
         if let myParent = self.aSourceFilter as? PGLTriangleGradientFilter {
             return NSNumber(value: Double(myParent.gradientWidth))

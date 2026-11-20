@@ -14,7 +14,14 @@ import CoreImage
 
 class PGLFilterAttributeNumber: PGLFilterAttribute {
 
-
+    /// Authoritative value of a Distance parm (tile width, blur radius, zoom amount...) in
+    /// FilterCanvasSize units. The CIFilter holds this times canvasFitScale(renderSize:) so the
+    /// distance scales with the aspect-fit image like the point parms. nil until first set or
+    /// render - then the CIFilter's current value (its default) is taken as the canvas value.
+    var canvasNumber: NSNumber?
+    /// render size and FullScreenAspectFillMode at the last pushToFilter
+    var appliedRenderSize: CGSize?
+    var appliedAspectFill: Bool?
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
@@ -22,12 +29,64 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
 
     }
 
+    /// Distance parms are pixel lengths - kept in canvas units and scaled to the render size
+    func usesCanvasDistance() -> Bool {
+        return attributeType == AttrType.Distance.rawValue
+    }
+
     override func set(_ value: Any) {
          if attributeName != nil {
             if let myNumber = value as? NSNumber {
                 parmInputState = .inputValueSet
-                aSourceFilter?.setNumberValue(newValue: myNumber, keyName: attributeName!) }
+                if usesCanvasDistance() {
+                    canvasNumber = myNumber
+                    pushToFilter(renderSize: RenderTargetSize)
+                } else {
+                    aSourceFilter?.setNumberValue(newValue: myNumber, keyName: attributeName!) }
+                }
         }
+    }
+
+    /// Distance parms answer the canvas value - sliders, animation and storage work in canvas units
+    override func getValue() -> Any? {
+        if usesCanvasDistance(), let canvasNumber {
+            return canvasNumber
+        }
+        return super.getValue()
+    }
+
+    /// Converts the canvas value to `renderSize` and writes it into the actual CIFilter.
+    func pushToFilter(renderSize: CGSize, log: Bool = true) {
+        guard let canvasNumber, attributeName != nil else { return }
+        let renderValue = canvasFitScalar(CGFloat(canvasNumber.doubleValue), renderSize: renderSize)
+        aSourceFilter?.setNumberValue(newValue: NSNumber(value: Double(renderValue)), keyName: attributeName!)
+        if log {
+            // TEMP [PointShift] logging - the Distance parm value given to the filter
+//            NSLog("[PointShift] pushNumber \(aSourceFilter?.filterName ?? "?") \(attributeName!) renderSize=\(renderSize) previous=\(String(describing: appliedRenderSize)) canvas=\(canvasNumber.doubleValue) render=\(renderValue) fitScale=\(canvasFitScale(renderSize: renderSize)) aspectFill=\(FullScreenAspectFillMode)")
+        }
+        appliedRenderSize = renderSize
+        appliedAspectFill = FullScreenAspectFillMode
+    }
+
+    override func applyRenderSize(_ renderSize: CGSize) {
+        guard usesCanvasDistance() else { return }
+        if canvasNumber == nil {
+            // first render - the CIFilter default is the canvas value
+            canvasNumber = super.getValue() as? NSNumber
+        }
+        if appliedRenderSize != renderSize || appliedAspectFill != FullScreenAspectFillMode {
+            pushToFilter(renderSize: renderSize)
+        }
+    }
+
+    /// The stored value is in the saved render size - see storeParmValue.
+    /// Convert it to canvas units with the same uniform fit used to store it.
+    override func resizeFrom(savedSize: CGSize?) {
+        guard usesCanvasDistance(), let savedSize, savedSize.width > 0, savedSize.height > 0,
+              let storedNumber = canvasNumber
+            else { return }
+        let canvasValue = storedNumber.doubleValue / Double(canvasUniformFitScale(size: savedSize))
+        set(NSNumber(value: canvasValue))
     }
 
     override func incrementValueDelta() {
@@ -50,7 +109,13 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
 //                NSLog("PGLFilterAttributeNumber incrementValueDelta attributeValueDelta = \(String(describing: attributeValueDelta))")
 //                NSLog("PGLFilterAttributeNumber incrementValueDelta newValue \(newValue)")
 
-                aSourceFilter?.setNumberValue(newValue: newValue as NSNumber, keyName: attributeName!)
+                if usesCanvasDistance() {
+                    canvasNumber = newValue as NSNumber
+                    pushToFilter(renderSize: RenderTargetSize, log: false)
+                        // no TEMP logging on every animation frame
+                } else {
+                    aSourceFilter?.setNumberValue(newValue: newValue as NSNumber, keyName: attributeName!)
+                }
                 postUIChange(attribute: self)
             }
 
