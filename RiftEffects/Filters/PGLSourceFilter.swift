@@ -668,7 +668,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         if imageParm?.blocksImageWrite() ?? false {
             return
         }
-        localFilter.setValue( newValue, forKey: keyName)
+        localFilter.setValue( originNormalizedInput(newValue, keyName: keyName), forKey: keyName)
         imageParm?.propagateLinkedImage(newValue)
 //        logParm(#function, newValue.debugDescription, keyName)
         /*
@@ -684,6 +684,23 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         }
          */
 
+    }
+
+    /// CIFilters whose output depends on where the input image sits, not just on the
+    /// center parm - CICircularWrap adds the image's extent origin to the hole radius
+    /// and wrap angle. The aspect-fit letterbox offset changes with rotation, so the effect
+    /// changed size; their main input is moved to a (0,0) origin first.
+    static let originDependentFilters: Set<String> = ["CICircularWrap"]
+
+    func originNormalizedInput(_ image: CIImage, keyName: String) -> CIImage {
+        guard keyName == kCIInputImageKey,
+              PGLSourceFilter.originDependentFilters.contains(localFilter.name)
+            else { return image }
+        let imageExtent = image.extent
+        guard !imageExtent.isInfinite, !imageExtent.isEmpty,
+              imageExtent.origin != .zero
+            else { return image }
+        return image.transformed(by: CGAffineTransform(translationX: -imageExtent.minX, y: -imageExtent.minY))
     }
 
     func removeImageValue(keyName: String) {

@@ -125,6 +125,22 @@ import UIKit
         }
     }
 
+    /// CICircularWrap adds the input image's origin to the hole radius - the letterboxed
+    /// image (portrait fitRect y = 360) must reach the filter at a (0,0) origin.
+    @Test func circularWrapInputIsOriginNormalized() throws {
+        let letterboxed = CIImage(color: .red).cropped(to: CGRect(x: 0, y: 360, width: 1179, height: 884))
+        let wrap = try #require(PGLSourceFilter(filter: "CICircularWrap"))
+        wrap.setImageValue(newValue: letterboxed, keyName: kCIInputImageKey)
+        let wrapInput = try #require(wrap.localFilter.value(forKey: kCIInputImageKey) as? CIImage)
+        #expect(wrapInput.extent == CGRect(x: 0, y: 0, width: 1179, height: 884))
+
+        // position independent filters keep the input where it is
+        let twirl = try #require(PGLSourceFilter(filter: "CITwirlDistortion"))
+        twirl.setImageValue(newValue: letterboxed, keyName: kCIInputImageKey)
+        let twirlInput = try #require(twirl.localFilter.value(forKey: kCIInputImageKey) as? CIImage)
+        #expect(twirlInput.extent == letterboxed.extent)
+    }
+
     @Test func viewRectRoundTrip() {
         for viewSize in renderSizes {
             let rect = CGRect(x: 100, y: 150, width: 300, height: 200)

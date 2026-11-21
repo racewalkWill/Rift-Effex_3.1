@@ -285,12 +285,6 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         guard let canvasVector, attributeName != nil else { return }
         let renderVector = canvasVector.fittedFromCanvas(toRenderSize: renderSize)
         aSourceFilter?.setVectorValue(newValue: renderVector, keyName: attributeName!)
-        // TEMP [PointShift] logging - compares the per-axis stretch actually applied with
-        // the uniform aspect-fit scale PGLCenterScaler applies to images at this render size.
-        let sx = renderSize.width / FilterCanvasSize.width
-        let sy = renderSize.height / FilterCanvasSize.height
-        let fitScale = min(sx, sy)
-//        NSLog("[PointShift] pushToFilter \(aSourceFilter?.filterName ?? "?") \(attributeName!) renderSize=\(renderSize) previous=\(String(describing: appliedRenderSize)) canvas=[\(canvasVector.x), \(canvasVector.y)] render=[\(renderVector.x), \(renderVector.y)] relative=[\(renderVector.x / renderSize.width), \(renderVector.y / renderSize.height)] sx=\(sx) sy=\(sy) fitScale=\(fitScale) stretchVsFit=[\(sx / fitScale), \(sy / fitScale)] aspectFill=\(FullScreenAspectFillMode)")
         appliedRenderSize = renderSize
         appliedAspectFill = FullScreenAspectFillMode
     }

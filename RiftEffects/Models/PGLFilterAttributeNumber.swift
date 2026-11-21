@@ -56,14 +56,10 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
     }
 
     /// Converts the canvas value to `renderSize` and writes it into the actual CIFilter.
-    func pushToFilter(renderSize: CGSize, log: Bool = true) {
+    func pushToFilter(renderSize: CGSize) {
         guard let canvasNumber, attributeName != nil else { return }
         let renderValue = canvasFitScalar(CGFloat(canvasNumber.doubleValue), renderSize: renderSize)
         aSourceFilter?.setNumberValue(newValue: NSNumber(value: Double(renderValue)), keyName: attributeName!)
-        if log {
-            // TEMP [PointShift] logging - the Distance parm value given to the filter
-//            NSLog("[PointShift] pushNumber \(aSourceFilter?.filterName ?? "?") \(attributeName!) renderSize=\(renderSize) previous=\(String(describing: appliedRenderSize)) canvas=\(canvasNumber.doubleValue) render=\(renderValue) fitScale=\(canvasFitScale(renderSize: renderSize)) aspectFill=\(FullScreenAspectFillMode)")
-        }
         appliedRenderSize = renderSize
         appliedAspectFill = FullScreenAspectFillMode
     }
@@ -111,8 +107,7 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
 
                 if usesCanvasDistance() {
                     canvasNumber = newValue as NSNumber
-                    pushToFilter(renderSize: RenderTargetSize, log: false)
-                        // no TEMP logging on every animation frame
+                    pushToFilter(renderSize: RenderTargetSize)
                 } else {
                     aSourceFilter?.setNumberValue(newValue: newValue as NSNumber, keyName: attributeName!)
                 }

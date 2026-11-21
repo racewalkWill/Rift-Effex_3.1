@@ -800,6 +800,7 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         if metalController === nil {
             loadMetalController()
         }
+        setMetalViewPaused(false)
         setGestureRecogniziers()
             //        toggleViewControls(hide: false ) // restore removed position & text controls
         if appStack.videoMgr.videoState != .None {
@@ -1445,6 +1446,14 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
        publishers = [any Cancellable]()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // pause at the start of the push/pop transition - both image views are on screen
+        // during the animation; the outgoing view keeps its last frame while it slides away.
+        // A cancelled swipe-back calls viewWillAppear again, which resumes it.
+        setMetalViewPaused(true)
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         appStack.isImageControllerOpen = false // selection of new image or image list is started
@@ -1456,6 +1465,15 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         removeGestureRecogniziers()
 
         Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
+    }
+
+    /// Stop drawing while another screen covers this one. On iPhone the filter screen's
+    /// view stays in the window under a pushed parm screen; both MTKViews share the one
+    /// Renderer, so the covered view kept drawing and every frame flipped RenderTargetSize
+    /// between the two drawable sizes (re-pushing all parms each time).
+    func setMetalViewPaused(_ paused: Bool) {
+        guard let compactMetalView = metalController?.view as? MTKView else { return }
+        compactMetalView.isPaused = paused
     }
 
         // MARK: RPPreviewViewControllerDelegate
