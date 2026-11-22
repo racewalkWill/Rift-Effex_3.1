@@ -387,7 +387,11 @@ class PGLSelectParmController: PGLCommonController,
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        view = nil
+        // Do not set view = nil here. On iPhone this view is embedded in the
+        // PGLParmImageController drawer by loadViewColumns (viewDidLoad only), and a
+        // .fullScreen presentation or a push over the parm screen also calls
+        // viewDidDisappear - dropping the view left the drawer empty on return.
+        // The container's pop path removes and releases this controller.
 //        currentFilter = nil
         tappedAttribute = nil
 

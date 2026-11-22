@@ -2312,17 +2312,9 @@ extension PGLImageController {
         else {return }
         newImageController.isFullScreen = true
 
-        // Pause the compact column's own MTKView while the fullscreen one is
-        // presented on top of it - both delegate to the same Renderer
-        // instance, and Renderer.isFullScreen is one shared flag, so leaving
-        // this view running has it hit the fullscreen-only render branch with
-        // its own (different) drawable size, producing a repeating
-        // "image extent and destination extent do not intersect" error.
-        // Resumed in PGLMetalController.userDoubleTap() on dismiss.
-        if let compactMetalView = metalController?.view as? MTKView {
-            compactMetalView.isPaused = true
-            newImageController.coveredCompactMetalView = compactMetalView
-        }
+        // The compact MTKView is paused by viewWillDisappear (setMetalViewPaused)
+        // when the fullscreen controller is presented, and resumed by viewWillAppear
+        // on dismiss - both views share the one Renderer, so only one may draw.
 //        NSLog("\(self.debugDescription) " + #function)
 //        NSLog("newImageController = \(newImageController.debugDescription)")
         // turns on gesture recogniziers to dismiss, zoom, pan

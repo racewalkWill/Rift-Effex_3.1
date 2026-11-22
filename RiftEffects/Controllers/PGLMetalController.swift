@@ -30,21 +30,6 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
 
         /// in full screen mode the MetalController uses GestureRecogniziers
     var isFullScreen = false
-
-    /// The compact column's MTKView, paused by PGLImageController.fullScreenImage()
-    /// before this controller is presented, and resumed here on dismiss.
-    /// Renderer.isFullScreen is one flag shared by the single Renderer
-    /// instance both MTKViews delegate to - while this controller is
-    /// presented it stays true for every draw(in:) call, including any the
-    /// covered compact view still makes if left running. That covered view
-    /// then hits the fullscreen-only branch in Renderer.drawBasicCentered
-    /// (cropForInfiniteExtent + the shared outputZoomPanFilter, sized for
-    /// whichever view drew most recently) using its own different drawable
-    /// size, which is what produces "the image extent and destination extent
-    /// do not intersect" - reported as a repeating error loop specifically in
-    /// landscape once the compact view became full-bleed and started
-    /// redrawing continuously behind the fullscreen presentation.
-    weak var coveredCompactMetalView: MTKView?
     override var prefersStatusBarHidden: Bool {
         get {
             return true
@@ -335,8 +320,11 @@ class PGLMetalController: UIViewController, UIGestureRecognizerDelegate {
         NSLog("\(self.debugDescription) " + #function + " dismiss FullScreenAspectFillMode = false ")
         FullScreenAspectFillMode = false
         metalRender.isFullScreen = FullScreenAspectFillMode
-        coveredCompactMetalView?.isPaused = false
-        coveredCompactMetalView = nil
+        // Stop this view before the dismiss animation. The compact view underneath
+        // resumes in PGLImageController.viewWillAppear; if both drew during the
+        // animation, the shared Renderer's size re-sync flipped RenderTargetSize
+        // between the two drawable sizes every frame.
+        (view as? MTKView)?.isPaused = true
         self.dismiss(animated: animated)
     }
 
