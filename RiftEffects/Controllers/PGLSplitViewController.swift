@@ -227,33 +227,63 @@ class PGLSplitViewController: UISplitViewController, NSFetchedResultsControllerD
                 // showsSecondaryOnlyButton  not needed for full screen of the PGLImageController
                 // now doubleTap on the PGLImageController opens full screen of the PGLMetalController
 //            }
-        updateDuoPortraitColumnWidths()
+        updateColumnWidths()
         super.viewWillLayoutSubviews()
 
     }
 
-    // MARK: iPhone Duo column widths
+    // MARK: column widths
 
     /// iPhone Duo unfolded in portrait is the only phone layout that is
     /// horizontally regular with height > width. UIKit's automatic
     /// supplementary width (min 320pt) takes about half the screen there,
-    /// leaving the image column too narrow. iPad and Plus/Max landscape
-    /// keep the automatic widths.
-    private func updateDuoPortraitColumnWidths() {
+    /// leaving the image column too narrow.
+    /// iPad portrait: the automatic supplementary width is too wide for the
+    /// stack/filter/parm lists, so narrow it ~15%.
+    /// iPad landscape and Plus/Max landscape keep the automatic widths.
+    private func updateColumnWidths() {
         let size = view.bounds.size
+        let isPortrait = size.height > size.width
         let isDuoPortrait = traitCollection.userInterfaceIdiom == .phone
             && traitCollection.horizontalSizeClass == .regular
-            && size.height > size.width
+            && isPortrait
+        let isPadPortrait = traitCollection.userInterfaceIdiom == .pad && isPortrait
 
         let widthFraction: CGFloat = isDuoPortrait ? 0.35 : UISplitViewController.automaticDimension
-        let minimumWidth: CGFloat = isDuoPortrait ? 240 : UISplitViewController.automaticDimension
+        let preferredWidth: CGFloat = isPadPortrait ? 272 : UISplitViewController.automaticDimension
+        // pin iPad portrait min and max to the preferred width so the
+        // automatic range (340pt on an 11" iPad) can't override it
+        let maximumWidth: CGFloat = isPadPortrait ? 272 : UISplitViewController.automaticDimension
+        let minimumWidth: CGFloat
+        if isDuoPortrait {
+            minimumWidth = 240
+        } else if isPadPortrait {
+            minimumWidth = 272
+        } else {
+            minimumWidth = UISplitViewController.automaticDimension
+        }
 
         // assign only on change so setting these inside layout can't loop
+        var changed = false
         if preferredSupplementaryColumnWidthFraction != widthFraction {
             preferredSupplementaryColumnWidthFraction = widthFraction
+            changed = true
+        }
+        if preferredSupplementaryColumnWidth != preferredWidth {
+            preferredSupplementaryColumnWidth = preferredWidth
+            changed = true
         }
         if minimumSupplementaryColumnWidth != minimumWidth {
             minimumSupplementaryColumnWidth = minimumWidth
+            changed = true
+        }
+        if maximumSupplementaryColumnWidth != maximumWidth {
+            maximumSupplementaryColumnWidth = maximumWidth
+            changed = true
+        }
+        if changed {
+            // widths set during this layout pass may not apply until the next one
+            view.setNeedsLayout()
         }
 
         // UIKit only honors preferredSplitBehavior .tile when the library +
