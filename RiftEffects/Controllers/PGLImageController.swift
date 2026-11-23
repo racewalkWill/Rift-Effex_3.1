@@ -679,6 +679,28 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         }
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        repositionPointControls()
+    }
+
+    /// Move each point marker to its parm's position in the current view size.
+    /// addPositionControl places a marker once; after a rotation or other resize the
+    /// marker kept the old orientation's view coordinates while the filter's point
+    /// (canvas value mapped to the new render size) moved with the image.
+    func repositionPointControls() {
+        let viewSize = view.bounds.size
+        guard viewSize.width > 0, viewSize.height > 0 else { return }
+        for (attributeName, controlView) in appStack.parmControls {
+            guard controlView.superview === view,
+                  let attribute = appStack.parms[attributeName],
+                  attribute.isPointUI(),
+                  let positionVector = attribute.getVectorValue()
+                else { continue }
+            controlView.center = attribute.mapVector2Point(vector: positionVector, viewSize: viewSize)
+        }
+    }
+
     /// One-time setup: replace the storyboard's two absolute slider-stack
     /// anchors (104pt from this view's leading edge, 33pt above the bottom
     /// layout guide) with our own, then perform the first orientation-specific
