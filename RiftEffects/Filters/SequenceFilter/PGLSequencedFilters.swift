@@ -157,6 +157,18 @@ class PGLSequencedFilters: PGLSourceFilter {
 
     }
 
+    /// the reference passed to the next filter in the parent stack - the showing child
+    /// filter, or the sequence dissolve blending the two child filters by time
+    override func parmReferenceRect() -> CGRect? {
+        if sequenceStack.isEmptyStack() {
+            return nil
+        }
+        if sequenceStack.isSingleFilterStack() {
+            return sequenceStack.inputFilter?.parmReferenceRect()
+        }
+        return dissolve?.parmReferenceRect()
+    }
+
     func incrementImageLists() {
         // send increment to the image parm lists
         for anImageParm in imageParms() ?? [PGLFilterAttributeImage]() {

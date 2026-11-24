@@ -52,7 +52,7 @@ class PGLFilterAttributeVector3: PGLFilterAttributeVector {
             parmInputState = .inputValueSet
             zValue = newZValue
             canvasVector = CIVector(x: newXYvector.x, y: newXYvector.y, z: newZValue)
-            pushToFilter(renderSize: RenderTargetSize)
+            pushToFilter(mapping: currentParmMapping())
             propagateLink(CIVector(x: newXYvector.x, y: newXYvector.y))
                 // x,y only - each 3D target keeps its own z, 2D targets get a point
     }

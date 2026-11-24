@@ -12,6 +12,8 @@ import os
 
 let PGLRedrawParmControllerOpenNotification = NSNotification.Name(rawValue: "PGLRedrawParmControllerOpenNotification")
 let PGLRedrawFilterChange = NSNotification.Name(rawValue: "PGLRedrawFilterChange")
+/// a filter's PGLParmMapping changed - the point parms now map to other view positions
+let PGLParmMappingChange = NSNotification.Name(rawValue: "PGLParmMappingChange")
 let PGLTransitionExists = NSNotification.Name(rawValue: "PGLTransitionExists")
 let PGLVaryTimerRunning = NSNotification.Name(rawValue: "PGLVaryTimerRunning")
 let PGLResetNeedsRedraw = NSNotification.Name(rawValue: "PGLResetNeedsRedraw")

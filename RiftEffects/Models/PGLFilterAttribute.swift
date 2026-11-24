@@ -582,11 +582,29 @@ class PGLFilterAttribute {
         return false
     }
 
-    /// Convert this attribute's canonical (FilterCanvasSize-relative) value into
-    /// `renderSize`-relative coordinates and push it into the actual CIFilter.
+    /// Convert this attribute's canonical (FilterCanvasSize-relative) value through
+    /// `mapping` and push it into the actual CIFilter.
     /// Called once per output-image evaluation from `PGLSourceFilter.outputImageBasic()`.
     /// Default no-op; overridden by attributes that store canvas coordinates.
-    func applyRenderSize(_ renderSize: CGSize) {
+    func applyMapping(_ mapping: PGLParmMapping) {
+    }
+
+    /// The child stack feeding this image parm - directly or through its image list.
+    /// Its reference rect is where that stack's image is drawn.
+    func childStackForReference() -> PGLFilterStack? {
+        if let inputStack {
+            return inputStack
+        }
+        if inputCollection?.hasImageStack() ?? false {
+            return inputCollection?.inputStack
+        }
+        return nil
+    }
+
+    /// the owning filter's mapping now - for value changes made outside a render pass
+    /// (slider, drag, animation steps, load)
+    func currentParmMapping() -> PGLParmMapping {
+        return aSourceFilter?.parmMapping() ?? PGLParmMapping.current(referenceRect: nil)
     }
     // MARK: value change
 
@@ -715,7 +733,7 @@ class PGLFilterAttribute {
         /// the marker/drag gesture is relative to, independent of any global render-size state.
     func mapPoint2Vector(point: CGPoint, viewSize: CGSize) -> CIVector {
 
-        let answerVector = viewPointToCanvasVector(point, viewSize: viewSize)
+        let answerVector = currentParmMapping().canvasVector(for: point, viewSize: viewSize)
         logRenderTarget(newValue: answerVector.description, oldValue: point.debugDescription, direction: PGLSourceFilter.RenderMapDirection.uiToFilter.rawValue, keyName: self.attributeName ?? "noAttributeName")
         if PGLSourceFilter.LogParmValues {NSLog("\(String(describing:self)): mapPoint2Vector: \(point.debugDescription) -> \(answerVector.debugDescription)")
         }
@@ -729,9 +747,9 @@ class PGLFilterAttribute {
             // it is some oddball initial neg value - place it at a reasonable default
             let reasonablePlace = FilterCanvasSize.height / 2.0
             let defaultVector = CIVector(x: reasonablePlace, y: reasonablePlace)
-            answerPoint = canvasVectorToViewPoint(defaultVector, viewSize: viewSize)
+            answerPoint = currentParmMapping().viewPoint(for: defaultVector, viewSize: viewSize)
         } else {
-            answerPoint = canvasVectorToViewPoint(vector, viewSize: viewSize)
+            answerPoint = currentParmMapping().viewPoint(for: vector, viewSize: viewSize)
         }
         logRenderTarget(newValue: answerPoint.debugDescription, oldValue: vector.debugDescription, direction: PGLSourceFilter.RenderMapDirection.filterToUI.rawValue, keyName: self.attributeName ?? "noAttributeName")
         return answerPoint

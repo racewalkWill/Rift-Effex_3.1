@@ -1125,6 +1125,16 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         publishers.append(cancellable!)
 
         // PGLStackNameChange
+        // a filter's parm mapping changed (rotation, another photo shape, a transition)
+        // - move the position markers onto the new positions
+        cancellable = myCenter.publisher(for: PGLParmMappingChange)
+            .sink() {[weak self]
+            myUpdate in
+                guard let self, !self.appStack.parmControls.isEmpty else { return }
+                self.repositionPointControls()
+        }
+        publishers.append(cancellable!)
+
         cancellable = myCenter.publisher(for: PGLStackNameChange)
             .sink() {[weak self]
             myUpdate in

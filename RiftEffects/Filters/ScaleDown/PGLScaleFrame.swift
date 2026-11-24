@@ -96,7 +96,7 @@ class PGLScaleDownFrame: PGLSourceFilter,  PGLCenterPoint {
             // conversion when workingSize == FilterCanvasSize (the regular attribute-UI role).
             // The canvas role uses the same aspect-fit mapping as the other vector parms.
             let liveTransform = (workingSize == FilterCanvasSize)
-                ? canvasToRenderTransform(renderSize: RenderTargetSize)
+                ? parmMapping().canvasToRender()
                 : CGAffineTransform(
                     scaleX: workingSize.width > 0 ? RenderTargetSize.width / workingSize.width : 1,
                     y: workingSize.height > 0 ? RenderTargetSize.height / workingSize.height : 1)

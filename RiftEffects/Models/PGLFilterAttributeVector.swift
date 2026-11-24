@@ -53,11 +53,9 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
     /// Authoritative value, in FilterCanvasSize-relative coordinates - independent of the
     /// live view/drawable size, navigation history, or which view resized last.
     var canvasVector: CIVector?
-    /// The RenderTargetSize this attribute's CIFilter value was last pushed for; used by
-    /// `applyRenderSize(_:)` to avoid redundant pushes.
-    var appliedRenderSize: CGSize?
-    /// FullScreenAspectFillMode at the last pushToFilter - the canvas mapping depends on it
-    var appliedAspectFill: Bool?
+    /// The mapping this attribute's CIFilter value was last pushed with; used by
+    /// `applyMapping(_:)` to avoid redundant pushes.
+    var appliedMapping: PGLParmMapping?
 
     //MARK: center link
     /// Linked kCIInputCenterKey parms - see PGLFilterAttribute MARK: Parm Link.
@@ -203,7 +201,7 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
             if let newVectorValue = value as? CIVector {
                 parmInputState = .inputValueSet
                 canvasVector = newVectorValue
-                pushToFilter(renderSize: RenderTargetSize)
+                pushToFilter(mapping: currentParmMapping())
                 propagateLink(newVectorValue)
             }
         }
@@ -279,21 +277,20 @@ class PGLFilterAttributeVector: PGLFilterAttribute {
         return canvasVector
     }
 
-    /// Converts the canonical (FilterCanvasSize-relative) value into `renderSize`-relative
-    /// coordinates and writes it into the actual CIFilter.
-    func pushToFilter(renderSize: CGSize) {
+    /// Converts the canonical (FilterCanvasSize-relative) value through `mapping`
+    /// and writes it into the actual CIFilter.
+    func pushToFilter(mapping: PGLParmMapping) {
         guard let canvasVector, attributeName != nil else { return }
-        let renderVector = canvasVector.fittedFromCanvas(toRenderSize: renderSize)
+        let renderVector = mapping.toRender(canvasVector)
         aSourceFilter?.setVectorValue(newValue: renderVector, keyName: attributeName!)
-        appliedRenderSize = renderSize
-        appliedAspectFill = FullScreenAspectFillMode
+        appliedMapping = mapping
     }
 
-    override func applyRenderSize(_ renderSize: CGSize) {
+    override func applyMapping(_ mapping: PGLParmMapping) {
         guard usesCanvasCoordinates() else { return }
-        // the full screen single tap toggles aspect fill without changing the render size
-        if appliedRenderSize != renderSize || appliedAspectFill != FullScreenAspectFillMode {
-            pushToFilter(renderSize: renderSize)
+        // pushes only when the reference rect, render size or aspect fill changed
+        if appliedMapping != mapping {
+            pushToFilter(mapping: mapping)
         }
     }
 

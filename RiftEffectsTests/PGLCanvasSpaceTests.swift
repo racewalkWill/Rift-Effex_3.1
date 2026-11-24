@@ -101,9 +101,9 @@ import UIKit
         let portrait = CGSize(width: 1179, height: 1604)
         RenderTargetSize = landscape
         width.set(NSNumber(value: 100.0))
-        width.applyRenderSize(landscape)
+        width.applyMapping(PGLParmMapping(referenceRect: nil, renderSize: landscape, aspectFill: false))
         let landscapeValue = try #require(filter.localFilter.value(forKey: kCIInputWidthKey) as? NSNumber).doubleValue
-        width.applyRenderSize(portrait)
+        width.applyMapping(PGLParmMapping(referenceRect: nil, renderSize: portrait, aspectFill: false))
         let portraitValue = try #require(filter.localFilter.value(forKey: kCIInputWidthKey) as? NSNumber).doubleValue
 
         #expect(abs(landscapeValue - 100.0 * canvasUniformFitScale(size: landscape)) < 0.001)
@@ -139,6 +139,150 @@ import UIKit
         twirl.setImageValue(newValue: letterboxed, keyName: kCIInputImageKey)
         let twirlInput = try #require(twirl.localFilter.value(forKey: kCIInputImageKey) as? CIImage)
         #expect(twirlInput.extent == letterboxed.extent)
+    }
+
+    // MARK: image reference rect mapping
+
+    /// The 'Eightfold Reflected Tile' report: a portrait photo (1132x1604) is drawn
+    /// height-bound in both orientations while the canvas fit flips axes. Mapping onto the
+    /// photo's own rect keeps the center and tile width fixed relative to the photo.
+    @Test func referenceRectKeepsPointAndDistanceOnPortraitPhotoAcrossRotation() throws {
+        let savedSize = RenderTargetSize
+        defer { RenderTargetSize = savedSize }
+        let filter = try #require(PGLSourceFilter(filter: "CIEightfoldReflectedTile"))
+        let center = try #require(filter.attribute(nameKey: kCIInputCenterKey) as? PGLFilterAttributeVector)
+        let width = try #require(filter.attribute(nameKey: kCIInputWidthKey) as? PGLFilterAttributeNumber)
+        center.set(CIVector(x: 617.47, y: 363.71))
+        width.set(NSNumber(value: 100.0))
+
+        // the logged photo rects - PGLCenterScaler aspect-fit in each orientation
+        let cases: [(render: CGSize, photo: CGRect)] = [
+            (CGSize(width: 1179, height: 1604), CGRect(x: 24, y: 0, width: 1132, height: 1604)),
+            (CGSize(width: 1542, height: 1179), CGRect(x: 355, y: 0, width: 832.06, height: 1179)),
+        ]
+        var relativeCenters = [CGPoint]()
+        var relativeWidths = [Double]()
+        for aCase in cases {
+            RenderTargetSize = aCase.render
+            let photoImage = CIImage(color: .red).cropped(to: aCase.photo)
+            let photo = photoImage.extent // cropped(to:) rounds out to whole pixels
+            filter.setImageValue(newValue: photoImage, keyName: kCIInputImageKey)
+            #expect(filter.parmReferenceRect() == photo)
+            let mapping = filter.parmMapping()
+            center.applyMapping(mapping)
+            width.applyMapping(mapping)
+            let renderCenter = try #require(filter.localFilter.value(forKey: kCIInputCenterKey) as? CIVector)
+            let renderWidth = try #require(filter.localFilter.value(forKey: kCIInputWidthKey) as? NSNumber).doubleValue
+            relativeCenters.append(CGPoint(x: (renderCenter.x - photo.minX) / photo.width,
+                                           y: (renderCenter.y - photo.minY) / photo.height))
+            relativeWidths.append(renderWidth / photo.width)
+        }
+        #expect(abs(relativeCenters[0].x - relativeCenters[1].x) < 0.0001)
+        #expect(abs(relativeCenters[0].y - relativeCenters[1].y) < 0.0001)
+        #expect(abs(relativeWidths[0] - relativeWidths[1]) < 0.0001)
+        // the canvas values used by the slider, marker and storage are unchanged
+        #expect(center.getVectorValue()?.x == 617.47)
+        #expect(width.getNumberValue()?.doubleValue == 100.0)
+    }
+
+    /// A transition blends the input and target rects by inputTime. The image swaps happen
+    /// where that image's weight is zero, so the blended rect does not jump at a swap.
+    @Test func transitionReferenceRectBlendsByTime() throws {
+        let savedSize = RenderTargetSize
+        defer { RenderTargetSize = savedSize }
+        RenderTargetSize = CGSize(width: 1542, height: 1179)
+        let dissolve = try #require(PGLSourceFilter(filter: "CIDissolveTransition"))
+        let portrait = CGRect(x: 355, y: 0, width: 833, height: 1179)
+        let landscape = CGRect(x: 0, y: 11, width: 1542, height: 1156)
+        dissolve.setImageValue(newValue: CIImage(color: .red).cropped(to: portrait), keyName: kCIInputImageKey)
+        dissolve.setImageValue(newValue: CIImage(color: .blue).cropped(to: landscape), keyName: kCIInputTargetImageKey)
+
+        dissolve.localFilter.setValue(0.0, forKey: kCIInputTimeKey)
+        #expect(dissolve.parmReferenceRect() == portrait)
+        dissolve.localFilter.setValue(1.0, forKey: kCIInputTimeKey)
+        #expect(dissolve.parmReferenceRect() == landscape)
+        dissolve.localFilter.setValue(0.5, forKey: kCIInputTimeKey)
+        let middle = try #require(dissolve.parmReferenceRect())
+        #expect(abs(middle.minX - 177.5) < 0.001)
+        #expect(abs(middle.width - 1187.5) < 0.001)
+
+        // at time 1 the hidden input swaps to a different shape - the rect must not move
+        dissolve.localFilter.setValue(1.0, forKey: kCIInputTimeKey)
+        let beforeSwap = dissolve.parmReferenceRect()
+        dissolve.setImageValue(newValue: CIImage(color: .green).cropped(to: CGRect(x: 400, y: 0, width: 700, height: 1179)), keyName: kCIInputImageKey)
+        #expect(dissolve.parmReferenceRect() == beforeSwap)
+    }
+
+    /// Generators and infinite inputs have no reference rect - the mapping falls back to
+    /// the R297 aspect-fit of the canvas in the render size.
+    @Test func noReferenceRectFallsBackToViewFit() throws {
+        let savedSize = RenderTargetSize
+        defer { RenderTargetSize = savedSize }
+        RenderTargetSize = CGSize(width: 1179, height: 1604)
+        let tile = try #require(PGLSourceFilter(filter: "CIEightfoldReflectedTile"))
+        tile.setImageValue(newValue: CIImage(color: .red), keyName: kCIInputImageKey) // infinite extent
+        #expect(tile.parmReferenceRect() == nil)
+        let vector = CIVector(x: 300, y: 200)
+        #expect(tile.parmMapping().toRender(vector) == vector.fittedFromCanvas(toRenderSize: RenderTargetSize))
+
+        // a chained input takes the prior filter's reference explicitly
+        let priorRect = CGRect(x: 24, y: 0, width: 1132, height: 1604)
+        tile.setImageReferenceRect(priorRect, forKey: kCIInputImageKey)
+        #expect(tile.parmReferenceRect() == priorRect)
+
+        let generator = try #require(PGLSourceFilter(filter: "CICheckerboardGenerator"))
+        #expect(generator.parmReferenceRect() == nil)
+    }
+
+    /// A tile filter's output is infinite - the next filter in the stack takes the tile's
+    /// reference (the photo rect), not the cropped extent of the tile output.
+    @Test func stackChainPassesReferenceThroughInfiniteOutput() throws {
+        let savedSize = RenderTargetSize
+        defer { RenderTargetSize = savedSize }
+        RenderTargetSize = CGSize(width: 1542, height: 1179)
+        let photoImage = CIImage(color: .red).cropped(to: CGRect(x: 355, y: 0, width: 833, height: 1179))
+
+        let tile = try #require(PGLSourceFilter(filter: "CIEightfoldReflectedTile"))
+        tile.setImageValue(newValue: photoImage, keyName: kCIInputImageKey)
+        tile.setInputImageParmState(newState: ParmInputState.inputPhoto)
+        let twirl = try #require(PGLSourceFilter(filter: "CITwirlDistortion"))
+        twirl.setInputImageParmState(newState: ParmInputState.inputPriorFilter)
+
+        let stack = PGLFilterStack()
+        stack.append(tile)
+        stack.append(twirl)
+        _ = stack.stackOutputImage(false)
+
+        #expect(twirl.imageReferenceRects[kCIInputImageKey] == photoImage.extent)
+        #expect(stack.outputReferenceRect == photoImage.extent)
+    }
+
+    /// The position marker sits where the filter renders the point - the view point is the
+    /// render point scaled to view points (y flipped) - and a drag maps back exactly.
+    @Test func markerViewPointMatchesRenderedPointWithReferenceRect() {
+        let renderSize = CGSize(width: 1542, height: 1179)
+        let viewSize = CGSize(width: 514, height: 393) // 3x drawable
+        let mapping = PGLParmMapping(referenceRect: CGRect(x: 355, y: 0, width: 833, height: 1179),
+                                     renderSize: renderSize, aspectFill: false)
+        let vector = CIVector(x: 617.47, y: 363.71)
+        let renderPoint = mapping.toRender(vector)
+        let viewPoint = mapping.viewPoint(for: vector, viewSize: viewSize)
+        #expect(abs(viewPoint.x - renderPoint.x / 3) < 0.001)
+        #expect(abs(viewPoint.y - (viewSize.height - renderPoint.y / 3)) < 0.001)
+
+        let backToCanvas = mapping.canvasVector(for: viewPoint, viewSize: viewSize)
+        #expect(abs(backToCanvas.x - vector.x) < 0.001)
+        #expect(abs(backToCanvas.y - vector.y) < 0.001)
+    }
+
+    /// without a reference rect the marker keeps the R297 view fit
+    @Test func markerViewPointFallsBackToViewFit() {
+        let viewSize = CGSize(width: 393, height: 534.67)
+        let mapping = PGLParmMapping(referenceRect: nil, renderSize: CGSize(width: 1179, height: 1604), aspectFill: false)
+        let vector = CIVector(x: 436.4, y: 300.4)
+        #expect(mapping.viewPoint(for: vector, viewSize: viewSize) == canvasVectorToViewPoint(vector, viewSize: viewSize))
+        let point = CGPoint(x: 164.9, y: 298.9)
+        #expect(mapping.canvasVector(for: point, viewSize: viewSize) == viewPointToCanvasVector(point, viewSize: viewSize))
     }
 
     @Test func viewRectRoundTrip() {
@@ -241,7 +385,7 @@ import UIKit
         #expect(firstTopLeft?.y == secondTopLeft?.y)
     }
 
-    @Test func applyRenderSizeIsIdempotentAndOrderIndependent() {
+    @Test func applyMappingIsIdempotentAndOrderIndependent() {
         let filter = PGLSourceFilter(filter: "CIPerspectiveCorrection")!
         let attribute = filter.attribute(nameKey: "inputTopLeft") as! PGLFilterAttributeVector
         let canonicalBefore = attribute.getVectorValue()
@@ -249,10 +393,12 @@ import UIKit
         let sizeA = CGSize(width: 1206, height: 1195)
         let sizeB = CGSize(width: 1206, height: 2622)
 
-        attribute.applyRenderSize(sizeA)
-        attribute.applyRenderSize(sizeB)
-        attribute.applyRenderSize(sizeA)
-        attribute.applyRenderSize(sizeA) // repeat - must not double-apply
+        let mappingA = PGLParmMapping(referenceRect: nil, renderSize: sizeA, aspectFill: false)
+        let mappingB = PGLParmMapping(referenceRect: CGRect(x: 24, y: 0, width: 1132, height: 1604), renderSize: sizeB, aspectFill: false)
+        attribute.applyMapping(mappingA)
+        attribute.applyMapping(mappingB)
+        attribute.applyMapping(mappingA)
+        attribute.applyMapping(mappingA) // repeat - must not double-apply
 
         let canonicalAfter = attribute.getVectorValue()
         #expect(canonicalAfter?.x == canonicalBefore?.x)

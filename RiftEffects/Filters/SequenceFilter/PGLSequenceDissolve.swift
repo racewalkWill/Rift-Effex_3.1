@@ -68,6 +68,8 @@ class PGLSequenceDissolve: PGLTransitionFilter {
             self.setImageValue(newValue: CIImage.empty(), keyName: kCIInputImageKey)
 
         }
+        // the child outputs are cropped or infinite - blend the child filters' references
+        setImageReferenceRect(sequenceStack.inputFilter?.parmReferenceRect(), forKey: kCIInputImageKey)
 
         
         if let  nextImage = sequenceStack.targetFilter?.outputImage() {
@@ -77,6 +79,7 @@ class PGLSequenceDissolve: PGLTransitionFilter {
             self.setImageValue(newValue: CIImage.empty(), keyName: kCIInputTargetImageKey)
 
         }
+        setImageReferenceRect(sequenceStack.targetFilter?.parmReferenceRect(), forKey: kCIInputTargetImageKey)
 
         return localFilter.outputImage
 

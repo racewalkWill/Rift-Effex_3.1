@@ -15,13 +15,12 @@ import CoreImage
 class PGLFilterAttributeNumber: PGLFilterAttribute {
 
     /// Authoritative value of a Distance parm (tile width, blur radius, zoom amount...) in
-    /// FilterCanvasSize units. The CIFilter holds this times canvasFitScale(renderSize:) so the
-    /// distance scales with the aspect-fit image like the point parms. nil until first set or
+    /// FilterCanvasSize units. The CIFilter holds this through the filter's PGLParmMapping so
+    /// the distance scales with the image like the point parms. nil until first set or
     /// render - then the CIFilter's current value (its default) is taken as the canvas value.
     var canvasNumber: NSNumber?
-    /// render size and FullScreenAspectFillMode at the last pushToFilter
-    var appliedRenderSize: CGSize?
-    var appliedAspectFill: Bool?
+    /// the mapping at the last pushToFilter
+    var appliedMapping: PGLParmMapping?
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
@@ -40,7 +39,7 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
                 parmInputState = .inputValueSet
                 if usesCanvasDistance() {
                     canvasNumber = myNumber
-                    pushToFilter(renderSize: RenderTargetSize)
+                    pushToFilter(mapping: currentParmMapping())
                 } else {
                     aSourceFilter?.setNumberValue(newValue: myNumber, keyName: attributeName!) }
                 }
@@ -55,23 +54,22 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
         return super.getValue()
     }
 
-    /// Converts the canvas value to `renderSize` and writes it into the actual CIFilter.
-    func pushToFilter(renderSize: CGSize) {
+    /// Converts the canvas value through `mapping` and writes it into the actual CIFilter.
+    func pushToFilter(mapping: PGLParmMapping) {
         guard let canvasNumber, attributeName != nil else { return }
-        let renderValue = canvasFitScalar(CGFloat(canvasNumber.doubleValue), renderSize: renderSize)
+        let renderValue = mapping.toRender(distance: CGFloat(canvasNumber.doubleValue))
         aSourceFilter?.setNumberValue(newValue: NSNumber(value: Double(renderValue)), keyName: attributeName!)
-        appliedRenderSize = renderSize
-        appliedAspectFill = FullScreenAspectFillMode
+        appliedMapping = mapping
     }
 
-    override func applyRenderSize(_ renderSize: CGSize) {
+    override func applyMapping(_ mapping: PGLParmMapping) {
         guard usesCanvasDistance() else { return }
         if canvasNumber == nil {
             // first render - the CIFilter default is the canvas value
             canvasNumber = super.getValue() as? NSNumber
         }
-        if appliedRenderSize != renderSize || appliedAspectFill != FullScreenAspectFillMode {
-            pushToFilter(renderSize: renderSize)
+        if appliedMapping != mapping {
+            pushToFilter(mapping: mapping)
         }
     }
 
@@ -107,7 +105,7 @@ class PGLFilterAttributeNumber: PGLFilterAttribute {
 
                 if usesCanvasDistance() {
                     canvasNumber = newValue as NSNumber
-                    pushToFilter(renderSize: RenderTargetSize)
+                    pushToFilter(mapping: appliedMapping ?? currentParmMapping())
                 } else {
                     aSourceFilter?.setNumberValue(newValue: newValue as NSNumber, keyName: attributeName!)
                 }

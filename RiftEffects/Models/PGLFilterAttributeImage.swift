@@ -331,7 +331,8 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
         guard let imageTarget = target as? PGLFilterAttributeImage
             else { return }
         if let currentImage = getImageValue() {
-            imageTarget.receiveLinkedImage(currentImage)
+            let masterRect = attributeName.flatMap { aSourceFilter?.imageReferenceRects[$0] }
+            imageTarget.receiveLinkedImage(currentImage, referenceRect: masterRect)
         }
         _ = imageTarget.aSourceFilter?.notifyTransitionsExist()
     }
@@ -370,20 +371,42 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
     }
 
     /// write the master's image into the filter of this target
-    func receiveLinkedImage(_ image: CIImage) {
+    /// `referenceRect` is where the master's image is drawn - see PGLParmMapping
+    func receiveLinkedImage(_ image: CIImage, referenceRect: CGRect?) {
         guard let myAttributeName = attributeName
             else { return }
         isReceivingLinkedImage = true
         defer { isReceivingLinkedImage = false }
         aSourceFilter?.setImageValue(newValue: image, keyName: myAttributeName)
+        aSourceFilter?.setImageReferenceRect(referenceRect, forKey: myAttributeName)
+    }
+
+    /// the target's reference only - the linked output image did not change this frame
+    func receiveLinkedReferenceRect(_ referenceRect: CGRect?) {
+        guard let myAttributeName = attributeName
+            else { return }
+        isReceivingLinkedImage = true
+        defer { isReceivingLinkedImage = false }
+        aSourceFilter?.setImageReferenceRect(referenceRect, forKey: myAttributeName)
+    }
+
+    /// called by PGLSourceFilter #setImageReferenceRect - an explicit reference (a chained
+    /// input) set after the image write reaches the linked targets too
+    func propagateLinkedReferenceRect(_ referenceRect: CGRect?) {
+        guard isLinkMaster
+            else { return }
+        for aTarget in linkTargets {
+            (aTarget as? PGLFilterAttributeImage)?.receiveLinkedReferenceRect(referenceRect)
+        }
     }
 
     /// called by PGLSourceFilter #setImageValue after this master's image changed
     func propagateLinkedImage(_ image: CIImage) {
         guard isLinkMaster
             else { return }
+        let masterRect = attributeName.flatMap { aSourceFilter?.imageReferenceRects[$0] }
         for aTarget in linkTargets {
-            (aTarget as? PGLFilterAttributeImage)?.receiveLinkedImage(image)
+            (aTarget as? PGLFilterAttributeImage)?.receiveLinkedImage(image, referenceRect: masterRect)
         }
     }
 
@@ -394,9 +417,13 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
         if let outputMaster = linkMaster as? PGLFilterAttributeOutput {
             // the master filter rendered earlier in this frame - see PGLFilterStack #imageUpdate
             let linkedImage = outputMaster.sizedOutput()
+            // the source filter's output is drawn at that filter's reference
+            let sourceRect = outputMaster.aSourceFilter?.parmReferenceRect()
             if linkedImage !== lastLinkedOutput {
                 lastLinkedOutput = linkedImage
-                receiveLinkedImage(linkedImage)
+                receiveLinkedImage(linkedImage, referenceRect: sourceRect)
+            } else {
+                receiveLinkedReferenceRect(sourceRect)
             }
             return
         }
@@ -505,7 +532,7 @@ class PGLFilterAttributeOutput: PGLFilterAttributeImage {
 
     override func didLink(target: PGLFilterAttribute) {
         if let currentOutput = aSourceFilter?.stackSizedOutput {
-            (target as? PGLFilterAttributeImage)?.receiveLinkedImage(currentOutput)
+            (target as? PGLFilterAttributeImage)?.receiveLinkedImage(currentOutput, referenceRect: aSourceFilter?.parmReferenceRect())
         }
         // otherwise the target reads the output on the next frame
         _ = target.aSourceFilter?.notifyTransitionsExist()

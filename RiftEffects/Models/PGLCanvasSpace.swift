@@ -73,6 +73,112 @@ func renderToCanvasTransform(renderSize: CGSize) -> CGAffineTransform {
     return canvasToRenderTransform(renderSize: renderSize).inverted()
 }
 
+/// How canvas-space point and Distance parms map into one filter's CIFilter for a frame.
+///
+/// `referenceRect` is where, in render pixels, the image the filter's parms belong to is
+/// drawn - a photo's aspect-fit rect (its extent after PGLCenterScaler), a video frame's
+/// full view, a prior filter's reference passed down the stack, or a transition's input and
+/// target rects blended by inputTime (see PGLSourceFilter #parmReferenceRect).
+/// The canvas is stretched per axis onto that rect, so a point keeps its position in the
+/// image for any image shape and any view size; distances use the uniform fit of the canvas
+/// in the rect, so they scale with the image.
+/// nil (generators, no image input) falls back to the aspect-fit of FilterCanvasSize in
+/// the render size - canvasToRenderTransform(renderSize:).
+struct PGLParmMapping: Equatable {
+    var referenceRect: CGRect?
+    var renderSize: CGSize
+    var aspectFill: Bool
+
+    @MainActor
+    static func current(referenceRect: CGRect?) -> PGLParmMapping {
+        return PGLParmMapping(referenceRect: referenceRect,
+                              renderSize: RenderTargetSize,
+                              aspectFill: FullScreenAspectFillMode)
+    }
+
+    private var usableRect: CGRect? {
+        guard let referenceRect,
+              !referenceRect.isInfinite, !referenceRect.isNull,
+              referenceRect.width > 0, referenceRect.height > 0,
+              FilterCanvasSize.width > 0, FilterCanvasSize.height > 0
+            else { return nil }
+        return referenceRect
+    }
+
+    /// canvas -> render pixels (CoreImage LLO)
+    @MainActor
+    func canvasToRender() -> CGAffineTransform {
+        guard let rect = usableRect else {
+            return canvasToRenderTransform(renderSize: renderSize)
+        }
+        return CGAffineTransform(a: rect.width / FilterCanvasSize.width, b: 0,
+                                 c: 0, d: rect.height / FilterCanvasSize.height,
+                                 tx: rect.minX, ty: rect.minY)
+    }
+
+    /// scale for canvas distances (Distance parms, the z radius of a 3-value point)
+    @MainActor
+    func distanceScale() -> CGFloat {
+        guard let rect = usableRect else {
+            return canvasFitScale(renderSize: renderSize)
+        }
+        return min(rect.width / FilterCanvasSize.width, rect.height / FilterCanvasSize.height)
+    }
+
+    @MainActor
+    func toRender(_ vector: CIVector) -> CIVector {
+        let transform = canvasToRender()
+        switch vector.count {
+            case 2:
+                let point = CGPoint(x: vector.x, y: vector.y).applying(transform)
+                return CIVector(x: point.x, y: point.y)
+            case 3:
+                let point = CGPoint(x: vector.x, y: vector.y).applying(transform)
+                return CIVector(x: point.x, y: point.y, z: vector.z * distanceScale())
+            case 4:
+                return CIVector(cgRect: vector.cgRectValue.applying(transform))
+            default:
+                return vector
+        }
+    }
+
+    @MainActor
+    func toRender(distance: CGFloat) -> CGFloat {
+        return distance * distanceScale()
+    }
+
+    // MARK: view points - the position marker and drag gesture
+
+    /// canvas point -> UIKit view point (upper-left origin, y-down) in a view of `viewSize`
+    /// that shows the render size. Without a reference rect this is the R297 view fit.
+    @MainActor
+    func viewPoint(for vector: CIVector, viewSize: CGSize) -> CGPoint {
+        guard usableRect != nil, renderSize.width > 0, renderSize.height > 0 else {
+            return canvasVectorToViewPoint(vector, viewSize: viewSize)
+        }
+        let renderPoint = CGPoint(x: vector.x, y: vector.y).applying(canvasToRender())
+        let viewScaleX = viewSize.width / renderSize.width
+        let viewScaleY = viewSize.height / renderSize.height
+        return CGPoint(x: renderPoint.x * viewScaleX,
+                       y: viewSize.height - (renderPoint.y * viewScaleY))
+    }
+
+    /// Inverse of `viewPoint(for:viewSize:)` - a dragged view point back to a canvas vector.
+    @MainActor
+    func canvasVector(for viewPoint: CGPoint, viewSize: CGSize) -> CIVector {
+        guard usableRect != nil, renderSize.width > 0, renderSize.height > 0,
+              viewSize.width > 0, viewSize.height > 0 else {
+            return viewPointToCanvasVector(viewPoint, viewSize: viewSize)
+        }
+        let viewScaleX = viewSize.width / renderSize.width
+        let viewScaleY = viewSize.height / renderSize.height
+        let renderPoint = CGPoint(x: viewPoint.x / viewScaleX,
+                                  y: (viewSize.height - viewPoint.y) / viewScaleY)
+        let canvasPoint = renderPoint.applying(canvasToRender().inverted())
+        return CIVector(x: canvasPoint.x, y: canvasPoint.y)
+    }
+}
+
 extension CIVector {
     /// Maps a canvas-space vector into `renderSize`-space for display - the value given to
     /// the CIFilter. Uses `canvasToRenderTransform(renderSize:)` so points keep their position

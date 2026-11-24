@@ -91,6 +91,14 @@ static let LogRenderTargetSize = false
     /// Set by PGLFilterStack #imageUpdate, read by image inputs linked to #outputLink
     var stackSizedOutput: CIImage?
 
+    /// Where, in render pixels, the image in each image parm is drawn - keyed by parm name.
+    /// Recorded by #setImageValue from a photo or video frame's own extent, or set explicitly
+    /// by PGLFilterStack #imageUpdate to the prior filter's reference for a chained input.
+    /// Point and Distance parms map onto this rect - see PGLParmMapping.
+    var imageReferenceRects = [String: CGRect]()
+    /// the mapping at the last PGLParmMappingChange post
+    var postedParmMapping: PGLParmMapping?
+
     /// link master for the output of this filter - see PGLFilterAttributeOutput
     lazy var outputLink: PGLFilterAttributeOutput? = PGLFilterAttributeOutput(pglFilter: self, attributeDict: PGLFilterAttributeOutput.outputAttributeDict, inputKey: kCIOutputImageKey)
 
@@ -539,16 +547,88 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
     func firstDetector() -> (any PGLDetection)? {
         return detectors.first
     }
+    // MARK: Parm reference rect
+    // PGLParmMappingChange is posted by #outputImageBasic when the mapping changes
+
+    /// The reference rect of a photo or video frame is its own extent - PGLCenterScaler
+    /// draws a photo at its aspect-fit rect, scaleToFrame draws video across the view.
+    /// An extent larger than the render area is clipped to it; an infinite or empty extent
+    /// has no reference (the mapping falls back to the view).
+    @MainActor
+    static func derivedReferenceRect(_ image: CIImage) -> CGRect? {
+        let imageExtent = image.extent
+        guard !imageExtent.isInfinite, !imageExtent.isNull, !imageExtent.isEmpty
+            else { return nil }
+        let renderRect = CGRect(origin: .zero, size: RenderTargetSize)
+        if renderRect.isEmpty || renderRect.contains(imageExtent) {
+            return imageExtent
+        }
+        let clipped = imageExtent.intersection(renderRect)
+        return clipped.isNull || clipped.isEmpty ? nil : clipped
+    }
+
+    /// Explicit reference for an image parm - PGLFilterStack #imageUpdate passes the prior
+    /// filter's reference for a chained input. nil removes it (the view fallback).
+    func setImageReferenceRect(_ rect: CGRect?, forKey keyName: String) {
+        let imageParm = attribute(nameKey: keyName) as? PGLFilterAttributeImage
+        if imageParm?.blocksImageWrite() ?? false {
+            return
+        }
+        imageReferenceRects[keyName] = rect
+        imageParm?.propagateLinkedReferenceRect(rect)
+    }
+
+    /// The rect this filter's point and Distance parms map onto, and the reference this
+    /// filter passes to the next filter in the stack.
+    /// The main input's rect; a transition (input + target + inputTime) blends the input
+    /// and target rects by inputTime. The transitions swap only the image whose weight is
+    /// zero (input at time 1, target at time 0) so the blend does not jump at a swap.
+    func parmReferenceRect() -> CGRect? {
+        let inputRect = imageReferenceRects[kCIInputImageKey]
+        guard localFilter.inputKeys.contains(kCIInputTargetImageKey),
+              localFilter.inputKeys.contains(kCIInputTimeKey),
+              let targetRect = imageReferenceRects[kCIInputTargetImageKey]
+            else { return inputRect }
+        guard let inputRect else { return targetRect }
+        let time = CGFloat((localFilter.value(forKey: kCIInputTimeKey) as? NSNumber)?.doubleValue ?? 0.0)
+        let weight = min(max(time, 0.0), 1.0)
+        func blend(_ from: CGFloat, _ to: CGFloat) -> CGFloat { from + (to - from) * weight }
+        return CGRect(x: blend(inputRect.minX, targetRect.minX),
+                      y: blend(inputRect.minY, targetRect.minY),
+                      width: blend(inputRect.width, targetRect.width),
+                      height: blend(inputRect.height, targetRect.height))
+    }
+
+    func parmMapping() -> PGLParmMapping {
+        return PGLParmMapping.current(referenceRect: parmReferenceRect())
+    }
+
     func outputImageBasic() -> CIImage? {
 
         // wrapper may call this to produce wrapper effects on the basicImage
         addFilterStepTime()  // if animation then move time forward
         updateImageVideoFrames()
 
+        // images first - the parm mapping depends on the image rects
         for anAttribute in attributes {
-                    anAttribute.updateFromInputStack()
-                    anAttribute.applyRenderSize(RenderTargetSize)
-                }
+            anAttribute.updateFromInputStack()
+            if anAttribute.isImageInput(), let imageKey = anAttribute.attributeName,
+               let childStack = anAttribute.childStackForReference() {
+                // a child stack image is cropped or infinite - its reference is where
+                // the child stack's image is drawn
+                setImageReferenceRect(childStack.outputReferenceRect, forKey: imageKey)
+            }
+        }
+        let mapping = parmMapping()
+        for anAttribute in attributes {
+            anAttribute.applyMapping(mapping)
+        }
+        if mapping != postedParmMapping {
+            // the image controller moves the position markers to the new mapping
+            // (rotation, a photo of another shape, a transition blending its rects)
+            postedParmMapping = mapping
+            NotificationCenter.default.post(name: PGLParmMappingChange, object: self)
+        }
         if hasImageParmMissingInput() {
             return CIImage.empty()
             
@@ -668,6 +748,8 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         if imageParm?.blocksImageWrite() ?? false {
             return
         }
+        // from the extent as drawn - before any origin normalization below
+        imageReferenceRects[keyName] = PGLSourceFilter.derivedReferenceRect(newValue)
         localFilter.setValue( originNormalizedInput(newValue, keyName: keyName), forKey: keyName)
         imageParm?.propagateLinkedImage(newValue)
 //        logParm(#function, newValue.debugDescription, keyName)
@@ -704,6 +786,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
     }
 
     func removeImageValue(keyName: String) {
+        imageReferenceRects[keyName] = nil
         localFilter.setValue(nil, forKey: keyName)
     }
 

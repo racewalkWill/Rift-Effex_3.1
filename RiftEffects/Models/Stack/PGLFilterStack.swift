@@ -45,6 +45,9 @@ class PGLFilterStack: Equatable, Hashable  {
         // should be unowned? a stack will always have a filter list
    
     var activeFilterIndex = 0
+    /// the parm reference of the last filter rendered by #imageUpdate - an image parm fed by
+    /// this stack (child stack) maps its points onto where this stack's image is drawn
+    var outputReferenceRect: CGRect?
     var saveSessionUUID: UUID?
 
     var stackName:String = ""  // Date().description(with: Locale.current)
@@ -759,6 +762,8 @@ class PGLFilterStack: Equatable, Hashable  {
             imagePosition = activeFilters.count - 1 // zero based array
             }
 
+        var chainReferenceRect: CGRect?
+            // the prior filter's parm reference - a chained input's rect (see PGLParmMapping)
         for index in 0...imagePosition { // only show up to the current filter in the stack
 //            NSLog("imageUpdate START thisImage.extent = \(thisImage?.extent)")
             if index >  activeFilters.count - 1 {
@@ -778,6 +783,9 @@ class PGLFilterStack: Equatable, Hashable  {
             if thisImage != nil {
                 thisImage = croppedToRenderTarget(thisImage!, cropTo: cropTo)
                 filter.setInput(image: thisImage, source: nil)
+                filter.setImageReferenceRect(chainReferenceRect, forKey: kCIInputImageKey)
+                    // the chained image's own extent is cropped or infinite - its reference
+                    // is where the prior filter's image is drawn
 
                 if filter.hasImageParmMissingInput() && thisImage != CIImage.empty() {
                     // only change the state if there is a real image
@@ -799,6 +807,7 @@ class PGLFilterStack: Equatable, Hashable  {
                     // most filters do not implement scaleOutput
                     // crop in the PGLRectangleFilter scales the crop to fill the extent
                 filter.stackSizedOutput = croppedToRenderTarget(thisImage!, cropTo: cropTo)
+                chainReferenceRect = filter.parmReferenceRect()
                     // the same image the next filter receives - read by image inputs linked to the filter output
 
             } else {
@@ -808,6 +817,7 @@ class PGLFilterStack: Equatable, Hashable  {
                 }
             }
 
+        outputReferenceRect = chainReferenceRect
         return thisImage ?? CIImage.empty()
       
     }
