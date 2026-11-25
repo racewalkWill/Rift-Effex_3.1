@@ -110,6 +110,59 @@
         }
       }
     },
+    "+ Save.." : {
+      "comment" : "Help page title",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Uložit.."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Sichern.."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Guardar.."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Enregistrer.."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Salva.."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ 保存.."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Salvar.."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ 存储.."
+          }
+        }
+      }
+    },
     "+Effex" : {
       "comment" : "Swipe action label - brand name for adding a Rift Effects filter stack as input",
       "extractionState" : "stale",
@@ -1632,6 +1685,7 @@
     },
     "Effex" : {
       "comment" : "Help page title",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -4176,8 +4230,62 @@
         }
       }
     },
+    "PICK an image from Photos Library. TAP a Filter. CHANGE Filter Settings." : {
+      "comment" : "Help page instructions",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VYBERTE obrázek z knihovny Fotek. KLEPNĚTE na filtr. ZMĚŇTE nastavení filtru."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WÄHLE ein Bild aus der Fotos-Mediathek. TIPPE auf einen Filter. ÄNDERE die Filtereinstellungen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ELIGE una imagen de la fototeca de Fotos. TOCA un filtro. CAMBIA los ajustes del filtro."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez une image dans la photothèque Photos. Touchez un filtre. Modifiez les réglages du filtre."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SCEGLI un’immagine dalla libreria di Foto. TOCCA un filtro. MODIFICA le impostazioni del filtro."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“写真”ライブラリから画像を選択します。フィルタをタップします。フィルタの設定を変更します。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ESCOLHA uma imagem da Fototeca do Fotos. TOQUE em um filtro. ALTERE os ajustes do filtro."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从“照片”图库中选取一张图像。轻点一个滤镜。更改滤镜设置。"
+          }
+        }
+      }
+    },
     "PICK an image from the Library. TAP Effex Filter. SWIPE filter to open Settings." : {
       "comment" : "Help page instructions",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -5020,6 +5128,59 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "移除图像"
+          }
+        }
+      }
+    },
+    "Rift Effects" : {
+      "comment" : "Help page title",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rift Effects"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rift Effects"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rift Effects"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rift Effects"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rift Effects"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rift Effects"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rift Effects"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rift Effects"
           }
         }
       }
@@ -5981,7 +6142,7 @@
       }
     },
     "Settings" : {
-      "comment" : "Alert button to open Settings\nHelp page title",
+      "comment" : "Alert button to open Settings",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -6139,6 +6300,59 @@
         }
       }
     },
+    "Single/All button shows just the image from the highlighted filter -->" : {
+      "comment" : "Help page instructions",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tlačítko Jednotlivě/Vše zobrazí pouze obrázek ze zvýrazněného filtru -->"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Taste „Einzeln/Alle“ zeigt nur das Bild des markierten Filters -->"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El botón Individual/Todo muestra solo la imagen del filtro resaltado -->"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le bouton Simple/Tout affiche uniquement l’image du filtre en surbrillance -->"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il pulsante Singolo/Tutti mostra solo l’immagine del filtro evidenziato -->"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“単一/すべて”ボタンで、ハイライトされたフィルタの画像のみを表示します -->"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O botão Individual/Todos mostra apenas a imagem do filtro destacado -->"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“单个/全部”按钮仅显示高亮滤镜的图像 -->"
+          }
+        }
+      }
+    },
     "Start Over" : {
       "comment" : "Trash alert action",
       "localizations" : {
@@ -6188,6 +6402,59 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "重新开始"
+          }
+        }
+      }
+    },
+    "SWIPE" : {
+      "comment" : "Help page title",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PŘEJETÍ"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "STREICHEN"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DESLIZAR"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BALAYER"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SCORRI"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スワイプ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DESLIZAR"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轻扫"
           }
         }
       }
@@ -6301,6 +6568,7 @@
     },
     "SWIPE left 'Open' to Settings for that filter  -->" : {
       "comment" : "Help page instructions",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -6407,6 +6675,7 @@
     },
     "TAP a row again to highlight and view only the selected filter effex image -->" : {
       "comment" : "Help page instructions",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -6513,6 +6782,7 @@
     },
     "TAP on Image row - SWIPE to '+Effex' for image from another filter. Or 'Library' for image from saved Library  -->" : {
       "comment" : "Help page instructions",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -6564,8 +6834,62 @@
         }
       }
     },
+    "TAP on Image row - SWIPE to '+Effex' for input another filter. Or 'Library' from saved stack  -->" : {
+      "comment" : "Help page instructions",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KLEPNĚTE na řádek Obrázek - PŘEJETÍM na „+Effex“ použijete jako vstup jiný filtr. Nebo na „Knihovna“ z uloženého stohu  -->"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TIPPE auf die Bildzeile – STREICHE zu „+Effex“, um einen anderen Filter als Eingabe zu verwenden. Oder zu „Bibliothek“ für einen gesicherten Stapel  -->"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TOCA la fila Imagen - DESLIZA hacia «+Effex» para usar otro filtro como entrada. O hacia «Biblioteca» para usar una pila guardada  -->"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touchez la ligne Image, puis balayez vers « +Effex » pour utiliser un autre filtre en entrée, ou vers « Bibliothèque » pour une pile enregistrée  -->"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TOCCA la riga Immagine - SCORRI verso “+Effex” per usare un altro filtro come input. Oppure verso “Libreria” per una pila salvata  -->"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“画像”の行をタップ - “+Effex”にスワイプすると別のフィルタを入力として、“ライブラリ”にスワイプすると保存済みのスタックを使用できます  -->"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TOQUE na linha Imagem - DESLIZE até “+Effex” para usar outro filtro como entrada. Ou até “Biblioteca” para usar uma pilha salva  -->"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轻点“图像”行 - 轻扫到“+Effex”以使用另一个滤镜作为输入，或轻扫到“资料库”以使用已存储的堆栈  -->"
+          }
+        }
+      }
+    },
     "TAP Save bar button to open text boxes" : {
       "comment" : "Help page instructions",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -7308,8 +7632,62 @@
         }
       }
     },
+    "TOUCH '+' button to add another Filter  -->" : {
+      "comment" : "Help page instructions",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DOTYKEM tlačítka „+“ přidáte další filtr  -->"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TIPPE auf die Taste „+“, um einen weiteren Filter hinzuzufügen  -->"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TOCA el botón «+» para añadir otro filtro  -->"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touchez le bouton « + » pour ajouter un autre filtre  -->"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TOCCA il pulsante “+” per aggiungere un altro filtro  -->"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“+”ボタンをタップすると、別のフィルタを追加できます  -->"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TOQUE no botão “+” para adicionar outro filtro  -->"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轻点“+”按钮以添加另一个滤镜  -->"
+          }
+        }
+      }
+    },
     "TOUCH Effex '+' button to add another effex filter after selected filter -->" : {
       "comment" : "Help page instructions",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -7573,8 +7951,62 @@
         }
       }
     },
+    "Type title, album names. TAP 'Save' button. The stack saves to the Library AND a new image is saved to Photo Library" : {
+      "comment" : "Help page instructions",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Napište název a název alba. KLEPNĚTE na tlačítko „Uložit“. Stoh se uloží do Knihovny A nový obrázek se uloží do knihovny Fotek"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib Titel und Albumnamen ein. TIPPE auf die Taste „Sichern“. Der Stapel wird in der Bibliothek gesichert UND ein neues Bild wird in der Fotos-Mediathek gesichert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escribe el título y el nombre del álbum. TOCA el botón «Guardar». La pila se guarda en la Biblioteca Y se guarda una nueva imagen en la fototeca de Fotos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saisissez le titre et le nom de l’album. Touchez le bouton « Enregistrer ». La pile est enregistrée dans la Bibliothèque ET une nouvelle image est enregistrée dans la photothèque Photos"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Digita il titolo e il nome dell’album. TOCCA il pulsante “Salva”. La pila viene salvata nella Libreria E una nuova immagine viene salvata nella libreria di Foto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タイトルとアルバム名を入力します。“保存”ボタンをタップします。スタックが“ライブラリ”に保存され、さらに新しい画像が“写真”ライブラリに保存されます"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Digite o título e o nome do álbum. TOQUE no botão “Salvar”. A pilha é salva na Biblioteca E uma nova imagem é salva na Fototeca do Fotos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入标题和相簿名称。轻点“存储”按钮。堆栈会存储到“资料库”，同时一张新图像会存储到“照片”图库"
+          }
+        }
+      }
+    },
     "Type title/album names. TAP 'Save' button saves a copy into Photos. Source images are not changed" : {
       "comment" : "Help page instructions",
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
