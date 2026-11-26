@@ -361,9 +361,14 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
             }
             else {
                     // not a child stack.. collect this level
+                    // remove any posted transition count - call before the images are removed.
+                    // notifyTransitionsExist() also posts for single image attributes so
+                    // removeTransitionCounts() (multiple lists only) left the count high.
+                    // The override only posts if this attribute posted an add, and clears
+                    // isPostedTransitionImageAvailable so new images post the add again
+                imageAttribute.postTransitionFilterRemove()
                 guard let thisAttributeImageCollection = imageAttribute.inputCollection
                 else { continue }
-                imageAttribute.removeTransitionCounts() // call this before the images are removed
                 collectImagesList.moveContentsFrom(thisAttributeImageCollection)
             }
             if imageAttribute.parmInputState == .inputPhoto {

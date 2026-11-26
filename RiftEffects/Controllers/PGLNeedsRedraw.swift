@@ -17,6 +17,10 @@ let PGLParmMappingChange = NSNotification.Name(rawValue: "PGLParmMappingChange")
 let PGLTransitionExists = NSNotification.Name(rawValue: "PGLTransitionExists")
 let PGLVaryTimerRunning = NSNotification.Name(rawValue: "PGLVaryTimerRunning")
 let PGLResetNeedsRedraw = NSNotification.Name(rawValue: "PGLResetNeedsRedraw")
+/// Trash 'Remove Images' - animation state is .none until an image input is added
+let PGLClearAnimationState = NSNotification.Name(rawValue: "PGLClearAnimationState")
+/// an image parm has new image input - ends the PGLClearAnimationState .none
+let PGLImageInputAdded = NSNotification.Name(rawValue: "PGLImageInputAdded")
 let PGLPauseAnimation = NSNotification.Name(rawValue: "PGLPauseAnimation")
 let PGLAnimationStateChanged = NSNotification.Name(rawValue: "PGLAnimationStateChanged")
 let PGLImageViewWillAppear = NSNotification.Name(rawValue: "PGLImageViewWillAppear")
@@ -45,6 +49,10 @@ class PGLRedraw {
 
     var viewWillAppear = false
     private var viewWillAppearCounter = 0
+
+    /// true after Trash 'Remove Images' until an image input is added.
+    /// Vary timers keep running and stay counted, but with no images the state is .none
+    private var imagesRemoved = false
 
     private var transitionFilterCount = 0
     private var varyTimerCount = 0
@@ -137,17 +145,31 @@ class PGLRedraw {
             [weak self]
             myUpdate in
             self?.parmControllerIsOpen = false
-            self?.transitionFilterExists = false
-            self?.varyTimerIsRunning = false
             self?.filterChanged = false
-            self?.pauseAnimation = false
-            self?.oldAnimationState = PGLAnimationState.none
-            self?.transitionFilterCount = 0
-            self?.varyTimerCount = 0
+            self?.clearAnimationCounts()
             self?.viewWillAppear = false
             self?.viewWillAppearCounter = 0
             self?.isFullScreen = false
             self?.publishAnimationState()
+        }
+        publishers.append(cancellable!)
+
+        // Trash 'Remove Images' - the stack stays displayed so the parm controller
+        // and full screen flags are kept
+        cancellable = NotificationCenter.default.publisher(for: PGLClearAnimationState )
+            .sink() {
+            [weak self]
+            myUpdate in
+            self?.clearImageAnimationCounts()
+            self?.publishAnimationState()
+        }
+        publishers.append(cancellable!)
+
+        cancellable = NotificationCenter.default.publisher(for: PGLImageInputAdded )
+            .sink() {
+            [weak self]
+            myUpdate in
+            self?.imageInputAdded()
         }
         publishers.append(cancellable!)
 
@@ -259,6 +281,8 @@ class PGLRedraw {
             // count parm is +1 or -1
             // pass neg -1 to decrement
         varyTimerCount += count
+        if varyTimerCount < 0 { varyTimerCount = 0 }
+            // keep the count from going negative if a Vary off is posted after a reset
         varyTimer(isRunning: varyTimerCount > 0)
         if oldAnimationState != animationState() {
             publishAnimationState()
@@ -266,7 +290,43 @@ class PGLRedraw {
         }
     }
 
+    /// zero every animation source so animationState() answers .none
+    /// used by the PGLResetNeedsRedraw of a released stack
+    func clearAnimationCounts() {
+        clearImageAnimationCounts()
+        varyTimerCount = 0
+        varyTimerIsRunning = false
+        imagesRemoved = false
+    }
+
+    /// Trash 'Remove Images' - zero the image driven transition & video counts.
+    /// Vary timers keep running on the filters so their count is kept;
+    /// imagesRemoved answers .none until imageInputAdded()
+    /// leaves parmControllerIsOpen & isFullScreen alone - the stack is still displayed
+    func clearImageAnimationCounts() {
+        transitionFilterCount = 0
+        transitionFilterExists = false
+        videoCount = 0
+        videoSourceExists = false
+        pauseAnimation = false
+        imagesRemoved = true
+        oldAnimationState = PGLAnimationState.none
+    }
+
+    /// new image input after 'Remove Images' - a running Vary timer shows the button again
+    func imageInputAdded() {
+        if !imagesRemoved { return }
+        imagesRemoved = false
+        if oldAnimationState != animationState() {
+            publishAnimationState()
+            oldAnimationState = animationState()
+        }
+    }
+
     func animationState() -> PGLAnimationState {
+        if imagesRemoved {
+            return .none
+        }
         if !transitionFilterExists && !varyTimerIsRunning && !videoSourceExists {
 
             return .none

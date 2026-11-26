@@ -241,6 +241,9 @@ class PGLAppStack {
         let allImages = PGLImageList()
         _ = self.outputStack.removeAllImagesAndStopAnimations(collectImagesList: allImages)
 //        resetNeedsRedraw()
+            // with no images the animation state is .none - hides the play/pause button
+            // 'Remove Filters' re-posts the transition count for its new default filter
+        NotificationCenter.default.post(name: PGLClearAnimationState, object: nil)
         postStackChange()
         DoNotDraw = true  // will be reset on any filter change
         return allImages
@@ -487,6 +490,12 @@ class PGLAppStack {
         parm.setImageParmState(newState: ParmInputState.inputChildStack)
             // Notice the didSet in inputStack: it hooks output of stack to input of the attribute
             //        resetCellFilters() // the flattened filter list needs update for the new stack
+        if !newStack.isEmptyStack() {
+                // a library child stack is new image input - ends the .none animation
+                // state of Trash 'Remove Images'. An empty +Effex child stack posts when
+                // its images are picked (setImageCollectionInput)
+            NotificationCenter.default.post(name: PGLImageInputAdded, object: nil)
+        }
         postStackChange() // causes imageController view.isHidden = true
             // hides the visual output.
     }

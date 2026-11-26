@@ -457,7 +457,11 @@ class PGLFilterAttribute {
 //        ImageParm.inputPriorFilter
 
         _ = aSourceFilter?.notifyTransitionsExist()
-        
+        if !cycleStack.isEmpty() {
+                // ends the .none animation state of Trash 'Remove Images'
+                // a still running Vary timer shows the play/pause button again
+            NotificationCenter.default.post(name: PGLImageInputAdded, object: nil)
+        }
     }
 
     func setTargetAttributeOfUserAssetCollection() {
