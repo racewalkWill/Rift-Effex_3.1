@@ -28,38 +28,35 @@ class PGLAttributeRectangle: PGLFilterAttribute {
 //        // this is called to much in the inputImage code.. WHY?
 //        }}
    
-    var oldVector: CIVector?
+    /// Authoritative rect in FilterCanvasSize units - mapped through the filter's PGLParmMapping
+    /// onto where its image is drawn, like the point parms, so a crop or extent follows rotation,
+    /// photos of other shapes and transition blends. `filterRect` is only the editing overlay frame.
+    var canvasRect = CGRect.zero
+    /// canvasRect before the last commit - restored by the Cancel action
+    var previousCanvasRect: CGRect?
+    /// the overlay edit not yet committed by OK - in canvas units so it survives rotation
+    /// and mapping changes (a transition blends its rect every frame)
+    var pendingCanvasRect: CGRect?
+    /// the mapping at the last pushToFilter
+    var appliedMapping: PGLParmMapping?
+
     var isCropped = false
-    var isOverlayValueSet = false  // true after the rect overlay frame is applied as the initial value
     var imageParmState = ParmInputState.rectangleInput
+
+    /// Reduction filters sample a region of their input - the default region is the whole image.
+    static let wholeImageDefaultFilters: Set<String> = [
+        "CIAreaAlphaWeightedHistogram", "CIAreaAverage", "CIAreaAverageMaximumRed", "CIAreaBoundsRed",
+        "CIAreaHistogram", "CIAreaLogarithmicHistogram", "CIAreaMaximum", "CIAreaMaximumAlpha",
+        "CIAreaMinMax", "CIAreaMinMaxRed", "CIAreaMinimum", "CIAreaMinimumAlpha",
+        "CIRowAverage", "CIColumnAverage", "CIKMeans"
+    ]
 
 
     required init?(pglFilter: PGLSourceFilter, attributeDict: [String:Any], inputKey: String ) {
         super.init(pglFilter: pglFilter, attributeDict: attributeDict, inputKey: inputKey)
-        if let myVector = self.getVectorValue(){
-//            NSLog("PGLFilterAttributeRectangle init vectorValue = x:\(myVector.x) y:\(myVector.y)  width: \( myVector.z) height: \(myVector.w)")
-            if myVector.x <= 0.0 && myVector.y <= 0.0 && myVector.z <= 0.0 && myVector.w <= 0.0 {
-                // for zero vector create default inset by 200
-                // Crop rect stays in live RenderTargetSize-relative coordinates, like its
-                // drag handling below (moveTo/movingChange/movingCorner all take live view
-                // points directly) - it does not participate in the FilterCanvasSize scheme.
-                filterRect = CGRect(origin: CGPoint.zero, size: RenderTargetSize) .insetBy(dx: 200.0, dy: 200.0)
-                if LogDiagnostic { NSLog("DIAGNOSTIC PGLAttributeRectangle.init [1] default-branch filterRect=\(filterRect) RenderTargetSize=\(RenderTargetSize)") }
-            }
-            else {
-                // there is a saved value use it
-                filterRect = CGRect(x: myVector.x, y: myVector.y, width: myVector.z, height: myVector.w)
-                if LogDiagnostic { NSLog("DIAGNOSTIC PGLAttributeRectangle.init [1] saved-branch filterRect=\(filterRect) RenderTargetSize=\(RenderTargetSize)") }
-            }
-            applyCropRect(mappedCropRect: filterRect)
-
-        }
-        else {
-            // no vector default defined - use the same default inset rect and set it as the initial value
-            filterRect = CGRect(origin: CGPoint.zero, size: RenderTargetSize) .insetBy(dx: 200.0, dy: 200.0)
-            if LogDiagnostic { NSLog("DIAGNOSTIC PGLAttributeRectangle.init [1] nil-vector-branch filterRect=\(filterRect) RenderTargetSize=\(RenderTargetSize)") }
-            applyCropRect(mappedCropRect: filterRect)
-        }
+        // a saved value replaces this in #setStoredValueToAttribute / #resizeFrom
+        canvasRect = defaultCanvasRect()
+        pushToFilter(mapping: currentParmMapping())
         if let rectangleFilter = pglFilter as? PGLRectangleFilter {
             rectangleFilter.cropAttribute = self
         }
@@ -133,21 +130,65 @@ class PGLAttributeRectangle: PGLFilterAttribute {
     }
 
     override func restoreOldValue() {
-        // implement in subclasses for the various setValue types
-        // each type should have a var for the last value to restore
-        // future may be an array of changes.
-//        set(oldVector)  // the form of set() does some typecasting to any and back again.. in this subclass set directly
-        if oldVector != nil {
-            aSourceFilter?.setVectorValue(newValue: oldVector!, keyName: attributeName!)
+        // Cancel - back to the canvas rect before the last commit
+        pendingCanvasRect = nil
+        if let previousCanvasRect {
+            canvasRect = previousCanvasRect
+            pushToFilter(mapping: currentParmMapping())
         }
     }
 
+    /// The stored rect is relative to the saved render size (the stack globalSize) -
+    /// see storeParmValue. Stretch it per axis to FilterCanvasSize, the same as the point parms.
     override func resizeFrom(savedSize: CGSize?) {
-        // assumes setStoredValueToAttribute has created the filter rect
-        if savedSize != nil {
-            let resizingTransform = resizeStoredTransform(savedSize)
-            filterRect = filterRect.applying(resizingTransform)
-            applyCropRect(mappedCropRect: filterRect)
+        // assumes setStoredValueToAttribute has set canvasRect to the stored rect
+        guard savedSize != nil else { return }
+        canvasRect = canvasRect.applying(resizeStoredTransform(savedSize, destination: FilterCanvasSize))
+        pushToFilter(mapping: currentParmMapping())
+    }
+
+    // MARK: canvas rect
+
+    /// The initial rect, from the filter's own CIAttributeDefault:
+    /// - unbounded "no crop" rect (CICrop) - the whole image, uncropped
+    /// - reduction filters (wholeImageDefaultFilters) - the whole image
+    /// - zero rect, no default, or a small fixed default (CIClamp, generators, transitions...)
+    ///   - inset by 200 render pixels (R239.0) so the first display shows output
+    func defaultCanvasRect() -> CGRect {
+        let wholeCanvas = CGRect(origin: .zero, size: FilterCanvasSize)
+        if let filterName = aSourceFilter?.localFilter.name,
+           PGLAttributeRectangle.wholeImageDefaultFilters.contains(filterName) {
+            return wholeCanvas
+        }
+        if let ciDefault = initDict[kCIAttributeDefault] as? CIVector, ciDefault.count == 4 {
+            let defaultRect = ciDefault.cgRectValue
+            if defaultRect.isInfinite || defaultRect.width > 1.0e100 || defaultRect.height > 1.0e100 {
+                return wholeCanvas
+            }
+        }
+        // 200 render pixels as a fraction of the render size - the filter usually has no input
+        // image yet, so the inset is kept relative to the canvas, which maps onto the image
+        let renderSize = RenderTargetSize
+        guard renderSize.width > 0, renderSize.height > 0 else {
+            return wholeCanvas.insetBy(dx: FilterCanvasSize.width * 0.1, dy: FilterCanvasSize.height * 0.1)
+        }
+        let insetX = min(FilterCanvasSize.width * 200.0 / renderSize.width, FilterCanvasSize.width * 0.4)
+        let insetY = min(FilterCanvasSize.height * 200.0 / renderSize.height, FilterCanvasSize.height * 0.4)
+        return wholeCanvas.insetBy(dx: insetX, dy: insetY)
+    }
+
+    /// Converts canvasRect through `mapping` and writes it into the actual CIFilter.
+    func pushToFilter(mapping: PGLParmMapping) {
+        guard let attributeName else { return }
+        let renderVector = mapping.toRender(CIVector(cgRect: canvasRect))
+        aSourceFilter?.setVectorValue(newValue: renderVector, keyName: attributeName)
+        appliedMapping = mapping
+    }
+
+    override func applyMapping(_ mapping: PGLParmMapping) {
+        // pushes only when the reference rect, render size or aspect fill changed
+        if appliedMapping != mapping {
+            pushToFilter(mapping: mapping)
         }
     }
 
@@ -173,21 +214,37 @@ class PGLAttributeRectangle: PGLFilterAttribute {
         // this parm should use the applyCropRect.. bypass the set call
         // empty implementation
     }
-    func applyCropRect(mappedCropRect: CGRect) {
-        // assumes mappedCropRect is the new frame as transformed into the CIImage size and LLO coordinates
-        // generate the vector
-        // save the old vector
-        // apply to the filter
-        parmInputState = .inputValueSet
-        
-        let newVector = CIVector(x: mappedCropRect.origin.x, y: mappedCropRect.origin.y, z: mappedCropRect.size.width, w: mappedCropRect.size.height)
-//        Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
-//        NSLog("     newVector \(newVector) from \(mappedCropRect)")
-        oldVector = self.getVectorValue()  // save old value for cancel action
-        aSourceFilter?.setVectorValue(newValue: newVector, keyName: attributeName!)
-        // let the parent filter do the work in CIImage.methods  see PGLRectangleFilter outputImage()
-        filterRect = mappedCropRect // save the rect
+    // MARK: overlay
 
+    /// the overlay frame in the image view - the pending edit, else the committed rect
+    func overlayViewRect(viewSize: CGSize) -> CGRect {
+        return currentParmMapping().viewRect(for: pendingCanvasRect ?? canvasRect, viewSize: viewSize)
+    }
+
+    /// keep the overlay frame after a drag as the pending edit
+    func setPendingOverlay(viewRect: CGRect, viewSize: CGSize) {
+        pendingCanvasRect = currentParmMapping().canvasRect(for: viewRect, viewSize: viewSize)
+    }
+
+    /// The OK action - commit the overlay frame (view points in the image view).
+    func commitOverlay(viewRect: CGRect, viewSize: CGSize) {
+        parmInputState = .inputValueSet
+        let mapping = currentParmMapping()
+        previousCanvasRect = canvasRect  // for the Cancel action
+        canvasRect = mapping.canvasRect(for: viewRect, viewSize: viewSize)
+        pendingCanvasRect = nil
+        pushToFilter(mapping: mapping)
+    }
+
+    /// Commit a rect in render pixels (CoreImage LLO) - an archived CIFilter value.
+    /// Converted to canvas units through the filter's current mapping.
+    func applyCropRect(mappedCropRect: CGRect) {
+        parmInputState = .inputValueSet
+        let mapping = currentParmMapping()
+        previousCanvasRect = canvasRect  // for the Cancel action
+        canvasRect = mapping.toCanvas(rect: mappedCropRect)
+        pushToFilter(mapping: mapping)
+        // let the parent filter do the work in CIImage.methods  see PGLRectangleFilter outputImage()
     }
 
     override func movingChange(startPoint: CGPoint, newPoint: CGPoint, inView: UIView) {

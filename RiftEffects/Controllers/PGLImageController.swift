@@ -699,6 +699,21 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                 else { continue }
             controlView.center = attribute.mapVector2Point(vector: positionVector, viewSize: viewSize)
         }
+        repositionRectOverlay()
+    }
+
+    /// Move the rectangle overlay to its attribute's rect (pending edit or committed) in the
+    /// current mapping - not while the overlay is being dragged.
+    func repositionRectOverlay() {
+        guard let activeRectController = rectController,
+              let rectAttribute = activeRectController.thisCropAttribute,
+              activeRectController.view.superview === view
+            else { return }
+        if let panState = panner?.state, panState == .began || panState == .changed {
+            return
+        }
+        rectAttribute.filterRect = rectAttribute.overlayViewRect(viewSize: view.bounds.size)
+        activeRectController.updateFrame()
     }
 
     /// One-time setup: replace the storyboard's two absolute slider-stack
@@ -1484,6 +1499,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         // during the animation; the outgoing view keeps its last frame while it slides away.
         // A cancelled swipe-back calls viewWillAppear again, which resumes it.
         setMetalViewPaused(true)
+        // leaving the screen ends any rect edit - the crop shows its output again
+        rectController?.croppingFilter?.isEditingRect = false
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -1551,7 +1568,6 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
                     if let rectAttribute = parmAttribute as? PGLAttributeRectangle {
                             addRectControl(attribute: rectAttribute)
                             setRectTintAndCornerViews(attribute: rectAttribute)
-                            applyOverlayDefault(rectAttribute: rectAttribute)
 
                     //rectController!.view.isHidden = false   // constraints still work?
                     }
@@ -1590,19 +1606,6 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 //        thisRectController.thisCropAttribute = aRectInputFilter.cropAttribute
         showRectView(setIsHidden: false)
         
-    }
-
-    func applyOverlayDefault(rectAttribute: PGLAttributeRectangle) {
-        // the rect overlay frame is the default extent value.
-        // On first display of the filter with no user or stored value
-        // apply the overlay frame to the filter the same as the OK swipe action
-        // so the filter renders with the overlay rect before the Extent cell is tapped.
-        // assumes setRectTintAndCornerViews has set the overlay frame
-        guard !rectAttribute.isCropped, !rectAttribute.isOverlayValueSet,
-              rectController != nil, metalController?.view != nil
-        else { return }
-        cropAction(rectAttribute: rectAttribute)
-        rectAttribute.isOverlayValueSet = true
     }
 
     func toggleViewControls(hide: Bool, uiTypeToShow: AttrUIType?) {
@@ -1838,27 +1841,12 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     func cropAction(rectAttribute: PGLAttributeRectangle) {
 
         // assumes RectController is setup
-            let metalView = metalController!.view
-        if let newFrame = rectController?.panEnded(startPoint: self.startPoint, newPoint: self.endPoint, inView:(metalView)!)
-        {
-            // panEnded handles both modes of resize or move of the pan action
-            // handle the transform coordinates here. Tell the attribute to change the filter to new crop
-            // have it save the old vector
-            // tell the rectController to unhighlight the filterRect box..
-
-            let glkScaleFactorTransform = myScaleTransform
-            var yOffset = metalView!.frame.height
-            yOffset = yOffset * -1.0  // negate
-            let glkTranslateTransform  = (CGAffineTransform.init(translationX: 0.0, y: yOffset ))
-            let glkScaleTransform = glkTranslateTransform.concatenating(CGAffineTransform.init(scaleX: 1.0, y: -1.0))
-            let finalTransform = glkScaleTransform.concatenating(glkScaleFactorTransform)
-        // start with the scale of the glkView - scaleFactor = 2.. then do the flip
-
-            let mappedFrame = newFrame.applying(finalTransform)
-            if LogDiagnostic { NSLog("DIAGNOSTIC PGLImageController.cropAction [5] newFrame(points)=\(newFrame) myScaleTransform=\(myScaleTransform) metalView.frame=\(String(describing: metalView?.frame)) mappedFrame(pixels,committed)=\(mappedFrame)") }
-
-            rectAttribute.applyCropRect(mappedCropRect: mappedFrame)
-        }
+        guard let metalView = metalController?.view,
+              let newFrame = rectController?.panEnded(startPoint: self.startPoint, newPoint: self.endPoint, inView: metalView)
+            else { return }
+        // panEnded answers the overlay frame (view points in this view) after a move or resize.
+        // The filter mapping converts it to canvas units - the same mapping that placed it.
+        rectAttribute.commitOverlay(viewRect: newFrame, viewSize: view.bounds.size)
 
     }
 
@@ -1877,8 +1865,9 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
     }
     func setRectTintAndCornerViews(attribute: PGLAttributeRectangle) {
         if rectController != nil
-            {  let newInsetRectFrame = insetRect(fromRect: self.view.bounds)
-            if LogDiagnostic { NSLog("DIAGNOSTIC PGLImageController.setRectTintAndCornerViews [0] view.bounds=\(self.view.bounds) RenderTargetSize=\(RenderTargetSize) myScaleTransform=\(myScaleTransform) newInsetRectFrame=\(newInsetRectFrame)") }
+            {  let newInsetRectFrame = attribute.overlayViewRect(viewSize: self.view.bounds.size)
+                // the overlay shows the attribute value (or its pending edit) through the filter mapping
+            attribute.filterRect = newInsetRectFrame
 
             rectController!.view.frame = newInsetRectFrame
             rectController!.scaleTransform = myScaleTransform
@@ -1917,6 +1906,8 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
 //            NSLog("PGLImageController #showCropTintViews isHidden changing to \(setIsHidden)")
             rectController!.view.isHidden = setIsHidden
             rectController!.setCorners(isHidden: setIsHidden)
+            // a crop shows its uncropped input while the overlay is open
+            rectController!.croppingFilter?.isEditingRect = !setIsHidden
 
         }
         else {
@@ -1929,11 +1920,6 @@ class PGLImageController: PGLCommonController, UIDynamicAnimatorDelegate, UINavi
         if rectController != nil {
             rectController!.view.isHidden = true
         }
-    }
-    func insetRect(fromRect: CGRect) -> CGRect {
-        let inset: CGFloat = 100 // 100.0
-        //        return  CGRect(origin: CGPoint.zero, size: fromRect.size).insetBy(dx: inset, dy: inset)
-        return fromRect.insetBy(dx: inset, dy: inset)
     }
 
 // MARK: Sliders
@@ -2132,6 +2118,13 @@ extension PGLImageController: UIGestureRecognizerDelegate {
 
 
     func panEnded( endingPoint: CGPoint, parm: PGLFilterAttribute) {
+            if let rectAttribute = parm as? PGLAttributeRectangle {
+                // keep the dragged overlay frame as the pending edit until OK
+                if let overlayFrame = rectController?.view.frame {
+                    rectAttribute.setPendingOverlay(viewRect: overlayFrame, viewSize: view.bounds.size)
+                }
+                return
+            }
 
             let newVector = parm.mapPoint2Vector(point: endingPoint, viewSize: view.bounds.size)
             parm.set(newVector)

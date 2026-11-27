@@ -147,6 +147,12 @@ struct PGLParmMapping: Equatable {
         return distance * distanceScale()
     }
 
+    /// Inverse of `toRender(_:)` for a rect - a render-pixel rect (CoreImage LLO) back to canvas units
+    @MainActor
+    func toCanvas(rect renderRect: CGRect) -> CGRect {
+        return renderRect.applying(canvasToRender().inverted())
+    }
+
     // MARK: view points - the position marker and drag gesture
 
     /// canvas point -> UIKit view point (upper-left origin, y-down) in a view of `viewSize`
@@ -161,6 +167,38 @@ struct PGLParmMapping: Equatable {
         let viewScaleY = viewSize.height / renderSize.height
         return CGPoint(x: renderPoint.x * viewScaleX,
                        y: viewSize.height - (renderPoint.y * viewScaleY))
+    }
+
+    /// canvas rect -> UIKit view rect (upper-left origin, y-down) - the rectangle parm overlay.
+    /// Without a reference rect this is the R297 view fit.
+    @MainActor
+    func viewRect(for canvasRect: CGRect, viewSize: CGSize) -> CGRect {
+        guard usableRect != nil, renderSize.width > 0, renderSize.height > 0 else {
+            return canvasRectToViewRect(canvasRect, viewSize: viewSize)
+        }
+        let renderRect = canvasRect.applying(canvasToRender())
+        let viewScaleX = viewSize.width / renderSize.width
+        let viewScaleY = viewSize.height / renderSize.height
+        return CGRect(x: renderRect.minX * viewScaleX,
+                      y: viewSize.height - (renderRect.maxY * viewScaleY),
+                      width: renderRect.width * viewScaleX,
+                      height: renderRect.height * viewScaleY)
+    }
+
+    /// Inverse of `viewRect(for:viewSize:)` - the edited overlay frame back to a canvas rect.
+    @MainActor
+    func canvasRect(for viewRect: CGRect, viewSize: CGSize) -> CGRect {
+        guard usableRect != nil, renderSize.width > 0, renderSize.height > 0,
+              viewSize.width > 0, viewSize.height > 0 else {
+            return viewRectToCanvasRect(viewRect, viewSize: viewSize)
+        }
+        let viewScaleX = viewSize.width / renderSize.width
+        let viewScaleY = viewSize.height / renderSize.height
+        let renderRect = CGRect(x: viewRect.minX / viewScaleX,
+                                y: (viewSize.height - viewRect.maxY) / viewScaleY,
+                                width: viewRect.width / viewScaleX,
+                                height: viewRect.height / viewScaleY)
+        return renderRect.applying(canvasToRender().inverted())
     }
 
     /// Inverse of `viewPoint(for:viewSize:)` - a dragged view point back to a canvas vector.

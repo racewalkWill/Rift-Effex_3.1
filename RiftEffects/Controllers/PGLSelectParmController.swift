@@ -983,6 +983,7 @@ class PGLSelectParmController: PGLCommonController,
                     guard let activeRectController = imageController?.rectController
                         else {return }
                     activeRectController.thisCropAttribute = thisCropAttribute
+                    // setRectTintAndCornerViews placed the overlay from this attribute's value
                     imageController?.showRectInput(aRectInputFilter: croppingFilter)
 
 

@@ -418,7 +418,7 @@ class PGLFilterAttributeImage: PGLFilterAttribute {
             // the master filter rendered earlier in this frame - see PGLFilterStack #imageUpdate
             let linkedImage = outputMaster.sizedOutput()
             // the source filter's output is drawn at that filter's reference
-            let sourceRect = outputMaster.aSourceFilter?.parmReferenceRect()
+            let sourceRect = outputMaster.aSourceFilter?.outputReferenceRect()
             if linkedImage !== lastLinkedOutput {
                 lastLinkedOutput = linkedImage
                 receiveLinkedImage(linkedImage, referenceRect: sourceRect)
@@ -532,7 +532,7 @@ class PGLFilterAttributeOutput: PGLFilterAttributeImage {
 
     override func didLink(target: PGLFilterAttribute) {
         if let currentOutput = aSourceFilter?.stackSizedOutput {
-            (target as? PGLFilterAttributeImage)?.receiveLinkedImage(currentOutput, referenceRect: aSourceFilter?.parmReferenceRect())
+            (target as? PGLFilterAttributeImage)?.receiveLinkedImage(currentOutput, referenceRect: aSourceFilter?.outputReferenceRect())
         }
         // otherwise the target reads the output on the next frame
         _ = target.aSourceFilter?.notifyTransitionsExist()

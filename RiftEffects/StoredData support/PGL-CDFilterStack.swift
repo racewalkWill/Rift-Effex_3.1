@@ -1612,11 +1612,14 @@ extension PGLAttributeRectangle {
             storedParmValue = cdRectangle
             setCDParmValueRelation()
         }
-        // assign current values for coreData
-        cdRectangle.xPoint = filterRect.minX
-        cdRectangle.yPoint = filterRect.minY
-        cdRectangle.width = filterRect.width
-        cdRectangle.height = filterRect.height
+        // canvasRect is canonical (FilterCanvasSize units); persist it relative to the live
+        // RenderTargetSize, matching globalSizeWidth/Height - resizeFrom(savedSize:) converts it
+        // back on load. Older stacks stored the render-pixel rect, which reads the same way.
+        let storedRect = CIVector(cgRect: canvasRect).scaledFromCanvas(toRenderSize: RenderTargetSize).cgRectValue
+        cdRectangle.xPoint = storedRect.minX
+        cdRectangle.yPoint = storedRect.minY
+        cdRectangle.width = storedRect.width
+        cdRectangle.height = storedRect.height
 
     }
 
@@ -1624,8 +1627,10 @@ extension PGLAttributeRectangle {
         super.setStoredValueToAttribute(value)
         guard let storedValue = value as? CDAttributeRectangle
             else { return }
-        filterRect = CGRect(x: storedValue.xPoint, y: storedValue.yPoint, width: storedValue.width, height: storedValue.height)
-        applyCropRect(mappedCropRect: filterRect)
+        // relative to the saved render size - #resizeFrom(savedSize:) converts it to canvas units
+        canvasRect = CGRect(x: storedValue.xPoint, y: storedValue.yPoint, width: storedValue.width, height: storedValue.height)
+        parmInputState = .inputValueSet
+        pushToFilter(mapping: currentParmMapping())
         isCropped = true //var for Vary/Cancel swipe cells on the UI
     }
 

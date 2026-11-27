@@ -15,6 +15,11 @@ import Photos
 import os
 
 class PGLDisparityFilter: PGLRectangleFilter {
+
+    /// the focus rect is placed while the depth blur is visible
+    override var showsInputWhileEditing: Bool {
+        return false
+    }
     // filters that use depth or disparity
     // some of the filters may have disparity in different attributes..
     // initial user is CIDepthBlurEffect

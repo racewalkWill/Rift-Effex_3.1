@@ -807,7 +807,7 @@ class PGLFilterStack: Equatable, Hashable  {
                     // most filters do not implement scaleOutput
                     // crop in the PGLRectangleFilter scales the crop to fill the extent
                 filter.stackSizedOutput = croppedToRenderTarget(thisImage!, cropTo: cropTo)
-                chainReferenceRect = filter.parmReferenceRect()
+                chainReferenceRect = filter.outputReferenceRect()
                     // the same image the next filter receives - read by image inputs linked to the filter output
 
             } else {

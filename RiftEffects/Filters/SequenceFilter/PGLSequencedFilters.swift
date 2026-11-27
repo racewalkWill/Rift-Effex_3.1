@@ -164,7 +164,7 @@ class PGLSequencedFilters: PGLSourceFilter {
             return nil
         }
         if sequenceStack.isSingleFilterStack() {
-            return sequenceStack.inputFilter?.parmReferenceRect()
+            return sequenceStack.inputFilter?.outputReferenceRect()
         }
         return dissolve?.parmReferenceRect()
     }

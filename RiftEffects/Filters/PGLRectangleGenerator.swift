@@ -11,6 +11,11 @@ import UIKit
 
 class PGLRectangleGenerator: PGLRectangleFilter {
 
+    /// a generator has no input - the generated rect is what is edited
+    override var showsInputWhileEditing: Bool {
+        return false
+    }
+
     /// in CIBlurredRectangleGenerator, CIRoundedRectangleGenerator
 
     override func setDefaults() {
@@ -23,7 +28,7 @@ class PGLRectangleGenerator: PGLRectangleFilter {
             // (saved value, or default inset rect for a zero or undefined vector default).
             // Apply it to the filter the same as the OK swipe action so the initial display uses it.
             // Setting the raw CIAttributeDefault here would overwrite that rect.
-            extentAttribute.applyCropRect(mappedCropRect: extentAttribute.filterRect)
+            extentAttribute.pushToFilter(mapping: extentAttribute.currentParmMapping())
         }
         else if let inputExtentAttribute = attribute(nameKey: extentKey){
 

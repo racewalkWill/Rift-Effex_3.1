@@ -257,6 +257,221 @@ import UIKit
         #expect(stack.outputReferenceRect == photoImage.extent)
     }
 
+    // MARK: rectangle parms
+
+    /// Defaults come from the filter's own CIAttributeDefault: the unbounded CICrop default and
+    /// the reduction filters show the whole image; a zero default (CIClamp) gets the R239.0 inset
+    /// of 200 render pixels so the first display shows output.
+    @Test func rectangleDefaultsFollowTheFilterDefault() throws {
+        let savedSize = RenderTargetSize
+        defer { RenderTargetSize = savedSize }
+        RenderTargetSize = CGSize(width: 1179, height: 1604)
+        let wholeCanvas = CGRect(origin: .zero, size: FilterCanvasSize)
+
+        let average = try #require(PGLSourceFilter(filter: "CIAreaAverage"))
+        let averageExtent = try #require(average.attribute(nameKey: kCIInputExtentKey) as? PGLAttributeRectangle)
+        #expect(averageExtent.canvasRect == wholeCanvas)
+
+        let crop = try #require(PGLFilterDescriptor("CICrop", PGLRectangleFilter.self)?.pglSourceFilter())
+        let cropRect = try #require(crop.attribute(nameKey: "inputRectangle") as? PGLAttributeRectangle)
+        #expect(cropRect.canvasRect == wholeCanvas)
+
+        let clamp = try #require(PGLFilterDescriptor("CIClamp", PGLRectangleFilter.self)?.pglSourceFilter())
+        let clampExtent = try #require(clamp.attribute(nameKey: kCIInputExtentKey) as? PGLAttributeRectangle)
+        let insetX = FilterCanvasSize.width * 200 / RenderTargetSize.width
+        let insetY = FilterCanvasSize.height * 200 / RenderTargetSize.height
+        let expected = wholeCanvas.insetBy(dx: insetX, dy: insetY)
+        #expect(abs(clampExtent.canvasRect.minX - expected.minX) < 0.001)
+        #expect(abs(clampExtent.canvasRect.minY - expected.minY) < 0.001)
+        #expect(abs(clampExtent.canvasRect.width - expected.width) < 0.001)
+        #expect(abs(clampExtent.canvasRect.height - expected.height) < 0.001)
+    }
+
+    /// While the overlay is open a crop shows its uncropped input, unscaled, and passes the
+    /// input's reference on; when editing ends it crops and zooms again.
+    @Test func cropShowsUncroppedInputWhileEditing() throws {
+        let savedSize = RenderTargetSize
+        defer { RenderTargetSize = savedSize }
+        RenderTargetSize = CGSize(width: 1179, height: 1604)
+        let photoImage = CIImage(color: .red).cropped(to: CGRect(x: 137, y: 0, width: 905, height: 1604))
+        let crop = try #require(PGLFilterDescriptor("CICrop", PGLRectangleFilter.self)?.pglSourceFilter() as? PGLRectangleFilter)
+        crop.setImageValue(newValue: photoImage, keyName: kCIInputImageKey)
+        crop.setInputImageParmState(newState: ParmInputState.inputPhoto)
+        let cropRect = try #require(crop.attribute(nameKey: "inputRectangle") as? PGLAttributeRectangle)
+        cropRect.canvasRect = CGRect(x: 300, y: 200, width: 300, height: 400)
+        let stackRect = CGRect(origin: .zero, size: RenderTargetSize)
+
+        crop.isEditingRect = true
+        let editingOutput = try #require(crop.outputImage())
+        #expect(editingOutput.extent == photoImage.extent)
+        let editingScaled = crop.scaleOutput(ciOutput: editingOutput, stackCropRect: stackRect)
+        #expect(editingScaled.extent == photoImage.extent)
+        #expect(crop.outputReferenceRect() == photoImage.extent)
+
+        crop.isEditingRect = false
+        let croppedOutput = try #require(crop.outputImage())
+        let renderCrop = try #require(crop.localFilter.value(forKey: "inputRectangle") as? CIVector).cgRectValue
+        #expect(croppedOutput.extent.width < photoImage.extent.width)
+        #expect(abs(croppedOutput.extent.width - renderCrop.width) < 1.0)
+        _ = crop.scaleOutput(ciOutput: croppedOutput, stackCropRect: stackRect)
+        #expect(crop.scaledOutputRect != nil)
+    }
+
+    /// Mask and the generators edit in their own output space - no pass-through.
+    @Test func maskAndGeneratorDoNotPassInputWhileEditing() throws {
+        let mask = try #require(PGLFilterDescriptor("CICrop", PGLMaskFilter.self)?.pglSourceFilter() as? PGLRectangleFilter)
+        mask.isEditingRect = true
+        #expect(!mask.isShowingInputForEditing())
+        let generator = try #require(PGLFilterDescriptor("CIRoundedRectangleGenerator", PGLRectangleGenerator.self)?.pglSourceFilter() as? PGLRectangleFilter)
+        generator.isEditingRect = true
+        #expect(!generator.isShowingInputForEditing())
+    }
+
+    /// A crop committed in portrait keeps the same region of a portrait photo in landscape.
+    @Test func rectangleFollowsPhotoAcrossRotation() throws {
+        let savedSize = RenderTargetSize
+        defer { RenderTargetSize = savedSize }
+        let crop = try #require(PGLSourceFilter(filter: "CICrop"))
+        let cropRect = try #require(crop.attribute(nameKey: "inputRectangle") as? PGLAttributeRectangle)
+
+        RenderTargetSize = CGSize(width: 1179, height: 1604)
+        let portraitPhoto = CIImage(color: .red).cropped(to: CGRect(x: 24, y: 0, width: 1132, height: 1604))
+        crop.setImageValue(newValue: portraitPhoto, keyName: kCIInputImageKey)
+        // the overlay OK action commits a render-pixel rect
+        let committed = CGRect(x: 300, y: 400, width: 500, height: 600)
+        cropRect.applyCropRect(mappedCropRect: committed)
+        let portraitRender = try #require(crop.localFilter.value(forKey: "inputRectangle") as? CIVector).cgRectValue
+        #expect(abs(portraitRender.minX - committed.minX) < 0.001)
+        #expect(abs(portraitRender.width - committed.width) < 0.001)
+
+        RenderTargetSize = CGSize(width: 1542, height: 1179)
+        let landscapePhoto = CIImage(color: .red).cropped(to: CGRect(x: 355, y: 0, width: 833, height: 1179))
+        crop.setImageValue(newValue: landscapePhoto, keyName: kCIInputImageKey)
+        cropRect.applyMapping(crop.parmMapping())
+        let landscapeRender = try #require(crop.localFilter.value(forKey: "inputRectangle") as? CIVector).cgRectValue
+
+        func relative(_ rect: CGRect, in photo: CGRect) -> CGRect {
+            CGRect(x: (rect.minX - photo.minX) / photo.width, y: (rect.minY - photo.minY) / photo.height,
+                   width: rect.width / photo.width, height: rect.height / photo.height)
+        }
+        let before = relative(portraitRender, in: portraitPhoto.extent)
+        let after = relative(landscapeRender, in: landscapePhoto.extent)
+        #expect(abs(before.minX - after.minX) < 0.0001)
+        #expect(abs(before.minY - after.minY) < 0.0001)
+        #expect(abs(before.width - after.width) < 0.0001)
+        #expect(abs(before.height - after.height) < 0.0001)
+    }
+
+    @Test func rectangleCancelRestoresPreviousRect() throws {
+        let crop = try #require(PGLSourceFilter(filter: "CICrop"))
+        let cropRect = try #require(crop.attribute(nameKey: "inputRectangle") as? PGLAttributeRectangle)
+        let original = cropRect.canvasRect
+        cropRect.applyCropRect(mappedCropRect: CGRect(x: 10, y: 20, width: 30, height: 40))
+        #expect(cropRect.canvasRect != original)
+        cropRect.restoreOldValue()
+        #expect(cropRect.canvasRect == original)
+    }
+
+    /// The overlay frame is the committed rect drawn through the mapping (view points, y-down),
+    /// and committing that same frame back gives the same canvas rect.
+    @Test func rectangleOverlayViewRectRoundTrips() {
+        let renderSize = CGSize(width: 1542, height: 1179)
+        let viewSize = CGSize(width: 514, height: 393) // 3x drawable
+        let canvas = CGRect(x: 100, y: 150, width: 400, height: 300)
+        for referenceRect in [CGRect(x: 355, y: 0, width: 833, height: 1179), nil] {
+            let mapping = PGLParmMapping(referenceRect: referenceRect, renderSize: renderSize, aspectFill: false)
+            let viewRect = mapping.viewRect(for: canvas, viewSize: viewSize)
+            let backToCanvas = mapping.canvasRect(for: viewRect, viewSize: viewSize)
+            #expect(abs(backToCanvas.minX - canvas.minX) < 0.001)
+            #expect(abs(backToCanvas.minY - canvas.minY) < 0.001)
+            #expect(abs(backToCanvas.width - canvas.width) < 0.001)
+            #expect(abs(backToCanvas.height - canvas.height) < 0.001)
+        }
+        // with a reference rect the overlay sits over the rendered rect: render / 3, y flipped
+        let mapping = PGLParmMapping(referenceRect: CGRect(x: 355, y: 0, width: 833, height: 1179), renderSize: renderSize, aspectFill: false)
+        let renderRect = mapping.toRender(CIVector(cgRect: canvas)).cgRectValue
+        let viewRect = mapping.viewRect(for: canvas, viewSize: viewSize)
+        #expect(abs(viewRect.minX - renderRect.minX / 3) < 0.001)
+        #expect(abs(viewRect.minY - (viewSize.height - renderRect.maxY / 3)) < 0.001)
+        #expect(abs(viewRect.width - renderRect.width / 3) < 0.001)
+    }
+
+    /// A drag ends as a pending edit (shown, not applied); OK commits it; Cancel drops it.
+    @Test func rectanglePendingEditCommitAndCancel() throws {
+        let crop = try #require(PGLSourceFilter(filter: "CICrop"))
+        let cropRect = try #require(crop.attribute(nameKey: "inputRectangle") as? PGLAttributeRectangle)
+        let viewSize = CGSize(width: 393, height: 534.67)
+        let original = cropRect.canvasRect
+
+        let dragged = CGRect(x: 50, y: 60, width: 200, height: 150)
+        cropRect.setPendingOverlay(viewRect: dragged, viewSize: viewSize)
+        #expect(cropRect.canvasRect == original) // not applied before OK
+        let shown = cropRect.overlayViewRect(viewSize: viewSize)
+        #expect(abs(shown.minX - dragged.minX) < 0.001)
+        #expect(abs(shown.height - dragged.height) < 0.001)
+
+        cropRect.commitOverlay(viewRect: shown, viewSize: viewSize)
+        #expect(cropRect.pendingCanvasRect == nil)
+        #expect(cropRect.canvasRect != original)
+
+        cropRect.restoreOldValue()
+        #expect(cropRect.canvasRect == original)
+    }
+
+    /// The crop output is zoomed to fit the render area (uniform scale, centered), and the next
+    /// filter maps its parms onto that drawn rect.
+    @Test func cropOutputZoomsToFitAndPassesItsDrawnRect() throws {
+        let savedSize = RenderTargetSize
+        defer { RenderTargetSize = savedSize }
+        RenderTargetSize = CGSize(width: 1542, height: 1179)
+        let photoImage = CIImage(color: .red).cropped(to: CGRect(x: 0, y: 11, width: 1542, height: 1156))
+
+        // the app builds CICrop through its descriptor with the mapped PGLRectangleFilter class
+        let crop = try #require(PGLFilterDescriptor("CICrop", PGLRectangleFilter.self)?.pglSourceFilter() as? PGLRectangleFilter)
+        crop.setImageValue(newValue: photoImage, keyName: kCIInputImageKey)
+        crop.setInputImageParmState(newState: ParmInputState.inputPhoto)
+        let cropRect = try #require(crop.attribute(nameKey: "inputRectangle") as? PGLAttributeRectangle)
+        cropRect.canvasRect = CGRect(x: 200, y: 100, width: 300, height: 400) // a tall crop
+        let twirl = try #require(PGLSourceFilter(filter: "CITwirlDistortion"))
+        twirl.setInputImageParmState(newState: ParmInputState.inputPriorFilter)
+
+        let stack = PGLFilterStack()
+        stack.append(crop)
+        stack.append(twirl)
+        _ = stack.stackOutputImage(false)
+
+        let drawn = try #require(crop.scaledOutputRect)
+        let cropRender = try #require(crop.localFilter.value(forKey: "inputRectangle") as? CIVector).cgRectValue
+        if PGLRectangleFilter.outputScaling == .zoomToFit {
+            // same shape as the crop, fills the height, centered across the width
+            #expect(abs(drawn.width / drawn.height - cropRender.width / cropRender.height) < 0.001)
+            #expect(abs(drawn.height - RenderTargetSize.height) < 0.001)
+            #expect(abs(drawn.midX - RenderTargetSize.width / 2) < 0.001)
+        } else {
+            #expect(drawn == CGRect(origin: .zero, size: RenderTargetSize))
+        }
+        #expect(twirl.imageReferenceRects[kCIInputImageKey] == drawn)
+        #expect(crop.outputReferenceRect() == drawn)
+        #expect(crop.parmReferenceRect() == photoImage.extent) // the crop rect itself maps onto the photo
+    }
+
+    /// storeParmValue writes canvas stretched to RenderTargetSize; load sets that rect and
+    /// resizeFrom(savedSize: globalSize) stretches it back to canvas units.
+    @Test func rectangleStoredValueRoundTrips() throws {
+        let crop = try #require(PGLSourceFilter(filter: "CICrop"))
+        let cropRect = try #require(crop.attribute(nameKey: "inputRectangle") as? PGLAttributeRectangle)
+        let canvas = CGRect(x: 100, y: 150, width: 400, height: 300)
+        for saveSize in renderSizes {
+            let stored = CIVector(cgRect: canvas).scaledFromCanvas(toRenderSize: saveSize).cgRectValue
+            cropRect.canvasRect = stored
+            cropRect.resizeFrom(savedSize: saveSize)
+            #expect(abs(cropRect.canvasRect.minX - canvas.minX) < 0.001)
+            #expect(abs(cropRect.canvasRect.minY - canvas.minY) < 0.001)
+            #expect(abs(cropRect.canvasRect.width - canvas.width) < 0.001)
+            #expect(abs(cropRect.canvasRect.height - canvas.height) < 0.001)
+        }
+    }
+
     /// The position marker sits where the filter renders the point - the view point is the
     /// render point scaled to view points (y flipped) - and a drag maps back exactly.
     @Test func markerViewPointMatchesRenderedPointWithReferenceRect() {

@@ -11,6 +11,11 @@ import CoreImage
 import simd
 
 class PGLTransitionFilter: PGLRectangleFilter {
+
+    /// the transition output is not scaled - already in the input space
+    override var showsInputWhileEditing: Bool {
+        return false
+    }
     // Subclass of cropFilter to use the interface for rectangle extents for parms that are rectangles.
     // see rectangle parms in CIClamp CISwipeTransition CIFlashTransition
     //          CICopyMachineTransition  CIRippleTransition etc..

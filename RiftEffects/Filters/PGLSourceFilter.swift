@@ -608,6 +608,13 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
         return PGLParmMapping.current(referenceRect: parmReferenceRect())
     }
 
+    /// Where this filter's output image is drawn - the reference passed to the next filter in
+    /// the stack, to output link targets and to a sequence dissolve. The parm reference, unless
+    /// the filter rescales its output (PGLRectangleFilter #scaleOutput).
+    func outputReferenceRect() -> CGRect? {
+        return parmReferenceRect()
+    }
+
     func outputImageBasic() -> CIImage? {
 
         // wrapper may call this to produce wrapper effects on the basicImage

@@ -9,8 +9,47 @@
 import UIKit
 import os
 
+/// How a rectangle filter (crop) shows its output in the stack.
+enum PGLRectangleOutputScaling {
+    /// uniform scale to fit the render area, centered - no distortion in any orientation
+    case zoomToFit
+    /// separate x and y scale to fill the render area - distorts with the view shape
+    case stretchToFill
+}
+
 class PGLRectangleFilter : PGLSourceFilter {
     // applies CIImage level methods to the image output
+
+    /// one switch for all rectangle filters - zoomToFit chosen 2026-11-26, stretchToFill is
+    /// the earlier behavior
+    static let outputScaling = PGLRectangleOutputScaling.zoomToFit
+    //static let outputScaling = PGLRectangleOutputScaling.stretchToFill
+    
+    /// where #scaleOutput drew the output this frame - nil when not scaled (infinite extent,
+    /// or a subclass that does not scale)
+    var scaledOutputRect: CGRect?
+
+    /// true while the rectangle overlay is open - see PGLImageController #showRectView.
+    /// A filter that scales its output shows its uncropped input while editing, so the overlay
+    /// (mapped onto the input image) is drawn over the same picture it edits.
+    var isEditingRect = false {
+        didSet {
+            if oldValue != isEditingRect {
+                NotificationCenter.default.post(name: PGLRedrawFilterChange, object: nil, userInfo: ["filterHasChanged" : true as AnyObject])
+            }
+        }
+    }
+
+    /// false for subclasses whose output is already in the input's space (they do not scale
+    /// their output) or that need their effect visible while the rect is placed
+    var showsInputWhileEditing: Bool {
+        return true
+    }
+
+    /// passing the input through while editing - the output is shown unscaled
+    func isShowingInputForEditing() -> Bool {
+        return isEditingRect && showsInputWhileEditing
+    }
 
 
 
@@ -32,25 +71,53 @@ class PGLRectangleFilter : PGLSourceFilter {
 //       if skipScaling {
 //           return ciOutput
 //       }
-       if ciOutput.extent.isInfinite {
+       let outputExtent = ciOutput.extent
+       if isShowingInputForEditing() || outputExtent.isInfinite || outputExtent.isEmpty {
            // ciClamp filter output is always infinite extent
            // just return without scaling
+           scaledOutputRect = nil
            return ciOutput }
 
-        let widthScale = stackCropRect.width / ciOutput.extent.width
-        let heightScale = stackCropRect.height / ciOutput.extent.height
+        let drawnRect = PGLRectangleFilter.scaledRect(for: outputExtent, in: stackCropRect)
+        let widthScale = drawnRect.width / outputExtent.width
+        let heightScale = drawnRect.height / outputExtent.height
+        let transform = CGAffineTransform(translationX: -outputExtent.minX, y: -outputExtent.minY)
+            .concatenating(CGAffineTransform(scaleX: widthScale, y: heightScale))
+            .concatenating(CGAffineTransform(translationX: drawnRect.minX, y: drawnRect.minY))
+        scaledOutputRect = drawnRect
+        return ciOutput.transformed(by: transform)
+    }
 
-        let scaleTransform = CGAffineTransform(scaleX: widthScale, y: heightScale)
-        let translate = scaleTransform.translatedBy(x: -ciOutput.extent.minX, y: -ciOutput.extent.minY)
-//      Logger(subsystem: LogSubsystem, category: LogNavigation).info("\( String(describing: self) + "-" + #function)")
-   //    NSLog("     translate \(translate) from \(stackCropRect)")
-        let returnImage =  ciOutput.transformed(by: translate)
-        return returnImage
+    /// the rect the output extent is scaled into - see PGLRectangleFilter.outputScaling
+    static func scaledRect(for outputExtent: CGRect, in stackCropRect: CGRect) -> CGRect {
+        switch outputScaling {
+            case .stretchToFill:
+                return stackCropRect
+            case .zoomToFit:
+                let scale = min(stackCropRect.width / outputExtent.width, stackCropRect.height / outputExtent.height)
+                let fitWidth = outputExtent.width * scale
+                let fitHeight = outputExtent.height * scale
+                return CGRect(x: stackCropRect.minX + (stackCropRect.width - fitWidth) * 0.5,
+                              y: stackCropRect.minY + (stackCropRect.height - fitHeight) * 0.5,
+                              width: fitWidth, height: fitHeight)
+        }
+    }
+
+    /// the next filter maps its parms onto the scaled output, not onto this filter's input
+    override func outputReferenceRect() -> CGRect? {
+        return scaledOutputRect ?? parmReferenceRect()
     }
 
 
     override func outputImage() -> CIImage? {
         let thisOutput = super.outputImage()
+        if isShowingInputForEditing(),
+           let filterOutput = thisOutput, !filterOutput.extent.isInfinite,
+           let inputImage = localFilter.value(forKey: kCIInputImageKey) as? CIImage {
+            // editing the rect - show the uncropped input. An infinite output (CIClamp) is
+            // not scaled, so it is already in the input's space and shows as is.
+            return inputImage
+        }
         return thisOutput
         // need the transform for aspectFit to the parent extent.
 //        if let newOutput = thisOutput {

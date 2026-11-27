@@ -62,14 +62,9 @@ class PGLRectangleController: UIViewController {
     @IBOutlet weak var lowerRight: UIView!
 
 
-    var thisCropAttribute: PGLAttributeRectangle? {
-        didSet{
-            // moving UI rect frameImageView
-            if LogDiagnostic { NSLog("DIAGNOSTIC PGLRectangleController.thisCropAttribute [2] didSet BEFORE overwrite: oldFilterRect=\(String(describing: thisCropAttribute?.filterRect)) frameImageView.frame=\(frameImageView.frame) view.frame=\(view.frame)") }
-            thisCropAttribute?.filterRect = frameImageView.frame
-            if LogDiagnostic { NSLog("DIAGNOSTIC PGLRectangleController.thisCropAttribute [2] didSet AFTER overwrite: filterRect=\(String(describing: thisCropAttribute?.filterRect))") }
-        }
-    }
+    /// the attribute being edited - PGLImageController #placeRectOverlay sets its filterRect
+    /// (the overlay frame) from the attribute value before showing the overlay
+    var thisCropAttribute: PGLAttributeRectangle?
     var croppingFilter: PGLRectangleFilter? {
         didSet {
             if thisCropAttribute == nil {
