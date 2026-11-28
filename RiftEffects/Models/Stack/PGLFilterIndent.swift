@@ -43,7 +43,7 @@ class PGLFilterIndent: Hashable, Equatable , @preconcurrency CustomDebugStringCo
             return thisName
         }
         else {
-            return filter.localizedName()
+            return filter.displayTitle()
         }
 
     }
@@ -52,7 +52,7 @@ class PGLFilterIndent: Hashable, Equatable , @preconcurrency CustomDebugStringCo
             return thisName
         }
         else {
-            return filter.localizedName()
+            return filter.displayTitle()
         }
     }
 

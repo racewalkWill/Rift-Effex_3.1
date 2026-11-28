@@ -216,9 +216,25 @@ class PGLAttributeRectangle: PGLFilterAttribute {
     }
     // MARK: overlay
 
-    /// the overlay frame in the image view - the pending edit, else the committed rect
+    /// inset of the overlay from the image edges when the rect covers the whole image
+    static let wholeImageOverlayInset: CGFloat = 100.0
+
+    /// The overlay frame in the image view - the pending edit, else the committed rect.
+    /// A rect covering the whole image (the CICrop default) would put the frame on the image
+    /// edges where it is hard to see - the overlay starts inset instead; OK commits that frame,
+    /// otherwise the value stays the whole image.
     func overlayViewRect(viewSize: CGSize) -> CGRect {
-        return currentParmMapping().viewRect(for: pendingCanvasRect ?? canvasRect, viewSize: viewSize)
+        let mapping = currentParmMapping()
+        let valueRect = mapping.viewRect(for: pendingCanvasRect ?? canvasRect, viewSize: viewSize)
+        guard pendingCanvasRect == nil else { return valueRect }
+        let imageRect = mapping.viewRect(for: CGRect(origin: .zero, size: FilterCanvasSize), viewSize: viewSize)
+            .intersection(CGRect(origin: .zero, size: viewSize))
+        guard !imageRect.isNull, !imageRect.isEmpty,
+              valueRect.insetBy(dx: -1, dy: -1).contains(imageRect)
+            else { return valueRect }
+        let insetX = min(PGLAttributeRectangle.wholeImageOverlayInset, imageRect.width * 0.3)
+        let insetY = min(PGLAttributeRectangle.wholeImageOverlayInset, imageRect.height * 0.3)
+        return imageRect.insetBy(dx: insetX, dy: insetY)
     }
 
     /// keep the overlay frame after a drag as the pending edit

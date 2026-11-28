@@ -1051,7 +1051,7 @@ class PGLFilterStack: Equatable, Hashable  {
     func postFilterNameInTitleBar() {
            /// update the navigationItem title to the current filter name
         if isEmptyStack() { return }
-       let newFilterName = currentFilter().localizedName()
+       let newFilterName = currentFilter().displayTitle()
        let filterNameUpdateNotification = Notification(name:PGLCurrentSequenceFilterName,
                                                        object: nil,
                                                        userInfo: ["newFilterName" : newFilterName as Any ])
@@ -1077,14 +1077,14 @@ class PGLFilterStack: Equatable, Hashable  {
         if activeFilterIndex < 0 { return ""}
         if activeFilters.count == 0 {return "" }
         let theCurrentFilter = filterAt(tabIndex: activeFilterIndex)
-        return theCurrentFilter.localizedName()
+        return theCurrentFilter.displayTitle()
     }
 
     func outputFilterName() -> String {
         if activeFilters.isEmpty {
             return ""
         }
-        return activeFilters.last!.localizedName()
+        return activeFilters.last!.displayTitle()
     }
 
     func filterNumLabel(maxLen: Int?) -> String {

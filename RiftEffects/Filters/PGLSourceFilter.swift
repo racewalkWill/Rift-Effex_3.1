@@ -530,6 +530,12 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
       return  CIFilter.localizedName(forFilterName: localFilter.name) ?? "unNamed"
     }
 
+    /// The name a user sees for this filter - the subclass displayName (Mask is a CICrop,
+    /// Ken Burns Dissolve a CIDissolveTransition) or else the CIFilter localized name.
+    func displayTitle() -> String {
+        return type(of: self).displayName() ?? localizedName()
+    }
+
     func outputImage() -> CIImage? {
         // if any inputs are from another filter then they should be updated first
 
@@ -958,7 +964,7 @@ required init?(filter: String, position: PGLFilterCategoryIndex) {
     
     func sourceDescription(attributeKey:String) -> String  {
         if attribute(nameKey: attributeKey) != nil
-            { return self.localizedName() + "-" + filterName }  // + "-" + sourceAttribute.inputSourceDescription 
+            { return self.displayTitle() + "-" + filterName }  // + "-" + sourceAttribute.inputSourceDescription 
         else { return "blank" }
 
     }

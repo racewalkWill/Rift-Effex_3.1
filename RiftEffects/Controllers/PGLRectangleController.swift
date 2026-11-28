@@ -91,6 +91,11 @@ class PGLRectangleController: UIViewController {
         if controlViewCorners.isEmpty {
             Logger(subsystem: LogSubsystem, category: LogCategory).error("PGLRectangleController does not have cornerRects...")
         }
+        for aCorner in controlViewCorners {
+            if let aCorner {
+                frameImageView.outlineCorner(aCorner)
+            }
+        }
     }
      // MARK: movement
 
@@ -161,34 +166,53 @@ class PGLRectangleController: UIViewController {
 }
 
 class PGLFramedView: UIImageView {
-   let rectLineWidth:CGFloat = 20.0
+    /// The frame outline - a dark line over a wider light line, so one of them contrasts
+    /// with light and with dark images. Drawn as shape layers at the current bounds (the
+    /// overlay frame changes size on every drag).
+    private let lightBorder = CAShapeLayer()
+    private let darkBorder = CAShapeLayer()
+    let darkLineWidth: CGFloat = 2.0
+    let lightLineWidth: CGFloat = 5.0
 
     func initFrame() {
-         highlightedImage = rectHighLight(imageRect: bounds)
-        image = highlightedImage
-
-
+        image = nil
+        for (borderLayer, color, width) in [(lightBorder, UIColor.white, lightLineWidth),
+                                            (darkBorder, UIColor.black, darkLineWidth)] {
+            borderLayer.fillColor = UIColor.clear.cgColor
+            borderLayer.strokeColor = color.cgColor
+            borderLayer.lineWidth = width
+        }
+        // below the corner handle subviews
+        layer.insertSublayer(darkBorder, at: 0)
+        layer.insertSublayer(lightBorder, at: 0)
+        updateBorderPath()
     }
 
-    func rectHighLight(imageRect: CGRect, fillColor: UIColor = UIColor.clear) -> UIImage {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateBorderPath()
+    }
 
-//        NSLog("PGLFramedView #rectHighLight")
-
-        let renderer = UIGraphicsImageRenderer(size: imageRect.size)
-
-        let image = renderer.image { rendererContext in
-            let cgContext = rendererContext.cgContext
-            cgContext.setStrokeColor(UIColor.black.cgColor)
-            cgContext.setFillColor(fillColor.cgColor) // makes the highlight stand out
-
-            let rectPath = UIBezierPath(rect: imageRect)
-            rectPath.lineWidth = rectLineWidth
-
-            rectPath.stroke()
-            rectPath.fill() // the fill color for highlight
-//            Logger(subsystem: LogSubsystem, category: LogCategory).debug("PGLFramedView #rectImageHighLight path = \(rectPath)" )
+    private func updateBorderPath() {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true) // follow drags without the implicit path animation
+        let inset = lightLineWidth / 2
+        let borderPath = UIBezierPath(rect: bounds.insetBy(dx: inset, dy: inset)).cgPath
+        for borderLayer in [lightBorder, darkBorder] {
+            borderLayer.frame = bounds
+            borderLayer.path = borderPath
         }
-        return image
+        CATransaction.commit()
+    }
+
+    /// the same contrast on a corner handle - a light outline with a dark shadow around it
+    func outlineCorner(_ corner: UIView) {
+        corner.layer.borderColor = UIColor.white.cgColor
+        corner.layer.borderWidth = 1.5
+        corner.layer.shadowColor = UIColor.black.cgColor
+        corner.layer.shadowOpacity = 1.0
+        corner.layer.shadowRadius = 1.5
+        corner.layer.shadowOffset = .zero
     }
 
 }

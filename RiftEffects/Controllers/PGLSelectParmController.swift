@@ -47,7 +47,8 @@ class PGLSelectParmController: PGLCommonController,
     var currentFilter: PGLSourceFilter?  {
         didSet {
             let allAttributes = ((currentFilter?.attributes)!)
-            filterLabel.text = appStack.getViewerStack().filterNumLabel(maxLen: nil) // don't truncate
+            filterLabel.text = currentFilter?.displayTitle() ?? appStack.getViewerStack().filterNumLabel(maxLen: nil) // don't truncate
+                // displayTitle - a Mask (CICrop with the PGLMaskFilter class) reads Mask, not Crop
 
             filterParms[sectionImages] = allAttributes.filter{ $0.isImageUI() }  //isImageInput
             var nonImageParms = allAttributes.filter{ !($0.isImageUI()) } //isImageInput

@@ -317,6 +317,50 @@ import UIKit
         #expect(crop.scaledOutputRect != nil)
     }
 
+    /// A whole-image rect (the CICrop default) shows its overlay inset 100 pt from the image
+    /// edges; a pending edit or a smaller committed rect shows as is.
+    @Test func wholeImageRectOverlayStartsInset() throws {
+        let savedSize = RenderTargetSize
+        defer { RenderTargetSize = savedSize }
+        RenderTargetSize = CGSize(width: 1179, height: 1604)
+        let viewSize = CGSize(width: 393, height: 534.67)
+        let crop = try #require(PGLFilterDescriptor("CICrop", PGLRectangleFilter.self)?.pglSourceFilter())
+        let photoImage = CIImage(color: .red).cropped(to: CGRect(x: 137, y: 0, width: 905, height: 1604))
+        crop.setImageValue(newValue: photoImage, keyName: kCIInputImageKey)
+        let cropRect = try #require(crop.attribute(nameKey: "inputRectangle") as? PGLAttributeRectangle)
+        #expect(cropRect.canvasRect == CGRect(origin: .zero, size: FilterCanvasSize))
+
+        let photoInView = crop.parmMapping().viewRect(for: CGRect(origin: .zero, size: FilterCanvasSize), viewSize: viewSize)
+        let overlay = cropRect.overlayViewRect(viewSize: viewSize)
+        // about 100 pt, capped at 30% of the image so a narrow image keeps a usable frame
+        let expected = photoInView.insetBy(dx: min(100, photoInView.width * 0.3), dy: min(100, photoInView.height * 0.3))
+        #expect(abs(overlay.minX - expected.minX) < 0.001)
+        #expect(abs(overlay.minY - expected.minY) < 0.001)
+        #expect(abs(overlay.width - expected.width) < 0.001)
+        #expect(abs(overlay.height - expected.height) < 0.001)
+        #expect(cropRect.canvasRect == CGRect(origin: .zero, size: FilterCanvasSize)) // value unchanged until OK
+
+        // a pending drag shows where it was dragged, even at the image edges
+        cropRect.setPendingOverlay(viewRect: photoInView, viewSize: viewSize)
+        let pendingOverlay = cropRect.overlayViewRect(viewSize: viewSize)
+        #expect(abs(pendingOverlay.width - photoInView.width) < 0.001)
+
+        // a committed smaller rect shows as is
+        let smaller = photoInView.insetBy(dx: 40, dy: 60)
+        cropRect.commitOverlay(viewRect: smaller, viewSize: viewSize)
+        let committedOverlay = cropRect.overlayViewRect(viewSize: viewSize)
+        #expect(abs(committedOverlay.minX - smaller.minX) < 0.001)
+        #expect(abs(committedOverlay.height - smaller.height) < 0.001)
+    }
+
+    /// The parm screen title - a Mask is a CICrop with the PGLMaskFilter class and reads Mask.
+    @Test func maskFilterTitleReadsMask() throws {
+        let mask = try #require(PGLFilterDescriptor("CICrop", PGLMaskFilter.self)?.pglSourceFilter())
+        #expect(mask.displayTitle() == PGLMaskFilter.displayName())
+        let crop = try #require(PGLFilterDescriptor("CICrop", PGLRectangleFilter.self)?.pglSourceFilter())
+        #expect(crop.displayTitle() == crop.localizedName())
+    }
+
     /// Mask and the generators edit in their own output space - no pass-through.
     @Test func maskAndGeneratorDoNotPassInputWhileEditing() throws {
         let mask = try #require(PGLFilterDescriptor("CICrop", PGLMaskFilter.self)?.pglSourceFilter() as? PGLRectangleFilter)
